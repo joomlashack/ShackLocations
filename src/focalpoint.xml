@@ -30,7 +30,6 @@
     <files folder="site">
         <filename>controller.php</filename>
         <filename>focalpoint.php</filename>
-        <filename>index.html</filename>
         <filename>README.md</filename>
         <filename>router.php</filename>
         <folder>assets</folder>
@@ -68,7 +67,6 @@
             <filename>controller.php</filename>
             <filename>focalpoint.php</filename>
             <filename>focalpoint.xml</filename>
-            <filename>index.html</filename>
             <filename>README.md</filename>
             <folder>assets</folder>
             <folder>controllers</folder>
