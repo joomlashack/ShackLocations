@@ -2,34 +2,26 @@
 
 ## Important
 
-**FocalPoint is no longer actively developed or updated. At the current time, Focalpoint is fully functional and compatible with Joomla 3.8.x. I will still provide full support for any users with an active subscription purchased from the Focalpointx.com website. Please send email to me at the address on your subscription confirmation and I'll respond as quick as possible.**
-
-**Developing and maintaining FocalPoint over the past 3 years has been a blast. I have learned a lot from this experience. It has been inspiring seeing the many creative implementations people have built using a tool I created. I thank all of you.**
-
-**Moving forward, FocalPoint consumes too much time which isn't covered by the subscription fees. My regular business and my sanity have suffered for it. It's been a tough decision but the FocalPointx.com site has been deleted.**
-
-**Kind Regards,
-John Pitchers
-13 September, 2017**
+** Shack Locations is a fork of FocalPoint by John Pitchers and with his blessing. We're actively maintaining it and we look forward to building upon John's foundation.
 
 ---
-# Focalpoint
+# Shack Locations
 
 ## Advanced mapping extension for Joomla CMS
 
-This is the repo for the FocalPoint mapping extension for Joomla. It is compatible with all version of Joomla 3.x. 
+This is the repo for the Shack Locations mapping extension for Joomla. It is compatible with all version of Joomla 3.x. 
 
 Use this extension to create advanced map based directories with custom legends, markers, infoboxes and hundreds of locations. Define the content for each location using CCK functionality. And, give your users the ability to search and filter using familiar UI elements.
 
 **Installation Instructions** 
-1. Download the latest zipped installation archive from this Github repo or from [focalpointx.com](http://focalpointx.com/). 
+1. Download the latest zipped installation archive from this Github repo or from [joomlashack.com](https://www.joomlashack.com/). 
 2. Install the component via the Joomla extension manager. No need to unzip the archive.
 3. Follow the on screen wizard to set up your first map.
 
 These extensions are available to subscribers. Subscribers also receive support and a money back guarantee.
 
 **License**
-The license under which the FocalPoint extension for Joomla! is released is the General Public License Version 2 (GPL v2) from the Free Software Foundation. A copy of the license is included with every download. You can also view the license online. Please see http://www.gnu.org/licenses/gpl-faq.html for more information on the GPL license.
+The license under which the Shack Locations extension for Joomla! is released is the General Public License Version 2 (GPL v2) from the Free Software Foundation. A copy of the license is included with every download. You can also view the license online. Please see http://www.gnu.org/licenses/gpl-faq.html for more information on the GPL license.
 
 Under the terms of this license you are free to use the software in any way you wish. You are free to modify the software in any way you wish and create derivative works.
 
