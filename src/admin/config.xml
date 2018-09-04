@@ -349,6 +349,13 @@ In development for 1.2
                 validate="rules"
                 label="JCONFIG_PERMISSIONS_LABEL"
                 section="component"/>
+				
+		<field
+            type="customfooter"
+            name="customfooter"
+            media="com_osmap"
+            showgoproad="1"
+            jedurl="http://extensions.joomla.org/extensions/extension/structure-a-navigation/site-map/osmap" />
     </fieldset>
 
 </config>

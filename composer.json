@@ -1,0 +1,23 @@
+{
+    "name"             : "joomlashack/shacklocations",
+    "description"      : "Shack Locations",
+    "minimum-stability": "stable",
+    "license"          : "GPL-2+",
+    "type"             : "joomla.component",
+    "extra"            : {
+        "element"        : "com_shacklocations",
+        "element-short"  : "shacklocations",
+        "name"           : "Shack Locations",
+        "client"         : "site",
+        "package-license": "free"
+    },
+    "authors"          : [
+        {
+            "name" : "Joomlashack",
+            "email": "help@joomlashack.com"
+        }
+    ],
+    "require"          : {
+        "php"       : ">= 5.6"
+    }
+}

@@ -4,7 +4,7 @@
  * @package     com_focalpoint
  * @copyright   Copyright (C) 2013. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
- * @author      John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
+ * @author      Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
 
 
@@ -42,8 +42,8 @@ class com_focalpointInstallerScript
     function update($parent)
     {
         // $parent is the class calling this method
-        echo '<p>' . JText::sprintf('FocalPoint has been successfully updated.') . '</p>';
-        echo '<p><strong>Please note: If you are upgrading from a version prior to 1.2.</strong> FocalPoint v1.2 included a new batch of icon markers and cluster icons. If you are upgrading from version 1.0 or 1.1 these markers can\'t be moved to your images folder without overwriting the original images/markers directory which we do not wish to do. The new markers can be found on your server in the media/com_focalpoint folder. Alternatively, you can extract the installation archive on your local machine where you can find the markers in the media folder. You are free to use these new markers as you wish. There are over 200 of them. You can upload or move them via FTP or through your hosting control panel. For new installations, the new markers have been moved to images/markers.</p>';
+        echo '<p>' . JText::sprintf('Shack Locations has been successfully updated.') . '</p>';
+        echo '<p><strong>Please note: If you are upgrading from a version prior to 1.2.</strong> Shack Locations / FocalPoint v1.2 included a new batch of icon markers and cluster icons. If you are upgrading from version 1.0 or 1.1 these markers can\'t be moved to your images folder without overwriting the original images/markers directory which we do not wish to do. The new markers can be found on your server in the media/com_focalpoint folder. Alternatively, you can extract the installation archive on your local machine where you can find the markers in the media folder. You are free to use these new markers as you wish. There are over 200 of them. You can upload or move them via FTP or through your hosting control panel. For new installations, the new markers have been moved to images/markers.</p>';
     }
 
     /**
