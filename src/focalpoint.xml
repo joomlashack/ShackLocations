@@ -91,7 +91,7 @@
 
     <alledia>
         <element>focalpoint</element>
-        <namespace>focalpoint</namespace>
+        <namespace>ShackLocations</namespace>
         <license>free</license>
         <targetplatform>3.7</targetplatform>
         <phpminimum>5.6</phpminimum>
