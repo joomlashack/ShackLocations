@@ -5,8 +5,8 @@
     "license"          : "GPL-2+",
     "type"             : "joomla.component",
     "extra"            : {
-        "element"        : "com_shacklocations",
-        "element-short"  : "shacklocations",
+        "element"        : "com_focalpoint",
+        "element-short"  : "focalpoint",
         "name"           : "Shack Locations",
         "client"         : "site",
         "package-license": "free"
