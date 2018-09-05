@@ -37,9 +37,11 @@
         <filename>focalpoint.php</filename>
         <filename>router.php</filename>
     </files>
-    <languages folder="language/site">
+
+    <languages folder="site/language">
         <language tag="en-GB">en-GB/en-GB.com_focalpoint.ini</language>
     </languages>
+
     <administration>
         <menu>COM_FOCALPOINT</menu>
         <submenu>
@@ -77,7 +79,7 @@
             <filename>focalpoint.php</filename>
             <filename>README.md</filename>
         </files>
-        <languages folder="language/admin">
+        <languages folder="admin/language">
             <language tag="en-GB">en-GB/en-GB.com_focalpoint.ini</language>
             <language tag="en-GB">en-GB/en-GB.com_focalpoint.sys.ini</language>
         </languages>
