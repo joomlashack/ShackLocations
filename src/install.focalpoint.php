@@ -8,65 +8,45 @@
  * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
 
+use Alledia\Installer\AbstractScript;
 
-// no direct access
 defined('_JEXEC') or die;
 
-/**
- * Installation script for FocalPoint
- */
-class com_focalpointInstallerScript
+// Adapt for install and uninstall environments
+if (file_exists(__DIR__ . '/admin/library/Installer/AbstractScript.php')) {
+    require_once __DIR__ . '/admin/library/Installer/AbstractScript.php';
+} else {
+    require_once __DIR__ . '/library/Installer/AbstractScript.php';
+}
+
+class com_focalpointInstallerScript extends AbstractScript
 {
     /**
-     * method to install the component
+     * @param JInstallerAdapter $parent
      *
-     * @return void
+     * @return bool
      */
-    function install($parent)
+    public function update($parent)
     {
+        if (parent::update($parent)) {
+            echo '<p>' . JText::sprintf('Shack Locations has been successfully updated.') . '</p>';
+            echo '<p><strong>Please note: If you are upgrading from a version prior to 1.2.</strong> Shack Locations / FocalPoint v1.2 included a new batch of icon markers and cluster icons. If you are upgrading from version 1.0 or 1.1 these markers can\'t be moved to your images folder without overwriting the original images/markers directory which we do not wish to do. The new markers can be found on your server in the media/com_focalpoint folder. Alternatively, you can extract the installation archive on your local machine where you can find the markers in the media folder. You are free to use these new markers as you wish. There are over 200 of them. You can upload or move them via FTP or through your hosting control panel. For new installations, the new markers have been moved to images/markers.</p>';
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * method to uninstall the component
+     * @param string            $type
+     * @param JInstallerAdapter $parent
      *
-     * @return void
+     * @throws Exception
      */
-    function uninstall($parent)
+    public function postflight($type, $parent)
     {
-    }
-
-    /**
-     * method to update the component
-     *
-     * @return void
-     */
-    function update($parent)
-    {
-        // $parent is the class calling this method
-        echo '<p>' . JText::sprintf('Shack Locations has been successfully updated.') . '</p>';
-        echo '<p><strong>Please note: If you are upgrading from a version prior to 1.2.</strong> Shack Locations / FocalPoint v1.2 included a new batch of icon markers and cluster icons. If you are upgrading from version 1.0 or 1.1 these markers can\'t be moved to your images folder without overwriting the original images/markers directory which we do not wish to do. The new markers can be found on your server in the media/com_focalpoint folder. Alternatively, you can extract the installation archive on your local machine where you can find the markers in the media folder. You are free to use these new markers as you wish. There are over 200 of them. You can upload or move them via FTP or through your hosting control panel. For new installations, the new markers have been moved to images/markers.</p>';
-    }
-
-    /**
-     * method to run before an install/update/uninstall method
-     *
-     * @return void
-     */
-    function preflight($type, $parent)
-    {
-        // $parent is the class calling this method
-        // $type is the type of change (install, update or discover_install)
-    }
-
-    /**
-     * Runs after an install/update/uninstall method
-     *
-     * @return void
-     */
-    function postflight($type, $parent)
-    {
-        // $parent is the class calling this method
-        // $type is the type of change (install, update or discover_install)
+        parent::postFlight($type, $parent);
 
         //Move the markers to the images folder on new install only
         if ($type == 'install') {
@@ -77,6 +57,5 @@ class com_focalpointInstallerScript
                 echo "<p>Unable to move the markers folder to your /images folder. This is usaully due to;</p><ol><li>incorrect file permission settings. Please go to System > System Information > Directory Permissions and check that the images, media and tmp folders are writable.</li><li>You already have an /images/markers folder.</li></ol> ";
             }
         }
-
     }
 }
