@@ -28,15 +28,15 @@
     </media>
 
     <files folder="site">
-        <filename>controller.php</filename>
-        <filename>focalpoint.php</filename>
-        <filename>README.md</filename>
-        <filename>router.php</filename>
         <folder>assets</folder>
         <folder>controllers</folder>
         <folder>helpers</folder>
         <folder>models</folder>
         <folder>views</folder>
+
+        <filename>controller.php</filename>
+        <filename>focalpoint.php</filename>
+        <filename>router.php</filename>
     </files>
     <languages folder="language/site">
         <language tag="en-GB">en-GB/en-GB.com_focalpoint.ini</language>
@@ -62,12 +62,6 @@
             </menu>
         </submenu>
         <files folder="admin">
-            <filename>access.xml</filename>
-            <filename>config.xml</filename>
-            <filename>controller.php</filename>
-            <filename>focalpoint.php</filename>
-            <filename>focalpoint.xml</filename>
-            <filename>README.md</filename>
             <folder>assets</folder>
             <folder>controllers</folder>
             <folder>helpers</folder>
@@ -75,13 +69,19 @@
             <folder>sql</folder>
             <folder>tables</folder>
             <folder>views</folder>
+
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>focalpoint.php</filename>
+            <filename>README.md</filename>
         </files>
         <languages folder="language/admin">
             <language tag="en-GB">en-GB/en-GB.com_focalpoint.ini</language>
             <language tag="en-GB">en-GB/en-GB.com_focalpoint.sys.ini</language>
         </languages>
     </administration>
-	
+
 	<updateservers>
         <server type="extension" priority="1" name="ShackLocations"><![CDATA[https://deploy.ostraining.com/client/update/free/stable/com_shacklocations]]></server>
     </updateservers>
