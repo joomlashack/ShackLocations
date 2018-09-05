@@ -46,19 +46,22 @@ class com_focalpointInstallerScript extends AbstractScript
      */
     public function postflight($type, $parent)
     {
-        parent::postFlight($type, $parent);
-
         //Move the markers to the images folder on new install only
         if ($type == 'install') {
-            $markers_moved = JFolder::move(
-                JPATH_SITE . "/media/com_focalpoint/markers",
-                JPATH_SITE . "/images/markers"
-            );
-            if ($markers_moved) {
-                echo "<p>Successully moved markers to " . JPATH_SITE . "/images/markers/.";
+            $source      = $this->installer->getPath('source') . '/assets/markers';
+            $destination = JPATH_SITE . '/images/markers';
+
+            if (JFolder::move($source, $destination)) {
+                echo '<p>Successully copied markers to ' . $destination;
+
             } else {
-                echo "<p>Unable to move the markers folder to your /images folder. This is usaully due to;</p><ol><li>incorrect file permission settings. Please go to System > System Information > Directory Permissions and check that the images, media and tmp folders are writable.</li><li>You already have an /images/markers folder.</li></ol> ";
+                echo '<p>Unable to move the markers folder to your /images folder. This is usaully due to;</p>'
+                    . '<ol><li>incorrect file permission settings. Please go to System > System Information > Directory Permissions and check that the images, media and tmp folders are writable.</li>'
+                    . '<li>You already have an /images/markers folder.</li>'
+                    . '</ol>';
             }
         }
+
+        parent::postFlight($type, $parent);
     }
 }

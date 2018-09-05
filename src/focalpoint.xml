@@ -20,11 +20,8 @@
             <schemapath type="mysql">sql/updates/mysql</schemapath>
         </schemas>
     </update>
-    <scriptfile>install.focalpoint.php</scriptfile>
 
-    <media folder="media" destination="com_focalpoint">
-        <folder>markers</folder>
-    </media>
+    <scriptfile>install.focalpoint.php</scriptfile>
 
     <files folder="site">
         <folder>assets</folder>
