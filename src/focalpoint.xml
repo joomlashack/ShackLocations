@@ -94,19 +94,7 @@
         <targetplatform>3.7</targetplatform>
         <phpminimum>5.6</phpminimum>
 
-        <relatedExtensions>
-            <extension
-                type="library"
-                element="allediaframework">AllediaFramework</extension>
-
-            <extension
-                type="plugin"
-                group="system"
-                element="ossystem"
-                publish="true"
-                ordering="first">OSSystem</extension>
-
-        </relatedExtensions>
+        <relatedExtensions/>
 
         <include>AllediaFreeDefaultFiles</include>
 
