@@ -84,7 +84,7 @@
     </administration>
 
 	<updateservers>
-        <server type="extension" priority="1" name="ShackLocations"><![CDATA[https://deploy.ostraining.com/client/update/free/stable/com_shacklocations]]></server>
+        <server type="extension" priority="1" name="ShackLocations"><![CDATA[https://deploy.ostraining.com/client/update/free/stable/com_focalpoint]]></server>
     </updateservers>
 
     <alledia>
