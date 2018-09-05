@@ -50,7 +50,10 @@ class com_focalpointInstallerScript extends AbstractScript
 
         //Move the markers to the images folder on new install only
         if ($type == 'install') {
-            $markers_moved = JFile::move(JPATH_SITE . "/media/com_focalpoint/markers", JPATH_SITE . "/images/markers");
+            $markers_moved = JFolder::move(
+                JPATH_SITE . "/media/com_focalpoint/markers",
+                JPATH_SITE . "/images/markers"
+            );
             if ($markers_moved) {
                 echo "<p>Successully moved markers to " . JPATH_SITE . "/images/markers/.";
             } else {
