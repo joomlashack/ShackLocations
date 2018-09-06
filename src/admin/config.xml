@@ -393,7 +393,7 @@
 
         <field type="customfooter"
                name="customfooter"
-               media="com_osmap"
+               media="com_focalpoint"
                showgoproad="https://www.joomlashack.com/joomla-extensions/shack-locations/"
                jedurl=""/>
     </fieldset>
