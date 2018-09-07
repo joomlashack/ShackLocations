@@ -9,6 +9,7 @@
     <authorUrl>https://www.joomlashack.com</authorUrl>
     <version>1.3.1b1</version>
     <description>COM_FOCALPOINT_DESCRIPTION</description>
+    <variant>FREE</variant>
 
     <install> <!-- Runs on install -->
         <sql>
