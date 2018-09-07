@@ -7,7 +7,7 @@
     "extra"            : {
         "element"        : "com_focalpoint",
         "element-short"  : "focalpoint",
-        "name"           : "Shack Locations",
+        "name"           : "ShackLocations",
         "client"         : "site",
         "package-license": "free"
     },
