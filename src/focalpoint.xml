@@ -93,6 +93,7 @@
     </updateservers>
 
     <alledia>
+	<name>Shack Locations</name>
         <element>focalpoint</element>
         <namespace>FocalPoint</namespace>
         <license>free</license>
