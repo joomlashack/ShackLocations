@@ -20,7 +20,7 @@ jimport('joomla.event.dispatcher');
 class FocalpointModelMap extends JModelForm
 {
     var $_item = null;
-    
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -50,7 +50,7 @@ class FocalpointModelMap extends JModelForm
 		$this->setState('params', $params);
 
 	}
-        
+
 
 	/**
 	 * Method to get an ojbect.
@@ -61,20 +61,20 @@ class FocalpointModelMap extends JModelForm
 	 */
 	public function &getData($id = null)
 	{
-		
+
         if ($this->_item === null)
 		{
 			$this->_item = false;
 
 			if (empty($id)) {
                 //Get the id from the URL. This maintains the same Itemid (menu item) when clicking from map to map
-                $id = JFactory::getApplication()->input->get('id');
+                $id = JFactory::getApplication()->input->getInt('id');
 
                 if (empty($id)){
                     //Get the map id from the menu.
                     $id = $this->getState('map.id');
                 }
-                
+
 			}
 
 			// Get a level row instance.
@@ -98,26 +98,26 @@ class FocalpointModelMap extends JModelForm
 				$this->setError($error);
 			}
 		}
-        
+
         //Format the tabs data for use in the template as an object.
         $this->_item->tabs = self::formatTabsData($this->_item->tabsdata);
 
 		return $this->_item;
 	}
-    
+
     function formatTabsData($data) {
         // Decode the data from JSON
         $data = json_decode($data);
         return $data;
     }
-    
+
 	public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = array())
-	{   
+	{
         $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR.'/tables');
         return JTable::getInstance($type, $prefix, $config);
-	}     
+	}
 
-    
+
 	/**
 	 * Method to check in an item.
 	 *
@@ -131,7 +131,7 @@ class FocalpointModelMap extends JModelForm
 		$id = (!empty($id)) ? $id : (int)$this->getState('map.id');
 
 		if ($id) {
-            
+
 			// Initialise the table
 			$table = $this->getTable();
 
@@ -159,7 +159,7 @@ class FocalpointModelMap extends JModelForm
 		// Get the user id.
 		$id = (!empty($id)) ? $id : (int)$this->getState('map.id');
 		if ($id) {
-            
+
 			// Initialise the table
 			$table = $this->getTable();
 
@@ -175,7 +175,7 @@ class FocalpointModelMap extends JModelForm
             }
 		}
 		return true;
-	}    
+	}
 
 	/**
 	 * Method to get the profile form.
@@ -194,7 +194,7 @@ class FocalpointModelMap extends JModelForm
 
 
 
-    
+
     /**
 	 * Method to get the sidebar data.
 	 *
@@ -245,7 +245,7 @@ class FocalpointModelMap extends JModelForm
         $results = $db->loadObjectList();
 
         // Let's do a little processing before passing the results back to the view
-        // 
+        //
         // Cycle through the results and store the relevant marker icon in $result->marker.
         // The rule is as follows.
         //   1.Location marker (top priority)
@@ -362,6 +362,6 @@ class FocalpointModelMap extends JModelForm
             unset($result->customfieldsdata);
         }
         //Send it back to the template.
-        return $results;    
+        return $results;
     }
 }

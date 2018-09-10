@@ -20,7 +20,7 @@ jimport('joomla.event.dispatcher');
 class FocalpointModelLocation extends JModelForm
 {
     var $_item = null;
-    
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -93,10 +93,10 @@ class FocalpointModelLocation extends JModelForm
 				$this->setError($error);
 			}
 		}
-        
+
         //Format the customfields data for use in the template as an object.
         $this->_item->customfieldsdata = self::formatCustomFields($this->_item->customfieldsdata);
-        
+
         // Determine the correct marker to use before returning the data.
         $this->_item->marker = self::getMarker($id, $this->_item->marker);
 
@@ -135,27 +135,27 @@ class FocalpointModelLocation extends JModelForm
 	}
 
     function formatCustomFields($data) {
-        
+
         if (empty ($data)) {
             // Declare the customfields property to avoid getting PHP notices in the tempate.
             $this->_item->customfields = NULL;
             return false;
         }
-        
+
         // Decode the data from JSON
         $data = json_decode($data);
-        
+
         // Grab the location type record so we can match up the label. We don't save the labels with the data.
         // This is so we can change individaul labels at any time without having to update every record.
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
-        $query 
+        $query
             ->select('customfields')
             ->from('#__focalpoint_locationtypes')
             ->where('id = ' . $this->_item->type);
         $db->setQuery($query);
         $fieldsettings = (json_decode($db->loadResult()));
-        
+
         // Remove the id numbers from the field. turns [textbox.1234567.thisfield] into [thisfield]
         // Create a new object for each field containing the datatype, label and data.
 		$this->_item->customfields = New stdClass();
@@ -173,15 +173,15 @@ class FocalpointModelLocation extends JModelForm
             }
         }
     }
-    
+
     function getMarker($id, $location_marker) {
         $marker = $location_marker;
         // This marker has been defined at the location level. It rules!
-        
+
         if (!$marker) {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-            $query 
+            $query
                 ->select('a.marker')
                 ->from('#__focalpoint_locationtypes AS a')
                 ->leftJoin('#__focalpoint_locations AS b ON b.type= a.id')
@@ -189,24 +189,24 @@ class FocalpointModelLocation extends JModelForm
             $db->setQuery($query);
             $marker = $db->loadResult();
         }
-        
+
         if (!$marker) {
             // Fallback onto the component parameters. The parameters have already been merged in the view.
             // If a marker has been set in the map settings or global option it will defined in $params.
             $app =JFactory::getApplication();
-            $params = $app->getParams('com_focalpoint'); 
+            $params = $app->getParams('com_focalpoint');
             $marker = $params->get('marker');
         }
-        
+
         if ($marker) {
             $marker= JURI::base().$marker;
         }
-        
+
         return $marker;
     }
-    
+
 	public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = array())
-	{   
+	{
         $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR.'/tables');
         return JTable::getInstance($type, $prefix, $config);
 	}
@@ -228,5 +228,5 @@ class FocalpointModelLocation extends JModelForm
 	}
 
 
-    
+
 }
