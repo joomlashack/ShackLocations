@@ -33,10 +33,10 @@ class FocalpointModelLocation extends JModelForm
 		$app = JFactory::getApplication('com_focalpoint');
 
 		// Load state from the request userState on edit or from the passed variable on default
-        if (JFactory::getApplication()->input->get('layout') == 'edit') {
+        if (JFactory::getApplication()->input->getCmd('layout') == 'edit') {
             $id = JFactory::getApplication()->getUserState('com_focalpoint.edit.location.id');
         } else {
-            $id = JFactory::getApplication()->input->get('id');
+            $id = JFactory::getApplication()->input->getInt('id');
             JFactory::getApplication()->setUserState('com_focalpoint.edit.location.id', $id);
         }
 		$this->setState('location.id', $id);
@@ -65,7 +65,7 @@ class FocalpointModelLocation extends JModelForm
 
 			if (empty($id)) {
                 //Get the id from the URL. This maintains the same Itemid (menu item) when clicking from map to map
-                $id = JFactory::getApplication()->input->get('id');
+                $id = JFactory::getApplication()->input->getInt('id');
                 if (empty($id)){
                     //Get the map id from the menu.
                     $id = $this->getState('location.id');

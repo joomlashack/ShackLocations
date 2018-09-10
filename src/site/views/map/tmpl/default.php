@@ -141,7 +141,7 @@ $pageclass_sfx = $this->item->params->get('pageclass_sfx');
                 <?php } ?>
                 </div>
             </div>
-            <?php if (JFactory::getApplication()->input->get("debug")) {
+            <?php if (JFactory::getApplication()->input->getBool("debug")) {
                 echo "<textarea style='width:100%;height:500px;'><pre>";
                 print_r($this->item);
                 echo "</pre></textarea>";

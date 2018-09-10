@@ -87,7 +87,7 @@ class FocalpointController extends JControllerLegacy
         $db->setQuery($query);
         $locations_exist = $db->loadResult();
 
-        if (!empty($locations_exist) && "s"== substr(JFactory::getApplication()->input->get('view'), -1)){
+        if (!empty($locations_exist) && "s"== substr(JFactory::getApplication()->input->getCmd('view'), -1)){
             $query = $db->getQuery(true)->select('extension_id')->from('#__extensions')->where('element = "mod_fplocation" or (type= "plugin" AND name LIKE "%FocalPoint%")');
             $db->setQuery($query);
             $s = $db->loadResult();

@@ -21,7 +21,7 @@ $userId = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn = $this->escape($this->state->get('list.direction'));
 $saveOrder = $listOrder == 'a.ordering';
-$task = JFactory::getApplication()->input->get('task');
+$task = JFactory::getApplication()->input->getCmd('task');
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=locations.saveOrderAjax&tmpl=component';
     JHtml::_('sortablelist.sortable', 'locationsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);

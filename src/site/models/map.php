@@ -33,10 +33,10 @@ class FocalpointModelMap extends JModelForm
 		$app = JFactory::getApplication('com_focalpoint');
 
 		// Load state from the request userState on edit or from the passed variable on default
-        if (JFactory::getApplication()->input->get('layout') == 'edit') {
+        if (JFactory::getApplication()->input->getCmd('layout') == 'edit') {
             $id = JFactory::getApplication()->getUserState('com_focalpoint.edit.map.id');
         } else {
-            $id = JFactory::getApplication()->input->get('id');
+            $id = JFactory::getApplication()->input->getInt('id');
             JFactory::getApplication()->setUserState('com_focalpoint.edit.map.id', $id);
         }
 		$this->setState('map.id', $id);

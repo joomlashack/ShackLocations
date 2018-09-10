@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 // Import CSS
 $document = JFactory::getDocument();
 $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
-$task = JFactory::getApplication()->input->get('task', 'config');
+$task = JFactory::getApplication()->input->getCmd('task', 'config');
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=legends'); ?>" method="post" name="adminForm"

@@ -28,5 +28,5 @@ JLoader::register('FocalpointHelper', __DIR__ . '/helpers/focalpoint.php');
 JLoader::register('mapsAPI', __DIR__ . '/helpers/maps.php');
 
 $controller = JControllerLegacy::getInstance('Focalpoint');
-$controller->execute(JFactory::getApplication()->input->get('task'));
+$controller->execute(JFactory::getApplication()->input->getCmd('task'));
 $controller->redirect();

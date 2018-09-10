@@ -40,7 +40,7 @@ class FocalpointTablelegend extends JTable
 
 
         $input = JFactory::getApplication()->input;
-        $task = $input->getString('task', '');
+        $task = $input->getCmd('task', '');
         if (($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state', 'com_focalpoint') && $array['state'] == 1)) {
             $array['state'] = 0;
         }

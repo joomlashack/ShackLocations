@@ -12,5 +12,5 @@ defined('_JEXEC') or die;
 
 // Execute the task.
 $controller	= JControllerLegacy::getInstance('Focalpoint');
-$controller->execute(JFactory::getApplication()->input->get('task'));
+$controller->execute(JFactory::getApplication()->input->getCmd('task'));
 $controller->redirect();

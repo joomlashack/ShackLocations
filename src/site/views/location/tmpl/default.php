@@ -123,6 +123,6 @@ if ( $this->item->params->get('loadBootstrap') ) {
 	<?php } ?>
 	</div>
 	<?php echo $this->loadTemplate('mapjs'); ?>
-	<?php if (JFactory::getApplication()->input->get("debug")) {echo "<pre>"; print_r($this->item); echo"</pre>";} ?>
+	<?php if (JFactory::getApplication()->input->getBool("debug")) {echo "<pre>"; print_r($this->item); echo"</pre>";} ?>
 
 </div>
