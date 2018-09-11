@@ -8,7 +8,9 @@
  * @author      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
  * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
-// No direct access
+
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 /**
@@ -131,7 +133,7 @@ class FocalpointTablelocationtype extends JTable
         $k = $this->_tbl_key;
 
         // Sanitize input.
-        JArrayHelper::toInteger($pks);
+        ArrayHelper::toInteger($pks);
         $userId = (int)$userId;
         $state = (int)$state;
 

@@ -8,7 +8,8 @@
  * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
 
-// No direct access.
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modelform');
@@ -88,7 +89,7 @@ class FocalpointModelLocation extends JModelForm
 
 				// Convert the JTable to a clean JObject.
 				$properties = $table->getProperties(1);
-				$this->_item = JArrayHelper::toObject($properties, 'JObject');
+				$this->_item = ArrayHelper::toObject($properties, 'JObject');
 			} elseif ($error = $table->getError()) {
 				$this->setError($error);
 			}

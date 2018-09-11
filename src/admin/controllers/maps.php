@@ -8,7 +8,8 @@
  * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
 
-// No direct access.
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controlleradmin');
@@ -44,8 +45,8 @@ class FocalpointControllerMaps extends JControllerAdmin
         $order = $input->post->get('order', array(), 'array');
 
         // Sanitize the input
-        JArrayHelper::toInteger($pks);
-        JArrayHelper::toInteger($order);
+        ArrayHelper::toInteger($pks);
+        ArrayHelper::toInteger($order);
 
         // Get the model
         $model = $this->getModel();
