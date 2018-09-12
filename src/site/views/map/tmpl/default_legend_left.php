@@ -1,14 +1,11 @@
 <?php
 /**
- * @version     1.0.0
- * @package     com_focalpoint
- * @copyright   Copyright (C) 2013. All rights reserved.
+ * @package     ShackLocations
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
- * @author      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
+ * @copyright      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
+ * @copyright      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
 
-// No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
     $data = $this->item->markerdata;
@@ -25,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
             }
             $html .= '<div class="'.$ulclass.'"><h4>'.$item->legend."<small>".$item->legendsubtitle."</small></h4>";
             $html .= '<ul class="sidebar '.$ulclass.'">';
-            $first = false;   
+            $first = false;
         }
         if ($liclass != $item->locationtypealias) {
 			$html .= "<li><a data-marker-type='".$item->locationtype_id."' class='active markertoggles markers-".$item->locationtypealias."' href='#'>".$item->locationtype."</a></li>";

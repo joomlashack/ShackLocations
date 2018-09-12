@@ -1,30 +1,27 @@
 <?php
 /**
- * @version     1.0.0
- * @package     com_focalpoint
- * @copyright   Copyright (C) 2013. All rights reserved.
+ * @package     ShackLocations
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
- * @author      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
+ * @copyright      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
+ * @copyright      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
 // *********************************************************
-// 
+//
 // This file generates all the javascript required to show the map, markers and infoboxes.
 // In most custom templates this file should not require any changes and can be left as is.
-// 
+//
 // Backup this file before making any alterations.
-// 
+//
 // *********************************************************
 
 
-// No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
 // Load the Google API and initialise the map.
 
 $document = JFactory::getDocument();
-$document->addScript('http://maps.googleapis.com/maps/api/js?key='.$this->item->params->get('apikey').'&sensor=false'); 
-$document->addScript(JURI::base().'components/com_focalpoint/assets/js/infobox.js'); 
+$document->addScript('http://maps.googleapis.com/maps/api/js?key='.$this->item->params->get('apikey').'&sensor=false');
+$document->addScript(JURI::base().'components/com_focalpoint/assets/js/infobox.js');
 
 $script ='
     function initialize() {

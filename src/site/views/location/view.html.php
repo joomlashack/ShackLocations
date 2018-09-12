@@ -1,14 +1,11 @@
 <?php
 
 /**
- * @version     1.0.0
- * @package     com_focalpoint
- * @copyright   Copyright (C) 2013. All rights reserved.
+ * @package     ShackLocations
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
- * @author      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
+ * @copyright      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
+ * @copyright      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
-// No direct access
 defined('_JEXEC') or die;
 
 
@@ -26,7 +23,7 @@ class FocalpointViewLocation extends JViewLegacy {
     /**
      * Display the view
      */
-   
+
     public function display($tpl = null)
 	{
 		$app                = JFactory::getApplication();
@@ -43,21 +40,21 @@ class FocalpointViewLocation extends JViewLegacy {
         // Load FocalPoint Plugins. Trigger onBeforeMapPrepareRender
         JPluginHelper::importPlugin('focalpoint');
         JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
-        
+
         if($this->_layout == 'edit') {
             $authorised = $user->authorise('core.create', 'com_focalpoint');
             if ($authorised !== true) {
                 throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
             }
         }
-        
+
         // Load the item metadata. Decode from JSON so the metadata can be accessed as an object
         $metadata = new JRegistry;
         $metadata->loadString($this->item->metadata, 'JSON');
         $this->item->metadata = $metadata;
-        
+
         $this->_prepareDocument();
-        
+
         // Load the item params. Decode from JSON so the parameters can be accessed as an object
         $params = new JRegistry;
         $params->loadString($this->item->params, 'JSON');
@@ -211,7 +208,7 @@ class FocalpointViewLocation extends JViewLegacy {
 	 */
 	public function renderField($field, $hidelabel = false) {
         $datatype   = $field->datatype;
-        
+
         if ($field->data) {
             // We need to assign $field to a property of the view class for the data to be available in
             // the relevant subtemplate.

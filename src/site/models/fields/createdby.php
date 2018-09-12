@@ -1,11 +1,9 @@
 <?php
 /**
- * @version     1.0.0
- * @package     com_focalpoint
- * @copyright   Copyright (C) 2013. All rights reserved.
+ * @package     ShackLocations
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
- * @author      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
+ * @copyright      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
+ * @copyright      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
 
 defined('JPATH_BASE') or die;
@@ -35,8 +33,8 @@ class JFormFieldCreatedby extends JFormField
 	{
 		// Initialize variables.
 		$html = array();
-        
-        
+
+
 		//Load user
 		$user_id = $this->value;
 		if ($user_id) {
@@ -46,7 +44,7 @@ class JFormFieldCreatedby extends JFormField
 			$html[] = '<input type="hidden" name="'.$this->name.'" value="'.$user->id.'" />';
 		}
 		$html[] = "<div>".$user->name." (".$user->username.")</div>";
-        
+
 		return implode($html);
 	}
 }

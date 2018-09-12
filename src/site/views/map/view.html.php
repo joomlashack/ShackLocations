@@ -1,14 +1,11 @@
 <?php
 
 /**
- * @version     1.0.0
- * @package     com_focalpoint
- * @copyright   Copyright (C) 2013. All rights reserved.
+ * @package     ShackLocations
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
- * @author      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @author      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
+ * @copyright      2013-2017 - John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
+ * @copyright      2018 - Joomlashack <help@joomlashack.com> - https://www.joomlashack.com
  */
-// No direct access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
@@ -63,7 +60,7 @@ class FocalpointViewMap extends JViewLegacy
 
         JFactory::getApplication()->triggerEvent('onContentPrepare', array('com_focalpoint.map', &$this->item, &$this->params, $offset));
 
-        // We need to fire the onContentPrepare content plugin events for each tab. 
+        // We need to fire the onContentPrepare content plugin events for each tab.
         if (count($this->item->tabs)) {
             foreach ($this->item->tabs as $key => $tab) {
 
