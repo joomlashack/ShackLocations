@@ -26,7 +26,7 @@ defined('_JEXEC') or die;
 
 /*
  * Component Routes
- * 
+ *
  *  http://root/{menu_alias}  <- if menu exists
  *  http://root/{menu_alias}/{location_alias} <- shows location view at menu id
  *  http://root/component/focalpoint/map/id <-- map view
