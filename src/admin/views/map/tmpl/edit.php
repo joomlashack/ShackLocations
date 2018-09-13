@@ -71,7 +71,7 @@ $document->addScript('//maps.googleapis.com/maps/api/js?key='.$params->get('apik
                 <?php echo $this->getForm()->getControlGroup('centerpoint'); ?>
                 <!-- Button to trigger modal -->
                 <a id="openGeocoder" href="#myModal" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><span
-                        class="icon-out-2 small"></span> Open GeoCoder Tool</a>
+                        class="icon-out-2 small"></span> <?php echo JText::_('COM_FOCALPOINT_OPEN_GEOCODER'); ?></a>
                 <?php echo $this->getForm()->getControlGroup('latitude'); ?>
                 <?php echo $this->getForm()->getControlGroup('longitude'); ?>
                 <div class="control-group">
