@@ -36,7 +36,7 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
 ?>
 
 <script type="text/javascript">
-    Joomla.submitbutton = function (task) {
+    Joomla.submitbutton = function(task) {
         if (task == 'locationtype.cancel' || document.formvalidator.isValid(document.id('locationtype-form'))) {
             Joomla.submitform(task, document.getElementById('locationtype-form'));
         }
@@ -54,8 +54,10 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
     <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>"/>
     <input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>"/>
 
-    <?php echo JHtml::_('bootstrap.startTabSet', 'locationtype', array('active' => 'general')); ?>
-    <?php echo JHtml::_('bootstrap.addTab', 'locationtype', 'general', "General"); ?>
+    <?php
+    echo JHtml::_('bootstrap.startTabSet', 'locationtype', array('active' => 'general'));
+    echo JHtml::_('bootstrap.addTab', 'locationtype', 'general', JText::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
+    ?>
     <div class="form-horizontal">
         <div class="row-fluid">
             <div class="span12">
@@ -69,73 +71,77 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
     </div>
     <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-    <?php echo JHtml::_('bootstrap.addTab', 'locationtype', 'customfields', JText::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_LABEL')); ?>
+    <?php
+    echo JHtml::_(
+        'bootstrap.addTab',
+        'locationtype',
+        'customfields',
+        JText::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_LABEL')
+    );
+    ?>
     <div class="form-horizontal">
         <div class="row-fluid">
             <div class="span7 customfields">
                 <?php
                 $inserthtml = "";
                 if (isset($this->item->custom)) {
-                    //echo "<pre>";
-                    //print_r( $this->item->custom );
-                    //echo "</pre>";
                     foreach ($this->item->custom as $key1 => $array) {
                         $thiskey = explode(".", $key1);
                         switch ($thiskey[0]) {
                             case "textbox":
-                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Textbox</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Name</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][textbox.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
+                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_TEXTBOX') . '</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN') .'"></a>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME') . '</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][textbox.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
                                 $inserthtml .= '</fieldset>';
                                 break;
                             case "textarea":
-                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Textarea</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Name</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][textarea.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Load Editor</label></div><div class="controls"><select name="jform[custom][textarea.' . $thiskey[1] . '][loadeditor]" class="inputbox" size="1" >';
-                                $inserthtml .= '	<option value="1"' . ($array['loadeditor'] ? " selected=\"true\" " : "") . '>Yes</option>';
-                                $inserthtml .= '	<option value="0"' . ($array['loadeditor'] ? "" : " selected=\"true\" ") . '>No</option>';
+                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Textarea</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN') .'"></a>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME') . '</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][textarea.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR') . '</label></div><div class="controls"><select name="jform[custom][textarea.' . $thiskey[1] . '][loadeditor]" class="inputbox" size="1" >';
+                                $inserthtml .= '	<option value="1"' . ($array['loadeditor'] ? " selected=\"true\" " : "") . '>' . JText::_('JYES') . '</option>';
+                                $inserthtml .= '	<option value="0"' . ($array['loadeditor'] ? "" : " selected=\"true\" ") . '>' . JText::_('JNO') . '</option>';
                                 $inserthtml .= '</select></div></div>';
                                 $inserthtml .= '</fieldset>';
                                 break;
                             case "image":
-                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Image</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Name</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Default directory</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][directory]" value="' . $array['directory'] . '" /></div></div>';
+                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Image</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN') .'"></a>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME') . '</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DEFAULT_DIRECTORY') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' . $thiskey[1] . '][directory]" value="' . $array['directory'] . '" /></div></div>';
                                 $inserthtml .= '</fieldset>';
                                 break;
                             case "link":
-                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Link</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Name</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][link.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
+                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Link</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN') .'"></a>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME') . '</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][link.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
                                 $inserthtml .= '</fieldset>';
                                 break;
                             case "email":
-                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Email</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Name</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][email.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
+                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Email</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN') .'"></a>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME') . '</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][email.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
                                 $inserthtml .= '</fieldset>';
                                 break;
                             case "selectlist":
-                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Select List</legend></i><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Name</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Options (one to a line)</label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][options]" >' . $array['options'] . '</textarea></div></div>';
+                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Select List</legend></i><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN') .'"></a>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME') . '</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_OPTIONS') . '</label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][selectlist.' . $thiskey[1] . '][options]" >' . $array['options'] . '</textarea></div></div>';
                                 $inserthtml .= '</fieldset>';
                                 break;
                             case "multiselect":
-                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Multi Select</legend></i><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Name</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
-                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>Options (one to a line)</label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][options]" >' . $array['options'] . '</textarea></div></div>';
+                                $inserthtml .= '<fieldset><legend><i class="icon-menu"></i>&nbsp;Multi Select</legend></i><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN') .'"></a>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME') . '</label></div><div class="controls"><input readonly type="text" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][name]" value="' . $array['name'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][description]" value="' . $array['description'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL') . '</label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][label]" value="' . $array['label'] . '" /></div></div>';
+                                $inserthtml .= '<div class="control-group"><div class="control-label"><label>' . JText::_('COM_FOCALPOINT_CUSTOMFIELD_OPTIONS') . '</label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][multiselect.' . $thiskey[1] . '][options]" >' . $array['options'] . '</textarea></div></div>';
                                 $inserthtml .= '</fieldset>';
                                 break;
 
@@ -144,7 +150,7 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
                     }
                     $inserthtml .= "<script>jQuery.noConflict();";
                     $inserthtml .= "jQuery('.deletefield').click(function(){";
-                    $inserthtml .= "    if (confirm('Delete this field?')) {";
+                    $inserthtml .= "    if (confirm('" . JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE') . "')) {";
                     $inserthtml .= "       jQuery(this).tooltip('hide');";
                     $inserthtml .= "       jQuery(this).parent().remove();";
                     $inserthtml .= "    }";
@@ -161,15 +167,48 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
         </div>
         <h4><?php echo JText::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_DESCRIPTION'); ?></h4>
         <dl class="adminformlist">
-            <dd><a id="add-textbox" class="btn btn-small element-add" href="#"><i class="icon-plus"></i> Textbox</a>
+            <dd>
+                <a id="add-textbox" class="btn btn-small element-add" href="#">
+                    <i class="icon-plus"></i>
+                    <?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_TEXTBOX'); ?>
+                </a>
             </dd>
-            <dd><a id="add-textarea" class="btn btn-small element-add" href="#"><i class="icon-plus"></i> Textarea</a>
+            <dd>
+                <a id="add-textarea" class="btn btn-small element-add" href="#">
+                    <i class="icon-plus"></i>
+                    <?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_TEXTAREA'); ?>
+                </a>
             </dd>
-            <dd><a id="add-image" class="btn btn-small element-add" href="#"><i class="icon-plus"></i> Image</a></dd>
-            <dd><a id="add-link" class="btn btn-small element-add" href="#"><i class="icon-plus"></i> Link</a></dd>
-            <dd><a id="add-email" class="btn btn-small element-add" href="#"><i class="icon-plus"></i> Email</a></dd>
-            <dd><a id="add-selectlist" class="btn btn-small element-add" href="#"><i class="icon-plus"></i> Select List</a></dd>
-            <dd><a id="add-multiselect" class="btn btn-small element-add" href="#"><i class="icon-plus"></i> Multi Select</a></dd>
+            <dd>
+                <a id="add-image" class="btn btn-small element-add" href="#">
+                    <i class="icon-plus"></i>
+                    <?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_IMAGE'); ?>
+                </a>
+            </dd>
+            <dd>
+                <a id="add-link" class="btn btn-small element-add" href="#">
+                    <i class="icon-plus"></i>
+                    <?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_LINK'); ?>
+                </a>
+            </dd>
+            <dd>
+                <a id="add-email" class="btn btn-small element-add" href="#">
+                    <i class="icon-plus"></i>
+                    <?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_EMAIL'); ?>
+                </a>
+            </dd>
+            <dd>
+                <a id="add-selectlist" class="btn btn-small element-add" href="#">
+                    <i class="icon-plus"></i>
+                    <?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_SELECT_LIST'); ?>
+                </a>
+            </dd>
+            <dd>
+                <a id="add-multiselect" class="btn btn-small element-add" href="#">
+                    <i class="icon-plus"></i>
+                    <?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_MULTI_SELECT'); ?>
+                </a>
+            </dd>
         </dl>
     </div>
     <?php echo JHtml::_('bootstrap.endTab'); ?>
@@ -193,18 +232,18 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
     }
 
     jQuery.noConflict();
-    jQuery(document).ready(function () {
+    jQuery(document).ready(function() {
 
-        jQuery('#add-textbox').click(function () {
+        jQuery('#add-textbox').click(function() {
             var id = makeid();
-            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;Textbox</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required">Name</label></div><div class="controls"><input id="field' + id + '" type="text" class="field required" name="jform[custom][textbox.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' + id + '][description]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' + id + '][label]" value="" /></div></div>';
+            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;<?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_TEXTBOX'); ?></legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br /><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN'); ?>"></a>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'); ?></label></div><div class="controls"><input id="field' + id + '" type="text" class="field required" name="jform[custom][textbox.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' + id + '][description]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][textbox.' + id + '][label]" value="" /></div></div>';
             inserthtml = inserthtml + '</fieldset>';
             jQuery(inserthtml).fadeIn('slow').appendTo('.customfields');
             jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-            jQuery('.deletefield').click(function () {
+            jQuery('.deletefield').click(function() {
                 if (confirm('Delete this field?')) {
                     jQuery(this).tooltip('hide');
                     jQuery(this).parent().remove();
@@ -213,20 +252,20 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
             return false;
         });
 
-        jQuery('#add-textarea').click(function () {
+        jQuery('#add-textarea').click(function() {
             var id = makeid();
-            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;Textarea</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required">Name</label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][textarea.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' + id + '][description]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' + id + '][label]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Load Editor</label></div><div class="controls"><select name="jform[custom][textarea.' + id + '][loadeditor]" class="inputbox" size="1" ></div></div>';
+            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;<?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_TEXTAREA'); ?></legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br /><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN'); ?>"></a>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'); ?></label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][textarea.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' + id + '][description]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][textarea.' + id + '][label]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'); ?></label></div><div class="controls"><select name="jform[custom][textarea.' + id + '][loadeditor]" class="inputbox" size="1" ></div></div>';
             inserthtml = inserthtml + '	<option value="1" selected="selected">Yes</option>';
             inserthtml = inserthtml + '	<option value="0">No</option>';
             inserthtml = inserthtml + '</select></div></div>';
             inserthtml = inserthtml + '</fieldset>';
             jQuery(inserthtml).fadeIn('slow').appendTo('.customfields');
             jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-            jQuery('.deletefield').click(function () {
+            jQuery('.deletefield').click(function() {
                 if (confirm('Delete this field?')) {
                     jQuery(this).tooltip('hide');
                     jQuery(this).parent().remove();
@@ -235,17 +274,17 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
             return false;
         });
 
-        jQuery('#add-image').click(function () {
+        jQuery('#add-image').click(function() {
             var id = makeid();
-            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;Image</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required">Name</label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][image.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' + id + '][description]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' + id + '][label]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Default directory</label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' + id + '][directory]" value="" /></div></div>';
+            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;<?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_IMAGE'); ?></legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br /><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN'); ?>"></a>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'); ?></label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][image.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' + id + '][description]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' + id + '][label]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DEFAULT_DIRECTORY'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][image.' + id + '][directory]" value="" /></div></div>';
             inserthtml = inserthtml + '</fieldset>';
             jQuery(inserthtml).fadeIn('slow').appendTo('.customfields');
             jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-            jQuery('.deletefield').click(function () {
+            jQuery('.deletefield').click(function() {
                 if (confirm('Delete this field?')) {
                     jQuery(this).tooltip('hide');
                     jQuery(this).parent().remove();
@@ -254,16 +293,16 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
             return false;
         });
 
-        jQuery('#add-link').click(function () {
+        jQuery('#add-link').click(function() {
             var id = makeid();
-            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;Link</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required">Name</label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][link.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' + id + '][description]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' + id + '][label]" value="" /></div></div>';
+            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;<?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_LINK'); ?></legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br /><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN'); ?>"></a>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'); ?></label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][link.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' + id + '][description]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][link.' + id + '][label]" value="" /></div></div>';
             inserthtml = inserthtml + '</fieldset>';
             jQuery(inserthtml).fadeIn('slow').appendTo('.customfields');
             jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-            jQuery('.deletefield').click(function () {
+            jQuery('.deletefield').click(function() {
                 if (confirm('Delete this field?')) {
                     jQuery(this).tooltip('hide');
                     jQuery(this).parent().remove();
@@ -272,16 +311,16 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
             return false;
         });
 
-        jQuery('#add-email').click(function () {
+        jQuery('#add-email').click(function() {
             var id = makeid();
-            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;Email</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required">Name</label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][email.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' + id + '][description]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' + id + '][label]" value="" /></div></div>';
+            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;<?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_EMAIL'); ?></legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br /><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN'); ?>"></a>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'); ?></label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][email.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' + id + '][description]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][email.' + id + '][label]" value="" /></div></div>';
             inserthtml = inserthtml + '</fieldset>';
             jQuery(inserthtml).fadeIn('slow').appendTo('.customfields');
             jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-            jQuery('.deletefield').click(function () {
+            jQuery('.deletefield').click(function() {
                 if (confirm('Delete this field?')) {
                     jQuery(this).tooltip('hide');
                     jQuery(this).parent().remove();
@@ -290,17 +329,17 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
             return false;
         });
 
-        jQuery('#add-selectlist').click(function () {
+        jQuery('#add-selectlist').click(function() {
             var id = makeid();
-            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;Select List</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required">Name</label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][selectlist.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' + id + '][description]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' + id + '][label]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Options (one to a line)</label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][selectlist.' + id + '][options]" value="" /></div></div>';
+            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;<?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_SELECT_LIST'); ?></legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br /><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN'); ?>"></a>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'); ?></label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][selectlist.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' + id + '][description]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][selectlist.' + id + '][label]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_OPTIONS'); ?></label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][selectlist.' + id + '][options]" value="" /></div></div>';
             inserthtml = inserthtml + '</fieldset>';
             jQuery(inserthtml).fadeIn('slow').appendTo('.customfields');
             jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-            jQuery('.deletefield').click(function () {
+            jQuery('.deletefield').click(function() {
                 if (confirm('Delete this field?')) {
                     jQuery(this).tooltip('hide');
                     jQuery(this).parent().remove();
@@ -309,17 +348,17 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
             return false;
         });
 
-        jQuery('#add-multiselect').click(function () {
+        jQuery('#add-multiselect').click(function() {
             var id = makeid();
-            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;Multi Select</legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required">Name</label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][multiselect.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Tool tip</label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' + id + '][description]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Label</label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' + id + '][label]" value="" /></div></div>';
-            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label>Options (one to a line)</label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][multiselect.' + id + '][options]" value="" /></div></div>';
+            var inserthtml = '<fieldset><legend><i class="icon-menu"></i>&nbsp;<?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_MULTI_SELECT'); ?></legend><a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br /><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_DELETE_WARN'); ?>"></a>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label for="field' + id + '" class="required"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'); ?></label></div><div class="controls"><input id="field' + id + '" type="text" class="field" name="jform[custom][multiselect.' + id + '][name]" value="" required="required" aria-required="true" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' + id + '][description]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_LABEL'); ?></label></div><div class="controls"><input type="text" class="field" name="jform[custom][multiselect.' + id + '][label]" value="" /></div></div>';
+            inserthtml = inserthtml + '<div class="control-group"><div class="control-label"><label><?php echo JText::_('COM_FOCALPOINT_CUSTOMFIELD_OPTIONS'); ?></label></div><div class="controls"><textarea style="width:300px;" rows="20" class="field" name="jform[custom][multiselect.' + id + '][options]" value="" /></div></div>';
             inserthtml = inserthtml + '</fieldset>';
             jQuery(inserthtml).fadeIn('slow').appendTo('.customfields');
             jQuery('.hasTooltip').tooltip({"html": true, "container": "body"});
-            jQuery('.deletefield').click(function () {
+            jQuery('.deletefield').click(function() {
                 if (confirm('Delete this field?')) {
                     jQuery(this).tooltip('hide');
                     jQuery(this).parent().remove();
@@ -328,6 +367,4 @@ $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
             return false;
         });
     })
-
-
 </script>
