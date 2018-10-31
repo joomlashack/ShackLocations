@@ -87,7 +87,7 @@ if ( $this->item->params->get('loadBootstrap') ) {
              * Custom fields.
              */
             ?>
-			<?php if (count($this->item->customfields)) { ?>
+			<?php if ($this->item->customfields) { ?>
 				<div class="fp_customfields fp_content">
 					<?php foreach ($this->item->customfields as $key=>$customfield) { ?>
 						<?php $this->renderField($customfield); ?>

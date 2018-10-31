@@ -97,7 +97,7 @@ $pageclass_sfx = $this->item->params->get('pageclass_sfx');
             </div>
         <?php } ?>
         <div id="fp_main" class="clearfix">
-            <?php if (count($this->item->tabs) || $showlisttab) { ?>
+            <?php if ($this->item->tabs || $showlisttab) { ?>
             <div id="tab-container" class="tab-container">
                 <ul class='nav nav-tabs'>
                     <?php if ($showlisttab && $listtabfirst) { ?>
@@ -107,7 +107,7 @@ $pageclass_sfx = $this->item->params->get('pageclass_sfx');
                     <?php if ($showlisttab && !$listtabfirst) { ?>
                         <li class=''><a id="locationlisttab" href="#"><?php echo JText::_('COM_FOCALPOINT_LIST')?></a></li>
                     <?php } ?>
-                    <?php if (count($this->item->tabs)) { ?>
+                    <?php if ($this->item->tabs) { ?>
                         <?php foreach ($this->item->tabs as $key => $tab) { ?>
                             <li><a href="#tabs1-<?php echo $key; ?>" data-toggle="tab"><?php echo $tab->name; ?></a>
                             </li>
@@ -117,7 +117,7 @@ $pageclass_sfx = $this->item->params->get('pageclass_sfx');
                 <?php } ?>
 
                 <div class="tab-content">
-                    <?php if (count($this->item->tabs) || $showlisttab) { ?>
+                    <?php if ($this->item->tabs || $showlisttab) { ?>
                     <div id="tabs1-map" class="tab-pane active">
                         <?php } ?>
                         <div id="fp_googleMapContainer" class="<?php echo $sidebarClass; ?>"
@@ -141,9 +141,9 @@ $pageclass_sfx = $this->item->params->get('pageclass_sfx');
                                 </div>
                             <?php } ?>
                         </div>
-                        <?php if (count($this->item->tabs) || $showlisttab) { ?>
+                        <?php if ($this->item->tabs || $showlisttab) { ?>
                     </div>
-                <?php if (count($this->item->tabs)) { ?>
+                <?php if ($this->item->tabs) { ?>
                     <?php foreach ($this->item->tabs as $key => $tab) { ?>
                         <div id="tabs1-<?php echo $key; ?>" class="fp-custom-tab tab-pane">
                             <?php echo $tab->content; ?>
