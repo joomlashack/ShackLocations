@@ -22,76 +22,102 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\SiteApplication;
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die;
 
-
-/**
- * View to edit
- */
-class FocalpointViewLocation extends JViewLegacy {
-
+class FocalpointViewLocation extends JViewLegacy
+{
+    /**
+     * @var JObject
+     */
     protected $state;
-    protected $item;
-    protected $form;
-    protected $params;
-	protected $outputfield;
 
     /**
-     * Display the view
+     * @var JObject
      */
+    protected $item;
 
+    /**
+     * @var Registry
+     */
+    protected $params;
+
+    /**
+     * @var object
+     */
+    protected $outputfield;
+
+    /**
+     * @param string $tpl
+     *
+     * @return void
+     * @throws Exception
+     */
     public function display($tpl = null)
-	{
-		$app                = JFactory::getApplication();
-        $user               = JFactory::getUser();
-        $this->state        = $this->get('State');
-        $this->item         = $this->get('Data');
-        $this->params       = $app->getParams('com_focalpoint');
+    {
+        /** @var SiteApplication $app */
+        $app = JFactory::getApplication();
+
+        /** @var FocalpointModelLocation $model */
+        $model = $this->getModel();
+
+        $user = JFactory::getUser();
+
+        $this->state  = $model->getState();
+        $this->item   = $model->getData();
+        $this->params = $app->getParams('com_focalpoint');
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if ($errors = $model->getErrors()) {
             throw new Exception(implode("\n", $errors));
         }
 
-        // Load FocalPoint Plugins. Trigger onBeforeMapPrepareRender
-        JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
-
-        if($this->_layout == 'edit') {
+        if ($this->_layout == 'edit') {
             $authorised = $user->authorise('core.create', 'com_focalpoint');
             if ($authorised !== true) {
                 throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
             }
         }
 
-        // Load the item metadata. Decode from JSON so the metadata can be accessed as an object
-        $metadata = new JRegistry;
-        $metadata->loadString($this->item->metadata, 'JSON');
-        $this->item->metadata = $metadata;
+        JPluginHelper::importPlugin('focalpoint');
+        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
 
-        $this->_prepareDocument();
+        $this->item->metadata = new Registry($this->item->metadata);
 
-        // Load the item params. Decode from JSON so the parameters can be accessed as an object
-        $params = new JRegistry;
-        $params->loadString($this->item->params, 'JSON');
-        $this->item->params = $params;
+        $params             = new Registry($this->item->params);
+        $this->item->params = clone $this->params;
+        $this->item->params->merge($params);
 
-        // Merge global params with item params
-        $params = clone $this->params;
-        $params->merge($this->item->params);
-        $this->item->params = $params;
+        $this->prepareDocument();
 
-        // Call system plugin onContentPrepare. This only works on fields called text.
         JPluginHelper::importPlugin('content');
         $this->item->text = $this->item->description;
-        JFactory::getApplication()->triggerEvent('onContentPrepare', array('com_focalpoint.location', &$this->item, &$this->params, $limitstart = 0));
+        JFactory::getApplication()->triggerEvent(
+            'onContentPrepare',
+            array(
+                'com_focalpoint.location',
+                &$this->item,
+                &$this->params,
+                $limitstart = 0
+            )
+        );
         $this->item->description = $this->item->text;
 
         $this->item->text = $this->item->fulldescription;
-        JFactory::getApplication()->triggerEvent('onContentPrepare', array('com_focalpoint.location', &$this->item, &$this->params, $limitstart = 0));
+        JFactory::getApplication()->triggerEvent(
+            'onContentPrepare',
+            array(
+                'com_focalpoint.location',
+                &$this->item,
+                &$this->params,
+                $limitstart = 0
+            )
+        );
         $this->item->fulldescription = $this->item->text;
 
-        $this->item->description = $this->replace_custom_field_tags($this->item->description);
+        $this->item->description     = $this->replace_custom_field_tags($this->item->description);
         $this->item->fulldescription = $this->replace_custom_field_tags($this->item->fulldescription);
 
         parent::display($tpl);
@@ -100,138 +126,143 @@ class FocalpointViewLocation extends JViewLegacy {
     /**
      * Replaces all custom field tags in the text.
      *
+     * @param string $text
+     *
+     * @return string
+     * @throws Exception
      */
-    public function replace_custom_field_tags($text){
-        $regex		= '/{(.*?)}/i';
+    public function replace_custom_field_tags($text)
+    {
+        $regex = '/{(.*?)}/i';
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-        if (!empty($matches)){
 
-            // Cycle through each matching tag
-            foreach ($matches as $match){
-
-                // Output the relevant custom field if the tag matches the name.
-                foreach($this->item->customfields as $name=>$customfield) {
+        if (!empty($matches)) {
+            foreach ($matches as $match) {
+                foreach ($this->item->customfields as $name => $customfield) {
                     if ($name == $match[1]) {
+                        $this->outputfield = (object)array(
+                            'hidelabel' => true,
+                            'data'      => $customfield->data
+                        );
 
-                        // Set up the custom field object for the sub template
-                        $this->outputfield = new stdClass();
-                        $this->outputfield->hidelabel = true;
-                        $this->outputfield->data = $customfield->data;
-
-                        // Buffer the output and load the default sub template.
                         ob_start();
-                        echo $this->loadTemplate('customfield_'.$customfield->datatype);
+                        echo $this->loadTemplate('customfield_' . $customfield->datatype);
                         $output = ob_get_contents();
                         ob_end_clean();
 
-                        // Do the replace
-                        $text = str_replace($match[0],$output, $text);
+                        $text = str_replace($match[0], $output, $text);
                     }
                 }
             }
 
         }
+
         return $text;
     }
 
     /**
-	 * Prepares the document by setting up page titles and metadata.
-	 */
-	protected function _prepareDocument()
-	{
-		$app	= JFactory::getApplication();
-		$menus	= $app->getMenu();
-		$title	= null;
+     * Prepares the document by setting up page titles and metadata.
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function prepareDocument()
+    {
+        $app   = JFactory::getApplication();
+        $menus = $app->getMenu();
+        $menu  = $menus->getActive();
 
-		//Grab the active menu item. May return false.
-		$menu = $menus->getActive();
+        // Set page title
+        if ($menu) {
+            if ($menu->params->get('show_page_heading') && $menu->params->get('page_heading')) {
+                $this->item->page_title = $menu->params->get('page_heading');
+            }
 
-		if ($menu) {
-			// Use the Page Heading if defined in the menu
-			if ($menu->params->get('show_page_heading') && $menu->params->get('page_heading')) {
-				$this->item->page_title = $menu->params->get('page_heading');
-			}
+            if ($menu->params->get('page_title')) {
+                $title = $menu->params->get('page_title');
 
-			// Set the page title if defined in the menu
-			if ($menu->params->get('page_title')) {
-				$title = $menu->params->get('page_title');
-			} else {
-				$title = $this->item->title;
-			}
-		} else {
-			// No menu active menu item so set the page title as the item title
-			$title = $this->item->title;
-		}
+            } else {
+                $title = $this->item->title;
+            }
 
-		// Append or prepend the sitename to the browser title as defined in Global Configuratio
-		if (empty($title)) {
-			$title = $app->get('sitename');
-		} elseif ($app->get('sitename_pagetitles', 0) == 1) {
-			$title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
-		} elseif ($app->get('sitename_pagetitles', 0) == 2) {
-			$title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
-		}
+        } else {
+            $title = $this->item->title;
+        }
 
-		// Set the page title
-		$this->document->setTitle($title);
+        if (empty($title)) {
+            $title = $app->get('sitename');
 
-		// Set the page meta description. Article Meta over rides menu meta.
-		$articlemeta = ($this->item->metadata->get('metadesc'));
-		if($articlemeta){
-			$this->document->setDescription($this->item->metadata->get('metadesc'));
-		} elseif ($menu) {
-			if ($menu->params->get('menu-meta_description')) {
-				$this->document->setDescription($this->params->get('menu-meta_description'));
-			}
-		}
+        } elseif ($app->get('sitename_pagetitles', 0) == 1) {
+            $title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 
-		// Set the page keywords
-		$articlekeywords = ($this->item->metadata->get('metakey'));
-		if($articlekeywords){
-			$this->document->setMetadata('keywords', $this->item->metadata->get('metakey'));
-		} elseif ($menu) {
-			if ($menu->params->get('menu-meta_keywords')) {
-				$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-			}
-		}
+        } elseif ($app->get('sitename_pagetitles', 0) == 2) {
+            $title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
+        }
+        $this->document->setTitle($title);
 
-		// Set the robots declaration
-		$articlerobots = ($this->item->metadata->get('robots'));
-		if($articlerobots){
-			$this->document->setMetadata('robots', $this->item->metadata->get('robots'));
-		} elseif ($this->params->get('robots')) {
-			$this->document->setMetadata('robots', $this->params->get('robots'));
-		}
+        // Set the page meta description. Article Meta over rides menu meta.
+        $articlemeta = ($this->item->metadata->get('metadesc'));
+        if ($articlemeta) {
+            $this->document->setDescription($this->item->metadata->get('metadesc'));
 
-		// Set the robots declaration
-		$articlerights = ($this->item->metadata->get('rights'));
-		if($articlerights){
-			$this->document->setMetadata('rights', $this->item->metadata->get('rights'));
-		}
+        } elseif ($menu) {
+            if ($menu->params->get('menu-meta_description')) {
+                $this->document->setDescription($this->params->get('menu-meta_description'));
+            }
+        }
 
-		// Set the author declaration
-		$articleauthor = ($this->item->metadata->get('author'));
-		if($articleauthor){
-			$this->document->setMetadata('author', $this->item->metadata->get('author'));
-		}
-	}
+        // Set the page keywords
+        $articlekeywords = ($this->item->metadata->get('metakey'));
+        if ($articlekeywords) {
+            $this->document->setMetadata('keywords', $this->item->metadata->get('metakey'));
 
-	/**
-	 * Renders a custom field using the relevant template.
-	 *
-	 * $field  single customfield object.
-	 *
-	 */
-	public function renderField($field, $hidelabel = false) {
-        $datatype   = $field->datatype;
+        } elseif ($menu) {
+            if ($menu->params->get('menu-meta_keywords')) {
+                $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+            }
+        }
+
+        // Set the robots declarations
+        $articlerobots = ($this->item->metadata->get('robots'));
+        if ($articlerobots) {
+            $this->document->setMetadata('robots', $this->item->metadata->get('robots'));
+
+        } elseif ($this->params->get('robots')) {
+            $this->document->setMetadata('robots', $this->params->get('robots'));
+        }
+
+        // Set rights declaration
+        $articlerights = ($this->item->metadata->get('rights'));
+        if ($articlerights) {
+            $this->document->setMetadata('rights', $this->item->metadata->get('rights'));
+        }
+
+        // Set the author declaration
+        $articleauthor = ($this->item->metadata->get('author'));
+        if ($articleauthor) {
+            $this->document->setMetadata('author', $this->item->metadata->get('author'));
+        }
+    }
+
+    /**
+     * Renders a custom field using the relevant template.
+     *
+     * @param object $field
+     * @param bool   $hidelabel
+     *
+     * @return void
+     * @throws Exception
+     *
+     */
+    public function renderField($field, $hidelabel = false)
+    {
+        $datatype = $field->datatype;
 
         if ($field->data) {
-            // We need to assign $field to a property of the view class for the data to be available in
-            // the relevant subtemplate.
-            $this->outputfield = $field;
-			$this->outputfield->hidelabel = $hidelabel;
+            $this->outputfield            = $field;
+            $this->outputfield->hidelabel = $hidelabel;
 
-            switch ($datatype){
+            switch ($datatype) {
                 case "textbox":
                     echo $this->loadTemplate('customfield_textbox');
                     break;
@@ -254,21 +285,24 @@ class FocalpointViewLocation extends JViewLegacy {
                     echo $this->loadTemplate('customfield_multiselect');
                     break;
             }
-            unset($this->outputfield);
-			return;
+
+            $this->outputfield = null;
         }
     }
 
-	/**
-	 * Renders a single field using the relevant template.
-	 * $my_field is the name of the custom field.
-	 */
-	public function renderCustomField($my_field, $hidelabel = false)
-	{
-		if (isset($this->item->customfields->{$my_field})){
-			return $this->renderField($this->item->customfields->{$my_field}, $hidelabel);
-		} else {
-			return false;
-		}
-	}
+    /**
+     * Renders a single field using the relevant template.
+     *
+     * @param string $my_field
+     * @param bool   $hidelabel
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function renderCustomField($my_field, $hidelabel = false)
+    {
+        if (isset($this->item->customfields->{$my_field})) {
+            $this->renderField($this->item->customfields->{$my_field}, $hidelabel);
+        }
+    }
 }
