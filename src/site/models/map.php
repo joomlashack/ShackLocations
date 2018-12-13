@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
@@ -78,12 +79,19 @@ class FocalpointModelMap extends JModelForm
         return $this->item;
     }
 
+    /**
+     * @param string $type
+     * @param string $prefix
+     * @param array  $config
+     *
+     * @return Table
+     */
     public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = array())
     {
-        $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+        $this->addTablePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
+
         return JTable::getInstance($type, $prefix, $config);
     }
-
 
     /**
      * Method to check in an item.
