@@ -26,15 +26,12 @@ use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modelform');
-jimport('joomla.event.dispatcher');
-
-/**
- * Focalpoint model.
- */
 class FocalpointModelMap extends JModelForm
 {
-    var $_item = null;
+    /**
+     * @var object
+     */
+    protected  $item = null;
 
 	/**
 	 * Method to auto-populate the model state.
@@ -77,9 +74,9 @@ class FocalpointModelMap extends JModelForm
 	public function &getData($id = null)
 	{
 
-        if ($this->_item === null)
+        if ($this->item === null)
 		{
-			$this->_item = false;
+			$this->item = false;
 
 			if (empty($id)) {
                 //Get the id from the URL. This maintains the same Itemid (menu item) when clicking from map to map
@@ -102,22 +99,22 @@ class FocalpointModelMap extends JModelForm
 				if ($published = $this->getState('filter.published'))
 				{
 					if ($table->state != $published) {
-						return $this->_item;
+						return $this->item;
 					}
 				}
 
 				// Convert the JTable to a clean JObject.
 				$properties = $table->getProperties(1);
-				$this->_item = ArrayHelper::toObject($properties, 'JObject');
+				$this->item = ArrayHelper::toObject($properties, 'JObject');
 			} elseif ($error = $table->getError()) {
 				$this->setError($error);
 			}
 		}
 
         //Format the tabs data for use in the template as an object.
-        $this->_item->tabs = self::formatTabsData($this->_item->tabsdata);
+        $this->item->tabs = self::formatTabsData($this->item->tabsdata);
 
-		return $this->_item;
+		return $this->item;
 	}
 
     function formatTabsData($data) {
