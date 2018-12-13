@@ -94,82 +94,17 @@ class FocalpointModelMap extends JModelForm
     }
 
     /**
-     * Method to check in an item.
+     * We're using the form model but don't have any forms to load on the front end
      *
-     * @param    integer        The id of the row to check out.
+     * @param array $data
+     * @param bool  $loadData
      *
-     * @return    boolean        True on success, false on failure.
-     * @since    1.6
-     */
-    public function checkin($id = null)
-    {
-        // Get the id.
-        $id = (!empty($id)) ? $id : (int)$this->getState('map.id');
-
-        if ($id) {
-
-            // Initialise the table
-            $table = $this->getTable();
-
-            // Attempt to check the row in.
-            if (method_exists($table, 'checkin')) {
-                if (!$table->checkin($id)) {
-                    $this->setError($table->getError());
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Method to check out an item for editing.
-     *
-     * @param    integer        The id of the row to check out.
-     *
-     * @return    boolean        True on success, false on failure.
-     * @since    1.6
-     */
-    public function checkout($id = null)
-    {
-        // Get the user id.
-        $id = (!empty($id)) ? $id : (int)$this->getState('map.id');
-        if ($id) {
-
-            // Initialise the table
-            $table = $this->getTable();
-
-            // Get the current user object.
-            $user = JFactory::getUser();
-
-            // Attempt to check the row out.
-            if (method_exists($table, 'checkout')) {
-                if (!$table->checkout($user->get('id'), $id)) {
-                    $this->setError($table->getError());
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Method to get the profile form.
-     *
-     * The base form is loaded from XML
-     *
-     * @param    array   $data     An optional array of data for the form to interogate.
-     * @param    boolean $loadData True if the form is to load its own data (default case), false if not.
-     *
-     * @return    JForm    A JForm object on success, false on failure
-     * @since    1.6
+     * @return null
      */
     public function getForm($data = array(), $loadData = true)
     {
-        return parent::getForm($data = array(), $loadData = true);
+        return null;
     }
-
 
     /**
      * Method to get the sidebar data.
