@@ -23,7 +23,6 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
-use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 
@@ -50,60 +49,33 @@ class FocalpointModelMap extends JModelForm
     }
 
     /**
-     * Method to get an ojbect.
+     * @param int $id
      *
-     * @param    integer    The id of the object to get.
-     *
-     * @return    mixed    Object on success, false on failure.
+     * @return object
+     * @throws Exception
      */
-    public function &getData($id = null)
+    public function getData($id = null)
     {
-
         if ($this->item === null) {
             $this->item = false;
 
-            if (empty($id)) {
-                //Get the id from the URL. This maintains the same Itemid (menu item) when clicking from map to map
-                $id = JFactory::getApplication()->input->getInt('id');
-
-                if (empty($id)) {
-                    //Get the map id from the menu.
-                    $id = $this->getState('map.id');
-                }
-
-            }
-
-            // Get a level row instance.
+            $id    = $id ?: $this->getState('map.id');
             $table = $this->getTable();
-
-            // Attempt to load the row.
             if ($table->load($id)) {
                 // Check published state.
-                if ($published = $this->getState('filter.published')) {
-                    if ($table->state != $published) {
-                        return $this->item;
-                    }
+                $published = $this->getState('filter.published');
+                if (!$published || ($published == $table->state)) {
+                    $this->item = new JObject($table->getProperties());
+
+                    $this->item->tabs = json_decode($this->item->tabsdata);
                 }
 
-                // Convert the JTable to a clean JObject.
-                $properties = $table->getProperties(1);
-                $this->item = ArrayHelper::toObject($properties, 'JObject');
             } elseif ($error = $table->getError()) {
                 $this->setError($error);
             }
         }
 
-        //Format the tabs data for use in the template as an object.
-        $this->item->tabs = self::formatTabsData($this->item->tabsdata);
-
         return $this->item;
-    }
-
-    function formatTabsData($data)
-    {
-        // Decode the data from JSON
-        $data = json_decode($data);
-        return $data;
     }
 
     public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = array())
