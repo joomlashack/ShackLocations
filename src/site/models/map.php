@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -34,35 +35,19 @@ class FocalpointModelMap extends JModelForm
     protected $item = null;
 
     /**
-     * Method to auto-populate the model state.
-     *
-     * Note. Calling getState in this method will result in recursion.
-     *
-     * @since    1.6
+     * @throws Exception
      */
     protected function populateState()
     {
+        /** @var SiteApplication $app */
         $app = JFactory::getApplication('com_focalpoint');
 
-        // Load state from the request userState on edit or from the passed variable on default
-        if (JFactory::getApplication()->input->getCmd('layout') == 'edit') {
-            $id = JFactory::getApplication()->getUserState('com_focalpoint.edit.map.id');
-        } else {
-            $id = JFactory::getApplication()->input->getInt('id');
-            JFactory::getApplication()->setUserState('com_focalpoint.edit.map.id', $id);
-        }
-        $this->setState('map.id', $id);
-
-        // Load the parameters.
-        $params       = $app->getParams();
-        $params_array = $params->toArray();
-        if (isset($params_array['item_id'])) {
-            $this->setState('map.id', $params_array['item_id']);
-        }
+        $params = $app->getParams();
         $this->setState('params', $params);
 
+        $id = $app->getUserStateFromRequest('com_focalpoint.map.id', 'id', $params->get('item_id'), 'int');
+        $this->setState('map.id', $id);
     }
-
 
     /**
      * Method to get an ojbect.
