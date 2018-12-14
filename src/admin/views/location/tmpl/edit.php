@@ -38,14 +38,6 @@ $params = JComponentHelper::getParams('com_focalpoint');
 $document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
 $document->addScript('//maps.googleapis.com/maps/api/js?key='.$params->get('apikey'));
 
-//Check Multicategorisation plugin?
-//$multicategorisation = false;
-//if ($plugin = JPluginHelper::getPlugin('focalpoint','multicategorisation')){
-//    $multicategorisation = true;
-//}
-
-$multicategorisation = true;
-
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function (task) {
@@ -96,23 +88,16 @@ $multicategorisation = true;
             <div class="form-vertical">
                 <?php echo $this->getForm()->getControlGroup('map_id'); ?>
                 <?php echo $this->getForm()->getControlGroup('type'); ?>
-                <?php if (!$multicategorisation) { ?>
-                <div style="display:none;">
-                    <?php } ?>
-                    <?php echo $this->getForm()->getControlGroup('othertypes'); ?>
-                    <?php if (!$multicategorisation) { ?>
-                </div>
-                <?php } ?>
+                <?php echo $this->getForm()->getControlGroup('othertypes'); ?>
                 <?php echo $this->getForm()->getControlGroup('address'); ?>
                 <?php echo $this->getForm()->getControlGroup('phone'); ?>
-                <?php //echo $this->getForm()->getControlGroup('geoaddress'); ?>
+
                 <!-- Button to trigger modal -->
                 <a id="openGeocoder" href="#myModal" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><span
                         class="icon-out-2 small"></span> <?php echo JText::_('COM_FOCALPOINT_OPEN_GEOCODER'); ?></a>
                 <?php echo $this->getForm()->getControlGroup('latitude'); ?>
                 <?php echo $this->getForm()->getControlGroup('longitude'); ?>
                 <?php echo $this->getForm()->getControlGroup('marker'); ?>
-                <?php //echo $this->getForm()->getControlGroup('keylocation'); ?>
                 <?php echo $this->form->getInput('created_by'); ?>
             </div>
         </div>
