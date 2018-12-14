@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Table\Table;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
@@ -96,187 +97,220 @@ class FocalpointModelMap extends JModelForm
     /**
      * We're using the form model but don't have any forms to load on the front end
      *
-     * @param array $data
+     * @param array $customFieldsData
      * @param bool  $loadData
      *
      * @return null
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($customFieldsData = array(), $loadData = true)
     {
         return null;
     }
 
     /**
-     * Method to get the sidebar data.
+     * @param int $id
      *
+     * @return object[]
+     * @throws Exception
      */
     public function getMarkerData($id = null)
     {
-
-        // Load the component parameters.
+        /** @var SiteApplication $app */
         $app    = JFactory::getApplication();
         $params = $app->getParams('com_focalpoint');
 
-        // Grab all our required location info from the database as an object
-        $db = JFactory::getDbo();
+        $db = $this->getDbo();
 
-        //Check Multicategorisation plugin?
-        //$multicategorisation = false;
-        //if ($plugin = JPluginHelper::getPlugin('focalpoint','multicategorisation')){
-        //    $params->set("multicategorisation",1);
-        //    $multicategorisation = true;
-        //}
-
-        $multicategorisation = true;
-        $params->set("multicategorisation", 1);
-
-        if ($multicategorisation) {
-            $query = "
-			SELECT c.title AS legend, c.subtitle AS legendsubtitle, c.alias AS legendalias,
-			b.title AS locationtype, b.id as locationtype_id, b.alias AS locationtypealias, e.marker AS marker_type,
-			a.id, a.state, a.title, a.alias, a.map_id, a.type, a.address, a.phone, a.description,
-			a.customfieldsdata,
-			a.latitude, a.longitude, a.marker AS marker_location, a.linktype, a.altlink, a.maplinkid, a.menulink, a.params,
-			CONCAT('index.php?option=com_focalpoint&view=location&id=',a.id) AS link
-			FROM #__focalpoint_locations AS a
-			INNER JOIN #__focalpoint_locationtypes AS b
-			INNER JOIN #__focalpoint_locationtypes AS e
-			INNER JOIN #__focalpoint_legends AS c
-			INNER JOIN #__focalpoint_location_type_xref AS d
-			ON d.location_id = a.id
-			AND d.locationtype_id = b.id
-			AND e.id = a.type
-			AND b.legend = c.id
-			WHERE a.map_id = " . $id . " AND a.state = 1 AND b.state = 1 AND c.state = 1
-			ORDER BY c.ordering, b.ordering
-			";
-        }
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'c.title AS legend',
+                    'c.subtitle AS legendsubtitle',
+                    'c.alias AS legendalias',
+                    'b.title AS locationtype',
+                    'b.id AS locationtype_id',
+                    'b.alias AS locationtypealias',
+                    'e.marker AS marker_type',
+                    'a.id',
+                    'a.state',
+                    'a.title',
+                    'a.alias',
+                    'a.map_id',
+                    'a.type',
+                    'a.address',
+                    'a.phone',
+                    'a.description',
+                    'a.customfieldsdata',
+                    'a.latitude',
+                    'a.longitude',
+                    'a.marker AS marker_location',
+                    'a.linktype',
+                    'a.altlink',
+                    'a.maplinkid',
+                    'a.menulink',
+                    'a.params'
+                )
+            )
+            ->from('#__focalpoint_locations AS a')
+            ->innerJoin('#__focalpoint_locationtypes AS e on e.id = a.type')
+            ->innerJoin('#__focalpoint_location_type_xref AS d ON d.location_id = a.id')
+            ->innerJoin('#__focalpoint_locationtypes AS b ON b.id = d.locationtype_id')
+            ->innerJoin('#__focalpoint_legends AS c ON  c.id = b.legend')
+            ->where(
+                array(
+                    'a.map_id = ' . (int)$id,
+                    'a.state = 1',
+                    'b.state = 1',
+                    'c.state = 1'
+                )
+            )
+            ->order(
+                array(
+                    'c.ordering ASC',
+                    'b.ordering ASC'
+                )
+            );
 
         $db->setQuery($query);
         $results = $db->loadObjectList();
 
-        // Let's do a little processing before passing the results back to the view
-        //
-        // Cycle through the results and store the relevant marker icon in $result->marker.
-        // The rule is as follows.
-        //   1.Location marker (top priority)
-        //   2.Location Type marker (second priority)
-        //   3.Configuration default marker (third priority).
-        //
-        // If a maplink or URL link has been defined then overwrite $result->link. Saves extra processing in the template.
-        // Do some extra processing on the link at the end.
-
         foreach ($results as $result) {
+            // Merge global params with item params so Item params take precedence
+            $itemParams = new Registry($result->params);
+            $itemParams->set('mapTypeId', 'TEST');
+            $result->params = clone $params;
+            $result->params->merge($itemParams);
 
-            // Merge the item params and global params. For the maps view we only need the infobox parameters
-            // but easier to merge them all anyway.
-            $itemparams = new JRegistry;
-            $itemparams->loadString($result->params, 'JSON');
-            $result->params = $itemparams;
-
-            // Merge global params with item params
-            $newparams = clone $params;
-            $newparams->merge($result->params);
-            $result->params = $newparams;
-
+            /*
+             * Set the marker icon
+             *
+             * The rule is as follows.
+             *   1.Location marker (top priority)
+             *   2.Location Type marker (second priority)
+             *   3.Configuration default marker (third priority).
+             */
             if ($result->marker_location) {
-                $result->marker = JURI::base() . $result->marker_location;
-            } else {
-                if ($result->marker_type) {
-                    $result->marker = JURI::base() . $result->marker_type;
-                } else {
-                    $result->marker = JURI::base() . $params->get('marker');
-                }
-            }
+                $result->marker = $result->marker_location;
 
-            unset($result->marker_location);
-            unset($result->marker_type);
+            } elseif ($result->marker_type) {
+                $result->marker = $result->marker_type;
+
+            } else {
+                $result->marker = $params->get('marker');
+            }
+            $result->marker = JUri::base() . $result->marker;
+            unset($result->marker_location, $result->marker_type);
+
+            /*
+             * Create $result->link.
+             */
+            $linkQuery = array(
+                'option' => 'com_focalpoint',
+                'view'   => 'location',
+                'id'     => $result->id
+            );
+
+            $result->link = null;
             switch ($result->linktype) {
-                case "0":
-                    $app  = JFactory::getApplication();
-                    $menu = $app->getMenu()->getActive();
-                    if ($menu) {
-                        $result->link .= "&Itemid=" . $menu->id;
+                case '0':
+                    // Current Page (Own page)
+                    if ($menu = $app->getMenu()->getActive()) {
+                        $linkQuery['Itemid'] = $menu->id;
                     }
                     break;
-                case "1":
+
+                case '1':
+                    // URL
                     if ($result->altlink) {
                         $result->link = $result->altlink;
-                    } else {
-                        $app          = JFactory::getApplication();
-                        $menu         = $app->getMenu()->getActive();
-                        $result->link .= "&Itemid=" . $menu->id;
+                        $linkQuery    = null;
+
+                    } elseif ($menu = $app->getMenu()->getActive()) {
+                        $linkQuery['Itemid'] = $menu->id;
                     }
                     break;
-                case "2":
+
+                case '2':
+                    // Map Id
                     if ($result->maplinkid) {
-                        $app   = JFactory::getApplication();
-                        $db    = JFactory::getDbo();
-                        $query = $db->getQuery(true);
-                        $query->select('id');
-                        $query->from('#__menu');
-                        $query->where('link = "index.php?option=com_focalpoint&view=map" AND params LIKE "%{\"item_id\":\"' . $result->maplinkid . '\",%"');
-                        $db->setQuery($query);
-                        $itemid       = $db->loadResult();
-                        $result->link = 'index.php?option=com_focalpoint&view=map&id=' . $result->maplinkid . "&Itemid=";
+                        $linkQuery['view'] = 'map';
+                        $linkQuery['id']   = $result->maplinkid;
                     }
                     break;
-                case "3":
-                    unset($result->link);
+
+                case '3':
+                    // No Link
+                    $linkQuery = null;
                     break;
-                case "4":
+
+                case '4':
+                    // Menu Item
                     if ($result->menulink) {
-                        $result->link = JRoute::_(JFactory::getApplication()
-                                ->getMenu()
-                                ->getItem($result->menulink)->link . "&Itemid=" . $result->menulink, true);
+                        if ($targetMenu = $app->getMenu()->getItem($result->menulink)) {
+                            $linkQuery = array(
+                                'option' => $targetMenu->query['option'],
+                                'Itemid' => $targetMenu->id
+                            );
+                        }
                     }
+                    break;
+
+
+            }
+            unset($result->altlink, $result->maplink);
+
+            if (!$result->link && $linkQuery) {
+                $result->link = 'index.php?' . http_build_query($linkQuery);
+            }
+            if ($result->link && !preg_match('#https?://#', $result->link)) {
+                $result->link = JRoute::_($result->link);
             }
 
-            unset($result->altlink);
-            unset($result->maplink);
-
-            //Replace || with <br> in the address. Allows the user to easily add linebreaks to the address field.
+            // check format of address field
             $result->address = str_replace("||", " <br>", $result->address);
-
-            //Route the location link.
-            if (isset($result->link)) {
-                if (!strstr($result->link, "http://")) {
-                    $result->link = JRoute::_($result->link);
-                }
-            }
 
             // Decode the custom field data
             if (!empty($result->customfieldsdata)) {
-                $data = json_decode($result->customfieldsdata);
+                $customFieldsData = json_decode($result->customfieldsdata);
 
-                // Grab the location type record so we can match up the label. We don't save the labels with the data.
-                // This is so we can change individaul labels at any time without having to update every record.
-                $db    = JFactory::getDbo();
-                $query = $db->getQuery(true);
-                $query
+                /*
+                 * Grab the location type record so we can match up the label. We don't save the labels with the data.
+                 * This is so we can change individaul labels at any time without having to update every record.
+                 *
+                 */
+                $db = $this->getDbo();
+
+                $query = $db->getQuery(true)
                     ->select('customfields')
                     ->from('#__focalpoint_locationtypes')
                     ->where('id = ' . $result->type);
-                $db->setQuery($query);
-                $fieldsettings        = (json_decode($db->loadResult()));
-                $result->customfields = New stdClass();
-                foreach ($data as $field => $value) {
+
+                $fieldSettings = (json_decode($db->setQuery($query)->loadResult()));
+
+                $result->customfields = new stdClass();
+                foreach ($customFieldsData as $field => $value) {
                     $segments = explode(".", $field);
+
+                    $dataType = $segments[0];
+                    $fieldKey = join('.', $segments);
 
                     // Before adding the custom field data to the results we first need to check field settings matches
                     // the data. This is required in case the admin changes or deletes a custom field
                     // from the location type but the data still exists in the location items record.
-                    if (!empty($fieldsettings->{$segments[0] . "." . $segments[1]})) {
-                        $result->customfields->{end($segments)}           = New stdClass();
-                        $result->customfields->{end($segments)}->datatype = $segments[0];
-                        $result->customfields->{end($segments)}->label    = $fieldsettings->{$segments[0] . "." . $segments[1]}->label;
-                        $result->customfields->{end($segments)}->data     = $value;
+                    if (!empty($fieldSettings->{$fieldKey})) {
+                        $field = $fieldSettings->{$fieldKey};
+
+                        $result->customfields->{$field->name} = (object)array(
+                            'datatype' => $dataType,
+                            'label'    => $field->label,
+                            'data'     => $value
+                        );
                     }
                 }
             }
             unset($result->customfieldsdata);
         }
-        //Send it back to the template.
+
         return $results;
     }
 }
