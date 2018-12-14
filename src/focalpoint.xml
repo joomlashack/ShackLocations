@@ -103,5 +103,8 @@
 
         <include>AllediaFreeDefaultFiles</include>
 
+        <obsolete>
+            <file>administrator/components/com_focalpoint/models/fields/otherlocationtypeslist.php</file>
+        </obsolete>
     </alledia>
 </extension>

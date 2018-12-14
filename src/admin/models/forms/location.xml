@@ -30,10 +30,11 @@
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_TYPE"/>
 
         <field name="othertypes"
-               type="othertypeslist"
+               type="locationtype"
                label="COM_FOCALPOINT_OTHERTYPES_LABEL"
                description="COM_FOCALPOINT_OTHERTYPES_DESC"
-               multiple="true">
+               multiple="true"
+               primary="type">
         </field>
 
         <field name="alias"

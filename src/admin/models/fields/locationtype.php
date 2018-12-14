@@ -24,47 +24,93 @@
 
 defined('JPATH_PLATFORM') or die;
 
-JFormHelper::loadFieldClass('predefinedlist');
+JFormHelper::loadFieldType('GroupedList');
 
-/**
- * Form Field to load a list of states
- * Used in place of the Joomla status field as FocalPoint does not use "archived"
- */
-class JFormFieldLocationtype extends JFormFieldPredefinedList
+class JFormFieldLocationtype extends JFormFieldGroupedList
 {
-    /**
-     * The form field type.
-     *
-     * @var    string
-     * @since  3.2
-     */
     public $type = 'locationtype';
 
     /**
-     * Available statuses
-     *
-     * @var  array
-     * @since  3.2
+     * @var object[]
      */
-    protected $predefinedOptions = array();
+    protected static $typeOptions = null;
 
-    /**
-     * Constrct method to get the field input markup.
-     */
-    function __construct()
+    protected function getInput()
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query
-            ->select('a.id, CONCAT("(",b.title,") ",a.title) AS title')
-            ->from('#__focalpoint_locationtypes AS a')
-            ->innerJoin('#__focalpoint_legends AS b on a.legend = b.id')
-            ->where('a.state > -1')
-            ->order('b.ordering,a.ordering');
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-        foreach ($results as $result) {
-            $this->predefinedOptions[$result->id] = $result->title;
+        if ($this->multiple) {
+            if (is_string($this->value)) {
+                $this->value = array_filter(array_map('intval', explode('|', $this->value)));
+            }
+
+            $primaryName = (string)$this->element['primary'];
+            if ($primary = $this->form->getField($primaryName)) {
+                JHtml::_('jquery.framework');
+                $js = <<<JSCODE
+(function($) {
+    $(document).ready(function() {
+        $('#{$primary->id}')
+            .on('change', function() {
+                var primary = this.value,
+                    secondary = $('#{$this->id}');
+                    
+                secondary.find('option').each(function (idx, option) {
+                    if (option.value == primary) {
+                        $(option).prop('disabled', true).prop('selected', false);
+                    } else {
+                        $(option).prop('disabled', false);
+                    }
+                });
+                secondary.trigger('liszt:updated');
+            })
+            .trigger('change');
+    });
+})(jQuery);
+JSCODE;
+                JFactory::getDocument()->addScriptDeclaration($js);
+            }
+
         }
+
+        return parent::getInput();
+    }
+
+    protected function getGroups()
+    {
+        if (static::$typeOptions === null) {
+            $db = JFactory::getDbo();
+
+            $query = $db->getQuery(true)
+                ->select(
+                    array(
+                        'a.id',
+                        'a.title',
+                        'b.title AS legend'
+                    )
+                )
+                ->from('#__focalpoint_locationtypes AS a')
+                ->innerJoin('#__focalpoint_legends AS b on a.legend = b.id')
+                ->where('a.state > -1')
+                ->order(
+                    array(
+                        'b.ordering ASC',
+                        'a.ordering ASC'
+                    )
+                );
+
+            $types      = $db->setQuery($query)->loadObjectList();
+            $lastLegend = null;
+
+            static::$typeOptions = array();
+            foreach ($types as $type) {
+                if ($type->legend !== $lastLegend) {
+                    static::$typeOptions[$type->legend] = array();
+                }
+                static::$typeOptions[$type->legend][] = JHtml::_('select.option', $type->id, $type->title);
+
+                $lastLegend = $type->legend;
+            }
+        }
+
+        return array_merge(parent::getGroups(), static::$typeOptions);
     }
 }
