@@ -167,7 +167,8 @@ class FocalpointModelMap extends JModelForm
             ->order(
                 array(
                     'c.ordering ASC',
-                    'b.ordering ASC'
+                    'b.ordering ASC',
+                    'a.ordering ASC'
                 )
             );
 
