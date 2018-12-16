@@ -142,7 +142,8 @@
               label="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"
               description="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"/>
 
-    <fieldset name="linkoptions" label="Infobox Options">
+    <fieldset name="linkoptions"
+              label="COM_FOCALPOINT_LEGEND_LINK_OPTIONS">
         <field name="linktype"
                type="list"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_LINKTYPE"
@@ -179,8 +180,8 @@
                showon="linktype:4"/>
     </fieldset>
 
-    <fields name="metadata">
-        <fieldset name="meta" label="COM_FOCALPOINT_FIELDSET_META_LABEL">
+    <fieldset name="metadata" label="COM_FOCALPOINT_FIELDSET_META_LABEL">
+        <fields name="metadata">
             <field name="metakey"
                    type="textarea"
                    label="COM_FOCALPOINT_FORM_META_KEYWORDS_LABEL"
@@ -215,11 +216,11 @@
                    description="COM_FOCALPOINT_FORM_META_RIGHTS_DESC"
                    filter="string"
                    rows="2"/>
-        </fieldset>
-    </fields>
+        </fields>
+    </fieldset>
 
-    <fields name="params">
-        <fieldset name="advanced" label="COM_FOCALPOINT_FIELDSET_ADVANCED_LABEL">
+    <fieldset name="advanced" label="COM_FOCALPOINT_FIELDSET_ADVANCED_LABEL">
+        <fields name="params">
             <field name="mapTypeId"
                    type="list"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE"
@@ -335,6 +336,6 @@
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
-        </fieldset>
-    </fields>
+        </fields>
+    </fieldset>
 </form>

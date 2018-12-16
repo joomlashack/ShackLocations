@@ -31,10 +31,6 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$paramsFieldSets = $this->form->getFieldsets('params');
-$metaFieldSets   = $this->form->getFieldsets('metadata');
-
-// Import CSS + JS
 $document = JFactory::getDocument();
 $params   = JComponentHelper::getParams('com_focalpoint');
 JHtml::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
@@ -115,56 +111,32 @@ $formFieldsets = $this->form->getFieldsets();
     </div>
     <?php
 
-    echo JHtml::_('bootstrap.addTab', 'location', 'linkoptions', JText::_('COM_FOCALPOINT_LEGEND_LINK_OPTIONS'));
+    echo JHtml::_('bootstrap.addTab', 'location', 'linkoptions', JText::_($formFieldsets['linkoptions']->label));
     ?>
     <div class="form-horizontal">
-        <?php echo $this->getForm()->getControlGroup('showaddress'); ?>
-        <?php echo $this->getForm()->getControlGroup('showintro'); ?>
-        <?php echo $this->getForm()->getControlGroup('linktype'); ?>
-        <?php echo $this->getForm()->getControlGroup('altlink'); ?>
-        <?php echo $this->getForm()->getControlGroup('maplinkid'); ?>
-        <?php echo $this->getForm()->getControlGroup('menulink'); ?>
+        <?php echo $this->form->renderFieldset('linkoptions'); ?>
     </div>
+    <?php
+    echo JHtml::_('bootstrap.endTab');
 
-    <?php echo JHtml::_('bootstrap.endTab'); ?>
+    echo JHtml::_('bootstrap.addTab', 'location', 'metadata', JText::_($formFieldsets['metadata']->label));
+    ?>
+    <div class="form-horizontal">
+        <?php echo $this->form->renderFieldset('metadata'); ?>
+    </div>
+    <?php
+    echo JHtml::_('bootstrap.endTab');
 
-    <?php foreach ($metaFieldSets as $name => $fieldSet) : ?>
-        <?php echo JHtml::_('bootstrap.addTab', 'location', $name . '-params', JText::_($fieldSet->label)); ?>
-        <div class="form-horizontal">
-            <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php echo $field->input; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-            <?php echo JHtml::_('bootstrap.endTab'); ?>
-        </div>
-    <?php endforeach; ?>
+    echo JHtml::_('bootstrap.addTab', 'location', 'advanced', JText::_($formFieldsets['advanced']->label));
+    ?>
+    <div class="form-horizontal">
+        <?php echo $this->form->renderFieldset('advanced'); ?>
+    </div>
+    <?php
+    echo JHtml::_('bootstrap.endTab');
 
-    <?php foreach ($paramsFieldSets as $name => $fieldSet) : ?>
-        <?php echo JHtml::_('bootstrap.addTab', 'location', $name . '-params', JText::_($fieldSet->label)); ?>
-        <div class="form-horizontal">
-            <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                <div class="control-group">
-                    <div class="control-label">
-                        <?php echo $field->label; ?>
-                    </div>
-                    <div class="controls">
-                        <?php echo $field->input; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <?php echo JHtml::_('bootstrap.endTab'); ?>
-    <?php endforeach; ?>
-
-    <?php echo JHtml::_('bootstrap.endTab'); ?>
-    <?php echo JHtml::_('bootstrap.endTabSet'); ?>
-
+    echo JHtml::_('bootstrap.endTabSet');
+    ?>
     <input type="hidden" name="task" value=""/>
     <?php echo JHtml::_('form.token'); ?>
 
