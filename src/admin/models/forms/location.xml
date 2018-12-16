@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset name="unused">
+    <fieldset>
+        <!-- These fields do not seem to be used anywhere -->
         <field name="keylocation"
                type="radio"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_KEYLOCATION"
@@ -18,13 +19,6 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-
-        <field name="customfieldsdata"
-               type="hidden"
-               filter="raw"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_CUSTOMFIELDSDATA"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_CUSTOMFIELDSDATA"/>
-
     </fieldset>
 
     <fieldset name="hidden">
@@ -33,7 +27,7 @@
         <field name="checked_out_time" type="hidden" filter="unset"/>
     </fieldset>
 
-    <fieldset name="header">
+    <fieldset>
         <field name="title"
                type="text"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_TITLE"

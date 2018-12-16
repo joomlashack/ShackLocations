@@ -31,8 +31,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
-$document = JFactory::getDocument();
-$params   = JComponentHelper::getParams('com_focalpoint');
+$params = JComponentHelper::getParams('com_focalpoint');
 JHtml::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
 JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
 
@@ -57,6 +56,7 @@ $formFieldsets = $this->form->getFieldsets();
 
     <?php
     echo $this->form->renderFieldset('hidden');
+    unset($formFieldsets['hidden']);
 
     echo JLayoutHelper::render('joomla.edit.title_alias', $this);
 
@@ -67,18 +67,18 @@ $formFieldsets = $this->form->getFieldsets();
     <div class="row-fluid">
         <div class="span9">
             <div class="form-vertical">
-                <?php echo $this->form->renderFieldset('basic'); ?>
+                <?php
+                echo $this->form->renderFieldset('basic');
+                unset($formFieldsets['basic']);
+                ?>
             </div>
         </div>
 
         <div class="span3">
             <div class="form-vertical">
                 <?php
-                $params = $this->form->getFieldset('params');
-                /** @var FormField $paramField */
-                foreach ($params as $paramField) :
-                    echo $paramField->renderField();
-                endforeach;
+                echo $this->form->renderFieldset('params');
+                unset($formFieldsets['params']);
                 ?>
             </div>
         </div>
@@ -86,54 +86,31 @@ $formFieldsets = $this->form->getFieldsets();
     <?php
     echo JHtml::_('bootstrap.endTab');
 
-    $customFields = $formFieldsets['customfields'];
-    echo JHtml::_(
-        'bootstrap.addTab',
-        'location',
-        'customfields',
-        JText::_($customFields->label)
-    );
-    ?>
-    <div class="form-horizontal">
-        <?php
-        if ($customFields->description) :
-            ?>
-            <div class="tab-description alert alert-info">
-                <span class="icon-info" aria-hidden="true"></span>
-                <?php echo JText::_($customFields->description); ?>
-            </div>
-        <?php
-        endif;
-
-        echo $this->form->renderFieldset('customfields');
-        echo JHtml::_('bootstrap.endTab');
+    foreach ($formFieldsets as $fieldsetName => $fieldset) :
+        echo JHtml::_(
+            'bootstrap.addTab',
+            'location',
+            $fieldsetName,
+            JText::_($fieldset->label)
+        );
         ?>
-    </div>
-    <?php
+        <div class="form-horizontal">
+            <?php
+            if ($fieldset->description) :
+                ?>
+                <div class="tab-description alert alert-info">
+                    <span class="icon-info" aria-hidden="true"></span>
+                    <?php echo JText::_($fieldset->description); ?>
+                </div>
+            <?php
+            endif;
 
-    echo JHtml::_('bootstrap.addTab', 'location', 'linkoptions', JText::_($formFieldsets['linkoptions']->label));
-    ?>
-    <div class="form-horizontal">
-        <?php echo $this->form->renderFieldset('linkoptions'); ?>
-    </div>
+            echo $this->form->renderFieldset($fieldsetName);
+            echo JHtml::_('bootstrap.endTab');
+            ?>
+        </div>
     <?php
-    echo JHtml::_('bootstrap.endTab');
-
-    echo JHtml::_('bootstrap.addTab', 'location', 'metadata', JText::_($formFieldsets['metadata']->label));
-    ?>
-    <div class="form-horizontal">
-        <?php echo $this->form->renderFieldset('metadata'); ?>
-    </div>
-    <?php
-    echo JHtml::_('bootstrap.endTab');
-
-    echo JHtml::_('bootstrap.addTab', 'location', 'advanced', JText::_($formFieldsets['advanced']->label));
-    ?>
-    <div class="form-horizontal">
-        <?php echo $this->form->renderFieldset('advanced'); ?>
-    </div>
-    <?php
-    echo JHtml::_('bootstrap.endTab');
+    endforeach;
 
     echo JHtml::_('bootstrap.endTabSet');
     ?>
