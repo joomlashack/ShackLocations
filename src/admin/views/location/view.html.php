@@ -136,6 +136,8 @@ class FocalpointViewLocation extends JViewLegacy
      */
     public function getCustomFieldsHTML($type)
     {
+        return '';
+
         /** @var AdministratorApplication $app */
         $app          = JFactory::getApplication();
         $customFields = $this->model->getCustomFieldsHTML($type);
@@ -210,7 +212,7 @@ class FocalpointViewLocation extends JViewLegacy
                                 $name,
                                 $value
                             );
-                            $html[]  = $this->createControlGroup($control);
+                            $html[]  = $this->createControlGroup($control, $label);
                         }
 
                         break;
@@ -237,13 +239,11 @@ class FocalpointViewLocation extends JViewLegacy
 
                         $html[] = $this->createControlGroup(join('', $control), $label);
                         break;
-
+/*
                     case 'link':
                         if (!is_array($value)) {
                             //Define blank values so PHP doesn't generate notices
-                            $value['url']      = '';
-                            $value['linktext'] = '';
-                            $value['target']   = '';
+                            $value = array_fill_keys(array('url', 'linktext', 'target'), '');
                         }
 
                         // URL input
@@ -306,8 +306,7 @@ class FocalpointViewLocation extends JViewLegacy
 
                     case 'email':
                         if (!is_array($value)) {
-                            $value['email']    = '';
-                            $value['linktext'] = '';
+                            $value = array_fill_keys(array('email', 'linktext'), '');
                         }
 
                         $emailControl = array(
@@ -377,7 +376,7 @@ class FocalpointViewLocation extends JViewLegacy
                         $html[] = $this->createControlGroup($selectControl, $label);
 
                         break;
-                }
+*/                }
 
                 $html[] = '<hr>';
             }

@@ -1,93 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <fieldset>
-        <field name="id"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ID"
-               readonly="true"
-               class="readonly"
-               description="JGLOBAL_FIELD_ID_DESC"/>
-
-        <field name="title"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_TITLE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_TITLE"
-               required="true"
-               filter="string"
-               maxlength="150"/>
-
-        <field name="map_id"
-               type="maps"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MAP_ID"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MAP_ID"
-               required="true"
-               extension="com_focalpoint"/>
-
-        <field name="type"
-               type="locationtype"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_TYPE_ALT"
-               required="true"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_TYPE"/>
-
-        <field name="othertypes"
-               type="locationtype"
-               label="COM_FOCALPOINT_OTHERTYPES_LABEL"
-               description="COM_FOCALPOINT_OTHERTYPES_DESC"
-               multiple="true"
-               primary="type">
-        </field>
-
-        <field name="alias"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ALIAS"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_ALIAS"
-               filter="safehtml"/>
-
-        <field name="description" type="editor"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_DESCRIPTION"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_DESCRIPTION"
-               height="250"
-               filter="JComponentHelper::filterText"
-               buttons="true"/>
-
-        <field name="address"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ADDRESS"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_ADDRESS"
-               maxlength="300"/>
-
-        <field name="phone"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_PHONE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_PHONE"
-               maxlength="300"/>
-
-        <field name="latitude"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_LATITUDE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_LATITUDE"
-               required="true"
-               maxlength="30"/>
-
-        <field name="longitude"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_LONGITUDE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_LONGITUDE"
-               required="true"
-               maxlength="30"/>
-
-        <field name="image"
-               type="media"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_IMAGE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_IMAGE"
-               directory=""/>
-
-        <field name="marker"
-               type="media"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MARKER"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MARKER"
-               directory="/images/markers/"/>
-
+    <fieldset name="unused">
         <field name="keylocation"
                type="radio"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_KEYLOCATION"
@@ -112,10 +25,101 @@
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_CUSTOMFIELDSDATA"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_CUSTOMFIELDSDATA"/>
 
-        <field name="created_by"
-               type="createdby"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_CREATED_BY"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_CREATED_BY"/>
+    </fieldset>
+
+    <fieldset name="hidden">
+        <field name="id" type="hidden"/>
+        <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
+    </fieldset>
+
+    <fieldset name="header">
+        <field name="title"
+               type="text"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_TITLE"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_TITLE"
+               required="true"
+               filter="string"
+               maxlength="150"/>
+
+        <field name="alias"
+               type="text"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ALIAS"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_ALIAS"
+               filter="safehtml"/>
+    </fieldset>
+
+    <fieldset name="basic"
+              label="COM_FOCALPOINT_LOCATION_BASIC">
+        <field name="image"
+               type="media"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_IMAGE"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_IMAGE"
+               directory=""/>
+
+        <field name="description" type="editor"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_DESCRIPTION"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_DESCRIPTION"
+               height="250"
+               filter="JComponentHelper::filterText"
+               buttons="true"/>
+    </fieldset>
+
+    <fieldset name="params">
+        <field name="map_id"
+               type="maps"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MAP_ID"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MAP_ID"
+               required="true"
+               extension="com_focalpoint"/>
+
+        <field name="type"
+               type="locationtype"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_TYPE_ALT"
+               required="true"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_TYPE"/>
+
+        <field name="othertypes"
+               type="locationtype"
+               label="COM_FOCALPOINT_OTHERTYPES_LABEL"
+               description="COM_FOCALPOINT_OTHERTYPES_DESC"
+               multiple="true"
+               primary="type">
+        </field>
+
+        <field name="address"
+               type="text"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ADDRESS"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_ADDRESS"
+               maxlength="300"/>
+
+        <field name="phone"
+               type="text"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_PHONE"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_PHONE"
+               maxlength="300"/>
+
+        <field name="geocoder" type="shacklocations.geocoder"/>
+
+        <field name="latitude"
+               type="text"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_LATITUDE"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_LATITUDE"
+               required="true"
+               maxlength="30"/>
+
+        <field name="longitude"
+               type="text"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_LONGITUDE"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_LONGITUDE"
+               required="true"
+               maxlength="30"/>
+
+        <field name="marker"
+               type="media"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MARKER"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MARKER"
+               directory="/images/markers/"/>
 
         <field name="state"
                type="list"
@@ -128,9 +132,15 @@
             <option value="0">JUNPUBLISHED</option>
         </field>
 
-        <field name="checked_out" type="hidden" filter="unset"/>
-        <field name="checked_out_time" type="hidden" filter="unset"/>
+        <field name="created_by"
+               type="user"
+               label="COM_FOCALPOINT_FORM_LBL_LOCATION_CREATED_BY"
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_CREATED_BY"/>
     </fieldset>
+
+    <fieldset name="customfields"
+              label="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"
+              description="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"/>
 
     <fieldset name="linkoptions" label="Infobox Options">
         <field name="linktype"
