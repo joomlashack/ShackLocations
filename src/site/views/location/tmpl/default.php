@@ -37,7 +37,7 @@ defined('_JEXEC') or die;
 
 //Load admin language file
 $lang = JFactory::getLanguage();
-$lang->load('com_focalpoint', JPATH_ADMINISTRATOR);
+$lang->load('com_focalpoint', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
 
 // Load the default CSS/JS files.
 $document = JFactory::getDocument();

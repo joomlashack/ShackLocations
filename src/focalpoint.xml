@@ -28,6 +28,7 @@
         <folder>assets</folder>
         <folder>controllers</folder>
         <folder>helpers</folder>
+        <folder>language</folder>
         <folder>models</folder>
         <folder>views</folder>
 
@@ -40,10 +41,6 @@
         <folder>css</folder>
         <folder>images</folder>
     </media>
-
-    <languages folder="site/language">
-        <language tag="en-GB">en-GB/en-GB.com_focalpoint.ini</language>
-    </languages>
 
     <administration>
         <menu>COM_FOCALPOINT</menu>
@@ -70,6 +67,7 @@
             <folder>controllers</folder>
             <folder>form</folder>
             <folder>helpers</folder>
+            <folder>language</folder>
             <folder>library</folder>
             <folder>models</folder>
             <folder>sql</folder>
@@ -82,10 +80,6 @@
             <filename>focalpoint.php</filename>
             <filename>README.md</filename>
         </files>
-        <languages folder="admin/language">
-            <language tag="en-GB">en-GB/en-GB.com_focalpoint.ini</language>
-            <language tag="en-GB">en-GB/en-GB.com_focalpoint.sys.ini</language>
-        </languages>
     </administration>
 
 	<updateservers>
@@ -105,6 +99,12 @@
 
         <obsolete>
             <file>administrator/components/com_focalpoint/models/fields/otherlocationtypeslist.php</file>
+            <file>administrator/language/en-GB/en-GB.com_focalpoint.ini</file>
+            <file>administrator/language/en-GB/en-GB.com_focalpoint.sys.ini</file>
+            <file>administrator/language/fr-FR/fr-FR.com_focalpoint.ini</file>
+            <file>administrator/language/fr-FR/fr-FR.com_focalpoint.sys.ini</file>
+            <file>language/en-GB/en-GB.com_focalpoint.ini</file>
+            <file>language/fr-FR/fr-FR.com_focalpoint.ini</file>
         </obsolete>
     </alledia>
 </extension>
