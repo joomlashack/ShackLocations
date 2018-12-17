@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
+    <!-- These fields do not seem to be used -->
     <fieldset>
-        <!-- These fields do not seem to be used anywhere -->
         <field name="keylocation"
                type="radio"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_KEYLOCATION"
@@ -21,12 +21,7 @@
         </field>
     </fieldset>
 
-    <fieldset name="hidden">
-        <field name="id" type="hidden"/>
-        <field name="checked_out" type="hidden" filter="unset"/>
-        <field name="checked_out_time" type="hidden" filter="unset"/>
-    </fieldset>
-
+    <!-- title/alias fields -->
     <fieldset>
         <field name="title"
                type="text"
@@ -41,6 +36,12 @@
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_ALIAS"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_ALIAS"
                filter="safehtml"/>
+    </fieldset>
+
+    <fieldset name="hidden">
+        <field name="id" type="hidden"/>
+        <field name="checked_out" type="hidden" filter="unset"/>
+        <field name="checked_out_time" type="hidden" filter="unset"/>
     </fieldset>
 
     <fieldset name="basic"
@@ -133,8 +134,7 @@
     </fieldset>
 
     <fieldset name="customfields"
-              label="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"
-              description="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"/>
+              label="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"/>
 
     <fieldset name="linkoptions"
               label="COM_FOCALPOINT_LEGEND_LINK_OPTIONS">

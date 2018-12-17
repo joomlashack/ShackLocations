@@ -22,11 +22,18 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Object\CMSObject;
+
 defined('_JEXEC') or die();
 
 class FocalpointModellocation extends JModelAdmin
 {
     protected $text_prefix = 'COM_FOCALPOINT';
+
+    /**
+     * @var CMSObject
+     */
+    protected $item = null;
 
     public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = array())
     {
@@ -48,14 +55,184 @@ class FocalpointModellocation extends JModelAdmin
             array('control' => 'jform', 'load_data' => $loadData)
         );
 
-        if ($form) {
-            $customFields = $form->getXml()->xpath('//fieldset[@name="customfields"]');
-            if ($customFields = array_pop($customFields)) {
-                $customFields['description'] = 'COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS_NONE_DEFINED';
+        return $form;
+    }
+
+    /**
+     * @param JForm     $form
+     * @param CMSObject $data
+     * @param string    $group
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function preprocessForm(\JForm $form, $data, $group = 'content')
+    {
+        parent::preprocessForm($form, $data, $group);
+
+        $customFields = $form->getXml()->xpath('//fieldset[@name="customfields"]');
+        if ($customFields = array_pop($customFields)) {
+            if (empty($data->id) || empty($data->type)) {
+                $customFields['description'] = 'COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS_SAVE_FIRST';
+
+            } else {
+                $definedFields = $this->getCustomFields($data->type);
+                if (!$definedFields) {
+                    $customFields['description'] = 'COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS_NONE_DEFINED';
+
+                } else {
+                    $group         = $customFields->addChild('fields');
+                    $group['name'] = 'customfields';
+
+                    foreach ($definedFields as $key => $definedField) {
+                        $dataType   = substr($key, 0, strpos($key, '.'));
+                        $hashedName = $key . '.' . $definedField['name'];
+
+                        $fieldAttribs = array(
+                            'name'        => $hashedName,
+                            'label'       => $definedField['label'],
+                            'description' => $definedField['description']
+                        );
+
+                        switch ($dataType) {
+                            case 'textbox':
+                                $fieldAttribs['type'] = 'textbox';
+                                $this->addCustomField($group, $fieldAttribs);
+                                break;
+
+                            case 'email':
+                                $emailGroup         = $group->addChild('fields');
+                                $emailGroup['name'] = str_replace('.', '-', $hashedName);
+
+                                $email = array_merge(
+                                    $fieldAttribs,
+                                    array(
+                                        'name'       => 'email',
+                                        'type'       => 'email',
+                                        'label'      => 'Email Address',
+                                        'descripton' => 'The actual email address. Do not include mailto:. This will be added automatically'
+                                    )
+                                );
+                                $this->addCustomField($emailGroup, $email);
+
+                                $emailText = array_merge(
+                                    $fieldAttribs,
+                                    array(
+                                        'name'        => 'linktext',
+                                        'label'       => 'Link Text',
+                                        'description' => 'Optional link text. If left blank the URL will be used as link text.'
+                                    )
+                                );
+                                $this->addCustomField($emailGroup, $emailText);
+                                break;
+
+                            case 'textarea':
+                                if ($definedField['loadeditor']) {
+                                    $fieldAttribs['type']   = 'editor';
+                                    $fieldAttribs['filter'] = 'JComponentHelper::filterText';
+                                } else {
+                                    $fieldAttribs['type'] = 'textarea';
+                                }
+                                $this->addCustomField($group, $fieldAttribs);
+                                break;
+
+                            case 'image':
+                                $fieldAttribs['type']      = 'media';
+                                $fieldAttribs['directory'] = $definedField['directory'];
+                                $this->addCustomField($group, $fieldAttribs);
+                                break;
+
+                            case 'link':
+                                $linkGroup         = $group->addChild('fields');
+                                $linkGroup['name'] = str_replace('.', '-', $hashedName);
+
+                                // URL input
+                                $linkUrl = array_merge(
+                                    $fieldAttribs,
+                                    array(
+                                        'name'        => 'url',
+                                        'type'        => 'text',
+                                        'description' => 'The URL to link to. Include http:// at the start for external links.'
+                                    )
+                                );
+                                $this->addCustomField($linkGroup, $linkUrl);
+
+                                // Link text field
+                                $linkText = array_merge(
+                                    $fieldAttribs,
+                                    array(
+                                        'name'        => 'linktext',
+                                        'type'        => 'text',
+                                        'label'       => 'Link text',
+                                        'description' => 'Optional link text. If left blank the URL will be used as link text.'
+                                    )
+                                );
+                                $this->addCustomField($linkGroup, $linkText);
+
+                                // Target field
+                                $linkTarget  = array_merge(
+                                    $fieldAttribs,
+                                    array(
+                                        'name'    => 'target',
+                                        'type'    => 'radio',
+                                        'class'   => 'btn-group btn-group-yesno',
+                                        'label'   => 'Target',
+                                        'default' => 0
+                                    )
+                                );
+                                $targetField = $this->addCustomField($linkGroup, $linkTarget);
+
+                                $yes = $targetField->addChild('option', JText::_('JYES'));
+                                $no  = $targetField->addChild('option', JText::_('JNO'));
+
+                                $yes['value'] = '1';
+                                $no['value']  = '0';
+                                break;
+
+                            case 'selectlist':
+                            case 'multiselect':
+                                $options = preg_split('/\n\r?/', $definedField['options']);
+                                $options = array_map('trim', $options);
+
+                                if ($options) {
+                                    $fieldAttribs['type'] = 'list';
+                                    if ($dataType == 'multiselect') {
+                                        $fieldAttribs['multiple'] = 'true';
+                                    }
+
+                                    $selectField = $this->addCustomField($group, $fieldAttribs);
+                                    foreach ($options as $option) {
+                                        $option = $selectField->addChild('option', $option);
+                                        $option['value'] = $option;
+                                    }
+                                }
+
+                                break;
+
+                            default:
+                                $fieldAttribs['type'] = $dataType;
+                                $this->addCustomField($group, $fieldAttribs);
+                        }
+                    }
+                }
             }
         }
+    }
 
-        return $form;
+    /**
+     * @param SimpleXMLElement $group
+     * @param array            $attribs
+     *
+     * @return SimpleXMLElement
+     */
+    protected function addCustomField(SimpleXMLElement $group, array $attribs)
+    {
+        $field = $group->addChild('field');
+        foreach ($attribs as $attribute => $value) {
+            $field[$attribute] = $value;
+        }
+
+        return $field;
     }
 
     protected function loadFormData()
@@ -65,14 +242,6 @@ class FocalpointModellocation extends JModelAdmin
 
         if (empty($data)) {
             $data = $this->getItem();
-
-            $array = array();
-            foreach ((array)$data->type as $value) {
-                if (!is_array($value)) {
-                    $array[] = $value;
-                }
-            }
-            $data->type = implode(',', $array);
         }
 
         return $data;
@@ -81,33 +250,35 @@ class FocalpointModellocation extends JModelAdmin
     /**
      * @param int $pk
      *
-     * @return JObject
+     * @return CMSObject
      */
     public function getItem($pk = null)
     {
-        if ($item = parent::getItem($pk)) {
-            // Merge the intro and full text.
-            $item->description = trim($item->fulldescription) != ''
-                ? $item->description . "<hr id=\"system-readmore\" />" . $item->fulldescription
-                : $item->description;
+        if ($this->item === null) {
+            if ($item = parent::getItem($pk)) {
+                // Merge the intro and full text.
+                $item->description = trim($item->fulldescription) == ''
+                    ? $item->description
+                    : $item->description . " < hr id = \"system-readmore\" />" . $item->fulldescription;
 
-            $item->othertypes = json_decode($item->othertypes);
+                $item->othertypes = json_decode($item->othertypes);
 
-            if ($item->customfieldsdata) {
-                $item->custom = json_decode($item->customfieldsdata, true);
-                if ($item->custom) {
-                    foreach ($item->custom as $key => $value) {
-                        $item->custom[$key] = $this->clean($value);
-                    }
+                $item->customfieldsdata = json_decode($item->customfieldsdata ?: '[]', true);
+                $item->customfields     = array();
+                foreach ($item->customfieldsdata as $key => $value) {
+                    $item->customcustomfieldsdata[$key] = $this->clean($value);
+                    $item->customfields[$key]           = $value;
                 }
+
+                // Convert the metadata field to an array.
+                $metaData       = new JRegistry($item->metadata);
+                $item->metadata = $metaData->toArray();
             }
 
-            // Convert the metadata field to an array.
-            $metaData       = new JRegistry($item->metadata);
-            $item->metadata = $metaData->toArray();
+            $this->item = $item;
         }
 
-        return $item;
+        return $this->item;
     }
 
     /**
@@ -115,8 +286,10 @@ class FocalpointModellocation extends JModelAdmin
      *
      * @return string|array
      */
-    protected function clean($string)
-    {
+    protected
+    function clean(
+        $string
+    ) {
         if (is_array($string)) {
             foreach ($string as $key => $value) {
                 $string[$key] = $this->clean($value);
@@ -131,8 +304,10 @@ class FocalpointModellocation extends JModelAdmin
     /**
      * @param JTable $table
      */
-    protected function prepareTable($table)
-    {
+    protected
+    function prepareTable(
+        $table
+    ) {
         $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
 
         // Split the description into two parts if required.
@@ -155,8 +330,10 @@ class FocalpointModellocation extends JModelAdmin
      *
      * @return array
      */
-    public function getCustomFieldsHTML($type)
-    {
+    public
+    function getCustomFields(
+        $type
+    ) {
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
@@ -176,8 +353,10 @@ class FocalpointModellocation extends JModelAdmin
      *
      * @return string
      */
-    public function toJSON($data)
-    {
+    public
+    function toJSON(
+        $data
+    ) {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $value = $this->toJSON($value);
@@ -189,8 +368,10 @@ class FocalpointModellocation extends JModelAdmin
         return json_encode($data);
     }
 
-    public function save($data)
-    {
+    public
+    function save(
+        $data
+    ) {
         if (empty($data['othertypes'])) {
             $data['othertypes'] = '';
         }
