@@ -286,10 +286,8 @@ class FocalpointModellocation extends JModelAdmin
      *
      * @return string|array
      */
-    protected
-    function clean(
-        $string
-    ) {
+    protected function clean($string)
+    {
         if (is_array($string)) {
             foreach ($string as $key => $value) {
                 $string[$key] = $this->clean($value);
@@ -304,10 +302,8 @@ class FocalpointModellocation extends JModelAdmin
     /**
      * @param JTable $table
      */
-    protected
-    function prepareTable(
-        $table
-    ) {
+    protected function prepareTable($table)
+    {
         $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
 
         // Split the description into two parts if required.
@@ -330,10 +326,8 @@ class FocalpointModellocation extends JModelAdmin
      *
      * @return array
      */
-    public
-    function getCustomFields(
-        $type
-    ) {
+    public function getCustomFields($type)
+    {
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
@@ -353,10 +347,8 @@ class FocalpointModellocation extends JModelAdmin
      *
      * @return string
      */
-    public
-    function toJSON(
-        $data
-    ) {
+    public function toJSON($data)
+    {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $value = $this->toJSON($value);
@@ -368,10 +360,8 @@ class FocalpointModellocation extends JModelAdmin
         return json_encode($data);
     }
 
-    public
-    function save(
-        $data
-    ) {
+    public function save($data)
+    {
         if (empty($data['othertypes'])) {
             $data['othertypes'] = '';
         }
