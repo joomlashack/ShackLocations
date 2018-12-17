@@ -68,7 +68,6 @@ class JFormFieldLocationtype extends JFormFieldGroupedList
 JSCODE;
                 JFactory::getDocument()->addScriptDeclaration($js);
             }
-
         }
 
         return parent::getInput();

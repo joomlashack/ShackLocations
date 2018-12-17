@@ -67,11 +67,11 @@ class FocalpointModellocation extends JModelAdmin
             $data = $this->getItem();
 
             $array = array();
-            foreach ((array)$data->type as $value):
-                if (!is_array($value)):
+            foreach ((array)$data->type as $value) {
+                if (!is_array($value)) {
                     $array[] = $value;
-                endif;
-            endforeach;
+                }
+            }
             $data->type = implode(',', $array);
         }
 
@@ -91,8 +91,7 @@ class FocalpointModellocation extends JModelAdmin
                 ? $item->description . "<hr id=\"system-readmore\" />" . $item->fulldescription
                 : $item->description;
 
-            $otherTypes       = new JRegistry($item->othertypes);
-            $item->othertypes = $otherTypes->toArray();
+            $item->othertypes = json_decode($item->othertypes);
 
             if ($item->customfieldsdata) {
                 $item->custom = json_decode($item->customfieldsdata, true);
@@ -192,37 +191,36 @@ class FocalpointModellocation extends JModelAdmin
 
     public function save($data)
     {
-        $id = $data['id'];
-        $db = $this->getDbo();
-
-         // Including primary type in the other types field makes the frontend sql much easier
-        if (!in_array($data['type'], $data['othertypes'])) {
-            $data['othertypes'][] = $data['type'];
+        if (empty($data['othertypes'])) {
+            $data['othertypes'] = '';
         }
 
-        //Delete all xrefs before saving new.
-        $sql = $db->getQuery(true);
-        $sql->delete('#__focalpoint_location_type_xref');
-        $sql->where('location_id = ' . $id);
-        $db->setQuery($sql);
-        $db->execute();
+        if (parent::save($data)) {
+            $db = $this->getDbo();
+            $id = $data['id'] ?: $db->insertid();
 
-        $datasave = parent::save($data);
+            $sql = $db->getQuery(true)
+                ->delete('#__focalpoint_location_type_xref')
+                ->where('location_id = ' . $id);
+            $db->setQuery($sql)->execute();
 
-        //Get the last used id
-        if (!isset($id) || $id == "") {
-            $id = $db->insertid();
+            $types = array_merge(
+                array($data['type']),
+                empty($data['othertypes']) ? array() : $data['othertypes']
+            );
+            $types = array_filter(array_unique($types));
+
+            foreach ($types as $type) {
+                $insert = (object)array(
+                    'location_id'     => $id,
+                    'locationtype_id' => $type
+                );
+                $db->insertObject('#__focalpoint_location_type_xref', $insert);
+            }
+
+            return true;
         }
 
-        // Insert xrefs from this save. This is to cross ref location types against this location.
-        foreach ($data['othertypes'] as $type) {
-            $sql = $db->getQuery(true);
-            $sql->insert('#__focalpoint_location_type_xref');
-            $sql->values('NULL,' . $id . ',' . $type);
-            $db->setQuery($sql);
-            $db->execute();
-        }
-        return $datasave;
-
+        return false;
     }
 }

@@ -31,72 +31,52 @@ defined('_JEXEC') or die;
  */
 class FocalpointTablelocation extends JTable
 {
-
-    /**
-     * Constructor
-     *
-     * @param JDatabase A database connector object
-     */
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_locations', 'id', $db);
     }
 
     /**
-     * Overloaded bind function to pre-process the params.
+     * @param array|object $array
+     * @param string       $ignore
      *
-     * @param    array        Named array
-     * @return    null|string    null is operation was satisfactory, otherwise returns an error
-     * @see        JTable:bind
-     * @since    1.5
+     * @return bool
+     * @throws Exception
      */
     public function bind($array, $ignore = '')
     {
-
-
         $input = JFactory::getApplication()->input;
-        $task = $input->getCmd('task', '');
-        if (($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state', 'com_focalpoint') && $array['state'] == 1)) {
+        $task  = $input->getCmd('task', '');
+        if (($task == 'save' || $task == 'apply')
+            && (!JFactory::getUser()->authorise('core.edit.state', 'com_focalpoint')
+                && $array['state'] == 1)
+        ) {
             $array['state'] = 0;
         }
 
         // Convert the othertypes list to an array for storage in the db
-        if (isset($array['othertypes']) && is_array($array['othertypes'])) {
-            $registry = new JRegistry;
-            $registry->loadArray($array['othertypes']);
-            $array['othertypes'] = (string)$registry;
+        if (isset($array['othertypes']) && !is_string($array['othertypes'])) {
+            $array['othertypes'] = json_encode($array['othertypes']);
         }
 
-        //Support for multiple or not foreign key field: type
-        if (isset($array['type'])):
-            if (is_array($array['type'])) {
-                $array['type'] = implode(',', $array['type']);
-            } else if (strrpos($array['type'], ',') != false) {
-                $array['type'] = explode(',', $array['type']);
-            }
-        endif;
-
-        if (isset($array['params']) && is_array($array['params'])) {
-            $registry = new JRegistry();
-            $registry->loadArray($array['params']);
-            $array['params'] = (string)$registry;
+        if (isset($array['params']) && !is_string($array['params'])) {
+            $array['params'] = json_encode($array['params']);
         }
 
-        if (isset($array['metadata']) && is_array($array['metadata'])) {
-            $registry = new JRegistry();
-            $registry->loadArray($array['metadata']);
-            $array['metadata'] = (string)$registry;
+        if (isset($array['metadata']) && !is_string($array['metadata'])) {
+            $array['metadata'] = json_encode($array['metadata']);
         }
+
         if (!JFactory::getUser()->authorise('core.admin', 'com_focalpoint.location.' . $array['id'])) {
-            $actions = JFactory::getACL()->getActions('com_focalpoint', 'location');
-            $default_actions = JFactory::getACL()->getAssetRules('com_focalpoint.location.' . $array['id'])->getData();
-            $array_jaccess = array();
+            $actions       = JFactory::getACL()->getActions('com_focalpoint', 'location');
+            $defaulActions = JFactory::getACL()->getAssetRules('com_focalpoint.location.' . $array['id'])->getData();
+            $access        = array();
             foreach ($actions as $action) {
-                $array_jaccess[$action->name] = $default_actions[$action->name];
+                $access[$action->name] = $defaulActions[$action->name];
             }
-            $array['rules'] = $this->JAccessRulestoArray($array_jaccess);
+            $array['rules'] = $this->JAccessRulestoArray($access);
         }
-        //Bind the rules for ACL where supported.
+
         if (isset($array['rules']) && is_array($array['rules'])) {
             $this->setRules($array['rules']);
         }
@@ -105,10 +85,11 @@ class FocalpointTablelocation extends JTable
     }
 
     /**
-     * This function convert an array of JAccessRule objects into an rules array.
-     * @param type $jaccessrules an arrao of JAccessRule objects.
+     * @param JAccessRules[] $jaccessrules
+     *
+     * @return array
      */
-    private function JAccessRulestoArray($jaccessrules)
+    protected function JAccessRulestoArray($jaccessrules)
     {
         $rules = array();
         foreach ($jaccessrules as $action => $jaccess) {
@@ -144,6 +125,7 @@ class FocalpointTablelocation extends JTable
      *                    set the instance property value is used.
      * @param    integer The publishing state. eg. [0 = unpublished, 1 = published]
      * @param    integer The user id of the user performing the operation.
+     *
      * @return    boolean    True on success.
      * @since    1.0.4
      */
@@ -155,14 +137,15 @@ class FocalpointTablelocation extends JTable
         // Sanitize input.
         ArrayHelper::toInteger($pks);
         $userId = (int)$userId;
-        $state = (int)$state;
+        $state  = (int)$state;
 
         // If there are no primary keys set check to see if the instance key is set.
         if (empty($pks)) {
             if ($this->$k) {
                 $pks = array($this->$k);
-            } // Nothing to set publishing state on, return false.
-            else {
+
+            } else {
+                // Nothing to set publishing state on, return false.
                 $this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
                 return false;
             }
@@ -185,7 +168,7 @@ class FocalpointTablelocation extends JTable
             ' WHERE (' . $where . ')' .
             $checkin
         );
-        $this->_db->query();
+        $this->_db->execute();
 
         // Check for a database error.
         if ($this->_db->getErrorNum()) {
@@ -212,6 +195,7 @@ class FocalpointTablelocation extends JTable
 
     /**
      * Define a namespaced asset name for inclusion in the #__assets table
+     *
      * @return string The asset name
      *
      * @see JTable::_getAssetName
@@ -223,7 +207,8 @@ class FocalpointTablelocation extends JTable
     }
 
     /**
-     * Returns the parrent asset's id. If you have a tree structure, retrieve the parent's id using the external key field
+     * Returns the parrent asset's id. If you have a tree structure, retrieve the parent's id using the external key
+     * field
      *
      * @see JTable::_getAssetParentId
      */
@@ -241,6 +226,4 @@ class FocalpointTablelocation extends JTable
         }
         return $assetParentId;
     }
-
-
 }
