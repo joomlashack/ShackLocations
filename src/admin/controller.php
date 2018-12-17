@@ -22,34 +22,30 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointController extends JControllerLegacy
 {
-    /**
-     * @var        string    The default view.
-     * @since   1.6
-     */
     protected $default_view = 'maps';
 
     /**
-     * Method to display a view.
+     * @param bool $cachable
+     * @param bool $urlparams
      *
-     * @param    boolean $cachable If true, the view output will be cached
-     * @param    array $urlparams An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
-     *
-     * @return    JController        This object to support chaining.
-     * @since    1.5
+     * @return JControllerLegacy
+     * @throws Exception
      */
     public function display($cachable = false, $urlparams = false)
     {
-        // The first thing a user needs to do is configure options. This checks if component parameters exists
-        // If not it redirects to the getting started view.
-        $params = JComponentHelper::getParams('com_focalpoint');
+        /*
+         * The first thing a user needs to do is configure options. This checks if component parameters exists
+         * If not it redirects to the getting started view.
+         */
+        $params     = JComponentHelper::getParams('com_focalpoint');
         $paramsdata = $params->jsonSerialize();
         if (!count((array)$paramsdata)) {
             JFactory::getApplication()->input->set('view', 'getstarted');
-            setcookie("ppr",1,time()+604800);
+            setcookie("ppr", 1, time() + 604800);
         }
 
         $view = JFactory::getApplication()->input->getCmd('view', $this->default_view);
@@ -58,34 +54,51 @@ class FocalpointController extends JControllerLegacy
         $db = JFactory::getDbo();
 
         // Check we have at least one locationtype defined
-        $query = $db->getQuery(true);
-        $query->select('id')->from('#__focalpoint_locationtypes');
-        $db->setQuery($query);
-        $types_exist = $db->loadResult();
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from('#__focalpoint_locationtypes');
 
-        if (!$types_exist && ($view != "maps" && $view != "map" && $view != "legends" && $view != "legend" && $view != "locationtypes" && $view != "locationtype" && $view != "getstarted")) {
+        $typesExist = $db->setQuery($query)->loadResult();
+
+        if (!$typesExist
+            && ($view != "maps"
+                && $view != "map"
+                && $view != "legends"
+                && $view != "legend"
+                && $view != "locationtypes"
+                && $view != "locationtype"
+                && $view != "getstarted")
+        ) {
             JFactory::getApplication()->input->set('view', 'getstarted');
             JFactory::getApplication()->input->set('task', 'locationtype');
         }
 
         // Check we have at least one legend defined
-        $query = $db->getQuery(true);
-        $query->select('id')->from('#__focalpoint_legends');
-        $db->setQuery($query);
-        $legends_exist = $db->loadResult();
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from('#__focalpoint_legends');
 
-        if (!$legends_exist && ($view != "maps" && $view != "map" && $view != "legends" && $view != "legend" && $view != "getstarted")) {
+        $legendsExist = $db->setQuery($query)->loadResult();
+
+        if (!$legendsExist
+            && ($view != "maps"
+                && $view != "map"
+                && $view != "legends"
+                && $view != "legend"
+                && $view != "getstarted")
+        ) {
             JFactory::getApplication()->input->set('view', 'getstarted');
             JFactory::getApplication()->input->set('task', 'legend');
         }
 
         // Check we have at least one map defined
-        $query = $db->getQuery(true);
-        $query->select('id')->from('#__focalpoint_maps');
-        $db->setQuery($query);
-        $maps_exist = $db->loadResult();
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from('#__focalpoint_maps');
 
-        if (!$maps_exist && ($view != "maps" && $view != "map" && $view != "getstarted")) {
+        $mapsExists = $db->setQuery($query)->loadResult();
+
+        if (!$mapsExists && ($view != "maps" && $view != "map" && $view != "getstarted")) {
             JFactory::getApplication()->input->set('view', 'getstarted');
             JFactory::getApplication()->input->set('task', 'map');
         }
