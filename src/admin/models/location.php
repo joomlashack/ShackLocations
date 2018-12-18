@@ -76,6 +76,8 @@ class FocalpointModellocation extends JModelAdmin
                 $customFields['description'] = 'COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS_SAVE_FIRST';
 
             } else {
+                $app = JFactory::getApplication();
+
                 $definedFields = $this->getCustomFields($data->type);
                 if (!$definedFields) {
                     $customFields['description'] = 'COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS_NONE_DEFINED';
@@ -85,8 +87,14 @@ class FocalpointModellocation extends JModelAdmin
                     $group['name'] = 'customfields';
 
                     foreach ($definedFields as $key => $definedField) {
-                        $dataType   = substr($key, 0, strpos($key, '.'));
-                        $hashedName = $key . '.' . $definedField['name'];
+                        $keyParts = explode('_', $key);
+                        if (count($keyParts) != 2) {
+                            $app->enqueueMessage('Invalid custom field key found - ' . $key, 'error');
+                            continue;
+                        }
+
+                        $keyParts[] = $definedField['name'];
+                        $hashedName = join('_', $keyParts);
 
                         $fieldAttribs = array(
                             'name'        => $hashedName,
@@ -94,6 +102,7 @@ class FocalpointModellocation extends JModelAdmin
                             'description' => $definedField['description']
                         );
 
+                        $dataType   = $keyParts[0];
                         switch ($dataType) {
                             case 'textbox':
                                 $fieldAttribs['type'] = 'textbox';
@@ -102,14 +111,21 @@ class FocalpointModellocation extends JModelAdmin
 
                             case 'email':
                                 $emailGroup         = $group->addChild('fields');
-                                $emailGroup['name'] = str_replace('.', '-', $hashedName);
+                                $emailGroup['name'] = $hashedName;
+
+                                $spacer = array(
+                                    'type'        => 'spacer',
+                                    'label'       => $fieldAttribs['label'],
+                                    'description' => $fieldAttribs['description']
+                                );
+                                $this->addCustomField($emailGroup, $spacer);
 
                                 $email = array_merge(
                                     $fieldAttribs,
                                     array(
                                         'name'       => 'email',
                                         'type'       => 'email',
-                                        'label'      => 'Email Address',
+                                        'label'      => 'Address',
                                         'descripton' => 'The actual email address. Do not include mailto:. This will be added automatically'
                                     )
                                 );
@@ -119,7 +135,7 @@ class FocalpointModellocation extends JModelAdmin
                                     $fieldAttribs,
                                     array(
                                         'name'        => 'linktext',
-                                        'label'       => 'Link Text',
+                                        'label'       => 'Text',
                                         'description' => 'Optional link text. If left blank the URL will be used as link text.'
                                     )
                                 );
@@ -144,7 +160,14 @@ class FocalpointModellocation extends JModelAdmin
 
                             case 'link':
                                 $linkGroup         = $group->addChild('fields');
-                                $linkGroup['name'] = str_replace('.', '-', $hashedName);
+                                $linkGroup['name'] = $hashedName;
+
+                                $spacer = array(
+                                    'type'        => 'spacer',
+                                    'label'       => $fieldAttribs['label'],
+                                    'description' => $fieldAttribs['description']
+                                );
+                                $this->addCustomField($linkGroup, $spacer);
 
                                 // URL input
                                 $linkUrl = array_merge(
@@ -152,6 +175,7 @@ class FocalpointModellocation extends JModelAdmin
                                     array(
                                         'name'        => 'url',
                                         'type'        => 'text',
+                                        'label'       => 'URL',
                                         'description' => 'The URL to link to. Include http:// at the start for external links.'
                                     )
                                 );
@@ -202,7 +226,7 @@ class FocalpointModellocation extends JModelAdmin
 
                                     $selectField = $this->addCustomField($group, $fieldAttribs);
                                     foreach ($options as $option) {
-                                        $option = $selectField->addChild('option', $option);
+                                        $option          = $selectField->addChild('option', $option);
                                         $option['value'] = $option;
                                     }
                                 }
@@ -220,15 +244,17 @@ class FocalpointModellocation extends JModelAdmin
     }
 
     /**
+     * Add a field to the specified <fields> group using the supplied attributes
+     *
      * @param SimpleXMLElement $group
-     * @param array            $attribs
+     * @param array            $attributes
      *
      * @return SimpleXMLElement
      */
-    protected function addCustomField(SimpleXMLElement $group, array $attribs)
+    protected function addCustomField(SimpleXMLElement $group, array $attributes)
     {
         $field = $group->addChild('field');
-        foreach ($attribs as $attribute => $value) {
+        foreach ($attributes as $attribute => $value) {
             $field[$attribute] = $value;
         }
 
@@ -261,7 +287,7 @@ class FocalpointModellocation extends JModelAdmin
                     ? $item->description
                     : $item->description . " < hr id = \"system-readmore\" />" . $item->fulldescription;
 
-                $item->othertypes = json_decode($item->othertypes);
+                $item->othertypes = json_decode($item->othertypes, true);
 
                 $item->customfieldsdata = json_decode($item->customfieldsdata ?: '[]', true);
                 $item->customfields     = array();
@@ -322,6 +348,8 @@ class FocalpointModellocation extends JModelAdmin
     }
 
     /**
+     * Get defined custom fields for the selected location type
+     *
      * @param int $type
      *
      * @return array

@@ -77,6 +77,10 @@ class FocalpointViewLocation extends JViewLegacy
 
             parent::display($tpl);
 
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            echo $e->getLine() . ': ' . $e->getCode();
+
         } catch (Throwable $e) {
             echo $e->getMessage();
             echo $e->getLine() . ': ' . $e->getCode();

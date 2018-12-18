@@ -39,6 +39,15 @@
     opacity: 0.2;
 }
 
+#customfields .field-spacer .control-label {
+    width: 400px;
+}
+#customfields .field-spacer span {
+    width: 100%;
+    display: block;
+    background-color: #999;
+    padding: 2px;
+}
 
 div fieldset.ui-sortable-placeholder {
     visibility: visible !important;
