@@ -36,104 +36,12 @@ class FocalpointTablemap extends JTable
         'params'
     );
 
+    protected $_columnAlias = array(
+        'published' => 'state'
+    );
+
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_maps', 'id', $db);
-    }
-
-    /**
-     * @param array|object $array
-     * @param string       $ignore
-     *
-     * @return bool
-     * @throws Exception
-     */
-    public function bind($array, $ignore = '')
-    {
-        $input = JFactory::getApplication()->input;
-        $task  = $input->getCmd('task', '');
-        if (($task == 'save' || $task == 'apply')
-            && (!JFactory::getUser()->authorise('core.edit.state', 'com_focalpoint') && $array['state'] == 1)
-        ) {
-            $array['state'] = 0;
-        }
-
-        if (!JFactory::getUser()->authorise('core.admin', 'com_focalpoint.map.' . $array['id'])) {
-            $actions        = JFactory::getACL()->getActions('com_focalpoint', 'map');
-            $defaultActions = JFactory::getACL()->getAssetRules('com_focalpoint.map.' . $array['id'])->getData();
-            $access         = array();
-            foreach ($actions as $action) {
-                $access[$action->name] = $defaultActions[$action->name];
-            }
-            $array['rules'] = $this->JAccessRulestoArray($access);
-        }
-
-        if (isset($array['rules']) && is_array($array['rules'])) {
-            $this->setRules($array['rules']);
-        }
-
-        return parent::bind($array, $ignore);
-    }
-
-    /**
-     * This function convert an array of JAccessRule objects into an rules array.
-     *
-     * @param Rules $accessRules
-     *
-     * @return array
-     */
-    private function JAccessRulestoArray($accessRules)
-    {
-        $rules = array();
-        foreach ($accessRules as $action => $access) {
-            $actions = array();
-            foreach ($access->getData() as $group => $allow) {
-                $actions[$group] = ((bool)$allow);
-            }
-            $rules[$action] = $actions;
-        }
-        return $rules;
-    }
-
-    /**
-     * @return bool
-     */
-    public function check()
-    {
-
-        //If there is an ordering column and this is a new row then get the next ordering value
-        if (!$this->ordering && $this->id == 0) {
-            $this->ordering = self::getNextOrder();
-        }
-
-        return parent::check();
-    }
-
-    /**
-     * @return string
-     */
-    protected function _getAssetName()
-    {
-        $k = $this->_tbl_key;
-        return 'com_focalpoint.map.' . (int)$this->$k;
-    }
-
-    /**
-     * @param JTable|null $table
-     * @param null        $id
-     *
-     * @return int
-     */
-    protected function _getAssetParentId(JTable $table = null, $id = null)
-    {
-        /** @var Asset $assetParent */
-        $assetParent   = JTable::getInstance('Asset');
-        $assetParentId = $assetParent->getRootId();
-        $assetParent->loadByName('com_focalpoint');
-        if ($assetParent->id) {
-            $assetParentId = $assetParent->id;
-        }
-
-        return $assetParentId;
     }
 }

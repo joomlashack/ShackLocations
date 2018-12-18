@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
 
@@ -41,9 +42,14 @@ class FocalpointViewMaps extends JViewLegacy
     protected $pagination;
 
     /**
-     * @var CMSObject
+     * @var Form
      */
-    protected $state;
+    public $filterForm = null;
+
+    /**
+     * @var mixed[]
+     */
+    public $activeFilters = null;
 
     /**
      * @param null $tpl
@@ -60,10 +66,11 @@ class FocalpointViewMaps extends JViewLegacy
             /** @var FocalpointModelMaps $model */
             $model = $this->getModel();
 
-            $this->state      = $model->getState();
-            $this->items      = $model->getItems();
-            $this->pagination = $model->getPagination();
-            $this->filterForm = $model->getFilterForm();
+            $this->state         = $model->getState();
+            $this->items         = $model->getItems();
+            $this->pagination    = $model->getPagination();
+            $this->filterForm    = $model->getFilterForm();
+            $this->activeFilters = $model->getActiveFilters();
 
             if ($errors = $model->getErrors()) {
                 throw new Exception(implode('<br>', $errors));
@@ -106,65 +113,39 @@ class FocalpointViewMaps extends JViewLegacy
      */
     protected function addToolbar()
     {
-        require_once JPATH_COMPONENT . '/helpers/focalpoint.php';
-
-        $state = $this->get('State');
-        $canDo = FocalpointHelper::getActions($state->get('filter.category_id'));
+        $user = JFactory::getUser();
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAPS'), 'compass');
 
-        //Check if the form exists before showing the add/edit buttons
-        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/map';
-        if (file_exists($formPath)) {
-
-            if ($canDo->get('core.create')) {
-                JToolBarHelper::addNew('map.add', 'JTOOLBAR_NEW');
-            }
-
-            if ($canDo->get('core.edit') && isset($this->items[0])) {
-                JToolBarHelper::editList('map.edit', 'JTOOLBAR_EDIT');
-            }
-
+        if ($user->authorise('core.create', 'com_focalpoint')) {
+            JToolBarHelper::addNew('map.add', 'JTOOLBAR_NEW');
         }
 
-        if ($canDo->get('core.edit.state')) {
-
-            if (isset($this->items[0]->state)) {
-                JToolBarHelper::divider();
-                JToolBarHelper::custom('maps.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-                JToolBarHelper::custom('maps.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH',
-                    true);
-            } else {
-                if (isset($this->items[0])) {
-                    //If this component does not use state then show a direct delete button as we can not trash
-                    JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_DELETE');
-                }
-            }
-
-            if (isset($this->items[0]->state)) {
-                JToolBarHelper::divider();
-                JToolBarHelper::archiveList('maps.archive', 'JTOOLBAR_ARCHIVE');
-            }
-            if (isset($this->items[0]->checked_out)) {
-                JToolBarHelper::custom('maps.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
-            }
+        if ($user->authorise('core.edit', 'com_focalpoint')) {
+            JToolBarHelper::editList('map.edit', 'JTOOLBAR_EDIT');
         }
 
-        //Show trash and delete for components that uses the state field
-        if (isset($this->items[0]->state)) {
-            if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
+        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
+            JToolBarHelper::divider();
+            JToolBarHelper::custom('maps.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+            JToolBarHelper::custom('maps.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+
+            JToolBarHelper::divider();
+            JToolBarHelper::archiveList('maps.archive', 'JTOOLBAR_ARCHIVE');
+
+            JToolBarHelper::custom('maps.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
+        }
+
+        if ($user->authorise('core.delete', 'com_focalpoint')) {
+            if ($this->state->get('filter.state') == -2) {
                 JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_EMPTY_TRASH');
-                JToolBarHelper::divider();
             } else {
-                if ($canDo->get('core.edit.state')) {
-                    JToolBarHelper::trash('maps.trash', 'JTOOLBAR_TRASH');
-                    JToolBarHelper::divider();
-                }
+                JToolBarHelper::trash('maps.trash', 'JTOOLBAR_TRASH');
             }
-        }
 
-        if ($canDo->get('core.admin')) {
-            JToolBarHelper::preferences('com_focalpoint');
+            if ($user->authorise('core.admin', 'com_focalpoint')) {
+                JToolBarHelper::preferences('com_focalpoint');
+            }
         }
     }
 

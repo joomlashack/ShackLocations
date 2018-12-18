@@ -79,6 +79,10 @@ class FocalpointModelmap extends JModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
+            if (empty($item->id)) {
+                $item->created_by = JFactory::getUser()->id;
+            }
+
             $tabsdata       = new Registry($item->tabsdata);
             $item->tabsdata = $tabsdata->toArray();
 
