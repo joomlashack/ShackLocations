@@ -22,55 +22,81 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
+use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Pagination\Pagination;
 
-jimport('joomla.application.component.view');
+defined('_JEXEC') or die();
 
-/**
- * View class for a list of Focalpoint.
- */
 class FocalpointViewMaps extends JViewLegacy
 {
-    protected $items;
+    /**
+     * @var object[]
+     */
+    protected $items = null;
+
+    /**
+     * @var Pagination
+     */
     protected $pagination;
+
+    /**
+     * @var CMSObject
+     */
     protected $state;
 
     /**
-     * Display the view
+     * @param null $tpl
+     *
+     * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
-        $this->state = $this->get('State');
-        $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->filterForm = $this->get('FilterForm');
+        /** @var AdministratorApplication $app */
+        $app = JFactory::getApplication();
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
+        try {
+            /** @var FocalpointModelMaps $model */
+            $model = $this->getModel();
+
+            $this->state      = $model->getState();
+            $this->items      = $model->getItems();
+            $this->pagination = $model->getPagination();
+            $this->filterForm = $model->getFilterForm();
+
+            if ($errors = $model->getErrors()) {
+                throw new Exception(implode('<br>', $errors));
+            }
+
+            FocalpointHelper::addSubmenu('maps');
+            $this->sidebar = JHtmlSidebar::render();
+
+            $this->addToolbar();
+
+            /*
+             * This is part of the getting started walk through. If we've gotten this far then the
+             * user has successfully saved their configuration.
+             * Check we have at least one map defined
+             */
+            $db = JFactory::getDbo();
+
+            $query = $db->getQuery(true)
+                ->select('COUNT(*)')->from('#__focalpoint_maps');
+
+            $mapsExist = $db->setQuery($query)->loadResult();
+            if (!$mapsExist) {
+                $app->input->set('task', 'showhelp');
+            }
+
+            parent::display($tpl);
+
+        } catch (Exception $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
+
+        } catch (Throwable $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
         }
-
-        $input = JFactory::getApplication()->input;
-        $view = $input->getCmd('view', '');
-        FocalpointHelper::addSubmenu($view);
-        $this->sidebar = JHtmlSidebar::render();
-
-        $this->addToolbar();
-
-        // This is part of the getting started walk through. If we've gotten this far then the
-        // user has successfully saved their configuration.
-        // Check we have at least one map defined
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select('id')->from('#__focalpoint_maps');
-        $db->setQuery($query);
-        $maps_exist = $db->loadResult();
-
-        if (!$maps_exist) {
-            JFactory::getApplication()->input->set('task', 'showhelp');
-        }
-
-        parent::display($tpl);
     }
 
     /**
@@ -106,10 +132,13 @@ class FocalpointViewMaps extends JViewLegacy
             if (isset($this->items[0]->state)) {
                 JToolBarHelper::divider();
                 JToolBarHelper::custom('maps.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-                JToolBarHelper::custom('maps.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-            } else if (isset($this->items[0])) {
-                //If this component does not use state then show a direct delete button as we can not trash
-                JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_DELETE');
+                JToolBarHelper::custom('maps.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH',
+                    true);
+            } else {
+                if (isset($this->items[0])) {
+                    //If this component does not use state then show a direct delete button as we can not trash
+                    JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_DELETE');
+                }
             }
 
             if (isset($this->items[0]->state)) {
@@ -126,9 +155,11 @@ class FocalpointViewMaps extends JViewLegacy
             if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
                 JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_EMPTY_TRASH');
                 JToolBarHelper::divider();
-            } else if ($canDo->get('core.edit.state')) {
-                JToolBarHelper::trash('maps.trash', 'JTOOLBAR_TRASH');
-                JToolBarHelper::divider();
+            } else {
+                if ($canDo->get('core.edit.state')) {
+                    JToolBarHelper::trash('maps.trash', 'JTOOLBAR_TRASH');
+                    JToolBarHelper::divider();
+                }
             }
         }
 
@@ -147,11 +178,11 @@ class FocalpointViewMaps extends JViewLegacy
     protected function getSortFields()
     {
         return array(
-            'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-            'a.state' => JText::_('JSTATUS'),
-            'a.title' => JText::_('JGLOBAL_TITLE'),
+            'a.ordering'   => JText::_('JGRID_HEADING_ORDERING'),
+            'a.state'      => JText::_('JSTATUS'),
+            'a.title'      => JText::_('JGLOBAL_TITLE'),
             'a.created_by' => JText::_('JAUTHOR'),
-            'a.id' => JText::_('JGRID_HEADING_ID')
+            'a.id'         => JText::_('JGRID_HEADING_ID')
         );
     }
 }
