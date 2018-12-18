@@ -91,6 +91,7 @@
         <include>AllediaFreeDefaultFiles</include>
 
         <obsolete>
+            <file>administrator/components/com_focalpoint/models/fields/custom_field.php</file>
             <file>administrator/components/com_focalpoint/models/fields/otherlocationtypeslist.php</file>
             <file>administrator/language/en-GB/en-GB.com_focalpoint.ini</file>
             <file>administrator/language/en-GB/en-GB.com_focalpoint.sys.ini</file>
