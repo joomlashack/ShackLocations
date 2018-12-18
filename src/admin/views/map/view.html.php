@@ -22,17 +22,26 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Object\CMSObject;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
-
-/**
- * View to edit
- */
 class FocalpointViewMap extends JViewLegacy
 {
+    /**
+     * @var CMSObject
+     */
     protected $state;
+
+    /**
+     * @var CMSObject
+     */
     protected $item;
+
+    /**
+     * @var Form
+     */
     protected $form;
 
     /**
@@ -40,41 +49,55 @@ class FocalpointViewMap extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $this->state = $this->get('State');
-        $this->item = $this->get('Item');
-        $this->form = $this->get('Form');
+        $app = JFactory::getApplication();
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
-        }
+        try {
+            /** @var FocalpointModelMap $model */
+            $model = $this->getModel();
 
-        $this->addToolbar();
+            $this->state = $model->getState();
+            $this->item  = $model->getItem();
+            $this->form  = $model->getForm();
 
-        // Load FocalPoint Plugins. Trigger onBeforeMapLoad
-        JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapLoad', array(&$this->item));
-//print_r($this->item->tabs);die();
-        foreach ($this->item->tabs as $key => $tab) {
-            // As of V1.1 FocalPoint plugins share the tabs database field. If they are still here then the plugin
-            // may be disabled. Skip any items not matching the tabs format of [name] and [content].
-            if (!isset($tab->name) || !isset($tab->content)) {
-                unset($this->item->tabs->$key);
+            if (count($errors = $this->get('Errors'))) {
+                throw new Exception(implode("\n", $errors));
             }
-        }
 
-        parent::display($tpl);
+            $this->addToolbar();
+
+            JPluginHelper::importPlugin('focalpoint');
+            JFactory::getApplication()->triggerEvent('onBeforeMapLoad', array(&$this->item));
+
+            foreach ($this->item->tabsdata as $key => $tab) {
+                /*
+                 *  As of V1.1 FocalPoint plugins share the tabs database field. If they are still here then the plugin
+                 * may be disabled. Skip any items not matching the tabs format of [name] and [content].
+                 */
+                if (!isset($tab->name) || !isset($tab->content)) {
+                    unset($this->item->tabsdata->$key);
+                }
+            }
+
+            parent::display($tpl);
+
+        } catch (Exception $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
+
+        } catch (Throwable $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
+        }
     }
 
     /**
-     * Add the page title and toolbar.
+     * @throws Exception
      */
     protected function addToolbar()
     {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $user = JFactory::getUser();
+        $user  = JFactory::getUser();
         $isNew = ($this->item->id == 0);
+
         if (isset($this->item->checked_out)) {
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
         } else {
@@ -84,24 +107,33 @@ class FocalpointViewMap extends JViewLegacy
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAP'), 'compass');
 
-        // If not checked out, can save the item.
-        if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
+        if (!$checkedOut) {
+            if ($canDo->get('core.edit') || $canDo->get('core.create')) {
+                JToolBarHelper::apply('map.apply', 'JTOOLBAR_APPLY');
+                JToolBarHelper::save('map.save', 'JTOOLBAR_SAVE');
+            }
+            if ($canDo->get('core.create')) {
+                JToolBarHelper::custom(
+                    'map.save2new',
+                    'save-new.png',
+                    'save-new_f2.png',
+                    'JTOOLBAR_SAVE_AND_NEW',
+                    false
+                );
+            }
+        }
 
-            JToolBarHelper::apply('map.apply', 'JTOOLBAR_APPLY');
-            JToolBarHelper::save('map.save', 'JTOOLBAR_SAVE');
-        }
-        if (!$checkedOut && ($canDo->get('core.create'))) {
-            JToolBarHelper::custom('map.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        }
-        // If an existing item, can save to a copy.
         if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom('map.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
-        }
-        if (empty($this->item->id)) {
-            JToolBarHelper::cancel('map.cancel', 'JTOOLBAR_CANCEL');
-        } else {
-            JToolBarHelper::cancel('map.cancel', 'JTOOLBAR_CLOSE');
+            JToolBarHelper::custom(
+                'map.save2copy',
+                'save-copy.png',
+                'save-copy_f2.png',
+                'JTOOLBAR_SAVE_AS_COPY',
+                false
+            );
         }
 
+        $cancel = empty($this->item->id) ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE';
+        JToolBarHelper::cancel('map.cancel', $cancel);
     }
 }
