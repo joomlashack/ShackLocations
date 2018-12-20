@@ -90,8 +90,6 @@
                description="COM_FOCALPOINT_FORM_DESC_MAP_CREATED_BY"/>
     </fieldset>
 
-    <fieldset name="tabs" label="Tabs"/>
-
     <fieldset name="metadata" label="Metadata">
         <fields name="metadata">
             <field name="metakey"
