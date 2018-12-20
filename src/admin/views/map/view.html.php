@@ -45,7 +45,10 @@ class FocalpointViewMap extends JViewLegacy
     protected $form;
 
     /**
-     * Display the view
+     * @param string $tpl
+     *
+     * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
@@ -67,16 +70,6 @@ class FocalpointViewMap extends JViewLegacy
 
             JPluginHelper::importPlugin('focalpoint');
             JFactory::getApplication()->triggerEvent('onBeforeMapLoad', array(&$this->item));
-
-            foreach ($this->item->tabsdata as $key => $tab) {
-                /*
-                 *  As of V1.1 FocalPoint plugins share the tabs database field. If they are still here then the plugin
-                 * may be disabled. Skip any items not matching the tabs format of [name] and [content].
-                 */
-                if (!isset($tab->name) || !isset($tab->content)) {
-                    unset($this->item->tabsdata->$key);
-                }
-            }
 
             parent::display($tpl);
 
