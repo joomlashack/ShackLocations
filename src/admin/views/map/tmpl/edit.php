@@ -73,8 +73,8 @@ $formFieldsets = $this->form->getFieldsets();
     <?php
     echo JHtml::_('bootstrap.endTab');
 
-    //JPluginHelper::importPlugin('focalpoint');
-    //$pluginTabs = JFactory::getApplication()->triggerEvent('onLoadMapTabs', array(&$this->item));
+    JPluginHelper::importPlugin('focalpoint');
+    JFactory::getApplication()->triggerEvent('onLoadMapTabs', array($this->form));
 
     echo JHtml::_('bootstrap.addTab', 'map', 'metadata', JText::_($formFieldsets['metadata']->label));
     ?>
