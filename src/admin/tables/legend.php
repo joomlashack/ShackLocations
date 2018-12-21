@@ -40,6 +40,7 @@ class FocalpointTablelegend extends JTable
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_legends', 'id', $db);
+        $this->setColumnAlias('published', 'state');
     }
 
     /**
