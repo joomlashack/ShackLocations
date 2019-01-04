@@ -73,6 +73,7 @@ $formFieldsets = $this->form->getFieldsets();
     <?php
     echo JHtml::_('bootstrap.endTab');
 
+    // Allow pluginsto add form tabs
     JPluginHelper::importPlugin('focalpoint');
     JFactory::getApplication()->triggerEvent('onLoadMapTabs', array($this->form));
 
