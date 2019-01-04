@@ -73,6 +73,28 @@ $formFieldsets = $this->form->getFieldsets();
     <?php
     echo JHtml::_('bootstrap.endTab');
 
+    $tabFieldset = $formFieldsets['tabs'];
+    echo JHtml::_('bootstrap.addTab', 'map', 'tabs', JText::_($tabFieldset->label));
+    ?>
+    <div class="row-fluid">
+        <div class="form-vertical">
+            <?php
+            if ($tabDescription = JText::_($tabFieldset->description)) :
+                ?>
+                <div class="tab-description alert alert-info">
+                    <span class="icon-info" aria-hidden="true"></span>
+                    <?php echo $tabDescription; ?>
+                </div>
+                <?php
+            endif;
+
+            echo $this->form->renderFieldset('tabs');
+            ?>
+        </div>
+    </div>
+    <?php
+    echo JHtml::_('bootstrap.endTab');
+
     // Allow pluginsto add form tabs
     JPluginHelper::importPlugin('focalpoint');
     JFactory::getApplication()->triggerEvent('onLoadMapTabs', array($this->form));

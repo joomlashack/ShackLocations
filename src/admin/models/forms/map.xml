@@ -90,6 +90,14 @@
                description="COM_FOCALPOINT_FORM_DESC_MAP_CREATED_BY"/>
     </fieldset>
 
+    <fields name="tabsdata">
+        <fieldset name="tabs"
+                  label="Tabs"
+                  description="COM_FOCALPOINT_FORM_MAP_TABS_DESCRIPTION">
+            <field name="tabs" type="shacklocations.maptabs"/>
+        </fieldset>
+    </fields>
+
     <fieldset name="metadata" label="Metadata">
         <fields name="metadata">
             <field name="metakey"
