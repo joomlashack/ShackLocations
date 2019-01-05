@@ -31,6 +31,9 @@ defined('_JEXEC') or die;
  */
 class FocalpointTablelegend extends JTable
 {
+    protected $_columnAlias = array(
+        'published' => 'state'
+    );
 
     /**
      * Constructor

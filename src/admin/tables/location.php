@@ -31,6 +31,10 @@ defined('_JEXEC') or die;
  */
 class FocalpointTablelocation extends JTable
 {
+    protected $_columnAlias = array(
+        'published' => 'state'
+    );
+
 
     /**
      * Constructor
