@@ -36,7 +36,9 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         if ($parent = $this->element->xpath('parent::fieldset')) {
             $this->addJS();
 
-            $allFields = array();
+            $htmlOutput = array(
+                '<div class="span7 custom-maptabs">'
+            );
             $values    = (array)$this->value;
 
             // Add our current tab name group
@@ -63,18 +65,23 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                 $contentField    = new SimpleXMLElement($contentFieldXml);
                 $this->form->setField($contentField, $groupName);
 
-                $allFields = array_merge(
-                    $allFields,
+                //'<a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
+
+                $htmlOutput = array_merge(
+                    $htmlOutput,
                     array(
-                        '<div class="clearfix">',
+                        '<fieldset class="clearfix">',
+                        '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
                         $this->form->renderField('name', $groupName, null, $options),
                         $this->form->renderField('content', $groupName, null, $options),
-                        '</div>'
+                        '</fieldset>'
                     )
                 );
             }
 
-            return join('', $allFields);
+            $htmlOutput[] = '</div>';
+
+            return join('', $htmlOutput);
         }
 
         JFactory::getApplication()->enqueueMessage('Error with setup of custom tab field - ' . $this->name, 'error');
@@ -83,5 +90,14 @@ class ShacklocationsFormFieldMaptabs extends JFormField
 
     protected function addJS()
     {
+        JHtml::_('jquery.ui', array('core', 'sortable'));
+
+        JFactory::getDocument()->addScriptDeclaration(
+            <<<JSCRIPT
+jQuery(document).ready(function($) {
+    $('.custom-maptabs').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
+});
+JSCRIPT
+        );
     }
 }
