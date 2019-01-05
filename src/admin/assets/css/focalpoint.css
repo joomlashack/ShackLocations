@@ -23,6 +23,13 @@
     display: inline-block;
 }
 
+.custom-maptabs fieldset * {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+}
+
 .deletefield {
     color: #666;
     display: block;
@@ -39,14 +46,31 @@
     opacity: 0.2;
 }
 
-#customfields .field-spacer .control-label {
-    width: 400px;
+.custom-maptabs fieldset:hover a.deletefield:hover {
+    text-decoration: none;
+    color: #000;
+    opacity: 1;
 }
-#customfields .field-spacer span {
-    width: 100%;
-    display: block;
-    background-color: #999;
-    padding: 2px;
+
+.custom-maptabs fieldset:hover .deletefield {
+    opacity: 0.6;
+}
+
+.custom-maptabs fieldset legend {
+    font-size: 16px;
+}
+
+.custom-maptabs fieldset:hover legend {
+    cursor: move;
+    background: #f7f9fa;
+    background: -moz-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f7f9fa), color-stop(100%, #ededed));
+    background: -webkit-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
+    background: -o-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
+    background: -ms-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
+    background: linear-gradient(top, #f7f9fa 0%, #ededed 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f9fa', endColorstr='#ededed', GradientType=0);
+
 }
 
 div fieldset.ui-sortable-placeholder {
@@ -133,6 +157,11 @@ div fieldset.ui-sortable-placeholder {
     background-position: 100% 50%;
     background-repeat: no-repeat;
     padding-right: 520px;
+}
+
+#locationContent #customfields label {
+    font-weight: bold;
+    font-size: 120%;
 }
 
 .fp_config #fp_pointer {
