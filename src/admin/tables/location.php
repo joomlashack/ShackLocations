@@ -31,6 +31,16 @@ defined('_JEXEC') or die;
  */
 class FocalpointTablelocation extends JTable
 {
+    protected $_columnAlias = array(
+        'published' => 'state'
+    );
+
+
+    /**
+     * Constructor
+     *
+     * @param JDatabase A database connector object
+     */
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_locations', 'id', $db);
