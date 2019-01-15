@@ -21,11 +21,38 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\Utilities\ArrayHelper;
+
 defined('_JEXEC') or die();
 
 class ShacklocationsFormFieldMaptabs extends JFormField
 {
     protected static $assetsLoaded = false;
+
+    protected static $trashButton = null;
+
+    protected static $insertButton = null;
+
+    /**
+     * @var SimpleXMLElement
+     */
+    protected $tabGroup = null;
+
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        if (parent::setup($element, $value, $group)) {
+            if ($parent = $element->xpath('parent::fieldset')) {
+                $parent = array_pop($parent);
+
+                $this->tabGroup         = $parent->addChild('fields');
+                $this->tabGroup['name'] = $this->fieldname;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * @param array $options
@@ -35,66 +62,49 @@ class ShacklocationsFormFieldMaptabs extends JFormField
      */
     public function renderField($options = array())
     {
-        if ($parent = $this->element->xpath('parent::fieldset')) {
-            $this->loadAssets();
+        $this->loadAssets();
 
-            $htmlOutput = array(
-                '<div class="span7 custom-maptabs">'
-            );
+        $htmlOutput = array(
+            '<div class="span7 custom-maptabs">',
+        );
 
-            if ($values = (array)($this->value ?: array())) {
-                // Add our current tab name group
-                $parent           = array_pop($parent);
-                $tabGroup         = $parent->addChild('fields');
-                $tabGroup['name'] = $this->fieldname;
-
-                $baseGroup = $this->group . '.' . $tabGroup['name'];
-
-                foreach ($values as $hash => $data) {
-                    $htmlOutput = array_merge(
-                        $htmlOutput,
-                        array(
-                            '<fieldset class="clearfix">',
-                            '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
-                            JHtml::_(
-                                'link',
-                                '',
-                                '',
-                                array(
-                                    'class' => 'hasTip maptab-delete icon-trash',
-                                    'title' => '<strong>Delete this field?</strong><br />This can NOT be undone.'
-                                )
-                            ),
-                            $this->renderSubfields($tabGroup, $baseGroup, $hash, $options),
-                            '</fieldset>'
-                        )
-                    );
-                }
-            }
-
-            $htmlOutput[] = '</div>';
-
-            return join('', $htmlOutput);
+        $values = (array)($this->value ?: array());
+        foreach ($values as $hash => $data) {
+            $htmlOutput[] = $this->renderSubfield($hash, $options);
         }
 
-        JFactory::getApplication()->enqueueMessage('Error with setup of custom tab field - ' . $this->name, 'error');
-        return '';
+        $appendButton = '<div>'
+            . '<button class="btn btn-small button-apply btn-success maptab-append">'
+            . '<span class="icon-plus icon-white"></span>'
+            . 'New Tab'
+            . '</button>'
+            . '</div>';
+
+        $htmlOutput = array_merge(
+            $htmlOutput,
+            array(
+                $appendButton,
+                '</div>'
+            )
+        );
+
+        return join('', $htmlOutput);
     }
 
     /**
-     * @param SimpleXMLElement $tabGroup
-     * @param string           $baseGroup
-     * @param string           $tabHash
-     * @param array            $options
+     * @param string $tabHash
+     * @param array  $options
      *
      * @return string
      */
-    protected function renderSubfields(SimpleXMLElement $tabGroup, $baseGroup, $tabHash, $options = array())
+    protected function renderSubfield($tabHash, $options = array())
     {
-        $fieldGroup         = $tabGroup->addChild('fields');
+        $baseGroup = $this->group . '.' . $this->tabGroup['name'];
+        $groupName = $baseGroup . '.' . $tabHash;
+
+        $fieldGroup         = $this->tabGroup->addChild('fields');
         $fieldGroup['name'] = $tabHash;
 
-        $groupName = $baseGroup . '.' . $tabHash;
 
         $nameFieldXml = sprintf(
             '<field name="name" type="text" label="%s"/>',
@@ -107,10 +117,57 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         $contentField    = new SimpleXMLElement($contentFieldXml);
         $this->form->setField($contentField, $groupName);
 
-        $fieldHtml = $this->form->renderField('name', $groupName, null, $options)
-            . $this->form->renderField('content', $groupName, null, $options);
+        $fieldHtml = array(
+            '<fieldset class="clearfix">',
+            '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
+            $this->getTrashButton(),
+            $this->getInsertButton(),
+            $this->form->renderField('name', $groupName, null, $options),
+            $this->form->renderField('content', $groupName, null, $options),
+            '</fieldset>'
+        );
 
-        return $fieldHtml;
+        return join('', $fieldHtml);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTrashButton()
+    {
+        if (static::$trashButton === null) {
+            static::$trashButton = sprintf(
+                '<a %s></a>',
+                ArrayHelper::toString(
+                    array(
+                        'class' => 'hasTip maptab-delete icon-cancel',
+                        'title' => 'Delete this tab'
+                    )
+                )
+            );
+        }
+
+        return static::$trashButton;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getInsertButton()
+    {
+        if (static::$insertButton === null) {
+            static::$insertButton = sprintf(
+                '<a %s></a>',
+                ArrayHelper::toString(
+                    array(
+                        'class' => 'hasTip maptab-insert icon-plus',
+                        'title' => 'Insert new tab before this one'
+                    )
+                )
+            );
+        }
+
+        return static::$insertButton;
     }
 
     protected function loadAssets()
@@ -129,6 +186,18 @@ jQuery(document).ready(function($) {
         var fieldset = $(this).parents('fieldset').get(0);
         if (fieldset) {
             $(fieldset).remove();
+        }
+    });
+    
+    $('.maptab-insert,.maptab-append').on('click', function(evt) {
+        evt.preventDefault();
+        
+        var fieldset = $(this).parents('fieldset').get(0);
+        if (fieldset) {
+            $('<fieldset><legend>Hey!</legend></fieldset>').insertBefore($(fieldset));
+            
+        } else {
+            $('<fieldset><legend>HO!</legend></fieldset>').insertBefore($(this).parent());
         }
     });
 });

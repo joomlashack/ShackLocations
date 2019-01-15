@@ -23,9 +23,8 @@
     display: inline-block;
 }
 
-/* .deletefield, maybe not needed anumore */
-.maptab-delete {
-    color: #666;
+.maptab-delete,
+.maptab-insert {
     display: block;
     width: 12px !important;
     height: 12px !important;
@@ -37,6 +36,14 @@
     top: -32px;
     cursor: pointer;
     border-radius: 20px;
+}
+
+.maptab-delete {
+    color: #942a25;
+}
+
+.maptab-insert {
+    color: #46a546;
 }
 
 .custom-maptabs fieldset * {
@@ -51,17 +58,19 @@
     margin-bottom: 0;
 }
 
-.custom-maptabs legend + .control-group {
+.custom-maptabs fieldset .control-group:first-of-type {
     margin-top: 9px;
 }
 
-.custom-maptabs fieldset:hover a.maptab-delete:hover {
+.custom-maptabs fieldset:hover a.maptab-delete:hover,
+.custom-maptabs fieldset:hover a.maptab-insert:hover{
     text-decoration: none;
     color: #000;
     opacity: 1;
 }
 
-.custom-maptabs fieldset:hover .maptab-delete {
+.custom-maptabs fieldset:hover .maptab-delete,
+.custom-maptabs fieldset:hover .maptab-insert{
     opacity: 0.6;
 }
 
