@@ -27,10 +27,19 @@ defined('_JEXEC') or die();
 
 class ShacklocationsFormFieldMaptabs extends JFormField
 {
+    /**
+     * @var bool
+     */
     protected static $assetsLoaded = false;
 
+    /**
+     * @var string
+     */
     protected static $trashButton = null;
 
+    /**
+     * @var string
+     */
     protected static $insertButton = null;
 
     /**
