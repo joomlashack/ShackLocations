@@ -51,6 +51,9 @@ class ShacklocationsFormFieldMaptabs extends JFormField
     {
         if (parent::setup($element, $value, $group)) {
             if ($parent = $element->xpath('parent::fieldset')) {
+                /*
+                 * Create a field group based on the field name
+                 */
                 $parent = array_pop($parent);
 
                 $this->tabGroup         = $parent->addChild('fields');
@@ -64,6 +67,9 @@ class ShacklocationsFormFieldMaptabs extends JFormField
     }
 
     /**
+     * The field is actually a group of fields that will be stored
+     * as an array or object
+     *
      * @param array $options
      *
      * @return string
@@ -71,7 +77,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
      */
     public function renderField($options = array())
     {
-        $this->loadAssets();
+        $this->loadAssets($options);
 
         $htmlOutput = array(
             '<div class="span7 custom-maptabs">',
@@ -79,7 +85,12 @@ class ShacklocationsFormFieldMaptabs extends JFormField
 
         $values = (array)($this->value ?: array());
         foreach ($values as $hash => $data) {
-            $htmlOutput[] = $this->renderSubfield($hash, $options);
+            $htmlOutput[] = $this->getFieldBlock(
+                array(
+                    $this->renderSubfield($hash, 'name', 'text', JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'), $options),
+                    $this->renderSubfield($hash, 'content', 'editor', '', $options)
+                )
+            );
         }
 
         $appendButton = '<div>'
@@ -101,42 +112,57 @@ class ShacklocationsFormFieldMaptabs extends JFormField
     }
 
     /**
-     * @param string $tabHash
+     * This provides a standardized way to get a rendered field on the form that
+     * will be in a hashed field group inside the main field group
+     *
+     * @param string $hash
+     * @param string $name
+     * @param string $type
+     * @param string $label
      * @param array  $options
      *
      * @return string
      */
-    protected function renderSubfield($tabHash, $options = array())
+    protected function renderSubfield($hash, $name, $type, $label, $options)
     {
         $baseGroup = $this->group . '.' . $this->tabGroup['name'];
-        $groupName = $baseGroup . '.' . $tabHash;
+        $groupName = $baseGroup . '.' . $hash;
 
         $fieldGroup         = $this->tabGroup->addChild('fields');
-        $fieldGroup['name'] = $tabHash;
+        $fieldGroup['name'] = $hash;
 
+        $fieldXml = sprintf('<field name="%s" type="%s" label="%s"/>', $name, $type, $label);
+        $field    = new SimpleXMLElement($fieldXml);
 
-        $nameFieldXml = sprintf(
-            '<field name="name" type="text" label="%s"/>',
-            JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME')
-        );
-        $nameField    = new SimpleXMLElement($nameFieldXml);
-        $this->form->setField($nameField, $groupName);
+        $this->form->setField($field, $groupName);
 
-        $contentFieldXml = '<field name="content" type="editor" label=""/>';
-        $contentField    = new SimpleXMLElement($contentFieldXml);
-        $this->form->setField($contentField, $groupName);
+        return $this->form->renderField($name, $groupName, null, $options);
+    }
 
-        $fieldHtml = array(
+    /**
+     * This renders a complete field block with subfields under the name specified by
+     * the fieldname. It includes all mover handles and add/delete buttons
+     *
+     * @param string|string[] $fields
+     *
+     * @return string
+     */
+    protected function getFieldBlock($fields)
+    {
+        $blockHtml = array(
             '<fieldset class="clearfix">',
             '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
             $this->getTrashButton(),
-            $this->getInsertButton(),
-            $this->form->renderField('name', $groupName, null, $options),
-            $this->form->renderField('content', $groupName, null, $options),
-            '</fieldset>'
+            $this->getInsertButton()
         );
 
-        return join('', $fieldHtml);
+        foreach ((array)$fields as $fieldHtml) {
+            $blockHtml[] = $fieldHtml;
+        }
+
+        $blockHtml[] = '</fieldset>';
+
+        return join('', $blockHtml);
     }
 
     /**
@@ -179,36 +205,90 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         return static::$insertButton;
     }
 
-    protected function loadAssets()
+    /**
+     * Load all the js/css required to make this work
+     *
+     * @param array $options
+     */
+    protected function loadAssets($options)
     {
         if (!static::$assetsLoaded) {
             JHtml::_('jquery.ui', array('core', 'sortable'));
 
+            $dummyId = 'BLANKFIELD';
+
+            $nameField = $this->renderSubfield(
+                $dummyId,
+                'name',
+                'text',
+                JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'),
+                $options
+            );
+
+            $fieldBlock = preg_replace(
+                '/\n?\r?/',
+                '',
+                $this->getFieldBlock(
+                    array(
+                        $nameField,
+                        '<p class="alert"><span class="icon-info"></span>Save this configuration to make this tab editable.</p>'
+                    )
+                )
+            );
+
             JFactory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
-jQuery(document).ready(function($) {
-    $('.custom-maptabs').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
+;jQuery(document).ready(function($) {
+    var dummyId    = /{$dummyId}/g,
+        fieldBlank = '{$fieldBlock}';
     
-    $('.maptab-delete').on('click', function(evt) {
-        evt.preventDefault();
-        
-        var fieldset = $(this).parents('fieldset').get(0);
-        if (fieldset) {
-            $(fieldset).remove();
-        }
-    });
-    
-    $('.maptab-insert,.maptab-append').on('click', function(evt) {
-        evt.preventDefault();
-        
-        var fieldset = $(this).parents('fieldset').get(0);
-        if (fieldset) {
-            $('<fieldset><legend>Hey!</legend></fieldset>').insertBefore($(fieldset));
+    var deleteTab = function(evt) {
+            evt.preventDefault();
             
-        } else {
-            $('<fieldset><legend>HO!</legend></fieldset>').insertBefore($(this).parent());
-        }
-    });
+            var fieldset = $(this).parents('fieldset').get(0);
+            if (fieldset) {
+                $(fieldset).remove();
+            }
+        };
+        
+    var createTab = function(evt) {
+            evt.preventDefault();
+            
+            var fieldset = $(this).parents('fieldset').get(0);
+            if (fieldset) {
+                $(fieldBlank.replace(dummyId, createId())).insertBefore($(fieldset));
+                
+            } else {
+                $(fieldBlank).insertBefore($(this).parent());
+            }
+            init();
+        };
+    
+        var createId = function() {
+            var text = "";
+            var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 10; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+
+            return text;
+        };
+       
+    var init = function() {
+        $('.custom-maptabs').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
+
+
+        $('.maptab-delete')
+            .off('click', deleteTab)
+            .on('click', deleteTab);
+        
+        $('.maptab-insert,.maptab-append')
+            .off('click', createTab)
+            .on('click', createTab);
+    };
+    
+    init();
 });
 JSCRIPT
             );
