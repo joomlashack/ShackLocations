@@ -25,6 +25,8 @@ defined('_JEXEC') or die();
 
 class ShacklocationsFormFieldMaptabs extends JFormField
 {
+    protected static $assetsLoaded = false;
+
     /**
      * @param array $options
      *
@@ -34,7 +36,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
     public function renderField($options = array())
     {
         if ($parent = $this->element->xpath('parent::fieldset')) {
-            $this->addJS();
+            $this->loadAssets();
 
             $htmlOutput = array(
                 '<div class="span7 custom-maptabs">'
@@ -49,22 +51,6 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                 $baseGroup = $this->group . '.' . $tabGroup['name'];
 
                 foreach ($values as $hash => $data) {
-                    $fieldGroup         = $tabGroup->addChild('fields');
-                    $fieldGroup['name'] = $hash;
-
-                    $groupName = $baseGroup . '.' . $hash;
-
-                    $nameFieldXml = sprintf(
-                        '<field name="name" type="text" label="%s"/>',
-                        JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME')
-                    );
-                    $nameField    = new SimpleXMLElement($nameFieldXml);
-                    $this->form->setField($nameField, $groupName);
-
-                    $contentFieldXml = '<field name="content" type="editor" label=""/>';
-                    $contentField    = new SimpleXMLElement($contentFieldXml);
-                    $this->form->setField($contentField, $groupName);
-
                     //'<a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
 
                     $htmlOutput = array_merge(
@@ -72,8 +58,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                         array(
                             '<fieldset class="clearfix">',
                             '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
-                            $this->form->renderField('name', $groupName, null, $options),
-                            $this->form->renderField('content', $groupName, null, $options),
+                            $this->renderSubfields($tabGroup, $baseGroup, $hash, $options),
                             '</fieldset>'
                         )
                     );
@@ -89,16 +74,52 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         return '';
     }
 
-    protected function addJS()
+    /**
+     * @param SimpleXMLElement $tabGroup
+     * @param string           $baseGroup
+     * @param string           $tabHash
+     * @param array            $options
+     *
+     * @return string
+     */
+    protected function renderSubfields(SimpleXMLElement $tabGroup, $baseGroup, $tabHash, $options = array())
     {
-        JHtml::_('jquery.ui', array('core', 'sortable'));
+        $fieldGroup         = $tabGroup->addChild('fields');
+        $fieldGroup['name'] = $tabHash;
 
-        JFactory::getDocument()->addScriptDeclaration(
-            <<<JSCRIPT
+        $groupName = $baseGroup . '.' . $tabHash;
+
+        $nameFieldXml = sprintf(
+            '<field name="name" type="text" label="%s"/>',
+            JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME')
+        );
+        $nameField    = new SimpleXMLElement($nameFieldXml);
+        $this->form->setField($nameField, $groupName);
+
+        $contentFieldXml = '<field name="content" type="editor" label=""/>';
+        $contentField    = new SimpleXMLElement($contentFieldXml);
+        $this->form->setField($contentField, $groupName);
+
+        $fieldHtml = $this->form->renderField('name', $groupName, null, $options)
+            . $this->form->renderField('content', $groupName, null, $options);
+
+        return $fieldHtml;
+    }
+
+    protected function loadAssets()
+    {
+        if (!static::$assetsLoaded) {
+            JHtml::_('jquery.ui', array('core', 'sortable'));
+
+            JFactory::getDocument()->addScriptDeclaration(
+                <<<JSCRIPT
 jQuery(document).ready(function($) {
     $('.custom-maptabs').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
 });
 JSCRIPT
-        );
+            );
+
+            static::$assetsLoaded = true;
+        }
     }
 }
