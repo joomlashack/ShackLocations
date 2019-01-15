@@ -23,13 +23,6 @@
     display: inline-block;
 }
 
-.custom-maptabs fieldset * {
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
-}
-
 .deletefield {
     color: #666;
     display: block;
@@ -46,6 +39,21 @@
     opacity: 0.2;
 }
 
+.custom-maptabs fieldset * {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+}
+
+.custom-maptabs fieldset legend {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.custom-maptabs legend + .control-group {
+    margin-top: 9px;
+}
 .custom-maptabs fieldset:hover a.deletefield:hover {
     text-decoration: none;
     color: #000;
@@ -54,10 +62,6 @@
 
 .custom-maptabs fieldset:hover .deletefield {
     opacity: 0.6;
-}
-
-.custom-maptabs fieldset legend {
-    font-size: 16px;
 }
 
 .custom-maptabs fieldset:hover legend {
