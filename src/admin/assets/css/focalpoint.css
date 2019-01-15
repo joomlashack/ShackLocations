@@ -23,7 +23,8 @@
     display: inline-block;
 }
 
-.deletefield {
+/* .deletefield, maybe not needed anumore */
+.maptab-delete {
     color: #666;
     display: block;
     width: 12px !important;
@@ -33,10 +34,9 @@
     float: right;
     position: relative;
     right: 5px;
-    top: -48px;
+    top: -32px;
     cursor: pointer;
     border-radius: 20px;
-    opacity: 0.2;
 }
 
 .custom-maptabs fieldset * {
@@ -54,13 +54,14 @@
 .custom-maptabs legend + .control-group {
     margin-top: 9px;
 }
-.custom-maptabs fieldset:hover a.deletefield:hover {
+
+.custom-maptabs fieldset:hover a.maptab-delete:hover {
     text-decoration: none;
     color: #000;
     opacity: 1;
 }
 
-.custom-maptabs fieldset:hover .deletefield {
+.custom-maptabs fieldset:hover .maptab-delete {
     opacity: 0.6;
 }
 

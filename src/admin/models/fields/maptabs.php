@@ -51,13 +51,20 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                 $baseGroup = $this->group . '.' . $tabGroup['name'];
 
                 foreach ($values as $hash => $data) {
-                    //'<a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
-
                     $htmlOutput = array_merge(
                         $htmlOutput,
                         array(
                             '<fieldset class="clearfix">',
                             '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
+                            JHtml::_(
+                                'link',
+                                '',
+                                '',
+                                array(
+                                    'class' => 'hasTip maptab-delete icon-trash',
+                                    'title' => '<strong>Delete this field?</strong><br />This can NOT be undone.'
+                                )
+                            ),
                             $this->renderSubfields($tabGroup, $baseGroup, $hash, $options),
                             '</fieldset>'
                         )
@@ -115,6 +122,15 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                 <<<JSCRIPT
 jQuery(document).ready(function($) {
     $('.custom-maptabs').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
+    
+    $('.maptab-delete').on('click', function(evt) {
+        evt.preventDefault();
+        
+        var fieldset = $(this).parents('fieldset').get(0);
+        if (fieldset) {
+            $(fieldset).remove();
+        }
+    });
 });
 JSCRIPT
             );
