@@ -39,44 +39,45 @@ class ShacklocationsFormFieldMaptabs extends JFormField
             $htmlOutput = array(
                 '<div class="span7 custom-maptabs">'
             );
-            $values    = (array)$this->value;
 
-            // Add our current tab name group
-            $parent           = array_pop($parent);
-            $tabGroup         = $parent->addChild('fields');
-            $tabGroup['name'] = $this->fieldname;
+            if ($values = (array)($this->value ?: array())) {
+                // Add our current tab name group
+                $parent           = array_pop($parent);
+                $tabGroup         = $parent->addChild('fields');
+                $tabGroup['name'] = $this->fieldname;
 
-            $baseGroup = $this->group . '.' . $tabGroup['name'];
+                $baseGroup = $this->group . '.' . $tabGroup['name'];
 
-            foreach ($values as $hash => $data) {
-                $fieldGroup         = $tabGroup->addChild('fields');
-                $fieldGroup['name'] = $hash;
+                foreach ($values as $hash => $data) {
+                    $fieldGroup         = $tabGroup->addChild('fields');
+                    $fieldGroup['name'] = $hash;
 
-                $groupName = $baseGroup . '.' . $hash;
+                    $groupName = $baseGroup . '.' . $hash;
 
-                $nameFieldXml = sprintf(
-                    '<field name="name" type="text" label="%s"/>',
-                    JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME')
-                );
-                $nameField    = new SimpleXMLElement($nameFieldXml);
-                $this->form->setField($nameField, $groupName);
+                    $nameFieldXml = sprintf(
+                        '<field name="name" type="text" label="%s"/>',
+                        JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME')
+                    );
+                    $nameField    = new SimpleXMLElement($nameFieldXml);
+                    $this->form->setField($nameField, $groupName);
 
-                $contentFieldXml = '<field name="content" type="editor" label=""/>';
-                $contentField    = new SimpleXMLElement($contentFieldXml);
-                $this->form->setField($contentField, $groupName);
+                    $contentFieldXml = '<field name="content" type="editor" label=""/>';
+                    $contentField    = new SimpleXMLElement($contentFieldXml);
+                    $this->form->setField($contentField, $groupName);
 
-                //'<a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
+                    //'<a class="hasTooltip deletefield icon-trash" data-original-title="<strong>Delete this field?</strong><br />This can NOT be undone."></a>';
 
-                $htmlOutput = array_merge(
-                    $htmlOutput,
-                    array(
-                        '<fieldset class="clearfix">',
-                        '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
-                        $this->form->renderField('name', $groupName, null, $options),
-                        $this->form->renderField('content', $groupName, null, $options),
-                        '</fieldset>'
-                    )
-                );
+                    $htmlOutput = array_merge(
+                        $htmlOutput,
+                        array(
+                            '<fieldset class="clearfix">',
+                            '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
+                            $this->form->renderField('name', $groupName, null, $options),
+                            $this->form->renderField('content', $groupName, null, $options),
+                            '</fieldset>'
+                        )
+                    );
+                }
             }
 
             $htmlOutput[] = '</div>';
