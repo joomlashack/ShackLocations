@@ -254,12 +254,13 @@ class ShacklocationsFormFieldMaptabs extends JFormField
     var createTab = function(evt) {
             evt.preventDefault();
             
-            var fieldset = $(this).parents('fieldset').get(0);
+            var fieldset = $(this).parents('fieldset').get(0)
+                \$newFieldset = $(fieldBlank.replace(dummyId, createId())); 
             if (fieldset) {
-                $(fieldBlank.replace(dummyId, createId())).insertBefore($(fieldset));
+                \$newFieldset.insertBefore($(fieldset));
                 
             } else {
-                $(fieldBlank).insertBefore($(this).parent());
+                \$newFieldset.insertBefore($(this).parent());
             }
             init();
         };
