@@ -67,6 +67,7 @@ class com_focalpointInstallerScript extends AbstractScript
                 break;
 
             case 'update':
+                $this->removeLanguageFiles();
                 break;
         }
 
@@ -94,6 +95,21 @@ class com_focalpointInstallerScript extends AbstractScript
             );
 
             $this->setMessage(join('', $message), 'notice');
+        }
+    }
+
+    /**
+     * Removes all non-localized language files
+     */
+    public function removeLanguageFiles()
+    {
+        $files = array_merge(
+            JFolder::files(JPATH_SITE . '/language', '.*focalpoint.*', true, true),
+            JFolder::files(JPATH_ADMINISTRATOR . '/language', '.*focalpoint.*', true, true)
+        );
+
+        foreach ($files as $file) {
+            JFile::delete($file);
         }
     }
 }
