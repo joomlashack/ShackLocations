@@ -80,14 +80,6 @@ class FocalpointViewMap extends JViewLegacy
             throw new Exception(implode("\n", $errors));
         }
 
-        if ($this->_layout == 'edit') {
-            $authorised = $user->authorise('core.create', 'com_focalpoint');
-
-            if ($authorised !== true) {
-                throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
-            }
-        }
-
         // Load FocalPoint Plugins. Trigger onBeforeMapPrepareRender
         JPluginHelper::importPlugin('focalpoint');
         JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
@@ -105,36 +97,27 @@ class FocalpointViewMap extends JViewLegacy
             )
         );
 
-        // We need to fire the onContentPrepare content plugin events for each tab.
-        if ($this->item->tabs) {
-            foreach ($this->item->tabs as $key => $tab) {
-                if (!isset($tab->name) || !isset($tab->content)) {
-                    unset($this->item->tabs->$key);
-                    continue;
-                }
-
-                $tab->text = $tab->content;
-                JFactory::getApplication()->triggerEvent(
-                    'onContentPrepare',
-                    array(
-                        'com_focalpoint.map',
-                        &$tab,
-                        &$this->params,
-                        $offset
-                    )
-                );
-
-                $tab->content = $tab->text;
+        // Trigger onContentPrepare for any custom map tabs
+        foreach ($this->item->tabsdata->tabs as $key => &$tab) {
+            if (empty($tab->name) || empty($tab->content)) {
+                unset($this->item->tabsdata->tabs[$key]);
+                continue;
             }
+
+            $tab->text = $tab->content;
+            JFactory::getApplication()->triggerEvent(
+                'onContentPrepare',
+                array(
+                    'com_focalpoint.map',
+                    &$tab,
+                    &$this->params,
+                    $offset
+                )
+            );
+
+            $tab->content = $tab->text;
+            unset($tab->text);
         }
-
-        $item        = new stdClass();
-        $item->event = new stdClass();
-
-        // Load the item metadata. Decode from JSON so the metadata can be accessed as an object
-        $metadata = new JRegistry;
-        $metadata->loadString($this->item->metadata, 'JSON');
-        $this->item->metadata = $metadata;
 
         // Setup metadata
         $this->prepareDocument();

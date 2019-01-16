@@ -69,7 +69,14 @@ class FocalpointModelMap extends JModelForm
                 if (!$published || ($published == $table->state)) {
                     $this->item = new JObject($table->getProperties());
 
-                    $this->item->tabs = json_decode($this->item->tabsdata);
+                    $this->item->tabsdata = json_decode($this->item->tabsdata);
+                    $mapTabs              = empty($this->item->tabsdata->tabs)
+                        ? array()
+                        : (array)$this->item->tabsdata->tabs;
+
+                    $this->item->tabsdata->tabs = $mapTabs;
+
+                    $this->item->metadata = new Registry($this->item->metadata);
                 }
 
             } elseif ($error = $table->getError()) {
