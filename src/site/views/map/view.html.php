@@ -122,16 +122,6 @@ class FocalpointViewMap extends JViewLegacy
         // Setup metadata
         $this->prepareDocument();
 
-        // Load the item params. Decode from JSON so the parameters can be accessed as an object
-        $params = new JRegistry;
-        $params->loadString($this->item->params, 'JSON');
-        $this->item->params = $params;
-
-        // Merge global params with item params
-        $params = clone $this->params;
-        $params->merge($this->item->params);
-        $this->item->params = $params;
-
         // Scan for custom field tags in the description and replace accordingly.
         foreach ($this->item->markerdata as &$markerdata) {
             $regex = '/{(.*?)}/i';

@@ -70,13 +70,19 @@ class FocalpointModelMap extends JModelForm
                     $this->item = new JObject($table->getProperties());
 
                     $this->item->tabsdata = json_decode($this->item->tabsdata);
-                    $mapTabs              = empty($this->item->tabsdata->tabs)
+                    $this->item->metadata = new Registry($this->item->metadata);
+
+                    // Some additional tweaking for custom tabs
+                    $mapTabs = empty($this->item->tabsdata->tabs)
                         ? array()
                         : (array)$this->item->tabsdata->tabs;
 
                     $this->item->tabsdata->tabs = $mapTabs;
 
-                    $this->item->metadata = new Registry($this->item->metadata);
+                    // Load the item params merged from component config
+                    $params = JComponentHelper::getParams('com_focalpoint');
+                    $params->merge(new Registry($this->item->params));
+                    $this->item->params = $params;
                 }
 
             } elseif ($error = $table->getError()) {
