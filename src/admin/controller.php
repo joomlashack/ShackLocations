@@ -107,44 +107,4 @@ class FocalpointController extends JControllerLegacy
 
         return $this;
     }
-
-    public function fixLocations()
-    {
-        $db = JFactory::getDbo();
-
-        $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'id',
-                    'customfields'
-                )
-            )
-            ->from('#__focalpoint_locationtypes')
-            ->where('customfields != ' . $db->quote(''));
-
-        $locationTypes = $db->setQuery($query)->loadObjectList();
-
-        $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'id',
-                    'type',
-                    'othertypes',
-                    'customfieldsdata'
-                )
-            )
-            ->from('#__focalpoint_locations')
-        ->where(
-            array(
-                'othertypes != ' . $db->quote(''),
-                'customfieldsdata != ' . $db->quote('')
-            ),
-            'OR'
-        );
-
-        $locations = $db->setQuery($query)->loadObjectList();
-
-        echo '<pre>' . print_r($locationTypes, 1) . '</pre>';
-        echo '<pre>' . print_r($locations, 1) . '</pre>';
-    }
 }
