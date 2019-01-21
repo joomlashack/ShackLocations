@@ -32,43 +32,4 @@ class FocalpointControllerMaps extends JControllerAdmin
     {
         return parent::getModel($name, $prefix, $config);
     }
-
-    public function downgrade()
-    {
-        $db = JFactory::getDbo();
-
-        $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'id',
-                    'tabsdata'
-                )
-            )
-            ->from('#__focalpoint_maps');
-
-        $maps = $db->setQuery($query)->loadObjectList();
-
-        $fixed = 0;
-        foreach ($maps as $map) {
-            if ($tabsdata = json_decode($map->tabsdata)) {
-                if (isset($tabsdata->tabs)) {
-                    $newData = array();
-                    foreach ($tabsdata as $key => $data) {
-                        if ($key == 'tabs') {
-                            foreach ($data as $hash => $tab) {
-                                $newData[$hash] = $tab;
-                            }
-                        } else {
-                            $newData[$key] = $data;
-                        }
-                    }
-                    if ($newData) {
-                        $map->tabsdata = json_encode($newData);
-                        $fixed += $db->updateObject('#__focalpoint_maps', $map, 'id');
-                    }
-                }
-            }
-        }
-        echo 'Fixed: ' . $fixed;
-    }
 }
