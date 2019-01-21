@@ -67,6 +67,7 @@ class com_focalpointInstallerScript extends AbstractScript
                 break;
 
             case 'update':
+                $this->updateTabsdata();
                 $this->removeLanguageFiles();
                 break;
         }
@@ -110,6 +111,45 @@ class com_focalpointInstallerScript extends AbstractScript
 
         foreach ($files as $file) {
             JFile::delete($file);
+        }
+    }
+
+    /**
+     * Reformats the tabsdata field for changes made in v1.3.5
+     */
+    protected function updateTabsdata()
+    {
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'id',
+                    'tabsdata'
+                )
+            )
+            ->from('#__focalpoint_maps');
+
+        $maps = $db->setQuery($query)->loadObjectList();
+
+        $fixed = 0;
+        foreach ($maps as $map) {
+            if ($tabsdata = json_decode($map->tabsdata)) {
+                $newData = array();
+                if (!isset($tabsdata->tabs)) {
+                    foreach ($tabsdata as $hash => $tab) {
+                        if (in_array($hash, array('mapstyle'))) {
+                            $newData[$hash] = $tab;
+                        } else {
+                            $newData['tabs'][$hash] = $tab;
+                        }
+                    }
+                }
+                if ($newData) {
+                    $map->tabsdata = json_encode($newData);
+                    $fixed         += (int)$db->updateObject('#__focalpoint_maps', $map, array('id'));
+                }
+            }
         }
     }
 }
