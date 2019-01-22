@@ -93,7 +93,7 @@
         <obsolete>
             <file>administrator/components/com_focalpoint/models/fields/createdby.php</file>
             <file>administrator/components/com_focalpoint/models/fields/custom_field.php</file>
-            <file>administrator/components/com_focalpoint/models/fields/otherlocationtypeslist.php</file>
+            <file>administrator/components/com_focalpoint/models/fields/othertypeslist.php</file>
         </obsolete>
     </alledia>
 </extension>
