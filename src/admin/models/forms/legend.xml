@@ -28,7 +28,7 @@
                size="30"
                maxlength="300"/>
 
-        <field name="created_by" type="createdby" default=""
+        <field name="created_by" type="user" default=""
                label="COM_FOCALPOINT_FORM_LBL_LEGEND_CREATED_BY"
                description="COM_FOCALPOINT_FORM_DESC_LEGEND_CREATED_BY"/>
 

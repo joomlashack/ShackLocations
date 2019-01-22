@@ -44,7 +44,7 @@
                description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_CUSTOMFIELDS"/>
 
         <field name="created_by"
-               type="createdby"
+               type="user"
                label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_CREATED_BY"
                description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_CREATED_BY"/>
 
