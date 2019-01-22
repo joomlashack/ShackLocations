@@ -95,6 +95,8 @@ class FocalpointModelmap extends JModelAdmin
 
     /**
      * @param JTable $table
+     *
+     * @return void
      */
     protected function prepareTable($table)
     {
