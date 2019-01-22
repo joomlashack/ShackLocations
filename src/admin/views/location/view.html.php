@@ -22,16 +22,11 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
-use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 
-/**
- * View to edit
- */
 class FocalpointViewLocation extends JViewLegacy
 {
     /**
@@ -88,14 +83,15 @@ class FocalpointViewLocation extends JViewLegacy
     }
 
     /**
-     * Add the page title and toolbar.
+     * @return void
+     * @throws Exception
      */
     protected function addToolbar()
     {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
         $user  = JFactory::getUser();
-        $isNew = ($this->item->id == 0);
+        $isNew = empty($this->item->id);
         if (isset($this->item->checked_out)) {
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
         } else {
@@ -105,25 +101,38 @@ class FocalpointViewLocation extends JViewLegacy
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATION'), 'location.png');
 
-        // If not checked out, can save the item.
-        if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
+        if (!$checkedOut) {
+            if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
+                JToolBarHelper::apply('location.apply', 'JTOOLBAR_APPLY');
+                JToolBarHelper::save('location.save', 'JTOOLBAR_SAVE');
+            }
 
-            JToolBarHelper::apply('location.apply', 'JTOOLBAR_APPLY');
-            JToolBarHelper::save('location.save', 'JTOOLBAR_SAVE');
+            if ($canDo->get('core.create')) {
+                JToolBarHelper::custom(
+                    'location.save2new',
+                    'save-new.png',
+                    'save-new_f2.png',
+                    'JTOOLBAR_SAVE_AND_NEW',
+                    false
+                );
+            }
         }
-        if (!$checkedOut && ($canDo->get('core.create'))) {
-            JToolBarHelper::custom('location.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW',
-                false);
-        }
+
+
         // If an existing item, can save to a copy.
         if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom('location.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY',
-                false);
+            JToolBarHelper::custom(
+                'location.save2copy',
+                'save-copy.png',
+                'save-copy_f2.png',
+                'JTOOLBAR_SAVE_AS_COPY',
+                false
+            );
         }
-        if (empty($this->item->id)) {
-            JToolBarHelper::cancel('location.cancel', 'JTOOLBAR_CANCEL');
-        } else {
-            JToolBarHelper::cancel('location.cancel', 'JTOOLBAR_CLOSE');
-        }
+
+        JToolBarHelper::cancel(
+            'location.cancel',
+            $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE'
+        );
     }
 }

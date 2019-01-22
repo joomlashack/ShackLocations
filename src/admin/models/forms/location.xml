@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <!-- These fields do not seem to be used -->
-    <fieldset>
-        <field name="keylocation"
-               type="radio"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_KEYLOCATION"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_KEYLOCATION"
-               class="btn-group btn-group-yesno">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-
-        <field name="includesubcats"
-               type="radio"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_INCLUDESUBCATS"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_INCLUDESUBCATS"
-               class="btn-group btn-group-yesno">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-    </fieldset>
-
     <!-- title/alias fields -->
     <fieldset>
         <field name="title"
@@ -61,6 +40,17 @@
     </fieldset>
 
     <fieldset name="params">
+        <field name="state"
+               type="list"
+               class="chzn-color chzn-color-state"
+               label="JSTATUS"
+               description="JFIELD_PUBLISHED_DESC"
+               size="1"
+               default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+
         <field name="map_id"
                type="maps"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_MAP_ID"
@@ -115,17 +105,6 @@
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_MARKER"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_MARKER"
                directory="/images/markers/"/>
-
-        <field name="state"
-               type="list"
-               class="chzn-color chzn-color-state"
-               label="JSTATUS"
-               description="JFIELD_PUBLISHED_DESC"
-               size="1"
-               default="1">
-            <option value="1">JPUBLISHED</option>
-            <option value="0">JUNPUBLISHED</option>
-        </field>
 
         <field name="created_by"
                type="user"

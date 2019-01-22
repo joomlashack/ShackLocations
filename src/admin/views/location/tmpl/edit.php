@@ -22,8 +22,6 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Form\FormField;
-
 defined('_JEXEC') or die;
 
 JHtml::_('behavior.tooltip');
@@ -40,18 +38,18 @@ $formFieldsets = $this->form->getFieldsets();
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task === 'location.cancel' || document.formvalidator.isValid(document.id('location-form'))) {
-            Joomla.submitform(task, document.getElementById('location-form'));
+        if (task === 'location.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+            Joomla.submitform(task, document.getElementById('adminForm'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
         }
     }
 </script>
-
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
-      method="post" enctype="multipart/form-data"
-      name="adminForm"
+<form name="adminForm"
       id="adminForm"
+      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+      method="post"
+      enctype="multipart/form-data"
       class="tmpl_<?php echo JFactory::getApplication()->getTemplate(); ?> form-validate">
 
     <?php
@@ -102,14 +100,14 @@ $formFieldsets = $this->form->getFieldsets();
                     <span class="icon-info" aria-hidden="true"></span>
                     <?php echo JText::_($fieldset->description); ?>
                 </div>
-            <?php
+                <?php
             endif;
 
             echo $this->form->renderFieldset($fieldsetName);
             echo JHtml::_('bootstrap.endTab');
             ?>
         </div>
-    <?php
+        <?php
     endforeach;
 
     echo JHtml::_('bootstrap.endTabSet');

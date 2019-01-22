@@ -102,7 +102,7 @@ class FocalpointModellocation extends JModelAdmin
                             'description' => $definedField['description']
                         );
 
-                        $dataType   = $keyParts[0];
+                        $dataType = $keyParts[0];
                         switch ($dataType) {
                             case 'textbox':
                                 $fieldAttribs['type'] = 'textbox';
@@ -280,59 +280,32 @@ class FocalpointModellocation extends JModelAdmin
      */
     public function getItem($pk = null)
     {
-        if ($this->item === null) {
-            if ($item = parent::getItem($pk)) {
-                // Merge the intro and full text.
-                $item->description = trim($item->fulldescription) == ''
-                    ? $item->description
-                    : $item->description . " < hr id = \"system-readmore\" />" . $item->fulldescription;
-
-                $item->othertypes = json_decode($item->othertypes, true);
-
-                $item->customfieldsdata = json_decode($item->customfieldsdata ?: '[]', true);
-                $item->customfields     = array();
-                foreach ($item->customfieldsdata as $key => $value) {
-                    $item->customcustomfieldsdata[$key] = $this->clean($value);
-                    $item->customfields[$key]           = $value;
-                }
-
-                // Convert the metadata field to an array.
-                $metaData       = new JRegistry($item->metadata);
-                $item->metadata = $metaData->toArray();
-            }
-
-            $this->item = $item;
+        if ($item = parent::getItem($pk)) {
+            $item->description = trim($item->fulldescription) == ''
+                ? $item->description
+                : $item->description . '<hr id="system-readmore" />' . $item->fulldescription;
         }
 
-        return $this->item;
-    }
-
-    /**
-     * @param string|array $string
-     *
-     * @return string|array
-     */
-    protected function clean($string)
-    {
-        if (is_array($string)) {
-            foreach ($string as $key => $value) {
-                $string[$key] = $this->clean($value);
-            }
-
-        } else {
-            $string = stripslashes($string);
+        if (empty($item->id)) {
+            $item->created_by = JFactory::getUser()->id;
         }
-        return $string;
+
+        return $item;
     }
 
     /**
      * @param JTable $table
+     *
+     * @return void
      */
     protected function prepareTable($table)
     {
         $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
 
-        // Split the description into two parts if required.
+        if (!$table->id) {
+            $table->ordering = $table->getNextOrder();
+        }
+
         $parts = preg_split('#(<hr\s+id="system-readmore"\s*/>)#', $table->description);
         if (count($parts) == 2) {
             $table->fulldescription = trim(array_pop($parts));
@@ -340,10 +313,6 @@ class FocalpointModellocation extends JModelAdmin
 
         } else {
             $table->fulldescription = '';
-        }
-
-        if (!$table->id) {
-            $table->ordering = $table->getNextOrder();
         }
     }
 
@@ -368,24 +337,6 @@ class FocalpointModellocation extends JModelAdmin
         }
 
         return array();
-    }
-
-    /**
-     * @param array|string $data
-     *
-     * @return string
-     */
-    public function toJSON($data)
-    {
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $value = $this->toJSON($value);
-
-            } else {
-                $value = addslashes($value);
-            }
-        }
-        return json_encode($data);
     }
 
     public function save($data)
