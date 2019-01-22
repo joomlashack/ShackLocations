@@ -53,7 +53,6 @@ class FocalpointModellocations extends JModelList
                 'description', 'a.description',
                 'address', 'a.address',
                 'marker', 'a.marker',
-                'keylocation', 'a.keylocation',
                 'customfieldsdata', 'a.customfieldsdata',
                 'created_by', 'a.created_by',
                 'params', 'a.params',
