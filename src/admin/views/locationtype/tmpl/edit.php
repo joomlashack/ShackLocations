@@ -30,48 +30,40 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('jquery.ui', array('core', 'sortable'));
 
-// Import CSS
-$document = JFactory::getDocument();
-$document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
+JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
 ?>
-
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
         if (task == 'locationtype.cancel' || document.formvalidator.isValid(document.id('locationtype-form'))) {
-            Joomla.submitform(task, document.getElementById('locationtype-form'));
-        }
-        else {
+            Joomla.submitform(task, document.getElementById('adminForm'));
+        } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
         }
     }
 </script>
 
-
 <form action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
-      method="post" enctype="multipart/form-data" name="adminForm" id="locationtype-form"
-      class="tmpl_<?php echo JFactory::getApplication()->getTemplate(); ?> form-validate">
-    <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
-    <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>"/>
-    <input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>"/>
-
+      method="post"
+      enctype="multipart/form-data"
+      name="adminForm"
+      id="adminForm"
+      class="form-validate">
     <?php
+    echo JLayoutHelper::render('joomla.edit.title_alias', $this);
+
+    echo $this->form->renderFieldset('hidden');
+
     echo JHtml::_('bootstrap.startTabSet', 'locationtype', array('active' => 'general'));
     echo JHtml::_('bootstrap.addTab', 'locationtype', 'general', JText::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
     ?>
-    <div class="form-horizontal">
-        <div class="row-fluid">
-            <div class="span12">
-                <?php echo $this->getForm()->getControlGroup('state'); ?>
-                <?php echo $this->getForm()->getControlGroup('legend'); ?>
-                <?php echo $this->getForm()->getControlGroup('marker'); ?>
-                <input type="hidden" name="jform[customfields]" value="<?php echo $this->item->customfields; ?>"/>
-                <?php echo $this->form->getInput('created_by'); ?>
-            </div>
+    <div class="row-fluid">
+        <div class="form-horizontal">
+            <?php echo $this->form->renderFieldset('general'); ?>
         </div>
     </div>
-    <?php echo JHtml::_('bootstrap.endTab'); ?>
-
     <?php
+    echo JHtml::_('bootstrap.endTab');
+
     echo JHtml::_(
         'bootstrap.addTab',
         'locationtype',
