@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <!-- apparently not used? -->
-    <fieldset>
-        <field name="includesubcats"
-               type="radio"
-               class="btn-group btn-group-yseno"
-               label="COM_FOCALPOINT_FORM_LBL_MAP_INCLUDESUBCATS"
-               description="COM_FOCALPOINT_FORM_DESC_MAP_INCLUDESUBCATS"
-               filter="raw">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
-        </field>
-
-        <field name="kmlfile"
-               type="text"
-               label="KML file"
-               description=""
-               hide_default="true"/>
-
-    </fieldset>
-
     <fieldset name="hidden">
         <field name="id" type="hidden"/>
         <field name="tabsdata" type="hidden" filter="raw"/>

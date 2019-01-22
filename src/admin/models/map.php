@@ -93,12 +93,15 @@ class FocalpointModelmap extends JModelAdmin
         return $item;
     }
 
+    /**
+     * @param JTable $table
+     */
     protected function prepareTable($table)
     {
         $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
 
         if (!$table->id) {
-            $table->getNextOrder();
+            $table->ordering   = $table->getNextOrder();
         }
     }
 }

@@ -126,7 +126,9 @@ class FocalpointViewMap extends JViewLegacy
             );
         }
 
-        $cancel = empty($this->item->id) ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE';
-        JToolBarHelper::cancel('map.cancel', $cancel);
+        JToolBarHelper::cancel(
+            'map.cancel',
+            $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE'
+        );
     }
 }
