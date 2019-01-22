@@ -22,46 +22,63 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Object\CMSObject;
 
-jimport('joomla.application.component.view');
+defined('_JEXEC') or die();
 
-/**
- * View to edit
- */
 class FocalpointViewLegend extends JViewLegacy
 {
+    /**
+     * @var CMSObject
+     */
     protected $state;
+
+    /**
+     * @var CMSObject
+     */
     protected $item;
+
+    /**
+     * @var Form
+     */
     protected $form;
 
     /**
-     * Display the view
+     * @param string $tpl
+     *
+     * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
-        $this->state = $this->get('State');
-        $this->item = $this->get('Item');
-        $this->form = $this->get('Form');
+        /** @var FocalpointModellegend $model */
+        $model = $this->getModel();
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        $this->state = $model->getState();
+        $this->item  = $model->getItem();
+        $this->form  = $model->getForm();
+
+        if ($errors = $model->getErrors()) {
             throw new Exception(implode("\n", $errors));
         }
 
         $this->addToolbar();
+
         parent::display($tpl);
     }
 
     /**
-     * Add the page title and toolbar.
+     * @return void
+     * @throws Exception
      */
     protected function addToolbar()
     {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $user = JFactory::getUser();
+        $user  = JFactory::getUser();
         $isNew = ($this->item->id == 0);
+
         if (isset($this->item->checked_out)) {
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
         } else {
@@ -71,24 +88,36 @@ class FocalpointViewLegend extends JViewLegacy
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGEND'), 'list-2');
 
-        // If not checked out, can save the item.
-        if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
+        if (!$checkedOut) {
+            if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
+                JToolBarHelper::apply('legend.apply', 'JTOOLBAR_APPLY');
+                JToolBarHelper::save('legend.save', 'JTOOLBAR_SAVE');
+            }
 
-            JToolBarHelper::apply('legend.apply', 'JTOOLBAR_APPLY');
-            JToolBarHelper::save('legend.save', 'JTOOLBAR_SAVE');
+            if ($canDo->get('core.create')) {
+                JToolBarHelper::custom(
+                    'legend.save2new',
+                    'save-new.png',
+                    'save-new_f2.png',
+                    'JTOOLBAR_SAVE_AND_NEW',
+                    false
+                );
+            }
         }
-        if (!$checkedOut && ($canDo->get('core.create'))) {
-            JToolBarHelper::custom('legend.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-        }
-        // If an existing item, can save to a copy.
+
         if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom('legend.save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
-        }
-        if (empty($this->item->id)) {
-            JToolBarHelper::cancel('legend.cancel', 'JTOOLBAR_CANCEL');
-        } else {
-            JToolBarHelper::cancel('legend.cancel', 'JTOOLBAR_CLOSE');
+            JToolBarHelper::custom(
+                'legend.save2copy',
+                'save-copy.png',
+                'save-copy_f2.png',
+                'JTOOLBAR_SAVE_AS_COPY',
+                false
+            );
         }
 
+        JToolBarHelper::cancel(
+            'legend.cancel',
+            $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE'
+        );
     }
 }
