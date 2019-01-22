@@ -26,10 +26,7 @@ defined('_JEXEC') or die;
 
 class FocalpointTablelegend extends JTable
 {
-    protected $_jsonEncode = array(
-        'metadata',
-        'params'
-    );
+    protected $_jsonEncode = array('params');
 
     protected $_columnAlias = array(
         'published' => 'state'

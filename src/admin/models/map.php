@@ -83,11 +83,8 @@ class FocalpointModelmap extends JModelAdmin
                 $item->created_by = JFactory::getUser()->id;
             }
 
-            $tabsdata       = new Registry($item->tabsdata);
-            $item->tabsdata = $tabsdata->toArray();
-
-            $metadata       = new Registry($item->metadata);
-            $item->metadata = $metadata->toArray();
+            $item->tabsdata = json_decode($item->tabsdata, true);
+            $item->metadata = json_decode($item->metadata, true);
         }
 
         return $item;
