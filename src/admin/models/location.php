@@ -284,6 +284,10 @@ class FocalpointModellocation extends JModelAdmin
             $item->description = trim($item->fulldescription) == ''
                 ? $item->description
                 : $item->description . '<hr id="system-readmore" />' . $item->fulldescription;
+
+            $item->metadata         = json_decode($item->metadata, true);
+            $item->othertypes       = json_decode($item->othertypes, true);
+            $item->customfieldsdata = json_decode($item->customfieldsdata, true);
         }
 
         if (empty($item->id)) {
@@ -339,38 +343,63 @@ class FocalpointModellocation extends JModelAdmin
         return array();
     }
 
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
     public function save($data)
     {
-        if (empty($data['othertypes'])) {
-            $data['othertypes'] = '';
-        }
-
         if (parent::save($data)) {
-            $db = $this->getDbo();
-            $id = $data['id'] ?: $db->insertid();
-
-            $sql = $db->getQuery(true)
-                ->delete('#__focalpoint_location_type_xref')
-                ->where('location_id = ' . $id);
-            $db->setQuery($sql)->execute();
-
-            $types = array_merge(
-                array($data['type']),
-                empty($data['othertypes']) ? array() : $data['othertypes']
-            );
-            $types = array_filter(array_unique($types));
-
-            foreach ($types as $type) {
-                $insert = (object)array(
-                    'location_id'     => $id,
-                    'locationtype_id' => $type
-                );
-                $db->insertObject('#__focalpoint_location_type_xref', $insert);
-            }
+            $id = $data['id'] ?: $this->getDbo()->insertid();
+            $this->updateTypes($id, $data);
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param int   $id
+     * @param array $data
+     *
+     * @return void
+     */
+    protected function updateTypes($id, array $data)
+    {
+        if (empty($data['othertypes'])) {
+            $data['othertypes'] = array();
+        }
+
+        $db = $this->getDbo();
+
+        // Remove existing xrefs
+        $db->setQuery(
+            $db->getQuery(true)
+                ->delete('#__focalpoint_location_type_xref')
+                ->where('location_id = ' . $id)
+        )
+            ->execute();
+
+        // normalize/filter selected ids between type and othertypes
+        $typeIds = array_merge(
+            array($data['type']),
+            empty($data['othertypes']) ? array() : $data['othertypes']
+        );
+        $typeValues = array_map(
+            function ($typeId) use ($id) {
+                return sprintf('(%s, %s)', $id, $typeId);
+            },
+            array_filter(array_unique($typeIds))
+        );
+
+        // Insert the new xrefs
+        $db->setQuery(
+            'INSERT #__focalpoint_location_type_xref '
+            . ' (location_id, locationtype_id)'
+            . ' VALUES ' . join(',', $typeValues)
+        )
+            ->execute();
     }
 }
