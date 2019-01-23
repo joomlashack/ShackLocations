@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS `#__focalpoint_legends` (
   `created_by` INT(11) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci;
 
 
 -- -----------------------------------------------------
@@ -62,7 +63,8 @@ CREATE TABLE IF NOT EXISTS `#__focalpoint_locations` (
   `metadata` TEXT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci;
 
 
 -- -----------------------------------------------------
@@ -83,7 +85,8 @@ CREATE TABLE IF NOT EXISTS `#__focalpoint_locationtypes` (
   `created_by` INT(11) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci;
 
 
 -- -----------------------------------------------------
@@ -95,7 +98,8 @@ CREATE TABLE IF NOT EXISTS `#__focalpoint_location_type_xref` (
   `locationtype_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci;
 
 
 -- -----------------------------------------------------
@@ -120,7 +124,8 @@ CREATE TABLE IF NOT EXISTS `#__focalpoint_maps` (
   `params` TEXT NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4;
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_general_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
