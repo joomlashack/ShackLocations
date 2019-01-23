@@ -22,9 +22,10 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-// Execute the task.
+JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
+
 $controller	= JControllerLegacy::getInstance('Focalpoint');
 $controller->execute(JFactory::getApplication()->input->getCmd('task'));
 $controller->redirect();

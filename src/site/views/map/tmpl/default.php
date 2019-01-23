@@ -33,10 +33,6 @@ $listtabfirst = $this->item->params->get('showlistfirst');
 $lang = JFactory::getLanguage();
 $lang->load('com_focalpoint', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
 
-// Load the default CSS/JS files.
-$document = JFactory::getDocument();
-JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
-
 if ($this->item->params->get('loadBootstrap')) {
     JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
     JHtml::_('bootstrap.framework');
