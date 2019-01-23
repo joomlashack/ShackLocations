@@ -39,7 +39,6 @@ class FocalpointTablelocation extends JTable
         'published' => 'state'
     );
 
-
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_locations', 'id', $db);
