@@ -43,7 +43,7 @@ class com_focalpointInstallerScript extends AbstractScript
     public function update($parent)
     {
         if (parent::update($parent)) {
-            if (version_compare($this->previousManifest->version, '1.2', 'gt')) {
+            if (version_compare($this->previousManifest->version, '1.2', 'lt')) {
                 $this->setMessage(
                     'FocalPoint v1.2 included a new batch of icon markers and cluster icons.'
                     . ' Since you are upgrading to Shack Locations from an earlier version, these markers'
