@@ -30,13 +30,8 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_focalpoint')) {
     throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-// Include dependancies
-jimport('joomla.application.component.controller');
-
-// Register the Helper class
+JHtml::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
 JLoader::register('FocalpointHelper', __DIR__ . '/helpers/focalpoint.php');
-
-// Register the mapsAPI class to handle geocoding and map functions.
 JLoader::register('mapsAPI', __DIR__ . '/helpers/maps.php');
 
 $controller = JControllerLegacy::getInstance('Focalpoint');

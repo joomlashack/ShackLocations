@@ -30,7 +30,6 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
 $params = JComponentHelper::getParams('com_focalpoint');
-JHtml::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
 JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();

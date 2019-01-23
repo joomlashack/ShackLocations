@@ -24,11 +24,6 @@
 
 defined('_JEXEC') or die;
 
-// Import CSS
-$document = JFactory::getDocument();
-$document->addStyleSheet('components/com_focalpoint/assets/css/focalpoint.css');
-
-
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');

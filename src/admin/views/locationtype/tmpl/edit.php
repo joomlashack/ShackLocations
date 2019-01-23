@@ -29,8 +29,6 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('jquery.ui', array('core', 'sortable'));
-
-JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
