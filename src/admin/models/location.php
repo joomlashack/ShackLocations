@@ -70,7 +70,9 @@ class FocalpointModellocation extends JModelAdmin
     {
         parent::preprocessForm($form, $data, $group);
 
-        $customFields = $form->getXml()->xpath('//fieldset[@name="customfields"]');
+        return;
+        
+        $customFields = $form->getXml()->xpath('//fieldset[@name="customfieldsdata"]');
         if ($customFields = array_pop($customFields)) {
             if (empty($data->id) || empty($data->type)) {
                 $customFields['description'] = 'COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS_SAVE_FIRST';

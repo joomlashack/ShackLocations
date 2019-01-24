@@ -112,8 +112,11 @@
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_CREATED_BY"/>
     </fieldset>
 
-    <fieldset name="customfields"
-              label="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS"/>
+    <fieldset name="customfieldsdata"
+              label="COM_FOCALPOINT_LEGEND_LOCATION_CUSTOMFIELDS">
+        <field name="customfieldsdata"
+               type="shacklocations.customfieldsdata"/>
+    </fieldset>
 
     <fieldset name="linkoptions"
               label="COM_FOCALPOINT_LEGEND_LINK_OPTIONS">

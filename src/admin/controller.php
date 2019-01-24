@@ -107,4 +107,41 @@ class FocalpointController extends JControllerLegacy
 
         return $this;
     }
+
+    public function downgradeCustomFields()
+    {
+        $db = JFactory::getDbo();
+
+        $locationTypes = $db->setQuery(
+            $db->getQuery(true)
+                ->select(
+                    array(
+                        'id',
+                        'customfields'
+                    )
+                )
+                ->from('#__focalpoint_locationtypes')
+                ->where('customfields != ' . $db->quote(''))
+        )
+            ->loadObjectList();
+
+        $count = 0;
+        foreach ($locationTypes as $locationType) {
+            $customFields = json_decode($locationType->customfields, true);
+            if (substr_count(key($customFields), '.') == 0) {
+                $locationType->customfields = array();
+                foreach ($customFields as $hash => $customField) {
+                    $key = $customField['type'] . '.' . $hash;
+                    unset($customField['type']);
+                    $locationType->customfields[$key] = $customField;
+                }
+
+                $locationType->customfields = json_encode($locationType->customfields);
+                $db->updateObject('#__focalpoint_locationtypes', $locationType, array('id'));
+                $count++;
+            }
+        }
+
+        echo 'Downgraded: ' . $count;
+    }
 }

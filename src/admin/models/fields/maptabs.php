@@ -209,6 +209,8 @@ class ShacklocationsFormFieldMaptabs extends JFormField
      * Load all the js/css required to make this work
      *
      * @param array $options
+     *
+     * @return void
      */
     protected function loadAssets($options)
     {
