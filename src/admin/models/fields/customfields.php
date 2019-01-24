@@ -83,8 +83,10 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             '<div class="span7 custom-maptabs">',
         );
 
-        foreach ($this->value as $hash => $data) {
-            $htmlOutput[] = $this->getFieldBlock($hash, $data, $options);
+        if ($this->value) {
+            foreach ($this->value as $hash => $data) {
+                $htmlOutput[] = $this->getFieldBlock($hash, $data, $options);
+            }
         }
 
         $appendButton = '<div>'
@@ -97,7 +99,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         $htmlOutput = array_merge(
             $htmlOutput,
             array(
-                $appendButton,
+                //$appendButton,
                 '</div>'
             )
         );
@@ -125,12 +127,24 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         $fieldGroup         = $this->fieldGroup->addChild('fields');
         $fieldGroup['name'] = $hash;
 
-        switch ($type) {
-            default:
-                $fieldXml = sprintf('<field name="%s" type="%s" label="%s"/>', $name, $type, $label);
-                $field    = new SimpleXMLElement($fieldXml);
-                break;
+        $attributes = array(
+            'name'  => $name,
+            'type'  => $type,
+            'label' => $label
+        );
+
+        if (!empty($options['attributes'])) {
+            $attributes = array_merge($attributes, $options['attributes']);
         }
+
+        if (empty($options['options'])) {
+            $fieldXml = sprintf('<field %s/>', ArrayHelper::toString($attributes));
+
+        } else {
+            $fieldXml = sprintf('<field %s>%s</field>', ArrayHelper::toString($attributes), $options['options']);
+        }
+
+        $field = new SimpleXMLElement($fieldXml);
 
         $this->form->setField($field, $groupName);
 
@@ -147,10 +161,12 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected function getFieldBlock($hash, $data, $options)
     {
+        $blockHeader = JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $data['type']);
+
         $blockHtml = array_merge(
             array(
                 '<fieldset class="clearfix">',
-                '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
+                sprintf('<legend><i class="icon-menu"></i>&nbsp;%s</legend>', $blockHeader),
                 $this->getTrashButton(),
                 $this->getInsertButton()
             ),
@@ -167,13 +183,65 @@ class ShacklocationsFormFieldCustomfields extends JFormField
 
         $renderedFields = array(
             $this->renderSubfield($hash, 'type', 'hidden', '', $options),
-            $this->renderSubfield($hash, 'name', 'text', 'Name', $options),
-            $this->renderSubfield($hash, 'description', 'text', 'Description', $options),
-            $this->renderSubfield($hash, 'label', 'text', 'Label', $options)
+            $this->renderSubfield($hash, 'name', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_NAME', $options),
+            $this->renderSubfield($hash, 'description', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP', $options),
+            $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options)
         );
 
         switch ($type) {
             case 'textbox':
+            case 'link':
+            case 'email':
+                break;
+
+            case 'textarea':
+                $fieldOptions = array(
+                    'attributes' => array(
+                        'class' => 'btn-group btn-group-yesno',
+                    ),
+                    'options'    => JHtml::_(
+                        'select.options',
+                        array(
+                            JHtml::_('select.option', 1, JText::_('JYES')),
+                            JHtml::_('select.option', 0, JText::_('JNO'))
+                        )
+                    )
+                );
+
+                $renderedFields[] = $this->renderSubfield(
+                    $hash,
+                    'loadeditor',
+                    'radio',
+                    JText::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'),
+                    array_merge($options, $fieldOptions)
+                );
+                break;
+
+            case 'image':
+                $renderedFields[] = $this->renderSubfield(
+                    $hash,
+                    'directory',
+                    'text',
+                    'COM_FOCALPOINT_CUSTOMFIELD_DEFAULT_DIRECTORY',
+                    $options
+                );
+                break;
+
+            case 'selectlist':
+            case 'multiselect':
+                $fieldOptions = array(
+                    'attributes' => array(
+                        'rows' => 20
+                    )
+                );
+
+                $renderedFields[] = $this->renderSubfield(
+                    $hash,
+                    'options',
+                    'textarea',
+                    'COM_FOCALPOINT_CUSTOMFIELD_OPTIONS',
+                    array_merge($options, $fieldOptions)
+                );
                 break;
 
             default:
