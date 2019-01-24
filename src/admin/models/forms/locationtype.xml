@@ -41,7 +41,6 @@
                required="true"
                description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_LEGEND"/>
 
-
         <field name="marker"
                type="media"
                label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_MARKER"
@@ -54,5 +53,8 @@
                description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_CREATED_BY"/>
     </fieldset>
 
+    <fieldset name="customfields">
+        <field name="customfields"
+               type="shacklocations.customfields"/>
     </fieldset>
 </form>

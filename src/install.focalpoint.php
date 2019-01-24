@@ -100,6 +100,7 @@ class com_focalpointInstallerScript extends AbstractScript
 
                 case 'update':
                     $this->updateTabsdata();
+                    $this->updateCustomFields();
                     $this->removeLanguageFiles();
                     break;
             }
@@ -154,7 +155,9 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * Reformats the tabsdata field for changes made in v1.3.5
+     * Reformats the tabsdata field for changes made in v1.4.0
+     *
+     * @return void
      */
     protected function updateTabsdata()
     {
@@ -188,6 +191,45 @@ class com_focalpointInstallerScript extends AbstractScript
                     $map->tabsdata = json_encode($newData);
                     $fixed         += (int)$db->updateObject('#__focalpoint_maps', $map, array('id'));
                 }
+            }
+        }
+    }
+
+    /**
+     * update the custom fields in location types made in v1.4.0
+     *
+     * @return void
+     */
+    public function updateCustomFields()
+    {
+        $db = JFactory::getDbo();
+
+        $locationTypes = $db->setQuery(
+            $db->getQuery(true)
+                ->select(
+                    array(
+                        'id',
+                        'customfields'
+                    )
+                )
+                ->from('#__focalpoint_locationtypes')
+                ->where('customfields != ' . $db->quote(''))
+        )
+            ->loadObjectList();
+
+        foreach ($locationTypes as $locationType) {
+            $customFields = json_decode($locationType->customfields, true);
+            if (substr_count(key($customFields), '.') == 1) {
+                $locationType->customfields = array();
+                foreach ($customFields as $key => $customField) {
+                    list($type, $hash) = explode('.', $key);
+
+                    $customField['type']               = $type;
+                    $locationType->customfields[$hash] = $customField;
+                }
+
+                $locationType->customfields = json_encode($locationType->customfields);
+                $db->updateObject('#__focalpoint_locationtypes', $locationType, array('id'));
             }
         }
     }
