@@ -94,41 +94,33 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             }
         }
 
-        $htmlOutput = array_merge(
-            $htmlOutput,
-            $this->createNewButtons()
-        );
-
+        $htmlOutput[] = $this->createNewButtons();
         $htmlOutput[] = '</div>';
 
         return join('', $htmlOutput);
     }
 
     /**
-     * @return string[]
+     * @return string
      */
     protected function createNewButtons()
     {
-        $newButtons = array();
+        $newButtons = array('<ul class="inline">');
 
-        $appendButton = '<div>'
-            . '<button class="btn btn-small button-apply btn-success maptab-append">'
-            . '<span class="icon-plus icon-white"></span>'
-            . 'New Tab'
-            . '</button>'
-            . '</div>';
+        foreach ($this->fieldTypes as $fieldType) {
+            $btnClass = 'btn btn-small button-apply btn-success pull-left sl-addcustom sl-type-' . $fieldType;
 
-        $insertButton = sprintf(
-            '<a %s></a>',
-            ArrayHelper::toString(
-                array(
-                    'class' => 'hasTip maptab-insert icon-plus',
-                    'title' => 'Insert new tab before this one'
-                )
-            )
-        );
+            $newButtons[] = '<li>'
+                . sprintf('<button class="%s">', $btnClass)
+                . '<span class="icon-plus icon-white"></span>'
+                . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $fieldType)
+                . '</button>'
+                . '</li>';
+        }
 
-        return $newButtons;
+        $newButtons[] = '</ul>';
+
+        return join("\n", $newButtons);
     }
 
     /**
@@ -306,7 +298,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
 
     /**
      * @param string $hash
-     * @param array $options
+     * @param array  $options
      *
      * @return string
      */
