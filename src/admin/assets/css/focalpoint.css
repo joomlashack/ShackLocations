@@ -23,8 +23,8 @@
     display: inline-block;
 }
 
-.maptab-delete,
-.maptab-insert {
+.sl-subfield-delete,
+.sl-subfield-insert {
     display: block;
     width: 12px !important;
     height: 12px !important;
@@ -38,43 +38,43 @@
     border-radius: 20px;
 }
 
-.maptab-delete {
+.sl-subfield-delete {
     color: #942a25;
 }
 
-.maptab-insert {
+.sl-subfield-insert {
     color: #46a546;
 }
 
-.custom-maptabs fieldset * {
+.sl-subfield-wrapper fieldset * {
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     -ms-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
 }
 
-.custom-maptabs fieldset legend {
+.sl-subfield-wrapper fieldset legend {
     font-size: 16px;
     margin-bottom: 0;
 }
 
-.custom-maptabs fieldset .control-group:first-of-type {
+.sl-subfield-wrapper fieldset .control-group:first-of-type {
     margin-top: 9px;
 }
 
-.custom-maptabs fieldset:hover a.maptab-delete:hover,
-.custom-maptabs fieldset:hover a.maptab-insert:hover{
+.sl-subfield-wrapper fieldset:hover a.sl-subfield-delete:hover,
+.sl-subfield-wrapper fieldset:hover a.sl-subfield-insert:hover{
     text-decoration: none;
     color: #000;
     opacity: 1;
 }
 
-.custom-maptabs fieldset:hover .maptab-delete,
-.custom-maptabs fieldset:hover .maptab-insert{
+.sl-subfield-wrapper fieldset:hover .sl-subfield-delete,
+.sl-subfield-wrapper fieldset:hover .sl-subfield-insert{
     opacity: 0.6;
 }
 
-.custom-maptabs fieldset:hover legend {
+.sl-subfield-wrapper fieldset:hover legend {
     cursor: move;
     background: #f7f9fa;
     background: -moz-linear-gradient(top, #f7f9fa 0%, #ededed 100%);

@@ -80,7 +80,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         $this->loadAssets($options);
 
         $htmlOutput = array(
-            '<div class="span7 custom-maptabs">',
+            '<div class="span7 sl-subfield-wrapper">',
         );
 
         $values = (array)($this->value ?: array());
@@ -94,7 +94,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         }
 
         $appendButton = '<div>'
-            . '<button class="btn btn-small button-apply btn-success maptab-append">'
+            . '<button class="btn btn-small button-apply btn-success sl-subfield-append">'
             . '<span class="icon-plus icon-white"></span>'
             . 'New Tab'
             . '</button>'
@@ -175,7 +175,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                 '<a %s></a>',
                 ArrayHelper::toString(
                     array(
-                        'class' => 'hasTip maptab-delete icon-cancel',
+                        'class' => 'hasTip sl-subfield-delete icon-cancel',
                         'title' => 'Delete this tab'
                     )
                 )
@@ -195,7 +195,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                 '<a %s></a>',
                 ArrayHelper::toString(
                     array(
-                        'class' => 'hasTip maptab-insert icon-plus',
+                        'class' => 'hasTip sl-subfield-insert icon-plus',
                         'title' => 'Insert new tab before this one'
                     )
                 )
@@ -277,14 +277,14 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         };
        
     var init = function() {
-        $('.custom-maptabs').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
+        $('.sl-subfield-wrapper').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
 
 
-        $('.maptab-delete')
+        $('.sl-subfield-delete')
             .off('click', deleteTab)
             .on('click', deleteTab);
         
-        $('.maptab-insert,.maptab-append')
+        $('.sl-subfield-insert,.sl-subfield-append')
             .off('click', createTab)
             .on('click', createTab);
     };

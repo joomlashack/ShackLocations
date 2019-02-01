@@ -85,7 +85,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         $this->loadAssets($options);
 
         $htmlOutput = array(
-            '<div class="span7 custom-maptabs">',
+            '<div class="span7 sl-subfield-wrapper">',
         );
 
         if ($this->value) {
@@ -317,8 +317,8 @@ class ShacklocationsFormFieldCustomfields extends JFormField
                 '<a %s></a>',
                 ArrayHelper::toString(
                     array(
-                        'class' => 'hasTip maptab-delete icon-cancel',
-                        'title' => 'Delete this tab'
+                        'class' => 'hasTip sl-subfield-delete icon-cancel',
+                        'title' => 'Delete this field'
                     )
                 )
             );
@@ -379,14 +379,14 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         };
        
     var init = function() {
-        $('.custom-maptabs').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
+        $('.sl-subfield-wrapper').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
 
 
-        $('.maptab-delete')
+        $('.sl-subfield-delete')
             .off('click', deleteTab)
             .on('click', deleteTab);
         
-        $('.maptab-insert,.maptab-append')
+        $('.sl-subfield-insert,.sl-subfield-append')
             .off('click', createTab)
             .on('click', createTab);
     };
