@@ -97,10 +97,4 @@ class FocalpointModellocationtype extends JModelAdmin
 
         return $item;
     }
-
-    public function toJSON($data)
-    {
-        return json_encode($data);
-    }
-
 }

@@ -24,18 +24,7 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
-
-/**
- * Legend controller class.
- */
 class FocalpointControllerLegend extends JControllerForm
 {
-
-    function __construct()
-    {
-        $this->view_list = 'legends';
-        parent::__construct();
-    }
-
+    protected $view_list = 'legend';
 }

@@ -31,13 +31,7 @@ jimport('joomla.application.component.controllerform');
  */
 class FocalpointControllerLocation extends JControllerForm
 {
-
-    function __construct()
-    {
-        $this->view_list = 'locations';
-        parent::__construct();
-    }
-
+    protected $view_list = 'locations';
 
     /**
      * Method to save a record overrides JControllerForm::save().
