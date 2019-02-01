@@ -25,10 +25,10 @@
 
     <fieldset name="general">
         <field name="state"
-               type="radio"
+               type="list"
                label="JSTATUS"
                description="JFIELD_PUBLISHED_DESC"
-               class="btn-group btn-group-yesno"
+               class="chzn-color-state"
                default="1">
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
