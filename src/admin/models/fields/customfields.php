@@ -32,15 +32,20 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected static $assetsLoaded = false;
 
-    /**
-     * @var string
-     */
-    protected static $trashButton = null;
+    protected $fieldTypes = array(
+        'textbox',
+        'link',
+        'email',
+        'textarea',
+        'image',
+        'selectlist',
+        'multiselect'
+    );
 
     /**
      * @var string
      */
-    protected static $insertButton = null;
+    protected static $trashButton = null;
 
     /**
      * @var SimpleXMLElement
@@ -89,6 +94,23 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             }
         }
 
+        $htmlOutput = array_merge(
+            $htmlOutput,
+            $this->createNewButtons()
+        );
+
+        $htmlOutput[] = '</div>';
+
+        return join('', $htmlOutput);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function createNewButtons()
+    {
+        $newButtons = array();
+
         $appendButton = '<div>'
             . '<button class="btn btn-small button-apply btn-success maptab-append">'
             . '<span class="icon-plus icon-white"></span>'
@@ -96,15 +118,17 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             . '</button>'
             . '</div>';
 
-        $htmlOutput = array_merge(
-            $htmlOutput,
-            array(
-                //$appendButton,
-                '</div>'
+        $insertButton = sprintf(
+            '<a %s></a>',
+            ArrayHelper::toString(
+                array(
+                    'class' => 'hasTip maptab-insert icon-plus',
+                    'title' => 'Insert new tab before this one'
+                )
             )
         );
 
-        return join('', $htmlOutput);
+        return $newButtons;
     }
 
     /**
@@ -155,7 +179,9 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      * This renders a complete field block with subfields under the name specified by
      * the fieldname. It includes all mover handles and add/delete buttons
      *
-     * @param string|string[] $fields
+     * @param string   $hash
+     * @param string[] $data
+     * @param array    $options
      *
      * @return string
      */
@@ -167,8 +193,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             array(
                 '<fieldset class="clearfix">',
                 sprintf('<legend><i class="icon-menu"></i>&nbsp;%s</legend>', $blockHeader),
-                $this->getTrashButton(),
-                $this->getInsertButton()
+                $this->getTrashButton()
             ),
             $this->getSubfields($hash, $data, $options),
             array('</fieldset>')
@@ -177,6 +202,13 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         return join('', $blockHtml);
     }
 
+    /**
+     * @param string   $hash
+     * @param string[] $data
+     * @param array    $options
+     *
+     * @return array
+     */
     protected function getSubfields($hash, $data, $options)
     {
         $type = empty($data['type']) ? null : $data['type'];
@@ -188,72 +220,99 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options)
         );
 
-        switch ($type) {
-            case 'textbox':
-            case 'link':
-            case 'email':
-                break;
-
-            case 'textarea':
-                $fieldOptions = array(
-                    'attributes' => array(
-                        'class' => 'btn-group btn-group-yesno',
-                    ),
-                    'options'    => JHtml::_(
-                        'select.options',
-                        array(
-                            JHtml::_('select.option', 1, JText::_('JYES')),
-                            JHtml::_('select.option', 0, JText::_('JNO'))
-                        )
-                    )
-                );
-
-                $renderedFields[] = $this->renderSubfield(
-                    $hash,
-                    'loadeditor',
-                    'radio',
-                    JText::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'),
-                    array_merge($options, $fieldOptions)
-                );
-                break;
-
-            case 'image':
-                $renderedFields[] = $this->renderSubfield(
-                    $hash,
-                    'directory',
-                    'text',
-                    'COM_FOCALPOINT_CUSTOMFIELD_DEFAULT_DIRECTORY',
-                    $options
-                );
-                break;
-
-            case 'selectlist':
-            case 'multiselect':
-                $fieldOptions = array(
-                    'attributes' => array(
-                        'rows' => 20
-                    )
-                );
-
-                $renderedFields[] = $this->renderSubfield(
-                    $hash,
-                    'options',
-                    'textarea',
-                    'COM_FOCALPOINT_CUSTOMFIELD_OPTIONS',
-                    array_merge($options, $fieldOptions)
-                );
-                break;
-
-            default:
-                $renderedFields[] =
-                    $hash
-                    . '<pre>'
-                    . print_r($data, 1)
-                    . '</pre>';
-                break;
+        $typeRenderer = 'renderSubfield' . ucfirst($type);
+        if (method_exists($this, $typeRenderer)) {
+            $renderedFields[] = $this->{$typeRenderer}($hash, $options);
         }
 
         return $renderedFields;
+    }
+
+    /**
+     * @param string $hash
+     * @param array  $options
+     *
+     * @return string
+     */
+    protected function renderSubfieldTextarea($hash, $options)
+    {
+        $fieldOptions = array(
+            'attributes' => array(
+                'class' => 'btn-group btn-group-yesno',
+            ),
+            'options'    => JHtml::_(
+                'select.options',
+                array(
+                    JHtml::_('select.option', 1, JText::_('JYES')),
+                    JHtml::_('select.option', 0, JText::_('JNO'))
+                )
+            )
+        );
+
+        $renderedField = $this->renderSubfield(
+            $hash,
+            'loadeditor',
+            'radio',
+            JText::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'),
+            array_merge($options, $fieldOptions)
+        );
+
+        return $renderedField;
+    }
+
+    /**
+     * @param string $hash
+     * @param array  $options
+     *
+     * @return string
+     */
+    protected function renderSubfieldImage($hash, $options)
+    {
+        $renderedField = $this->renderSubfield(
+            $hash,
+            'directory',
+            'text',
+            'COM_FOCALPOINT_CUSTOMFIELD_DEFAULT_DIRECTORY',
+            $options
+        );
+
+        return $renderedField;
+    }
+
+    /**
+     * @param string $hash
+     * @param array  $options
+     *
+     * @return string
+     */
+    protected function renderSubfieldSelectlist($hash, $options)
+    {
+        $fieldOptions = array(
+            'attributes' => array(
+                'rows' => 20
+            )
+        );
+
+        $renderedField = $this->renderSubfield(
+            $hash,
+            'options',
+            'textarea',
+            'COM_FOCALPOINT_CUSTOMFIELD_OPTIONS',
+            array_merge($options, $fieldOptions)
+        );
+
+        return $renderedField;
+    }
+
+    /**
+     * @param string $hash
+     * @param array $options
+     *
+     * @return string
+     */
+    protected function renderSubfieldMultiselect($hash, $options)
+    {
+        return $this->renderSubfieldSelectlist($hash, $options);
     }
 
     /**
@@ -277,26 +336,6 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     }
 
     /**
-     * @return string
-     */
-    protected function getInsertButton()
-    {
-        if (static::$insertButton === null) {
-            static::$insertButton = sprintf(
-                '<a %s></a>',
-                ArrayHelper::toString(
-                    array(
-                        'class' => 'hasTip maptab-insert icon-plus',
-                        'title' => 'Insert new tab before this one'
-                    )
-                )
-            );
-        }
-
-        return static::$insertButton;
-    }
-
-    /**
      * Load all the js/css required to make this work
      *
      * @param array $options
@@ -305,38 +344,14 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected function loadAssets($options)
     {
-        return;
-
         if (!static::$assetsLoaded) {
             JHtml::_('jquery.ui', array('core', 'sortable'));
 
             $dummyId = 'BLANKFIELD';
 
-            $nameField = $this->renderSubfield(
-                $dummyId,
-                'name',
-                'text',
-                JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'),
-                $options
-            );
-
-            $fieldBlock = preg_replace(
-                '/\n?\r?/',
-                '',
-                $this->getFieldBlock(
-                    array(
-                        $nameField,
-                        '<p class="alert"><span class="icon-info"></span>Save this configuration to make this tab editable.</p>'
-                    )
-                )
-            );
-
             JFactory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
 ;jQuery(document).ready(function($) {
-    var dummyId    = /{$dummyId}/g,
-        fieldBlank = '{$fieldBlock}';
-    
     var deleteTab = function(evt) {
             evt.preventDefault();
             
