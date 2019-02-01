@@ -108,10 +108,11 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         $newButtons = array('<ul class="inline">');
 
         foreach ($this->fieldTypes as $fieldType) {
-            $btnClass = 'btn btn-small button-apply btn-success pull-left sl-addcustom sl-type-' . $fieldType;
-
             $newButtons[] = '<li>'
-                . sprintf('<button class="%s">', $btnClass)
+                . sprintf(
+                    '<button class="btn btn-small button-apply btn-success pull-left sl-customfield-new" data-type="%s">',
+                    $fieldType
+                )
                 . '<span class="icon-plus icon-white"></span>'
                 . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $fieldType)
                 . '</button>'
@@ -344,7 +345,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             JFactory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
 ;jQuery(document).ready(function($) {
-    var deleteTab = function(evt) {
+    var deleteField = function(evt) {
             evt.preventDefault();
             
             var fieldset = $(this).parents('fieldset').get(0);
@@ -353,8 +354,11 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             }
         };
         
-    var createTab = function(evt) {
+    var createField = function(evt) {
             evt.preventDefault();
+            
+            alert('under Construction - ' + $(this).data('type'));
+            return;
             
             var fieldset = $(this).parents('fieldset').get(0)
                 \$newFieldset = $(fieldBlank.replace(dummyId, createId())); 
@@ -383,12 +387,12 @@ class ShacklocationsFormFieldCustomfields extends JFormField
 
 
         $('.sl-subfield-delete')
-            .off('click', deleteTab)
-            .on('click', deleteTab);
+            .off('click', deleteField)
+            .on('click', deleteField);
         
-        $('.sl-subfield-insert,.sl-subfield-append')
-            .off('click', createTab)
-            .on('click', createTab);
+        $('.sl-customfield-new')
+            .off('click', createField)
+            .on('click', createField);
     };
     
     init();
