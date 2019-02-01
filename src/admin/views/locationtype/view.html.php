@@ -86,7 +86,7 @@ class FocalpointViewLocationtype extends JViewLegacy
         $isNew = empty($this->item->id);
 
         $checkedOut = (int)$this->item->get('checked_out');
-        $checkedOut = $checkedOut || ($checkedOut != $user->id);
+        $checkedOut = !$checkedOut || ($checkedOut != $user->id);
 
         $canDo = FocalpointHelper::getActions();
 
