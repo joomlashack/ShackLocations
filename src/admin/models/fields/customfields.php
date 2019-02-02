@@ -338,63 +338,69 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     protected function loadAssets($options)
     {
         if (!static::$assetsLoaded) {
-            JHtml::_('jquery.ui', array('core', 'sortable'));
-
             $dummyId = 'BLANKFIELD';
+            $blanks = array();
+
+            foreach ($this->fieldTypes as $fieldType) {
+                $data = array('type' => $fieldType);
+                $blanks[$fieldType] = preg_replace('/\n?\r?/', '', $this->getFieldBlock($dummyId, $data, $options));
+            }
+            $blanks = json_encode($blanks);
+
+            JHtml::_('jquery.ui', array('core', 'sortable'));
 
             JFactory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
 ;jQuery(document).ready(function($) {
+    var dummyId    = /{$dummyId}/g,
+        fieldBlank = {$blanks};
+
     var deleteField = function(evt) {
-            evt.preventDefault();
-            
-            var fieldset = $(this).parents('fieldset').get(0);
-            if (fieldset) {
-                $(fieldset).remove();
-            }
-        };
-        
+        evt.preventDefault();
+
+        var fieldset = $(this).parents('fieldset').get(0);
+        if (fieldset) {
+            $(fieldset).remove();
+        }
+    };
+
     var createField = function(evt) {
-            evt.preventDefault();
-            
-            alert('under Construction - ' + $(this).data('type'));
-            return;
-            
-            var fieldset = $(this).parents('fieldset').get(0)
-                \$newFieldset = $(fieldBlank.replace(dummyId, createId())); 
-            if (fieldset) {
-                \$newFieldset.insertBefore($(fieldset));
-                
-            } else {
-                \$newFieldset.insertBefore($(this).parent());
-            }
+        evt.preventDefault();
+
+        var type = $(this).data('type');
+        if (fieldBlank[type]) {
+            $(fieldBlank[type].replace(dummyId, createId()))
+                .insertBefore($(this).parents('ul'));
             init();
-        };
-    
-        var createId = function() {
-            var text = "";
-            var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+            
+        } else {
+            alert('Field Type not found - ' + type);
+        }
+    };
 
-            for (var i = 0; i < 10; i++) {
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-            }
+    var createId = function() {
+        var text = "";
+        var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-            return text;
-        };
-       
+        for (var i = 0; i < 10; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    };
+
     var init = function() {
-        $('.sl-subfield-wrapper').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
-
+        $('.sl-subfield-wrapper').sortable({handle: 'legend', axis: 'y', opacity: '0.6', distance: '1'});
 
         $('.sl-subfield-delete')
             .off('click', deleteField)
             .on('click', deleteField);
-        
+
         $('.sl-customfield-new')
             .off('click', createField)
             .on('click', createField);
     };
-    
+
     init();
 });
 JSCRIPT
