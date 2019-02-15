@@ -231,7 +231,8 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     {
         $fieldOptions = array(
             'attributes' => array(
-                'class' => 'btn-group btn-group-yesno',
+                'class'   => 'btn-group btn-group-yesno',
+                'default' => 0
             ),
             'options'    => JHtml::_(
                 'select.options',
@@ -373,6 +374,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             $(fieldBlank[type].replace(dummyId, createId()))
                 .insertBefore($(this).parents('ul'));
             init();
+            $('body').trigger('subform-row-add');
             
         } else {
             alert('Field Type not found - ' + type);
