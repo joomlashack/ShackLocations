@@ -180,17 +180,30 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected function getFieldBlock($hash, $data, $options)
     {
-        $blockHeader = JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $data['type']);
+        $type = empty($data['type']) ? null : $data['type'];
+        if ($type) {
+            $blockHeader = JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $data['type']);
 
-        $blockHtml = array_merge(
-            array(
-                '<fieldset class="clearfix">',
-                sprintf('<legend><i class="icon-menu"></i>&nbsp;%s</legend>', $blockHeader),
-                $this->getTrashButton()
-            ),
-            $this->getSubfields($hash, $data, $options),
-            array('</fieldset>')
-        );
+            $blockHtml = array_merge(
+                array(
+                    '<fieldset class="clearfix">',
+                    sprintf('<legend><i class="icon-menu"></i>&nbsp;%s</legend>', $blockHeader),
+                    $this->getTrashButton()
+                ),
+                $this->getSubfields($hash, $data, $options),
+                array('</fieldset>')
+            );
+
+        } else {
+            $blockHtml = array(
+                '<fieldset class="clarfix">',
+                sprintf(
+                    '<legend><i class="icon-ban-circle"></i>&nbsp;%s</legend>',
+                    JText::sprintf('COM_FOCALPOINT_CUSTOMFIELD_TYPE_UNKNOWN', $type)
+                ),
+                '</fieldset>'
+            );
+        }
 
         return join('', $blockHtml);
     }
@@ -205,9 +218,18 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     protected function getSubfields($hash, $data, $options)
     {
         $type = empty($data['type']) ? null : $data['type'];
+        if (!$type) {
+            return array('Bad field ' . print_r($data, 1));
+        }
+
+        $hiddenOptions = array(
+            'attributes' => array(
+                'default' => $type
+            )
+        );
 
         $renderedFields = array(
-            $this->renderSubfield($hash, 'type', 'hidden', '', $options),
+            $this->renderSubfield($hash, 'type', 'hidden', '', array_merge($options, $hiddenOptions)),
             $this->renderSubfield($hash, 'name', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_NAME', $options),
             $this->renderSubfield($hash, 'description', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP', $options),
             $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options)
