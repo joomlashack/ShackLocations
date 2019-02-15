@@ -339,10 +339,11 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     {
         if (!static::$assetsLoaded) {
             $dummyId = 'BLANKFIELD';
-            $blanks = array();
+            $blanks  = array();
 
             foreach ($this->fieldTypes as $fieldType) {
                 $data = array('type' => $fieldType);
+
                 $blanks[$fieldType] = preg_replace('/\n?\r?/', '', $this->getFieldBlock($dummyId, $data, $options));
             }
             $blanks = json_encode($blanks);
