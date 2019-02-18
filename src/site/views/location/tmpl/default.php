@@ -44,34 +44,36 @@ if ($this->item->params->get('loadBootstrap')) :
     JHtml::_('bootstrap.framework');
 endif;
 
+if (empty($this->item->backlink)) :
+    $backLink = null;
+
+else :
+    $backLink = JHtml::_(
+        'link',
+        $this->item->backlink,
+        JText::_('COM_FOCALPOINT_BACK_TO_MAP'),
+        'class="backtomap"'
+    );
+endif;
+
 ?>
 <div id="focalpoint" class="fp-location-view">
     <div class="row-fluid">
         <?php
-        if (!empty($this->item->backlink)) {
-            $backLink = JHtml::_(
-                'link',
-                $this->item->backlink,
-                JText::_('COM_FOCALPOINT_BACK_TO_MAP'),
-                'class="backtomap"'
-            );
-        }
-
         if (empty($this->item->page_title)) :
             $itemTitleTag = 'h1';
         else :
             $itemTitleTag = 'h2';
             ?>
             <h1><?php echo $this->item->page_title; ?></h1>
-        <?php
+            <?php
         endif;
 
-        $backLink = empty($backLink) ? null : ($backLink . ' ');
         echo sprintf(
             '<%1$s%2$s>%3$s</%1$s>',
             $itemTitleTag,
             $backLink ? ' class="blacklink"' : '',
-            $backLink . $this->item->title
+            trim($backLink . ' ' . $this->item->title)
         );
         ?>
     </div>
@@ -95,6 +97,7 @@ endif;
 });
 JSCRIPT;
                 JFactory::getDocument()->addScriptDeclaration($jscript);
+
                 ?>
                 <div id="fp_googleMap_directions"></div>
                 <div id="fp_map_actions" class="input-append">
@@ -113,7 +116,7 @@ JSCRIPT;
                         </button>
                     </form>
                 </div>
-            <?php
+                <?php
             endif;
 
             if (!$this->item->params->get('hideintrotext')) :
@@ -146,7 +149,7 @@ JSCRIPT;
                             <h3><?php echo JText::_('COM_FOCALPOINT_ADDRESS'); ?>:</h3>
                             <p><?php echo $this->item->address; ?></p>
                         </div>
-                    <?php
+                        <?php
                     endif;
 
                     if ($this->item->phone) :
@@ -155,10 +158,10 @@ JSCRIPT;
                             <h3><?php echo JText::_('COM_FOCALPOINT_PHONE'); ?>:</h3>
                             <p><?php echo $this->item->phone; ?></p>
                         </div>
-                    <?php
+                        <?php
                     endif; ?>
                 </div>
-            <?php
+                <?php
             endif;
 
             if ($this->item->image) :
@@ -166,20 +169,15 @@ JSCRIPT;
                 <div class="fp_article_image">
                     <p><img src="<?php echo $this->item->image; ?>" title=""/></p>
                 </div>
-            <?php
+                <?php
             endif;
             ?>
         </div>
     </div>
     <div class="row-fluid">
         <?php
-        if ($this->item->backlink) :
-            ?>
-            <p>
-                <a class="btn backtomap"
-                   href="<?php echo $this->item->backlink; ?>"><?php echo JText::_('COM_FOCALPOINT_BACK_TO_MAP') ?></a>
-            </p>
-        <?php
+        if ($backLink) :
+            echo sprintf('<p class="btn_backtomap">%s</p>', $backLink);
         endif;
         ?>
     </div>
