@@ -19,8 +19,6 @@
 
     <fieldset name="hidden">
         <field name="id" type="hidden"/>
-        <field name="checked_out" type="hidden" filter="unset"/>
-        <field name="checked_out_time" type="hidden" filter="unset"/>
     </fieldset>
 
     <fieldset name="basic"
