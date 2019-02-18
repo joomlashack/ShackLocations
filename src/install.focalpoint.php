@@ -201,7 +201,7 @@ class com_focalpointInstallerScript extends AbstractScript
      *
      * @return void
      */
-    public function updateCustomFields()
+    protected function updateCustomFields()
     {
         $db = JFactory::getDbo();
 
