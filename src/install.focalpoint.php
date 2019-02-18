@@ -48,20 +48,7 @@ class com_focalpointInstallerScript extends AbstractScript
         try {
             if (parent::update($parent)) {
                 if (version_compare($this->previousManifest->version, '1.2', 'lt')) {
-                    $this->setMessage(
-                        'FocalPoint v1.2 included a new batch of icon markers and cluster icons.'
-                        . ' Since you are upgrading to Shack Locations from an earlier version, these markers'
-                        . ' cannot be moved to your images folder without overwriting the original images/markers'
-                        . ' directory which we do not wish to do.'
-                        . ' The new markers can be found on your server in the media/com_focalpoint folder.'
-                        . ' Alternatively, you can extract the installation archive on your local machine where you can'
-                        . ' find the markers in the media folder. You are free to use these new markers as you wish.'
-                        . ' There are over 200 of them. You can upload or move them via FTP or through your hosting'
-                        . ' control panel. For new installations, the new markers have been moved to images/markers.',
-                        'notice',
-                        true
-                    );
-
+                    $this->setMessage(JText::_('COM_FOCALPOINT_INSTALL_V12_NOTICE'), 'notice', true);
                 }
 
                 return true;
@@ -125,18 +112,10 @@ class com_focalpointInstallerScript extends AbstractScript
         $destination = JPATH_SITE . '/images/markers';
 
         if (JFolder::move($source, $destination)) {
-            $this->setMessage('Successully copied markers to ' . $destination, 'notice');
+            $this->setMessage(JText::sprintf('COM_FOCALPOINT_INSTALL_MARKER_SUCCESS', $destination), 'notice');
 
         } else {
-            $message = array(
-                '<p>Unable to move the markers folder to your /images folder. This is usaully due to;</p>',
-                '<ol>',
-                '<li>incorrect file permission settings. Please go to System &gt; System Information &gt; Directory Permissions and check that the images, media and tmp folders are writable.</li>',
-                '<li>You already have an /images/markers folder.</li>',
-                '</ol>'
-            );
-
-            $this->setMessage(join('', $message), 'notice');
+            $this->setMessage(JText::_('COM_FOCALPOINT_INSTALL_MARKER_FAIL'), 'notice');
         }
     }
 
