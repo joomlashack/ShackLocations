@@ -128,11 +128,13 @@ JSCRIPT;
             if ($this->item->customfields) :
                 ?>
                 <div class="fp_customfields fp_content">
-                    <?php foreach ($this->item->customfields as $key => $customfield) { ?>
-                        <?php $this->renderField($customfield); ?>
-                    <?php } ?>
+                    <?php
+                    foreach ($this->item->customfields as $key => $customfield) :
+                        $this->renderField($customfield);
+                    endforeach;
+                    ?>
                 </div>
-            <?php
+                <?php
             endif;
             ?>
         </div>
