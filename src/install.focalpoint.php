@@ -101,6 +101,7 @@ class com_focalpointInstallerScript extends AbstractScript
                 case 'update':
                     $this->updateTabsdata();
                     $this->updateCustomFields();
+                    $this->updateCustomFieldsData();
                     $this->removeLanguageFiles();
                     break;
             }
@@ -230,6 +231,46 @@ class com_focalpointInstallerScript extends AbstractScript
 
                 $locationType->customfields = json_encode($locationType->customfields);
                 $db->updateObject('#__focalpoint_locationtypes', $locationType, array('id'));
+            }
+        }
+    }
+
+    /**
+     * update the cusstom fields date in locations made in v1.4.0
+     *
+     * @return void
+     */
+    protected function updateCustomFieldsData()
+    {
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select(
+                array(
+                    'id',
+                    'customfieldsdata'
+                )
+            )
+            ->from('#__focalpoint_locations');
+
+        $locations = $db->setQuery($query)->loadObjectList();
+        foreach ($locations as $location) {
+            $values = json_decode($location->customfieldsdata, true);
+
+            $fixedValues = array();
+            foreach ($values as $fieldKey => $value) {
+                $keyParts = explode('.', $fieldKey);
+                if (count($keyParts) == 3) {
+                    $fieldName = array_pop($keyParts);
+                    $hash      = array_pop($keyParts);
+
+                    $fixedValues[$hash] = array(
+                        $fieldName => $value
+                    );
+
+                    $location->customfieldsdata = json_encode($fixedValues);
+                    $db->updateObject('#__focalpoint_locations', $location, array('id'));
+                }
             }
         }
     }
