@@ -4,11 +4,10 @@
               label="COM_FOCALPOINT_COMPONENT_LABEL"
               description="COM_FOCALPOINT_COMPONENT_DESC">
         <field name="apikey"
-               type="text"
-               default=""
+               type="textarea"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_API_KEY_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_API_KEY_DESC"
-               size="40"/>
+               rows="3"/>
 
         <field type="customfooter"
                name="customfooter"
@@ -341,7 +340,6 @@
 
         <field name="searchassist"
                type="text"
-               default=""
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_ASSIST_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_ASSIST_DESC"
                size="40"/>
