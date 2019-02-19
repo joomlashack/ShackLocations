@@ -129,7 +129,7 @@ class com_focalpointInstallerScript extends AbstractScript
             JFolder::files(JPATH_ADMINISTRATOR . '/language', '.*focalpoint.*', true, true),
             JFolder::files(
                 JPATH_SITE . '/components/com_focalpoint/views',
-                '^default_customfield_*\.php',
+                '^default_customfield_.*\.php$',
                 true,
                 true
             )
