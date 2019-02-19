@@ -43,7 +43,7 @@ class FocalpointModelLocation extends JModelForm
         /** @var SiteApplication $app */
         $app = JFactory::getApplication('com_focalpoint');
 
-        $locationId = $app->input->getInt('id');
+        $locationId = $app->input->getInt('id', $app->getParams()->get('item_id'));
         $this->setState('location.id', $locationId);
     }
 
