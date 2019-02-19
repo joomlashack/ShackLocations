@@ -73,8 +73,7 @@
 
     <fields name="tabsdata">
         <fieldset name="tabs"
-                  label="Tabs"
-                  description="COM_FOCALPOINT_FORM_MAP_TABS_DESCRIPTION">
+                  label="Tabs">
             <field name="tabs" type="shacklocations.maptabs"/>
         </fieldset>
     </fields>

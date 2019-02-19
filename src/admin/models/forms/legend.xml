@@ -19,7 +19,6 @@
                type="text"
                class="inputbox"
                label="COM_FOCALPOINT_FORM_LBL_LEGEND_ALIAS"
-               description="COM_FOCALPOINT_FORM_DESC_LEGEND_ALIAS"
                required="false"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
