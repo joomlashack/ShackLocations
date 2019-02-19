@@ -254,55 +254,30 @@ class FocalpointViewLocation extends JViewLegacy
      * @throws Exception
      *
      */
-    public function renderField($field, $hidelabel = false)
+    protected function renderField($field, $hidelabel = false)
     {
-        $datatype = $field->datatype;
+        if (!empty($field->datatype)) {
+            $data = array_merge(
+                get_object_vars($field),
+                array(
+                    'showlabel' => !$hidelabel
+                )
+            );
 
-        if ($field->data) {
-            $this->outputfield            = $field;
-            $this->outputfield->hidelabel = $hidelabel;
-
-            switch ($datatype) {
-                case "textbox":
-                    echo $this->loadTemplate('customfield_textbox');
-                    break;
-                case "link":
-                    echo $this->loadTemplate('customfield_link');
-                    break;
-                case "email":
-                    echo $this->loadTemplate('customfield_email');
-                    break;
-                case "textarea":
-                    echo $this->loadTemplate('customfield_textarea');
-                    break;
-                case "image":
-                    echo $this->loadTemplate('customfield_image');
-                    break;
-                case "selectlist":
-                    echo $this->loadTemplate('customfield_selectlist');
-                    break;
-                case "multiselect":
-                    echo $this->loadTemplate('customfield_multiselect');
-                    break;
-            }
-
-            $this->outputfield = null;
+            echo JLayoutHelper::render('custom.field.' . $field->datatype, $data);
         }
     }
 
     /**
-     * Renders a single field using the relevant template.
-     *
-     * @param string $my_field
-     * @param bool   $hidelabel
-     *
      * @return void
      * @throws Exception
+     *
+     * @deprecated v1.4.0
      */
-    public function renderCustomField($my_field, $hidelabel = false)
+    protected function renderCustomField()
     {
-        if (isset($this->item->customfields->{$my_field})) {
-            $this->renderField($this->item->customfields->{$my_field}, $hidelabel);
-        }
+        JFactory::getApplication()->enqueueMessage(
+            'The template override is using an obsolete method and requires updating'
+        );
     }
 }

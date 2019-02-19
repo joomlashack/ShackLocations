@@ -41,13 +41,10 @@ class FocalpointModelLocation extends JModelForm
     protected function populateState()
     {
         /** @var SiteApplication $app */
-        $app    = JFactory::getApplication('com_focalpoint');
-        $params = $app->getParams();
+        $app = JFactory::getApplication('com_focalpoint');
 
-        $locationId = $params->get('item_id') ?: $app->input->getInt('id');
+        $locationId = $app->input->getInt('id');
         $this->setState('location.id', $locationId);
-
-        $this->setState('params', $params);
     }
 
     /**
@@ -145,9 +142,9 @@ class FocalpointModelLocation extends JModelForm
      */
     protected function formatCustomFields(JObject $location)
     {
-        $customFieldsData = json_decode($location->get('customfieldsdata'));
-        $type            = (int)$location->get('type');
+        $customFieldsData = json_decode($location->get('customfieldsdata'), true);
 
+        $type = (int)$location->get('type');
 
         if (!$customFieldsData || !$type) {
             return null;
@@ -162,32 +159,23 @@ class FocalpointModelLocation extends JModelForm
 
         $fieldsettings = json_decode($db->setQuery($query)->loadResult());
 
-        /*
-         * Remove the id numbers from the field. turns [textbox.1234567.thisfield] into [thisfield]
-         * Create a new object for each field containing the datatype, label and data.
-        */
-        $customfields = array();
-        foreach ($customFieldsData as $field => $value) {
-            $segments = explode('.', $field);
+        $customFields = array();
+        foreach ($fieldsettings as $hash => $customField) {
+            if (!empty($customFieldsData[$hash])) {
+                $fieldName = $customField->name;
+                $fieldData = $customFieldsData[$hash];
 
-            $fieldName = array_pop($segments);
-            $fieldKey  = join('.', array_slice($segments, 0, 2));
-
-            /*
-             * Before adding the custom field data to the results we first need to check field settings matches
-             * the data. This is required in case the admin changes or deletes a custom field
-             * from the location type but the data still exists in the location items record.
-            */
-            if (!empty($fieldsettings->{$fieldKey})) {
-                $customfields[$fieldName] = (object)array(
-                    'datatype' => $segments[0],
-                    'label'    => $fieldsettings->{$fieldKey}->label,
-                    'data'     => $value
-                );
+                if (isset($fieldData[$fieldName])) {
+                    $customFields[$fieldName] = (object)array(
+                        'datatype' => $customField->type,
+                        'label'    => $customField->label,
+                        'data'     => $fieldData[$fieldName]
+                    );
+                }
             }
         }
 
-        return (object)$customfields;
+        return (object)$customFields;
     }
 
     /**

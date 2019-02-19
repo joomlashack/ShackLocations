@@ -89,7 +89,7 @@ class com_focalpointInstallerScript extends AbstractScript
                     $this->updateTabsdata();
                     $this->updateCustomFields();
                     $this->updateCustomFieldsData();
-                    $this->removeLanguageFiles();
+                    $this->removeObsoleteFiles();
                     break;
             }
 
@@ -120,13 +120,19 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * Removes all non-localized language files
+     * Removes all obsolete files that are easier to remove here rather than in the manifest
      */
-    public function removeLanguageFiles()
+    protected function removeObsoleteFiles()
     {
         $files = array_merge(
             JFolder::files(JPATH_SITE . '/language', '.*focalpoint.*', true, true),
-            JFolder::files(JPATH_ADMINISTRATOR . '/language', '.*focalpoint.*', true, true)
+            JFolder::files(JPATH_ADMINISTRATOR . '/language', '.*focalpoint.*', true, true),
+            JFolder::files(
+                JPATH_SITE . '/components/com_focalpoint/views',
+                '^default_customfield_*\.php',
+                true,
+                true
+            )
         );
 
         foreach ($files as $file) {

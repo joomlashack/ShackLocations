@@ -22,17 +22,6 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * A note for template designers.
- * To output a customfield with a label use
- * 		$this->renderCustomField("your-field-name", $hidelabel, $buffer);
- *  	$hidelabel is TRUE or FALSE
- *      $buffer is TRUE or FALSE. If TRUE the output is buffered and returned. If FALSE it is output directly.
- *
- * Alternatively iterate through the object $this->item->customfields AS $field and call
- *  	$this->renderField($field, $hidelabel, $buffer);
- */
-
 defined('_JEXEC') or die;
 
 //Load admin language file

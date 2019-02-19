@@ -22,16 +22,32 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die('Restricted access');
-?>
+use Joomla\CMS\Layout\FileLayout;
 
+defined('_JEXEC') or die();
 
-	<?php if (!$this->outputfield->hidelabel) { ?>
-    <p class="fp_customfield fp_image">
-	<span class="fp_label"><?php echo $this->outputfield->label.": "; ?></span>
-	<?php } ?>
-	<?php echo '<img src="'.JUri::base(true)."/".$this->outputfield->data.'" title="'.$this->outputfield->label.'" alt="'.$this->outputfield->label.'" />'; ?>
+/**
+ * @var FileLayout $this
+ * @var array      $displayData
+ * @var string     $layoutOutput
+ * @var string     $path
+ */
 
-    <?php if (!$this->outputfield->hidelabel) { ?>
-    </p>
-    <?php } ?>
+$showLabel = empty($displayData['showlabel']) ? true : $displayData['showlabel'];
+$label     = empty($displayData['label']) ? null : $displayData['label'];
+$value     = empty($displayData['data']) ? null : $displayData['data'];
+
+if ($value) :
+    if ($showLabel && $label) :
+        $list = join('<br><span class="fp_label"></span>', (array)$value);
+        ?>
+        <p class="fp_customfield fp_textbox">
+        <span class="fp_label">
+            <?php echo $label . ': '; ?>
+        </span><?php echo $list; ?>
+        </p>
+        <?php
+    else :
+        echo $list;
+    endif;
+endif;

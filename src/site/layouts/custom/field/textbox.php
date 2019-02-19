@@ -22,15 +22,32 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die('Restricted access');
-?>
+use Joomla\CMS\Layout\FileLayout;
 
+defined('_JEXEC') or die();
 
-	<?php if (!$this->outputfield->hidelabel) { ?>
-    <p class="fp_customfield fp_textbox">
-	<span class="fp_label"><?php echo $this->outputfield->label.": "; ?></span>
-	<?php } ?>
-	<?php echo $this->outputfield->data; ?>
-    <?php if (!$this->outputfield->hidelabel) { ?>
-    </p>
-    <?php } ?>
+/**
+ * @var FileLayout $this
+ * @var array      $displayData
+ * @var string     $layoutOutput
+ * @var string     $path
+ */
+
+$showLabel = empty($displayData['showlabel']) ? true : $displayData['showlabel'];
+$label     = empty($displayData['label']) ? null : $displayData['label'];
+$value     = empty($displayData['data']) ? null : $displayData['data'];
+
+if ($value) :
+    if ($showLabel && $label) :
+        ?>
+        <p class="fp_customfield fp_textbox">
+        <span class="fp_label">
+            <?php echo $label . ': '; ?>
+        </span>
+            <?php echo $value; ?>
+        </p>
+        <?php
+    else :
+        echo $value;
+    endif;
+endif;

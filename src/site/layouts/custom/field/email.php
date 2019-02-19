@@ -22,17 +22,40 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die('Restricted access');
-?>
+use Joomla\CMS\Layout\FileLayout;
 
+defined('_JEXEC') or die();
 
-	<?php if (!$this->outputfield->hidelabel) { ?>
-    <p class="fp_customfield fp_link">
-    <span class="fp_label"><?php echo $this->outputfield->label.": "; ?></span>
-	<?php }?>
-    <a href="<?php echo $this->outputfield->data->url; ?>" target="<?php echo $this->outputfield->data->target?"_blank":"_self"; ?>">
-        <?php echo ($this->outputfield->data->linktext!="")?$this->outputfield->data->linktext:$this->outputfield->data->url; ?>
-    </a>
-    <?php if (!$this->outputfield->hidelabel) { ?>
-    </p>
-    <?php } ?>
+/**
+ * @var FileLayout $this
+ * @var array      $displayData
+ * @var string     $layoutOutput
+ * @var string     $path
+ */
+
+$showLabel = empty($displayData['showlabel']) ? true : $displayData['showlabel'];
+$label     = empty($displayData['label']) ? null : $displayData['label'];
+$value     = empty($displayData['data']) ? null : $displayData['data'];
+
+if ($value) :
+    if ($email = empty($value['email']) ? null : $value['email']) {
+        $link = JHtml::_(
+            'link',
+            'mailto:' . $email,
+            empty($value['linktext']) ? $email : $value['linktext']
+        );
+
+        if ($showLabel && $label) :
+            ?>
+            <p class="fp_customfield fp_email">
+        <span class="fp_label">
+            <?php echo $label . ': '; ?>
+        </span>
+                <?php echo $link; ?>
+            </p>
+            <?php
+        else :
+            echo $link;
+        endif;
+    }
+endif;
