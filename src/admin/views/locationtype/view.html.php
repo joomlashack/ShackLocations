@@ -85,19 +85,16 @@ class FocalpointViewLocationtype extends JViewLegacy
         $user  = JFactory::getUser();
         $isNew = empty($this->item->id);
 
-        $checkedOut = (int)$this->item->get('checked_out');
-        $checkedOut = !$checkedOut || ($checkedOut != $user->id);
-
         $canDo = FocalpointHelper::getActions();
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPE'), 'location');
 
-        if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
+        if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
             JToolBarHelper::apply('locationtype.apply', 'JTOOLBAR_APPLY');
             JToolBarHelper::save('locationtype.save', 'JTOOLBAR_SAVE');
         }
 
-        if (!$checkedOut && ($canDo->get('core.create'))) {
+        if ($canDo->get('core.create')) {
             JToolBarHelper::custom(
                 'locationtype.save2new',
                 'save-new.png',
