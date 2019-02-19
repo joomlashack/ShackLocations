@@ -43,10 +43,7 @@ class FocalpointModelMap extends JModelForm
         /** @var SiteApplication $app */
         $app = JFactory::getApplication('com_focalpoint');
 
-        $params = $app->getParams();
-        $this->setState('params', $params);
-
-        $id = $app->getUserStateFromRequest('com_focalpoint.map.id', 'id', $params->get('item_id'), 'int');
+        $id = $app->input->getInt('id', $app->getParams()->get('item_id'), 'int');
         $this->setState('map.id', $id);
     }
 
