@@ -163,6 +163,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      * @param string           $fieldName
      * @param SimpleXMLElement $fieldGroup
      * @param string           $groupName
+     * @param array            $customField
      * @param array            $subFields
      * @param array            $options
      *
@@ -172,25 +173,35 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         $fieldName,
         SimpleXMLElement $fieldGroup,
         $groupName,
+        array $customField,
         array $subFields,
         array $options
     ) {
         $subFieldGroup         = $fieldGroup->addChild('fields');
         $subFieldGroup['name'] = $fieldName;
 
-        $renderedSubfields = array();
+        $renderedSubfields = array(
+            '<fieldset>',
+            sprintf('<legend>%s</legend>', $customField['label'])
+        );
+
         foreach ($subFields as $name => $subField) {
             $fieldOptions = empty($subField['options']) ? $options : array_merge($options, $subField['options']);
+
+            $label       = 'COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $customField['type'] . '_' . $name;
+            $description = $label . '_DESC';
 
             $renderedSubfields[] = $this->renderSubfield(
                 $subField['type'],
                 $name,
-                $subField['label'],
-                $subField['description'],
+                empty($subField['label']) ? JText::_($label) : $subField['label'],
+                empty($subField['description']) ? JText::_($description) : $subField['description'],
                 $groupName . '.' . $fieldName,
                 $fieldOptions
             );
         }
+
+        $renderedSubfields[] = '</fieldset>';
 
         return join("\n", $renderedSubfields);
     }
@@ -289,20 +300,14 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
     ) {
         $subFields = array(
             'url'      => array(
-                'type'        => 'text',
-                'label'       => 'Label for url',
-                'description' => 'description for url'
+                'type' => 'text'
             ),
             'linktext' => array(
-                'type'        => 'text',
-                'label'       => 'Label for linktext',
-                'description' => 'description for linktext'
+                'type' => 'text'
             ),
             'target'   => array(
-                'type'        => 'radio',
-                'label'       => 'Label for target',
-                'description' => 'description for target',
-                'options'     => array(
+                'type'    => 'radio',
+                'options' => array(
                     'attributes' => array(
                         'class'   => 'btn-group btn-group-yesno',
                         'default' => '1'
@@ -318,7 +323,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
             )
         );
 
-        return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $subFields, $options);
+        return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $customField, $subFields, $options);
     }
 
     /**
@@ -339,18 +344,14 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
     ) {
         $subFields = array(
             'email'    => array(
-                'type'        => 'text',
-                'label'       => 'Label for Email',
-                'description' => 'Description for Email'
+                'type' => 'email'
             ),
             'linktext' => array(
-                'type'        => 'text',
-                'label'       => 'Label for Linktext',
-                'description' => 'Description for Linktext'
+                'type' => 'text'
             )
         );
 
-        return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $subFields, $options);
+        return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $customField, $subFields, $options);
     }
 
     /**
