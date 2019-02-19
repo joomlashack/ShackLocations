@@ -22,10 +22,13 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Menu\MenuItem;
+
 defined('_JEXEC') or die;
 
 /*
  * Component Routes
+ * @TODO: This is not entirely accurate. Routing needs to be reviewed/improved
  *
  *  http://root/{menu_alias}  <- if menu exists
  *  http://root/{menu_alias}/{location_alias} <- shows location view at menu id
@@ -33,168 +36,146 @@ defined('_JEXEC') or die;
  *  http://root/component/focalpoint/location/id <-- location view
  */
 
-/**
- * @param	array	A named array
- * @return	array
- */
-function FocalpointBuildRoute(&$query)
+class FocalpointRouter extends JComponentRouterBase
 {
-	//die('hello builder');
-	$segments = array();
+    protected $menuItems = null;
 
-	// get a menu item based on Itemid or currently active
-	$app = JFactory::getApplication();
-	$menu = $app->getMenu();
-	$params = JComponentHelper::getParams('com_focalpoint');
+    protected $alias = array();
 
-	// we need a menu item.  Either the one specified in the query, or the current active one if none specified
-	if (empty($query['Itemid']))
-	{
-		$menuItem = $menu->getActive();
-		$menuItemGiven = false;
-	}
-	else
-	{
-		$menuItem = $menu->getItem($query['Itemid']);
-		$menuItemGiven = true;
-	}
+    /**
+     * @param array $query
+     *
+     * @return array
+     */
+    public function build(&$query)
+    {
+        $segments = array();
 
-	// check again
-	if ($menuItemGiven && isset($menuItem) && $menuItem->component != 'com_focalpoint')
-	{
-		$menuItemGiven = false;
-		unset($query['Itemid']);
-	}
+        $menuItem = empty($query['Itemid']) ? $this->menu->getActive() : $this->menu->getItem($query['Itemid']);
 
-	if (isset($query['view'])) {
+        if (!empty($query['view'])) {
+            $view = $query['view'];
+            unset($query['view']);
 
-		if($query['view'] =="map"){
-			if (isset($query['id'])) {
-				$db = JFactory::getDbo();
-				$sql = $db->getQuery(true);
-				$sql->select('alias');
-				$sql->from('#__focalpoint_locations');
-				$sql->where('id='.$query['id']);
-				$db->setQuery($sql);
-				$alias= $db->loadResult();
-				unset($query['id']);
-			}
-		}
+        } elseif ($menuItem) {
+            $view = $menuItem->query['view'];
+        }
 
-		if($query['view'] =="location"){
-			if (isset($query['id'])) {
-				$db = JFactory::getDbo();
-				$sql = $db->getQuery(true);
-				$sql->select('alias');
-				$sql->from('#__focalpoint_locations');
-				$sql->where('id='.$query['id']);
-				$db->setQuery($sql);
-				$alias= $db->loadResult();
+        if (!$menuItem || $view != $menuItem->query['view']) {
+            if (!empty($query['id'])) {
+                $id = $query['id'];
+                unset($query['id']);
 
-				$segments[] = $alias;
-				unset($query['id']);
-			}
-		}
-		unset($query['view']);
-	}
+                if ($targetMenu = $this->findMenu($view, $id)) {
+                    $alias = $targetMenu->alias;
+                } else {
+                    $alias = $this->getAlias($view, $id);
+                }
 
-	//echo"<pre>"; print_r($params);echo "</pre>";echo"<pre>"; print_r($segments);echo "</pre>";
-	return $segments;
-}
+                $segments[] = $alias;
+            }
+        }
 
-/**
- * @param	array	A named array
- * @param	array
- *
- * Formats:
- *
- * index.php?/focalpoint/task/id/Itemid
- *
- * index.php?/focalpoint/id/Itemid
- */
-function FocalpointParseRoute($segments)
-{
-	$vars = array();
-	//Get the active menu item.
-	$app = JFactory::getApplication();
-	$menu = $app->getMenu();
-	$item = $menu->getActive();
+        return $segments;
+    }
 
-	//Check the active menu is a map link.
-	// If so, the first segment should be a location alias
-	if ($item){
-		if ($item->query['view'] =="map") {
+    /**
+     * @param array $segments
+     *
+     * @return array
+     */
+    public function parse(&$segments)
+    {
+        $vars = array();
 
-			$alias = implode("-",explode(":",$segments[0]));
-			$db = JFactory::getDbo();
-			$sql = $db->getQuery(true);
-			$sql->select('id');
-			$sql->from('#__focalpoint_locations');
-			$sql->where('alias ="'.$alias.'"');
-			$db->setQuery($sql);
-			$id = $db->loadResult();
+        if ($segments) {
+            $menuItem = $this->menu->getActive();
 
-			if (isset($id)){
-				$vars['view'] = "location";
-				$vars['id'] = $id;
-			} else {
-				echo "unknown alias";
-			}
+            if (!$menuItem || $menuItem->query['view'] !== 'location') {
+                $locationAlias = array_pop($segments);
 
-		}
-	} else {
+                $db = JFactory::getDbo();
 
-		//Oh no! We don't have an active menu. better find one.
-		$type 		= $segments[0];
-		$item_id 	= $segments[1];
-		$db = JFactory::getDbo();
-		$sql = $db->getQuery(true);
-		$sql->select('id');
-		$sql->from('#__menu');
-		$sql->where('link LIKE "%option=com_focalpoint&view='.$type.'%" AND params LIKE "%item_id\":\"'.$item_id.'\"%" AND published = 1');
-		$db->setQuery($sql);
-		$menuitem = $db->loadResult();
+                $sqlQuery = $db->getQuery(true)
+                    ->select('id')
+                    ->from('#__focalpoint_locations')
+                    ->where('alias = ' . $db->quote($locationAlias));
 
-		if(!$menuitem) {
-			//Still no active menu.
-			//Check if it's a location. If so, is the parent map linked to a menu?
-			if ($type =="location") {
+                if ($locationId = (int)$db->setQuery($sqlQuery)->loadResult()) {
+                    $vars['view'] = 'location';
+                    $vars['id']   = $locationId;
+                }
+            }
+        }
 
-				//We need the map_id this location is assigned to.
-				$sql = $db->getQuery(true);
-				$sql->select('map_id');
-				$sql->from('#__focalpoint_locations');
-				$sql->where('id = '.$item_id);
-				$db->setQuery($sql);
-				$map_id = $db->loadResult();
+        return $vars;
+    }
 
-				//Check if it is linked to a published menu.
-				if ($map_id){
-					$sql = $db->getQuery(true);
-					$sql->select('id');
-					$sql->from('#__menu');
-					$sql->where('link LIKE "%option=com_focalpoint&view=map%" AND params LIKE "%item_id\":\"'.$map_id.'\"%" AND published = 1');
-					$db->setQuery($sql);
-					$menuitem = $db->loadResult();
-				}
-			}
-		}
-		if ($menuitem) {
-			$vars['Itemid'] = $menuitem;
-			$vars['view'] = $type;
-			$vars['id']= $item_id;
-		} else {
-			//Oh well! We tried. No menu exists. Just pass what we have. No Itemid for you!
-			$vars['view'] = $type;
-			$vars['id']= $item_id;
-		}
-	}
+    /**
+     * @param string $view
+     * @param string $id
+     *
+     * @return MenuItem
+     */
+    protected function findMenu($view, $id)
+    {
+        if ($this->menuItems === null) {
+            $menuItems = $this->menu->getItems('component', 'com_focalpoint');
 
-	//echo"<pre>";print_r($menuitem);echo"</pre>";
-	//echo"<pre>";print_r($item);echo"</pre>";
-	//echo"<pre>";print_r($segments);echo"</pre>";
-	//echo"<pre>";print_r($vars);echo"</pre>";
-	//die('hello parser');
+            $this->menuItems = array();
+            foreach ($menuItems as $menuItem) {
+                $menuView = $menuItem->query['view'];
+                if (!isset($this->menuItems[$menuView])) {
+                    $this->menuItems[$menuView] = array();
+                }
 
-	return $vars;
+                $parameterId = $menuItem->getParams()->get('item_id');
+
+                $this->menuItems[$menuView][$parameterId] = $menuItem;
+            }
+        }
+
+        if (!empty($this->menuItems[$view][$id])) {
+            return $this->menuItems[$view][$id];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $view
+     * @param string $id
+     *
+     * @return string
+     */
+    protected function getAlias($view, $id)
+    {
+        if (empty($this->alias[$view][$id])) {
+            $tables = array(
+                'location' => 'locations',
+                'map'      => 'maps'
+            );
+
+            if (!empty($tables[$view])) {
+                if (!isset($this->alias[$view])) {
+                    $this->alias[$view] = array();
+                }
+
+                $db = JFactory::getDbo();
+
+                $sqlQuery = $db->getQuery(true)
+                    ->select('alias')
+                    ->from('#__focalpoint_' . $tables[$view])
+                    ->where('id=' . (int)$id);
+
+                $this->alias[$view][$id] = $db->setQuery($sqlQuery)->loadResult();
+            }
+        }
+
+        if (!empty($this->alias[$view][$id])) {
+            return $this->alias[$view][$id];
+        }
+
+        return null;
+    }
 }
