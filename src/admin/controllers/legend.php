@@ -26,5 +26,5 @@ defined('_JEXEC') or die;
 
 class FocalpointControllerLegend extends JControllerForm
 {
-    protected $view_list = 'legend';
+    protected $view_list = 'legends';
 }
