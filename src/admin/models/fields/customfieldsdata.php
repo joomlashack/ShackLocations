@@ -476,7 +476,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      *
      * @return array
      */
-    public function getCustomFields()
+    protected function getCustomFields()
     {
         if ($this->customFields === null && $this->typeField) {
             $db = JFactory::getDbo();
