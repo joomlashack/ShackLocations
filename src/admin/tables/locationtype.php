@@ -38,4 +38,18 @@ class FocalpointTablelocationtype extends JTable
     {
         parent::__construct('#__focalpoint_locationtypes', 'id', $db);
     }
+
+    public function bind($src, $ignore = array())
+    {
+        if (parent::bind($src, $ignore)) {
+            if (empty($this->alias) && !empty($this->title)) {
+                $this->alias = $this->title;
+            }
+            $this->alias = JApplicationHelper::stringURLSafe($this->alias);
+
+            return true;
+        }
+
+        return false;
+    }
 }

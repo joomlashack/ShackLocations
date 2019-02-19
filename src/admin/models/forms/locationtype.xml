@@ -20,7 +20,8 @@
                label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_ALIAS"
                description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_ALIAS"
                required="false"
-               filter="safehtml"/>
+               filter="safehtml"
+               hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
 
     <fieldset name="general">
