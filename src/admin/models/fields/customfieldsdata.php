@@ -78,14 +78,41 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      */
     public function renderField($options = array())
     {
-        $customFields   = $this->getCustomFields();
-        $renderedFields = array();
+        if ($customFields = $this->getCustomFields()) {
+            $renderedFields = array();
 
-        $values = (array)$this->value;
-        foreach ($values as $hash => $value) {
-            if (isset($customFields[$hash])) {
-                $renderedFields[] = $this->renderFieldBlock($hash, $customFields[$hash], $options);
+            $values = (array)$this->value;
+            foreach ($values as $hash => $value) {
+                if (isset($customFields[$hash])) {
+                    $renderedFields[] = $this->renderFieldBlock($hash, $customFields[$hash], $options);
+                }
             }
+
+        } else {
+            if ($this->typeField->value) {
+                $db = JFactory::getDbo();
+
+                $locationType = $db->setQuery(
+                    $db->getQuery(true)
+                        ->select('title')
+                        ->from('#__focalpoint_locationtypes')
+                        ->where('id = ' . (int)$this->typeField->value)
+                )
+                    ->loadResult();
+
+                $message = JText::sprintf('COM_FOCALPOINT_CUSTOMFIELDSDATA_NONE', $locationType);
+
+            } else {
+                $message = JText::_('COM_FOCALPOINT_CUSTOMFIELDSDATA_SAVE');
+            }
+
+
+            $renderedFields = array(
+                '<div class="tab-description alert alert-info">',
+                '<span class="icon-info" aria-hidden="true"></span>',
+                $message,
+                '</div>'
+            );
         }
 
         return join("\n", $renderedFields);
@@ -189,14 +216,21 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         foreach ($subFields as $name => $subField) {
             $fieldOptions = empty($subField['options']) ? $options : array_merge($options, $subField['options']);
 
-            $label       = 'COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $customField['type'] . '_' . $name;
-            $description = $label . '_DESC';
+            $languageConstant = 'COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $customField['type'] . '_' . $name;
+
+            $label = empty($subField['label'])
+                ? $this->safeTranslate($languageConstant)
+                : $subField['label'];
+
+            $description = empty($subField['description'])
+                ? $this->safeTranslate($languageConstant . '_DESC')
+                : $subField['description'];
 
             $renderedSubfields[] = $this->renderSubfield(
                 $subField['type'],
                 $name,
-                empty($subField['label']) ? JText::_($label) : $subField['label'],
-                empty($subField['description']) ? JText::_($description) : $subField['description'],
+                $label,
+                $description,
                 $groupName . '.' . $fieldName,
                 $fieldOptions
             );
@@ -205,6 +239,23 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         $renderedSubfields[] = '</fieldset>';
 
         return join("\n", $renderedSubfields);
+    }
+
+    /**
+     * Checks if the language constant exists before translating.
+     * Returns empty string if it doesn't
+     *
+     * @param string $constant
+     *
+     * @return string
+     */
+    protected function safeTranslate($constant)
+    {
+        if (JFactory::getLanguage()->hasKey($constant)) {
+            return JText::_($constant);
+        }
+
+        return '';
     }
 
     /**
