@@ -74,6 +74,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      * @param array $options
      *
      * @return string
+     * @throws Exception
      */
     public function renderField($options = array())
     {
