@@ -81,8 +81,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         if ($customFields = $this->getCustomFields()) {
             $renderedFields = array();
 
-            $values = (array)$this->value;
-            foreach ($values as $hash => $value) {
+            foreach ($customFields as $hash => $value) {
                 if (isset($customFields[$hash])) {
                     $renderedFields[] = $this->renderFieldBlock($hash, $customFields[$hash], $options);
                 }
