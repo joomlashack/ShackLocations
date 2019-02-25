@@ -26,7 +26,7 @@ defined('JPATH_PLATFORM') or die;
 
 JFormHelper::loadFieldType('GroupedList');
 
-class JFormFieldLocationtype extends JFormFieldGroupedList
+class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
 {
     public $type = 'locationtype';
 

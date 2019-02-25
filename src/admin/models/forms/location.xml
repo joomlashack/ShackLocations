@@ -57,13 +57,13 @@
                extension="com_focalpoint"/>
 
         <field name="type"
-               type="locationtype"
+               type="shacklocations.locationtype"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_TYPE_ALT"
                required="true"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_TYPE"/>
 
         <field name="othertypes"
-               type="locationtype"
+               type="shacklocations.locationtype"
                label="COM_FOCALPOINT_OTHERTYPES_LABEL"
                description="COM_FOCALPOINT_OTHERTYPES_DESC"
                multiple="true"
