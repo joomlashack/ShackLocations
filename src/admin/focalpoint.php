@@ -30,9 +30,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_focalpoint')) {
     throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-JHtml::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
-JLoader::register('FocalpointHelper', __DIR__ . '/helpers/focalpoint.php');
-JLoader::register('mapsAPI', __DIR__ . '/helpers/maps.php');
+require_once __DIR__ . '/include.php';
 
 $controller = JControllerLegacy::getInstance('Focalpoint');
 $controller->execute(JFactory::getApplication()->input->getCmd('task'));

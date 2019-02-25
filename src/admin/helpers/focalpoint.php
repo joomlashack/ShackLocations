@@ -22,6 +22,8 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\Extension\Licensed;
+
 defined('_JEXEC') or die;
 
 /**
@@ -80,5 +82,15 @@ abstract class FocalpointHelper extends JHelperContent
         }
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    public static function renderAdminFooter()
+    {
+        $extension = new Licensed('focalpoint', 'component');
+
+        return $extension->getFooterMarkup();
     }
 }
