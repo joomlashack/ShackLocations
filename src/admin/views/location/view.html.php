@@ -105,36 +105,19 @@ class FocalpointViewLocation extends JViewLegacy
 
         if (!$checkedOut) {
             if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
-                JToolBarHelper::apply('location.apply', 'JTOOLBAR_APPLY');
-                JToolBarHelper::save('location.save', 'JTOOLBAR_SAVE');
+                JToolBarHelper::apply('location.apply');
+                JToolBarHelper::save('location.save');
             }
 
             if ($canDo->get('core.create')) {
-                JToolBarHelper::custom(
-                    'location.save2new',
-                    'save-new.png',
-                    'save-new_f2.png',
-                    'JTOOLBAR_SAVE_AND_NEW',
-                    false
-                );
+                JToolBarHelper::save2new('location.save2new');
             }
         }
 
-
-        // If an existing item, can save to a copy.
         if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom(
-                'location.save2copy',
-                'save-copy.png',
-                'save-copy_f2.png',
-                'JTOOLBAR_SAVE_AS_COPY',
-                false
-            );
+            JToolBarHelper::save2copy('location.save2copy');
         }
 
-        JToolBarHelper::cancel(
-            'location.cancel',
-            $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE'
-        );
+        JToolBarHelper::cancel('location.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

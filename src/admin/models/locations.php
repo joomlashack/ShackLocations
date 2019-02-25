@@ -24,41 +24,28 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.modellist');
-
-/**
- * Methods supporting a list of Focalpoint records.
- */
 class FocalpointModellocations extends JModelList
 {
-
-    /**
-     * Constructor.
-     *
-     * @param    array    An optional associative array of configuration settings.
-     * @see        JController
-     * @since    1.6
-     */
     public function __construct($config = array())
     {
-        if (empty($config['filter_fields'])) {
-            $config['filter_fields'] = array(
-                'id', 'a.id',
-                'state', 'a.state',
-                'ordering', 'a.ordering',
-                'title', 'a.title',
-                'map_title', 'map_title',
-                'type', 'a.type', //the location type. Need to change this.
-                'alias', 'a.alias',
-                'description', 'a.description',
-                'address', 'a.address',
-                'marker', 'a.marker',
-                'customfieldsdata', 'a.customfieldsdata',
-                'created_by', 'a.created_by',
-                'params', 'a.params',
-                'locationtype_title', 'locationtype_title'
-            );
-        }
+        $config = array_merge_recursive(
+            $config,
+            array(
+                'filter_fields' => array(
+                    'a.ordering',
+                    'a.state',
+                    'a.title',
+                    'map_title',
+                    'locationtype_title',
+                    'a.created_by',
+                    'a.id',
+                    'state',
+                    'map_id',
+                    'type'
+                )
+            )
+        );
+
 
         parent::__construct($config);
     }
@@ -83,10 +70,12 @@ class FocalpointModellocations extends JModelList
 
 
         //Filtering map_id
-        $this->setState('filter.map_id', $app->getUserStateFromRequest($this->context . '.filter.map_id', 'filter_map_id', '', 'string'));
+        $this->setState('filter.map_id',
+            $app->getUserStateFromRequest($this->context . '.filter.map_id', 'filter_map_id', '', 'string'));
 
         //Filtering type
-        $this->setState('filter.type', $app->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
+        $this->setState('filter.type',
+            $app->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
 
 
         // Load the parameters.
@@ -105,6 +94,7 @@ class FocalpointModellocations extends JModelList
      * ordering requirements.
      *
      * @param    string $id A prefix for the store id.
+     *
      * @return    string        A store id.
      * @since    1.6
      */
@@ -126,7 +116,7 @@ class FocalpointModellocations extends JModelList
     protected function getListQuery()
     {
         // Create a new query object.
-        $db = $this->getDbo();
+        $db    = $this->getDbo();
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
@@ -158,8 +148,10 @@ class FocalpointModellocations extends JModelList
         $published = $this->getState('filter.state');
         if (is_numeric($published)) {
             $query->where('a.state = ' . (int)$published);
-        } else if ($published === '') {
-            $query->where('(a.state IN (0, 1))');
+        } else {
+            if ($published === '') {
+                $query->where('(a.state IN (0, 1))');
+            }
         }
 
         // Filter by search in title
@@ -193,7 +185,7 @@ class FocalpointModellocations extends JModelList
 
 
         // Add the list ordering clause.
-        $orderCol = $this->state->get('list.ordering');
+        $orderCol  = $this->state->get('list.ordering');
         $orderDirn = $this->state->get('list.direction');
         if ($orderCol && $orderDirn) {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
