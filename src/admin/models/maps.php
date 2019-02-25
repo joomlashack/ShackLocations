@@ -36,7 +36,6 @@ class FocalpointModelmaps extends JModelList
                     'a.ordering',
                     'a.state',
                     'a.title',
-                    'author_id',
                     'state'
                 )
             ),

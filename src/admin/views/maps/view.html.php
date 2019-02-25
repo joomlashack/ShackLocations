@@ -25,6 +25,7 @@
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Pagination\Pagination;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
@@ -51,7 +52,12 @@ class FocalpointViewMaps extends JViewLegacy
     public $activeFilters = null;
 
     /**
-     * @param null $tpl
+     * @var Registry
+     */
+    protected $state = null;
+
+    /**
+     * @param string $tpl
      *
      * @return void
      * @throws Exception
