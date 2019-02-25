@@ -7,7 +7,7 @@
                hint="JSEARCH_FILTER"/>
 
         <field name="state"
-               type="statusalt"
+               type="shacklocations.status"
                label="COM_CONTENT_FILTER_PUBLISHED"
                description="COM_CONTENT_FILTER_PUBLISHED_DESC"
                onchange="this.form.submit();">

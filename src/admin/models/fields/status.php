@@ -30,26 +30,12 @@ JFormHelper::loadFieldClass('predefinedlist');
  * Form Field to load a list of states
  * Used in place of the Joomla status field as FocalPoint does not use "archived"
  */
-class JFormFieldStatusAlt extends JFormFieldPredefinedList
+class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
 {
-    /**
-     * The form field type.
-     *
-     * @var    string
-     * @since  3.2
-     */
-    public $type = 'StatusAlt';
-
-    /**
-     * Available statuses
-     *
-     * @var  array
-     * @since  3.2
-     */
     protected $predefinedOptions = array(
-        '1' => 'JPUBLISHED',
-        '0' => 'JUNPUBLISHED',
+        '1'  => 'JPUBLISHED',
+        '0'  => 'JUNPUBLISHED',
         '-2' => 'JTRASHED',
-        '*' => 'JALL'
+        '*'  => 'JALL'
     );
 }
