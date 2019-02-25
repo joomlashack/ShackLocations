@@ -73,6 +73,8 @@ class FocalpointViewMap extends JViewLegacy
 
             parent::display($tpl);
 
+            echo FocalpointHelper::renderAdminFooter();
+
         } catch (Exception $e) {
             $app->enqueueMessage($e->getMessage(), 'error');
 

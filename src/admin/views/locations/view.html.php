@@ -71,6 +71,8 @@ class FocalpointViewLocations extends JViewLegacy
         }
 
         parent::display($tpl);
+
+        echo FocalpointHelper::renderAdminFooter();
     }
 
     /**

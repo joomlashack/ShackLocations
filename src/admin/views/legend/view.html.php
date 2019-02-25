@@ -66,6 +66,8 @@ class FocalpointViewLegend extends JViewLegacy
         $this->addToolbar();
 
         parent::display($tpl);
+
+        echo FocalpointHelper::renderAdminFooter();
     }
 
     /**

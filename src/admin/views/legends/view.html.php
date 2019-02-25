@@ -70,7 +70,10 @@ class FocalpointViewLegends extends JViewLegacy
         if (!$legends_exist) {
             JFactory::getApplication()->input->set('task', 'showhelp');
         }
+
         parent::display($tpl);
+
+        echo FocalpointHelper::renderAdminFooter();
     }
 
     /**

@@ -24,7 +24,6 @@
 
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
 
 defined('_JEXEC') or die();
@@ -97,6 +96,8 @@ class FocalpointViewMaps extends JViewLegacy
             }
 
             parent::display($tpl);
+
+            echo FocalpointHelper::renderAdminFooter();
 
         } catch (Exception $e) {
             $app->enqueueMessage($e->getMessage(), 'error');
