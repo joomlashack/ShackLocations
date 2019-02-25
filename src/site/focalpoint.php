@@ -24,7 +24,7 @@
 
 defined('_JEXEC') or die();
 
-JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
+require_once JPATH_COMPONENT_ADMINISTRATOR . '/include.php';
 
 $controller	= JControllerLegacy::getInstance('Focalpoint');
 $controller->execute(JFactory::getApplication()->input->getCmd('task'));

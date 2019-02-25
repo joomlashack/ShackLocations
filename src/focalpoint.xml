@@ -99,6 +99,8 @@
         <include>AllediaFreeDefaultFiles</include>
 
         <obsolete>
+            <folder>components/com_focalpoint/helpers</folder>
+
             <file>administrator/components/com_focalpoint/models/fields/createdby.php</file>
             <file>administrator/components/com_focalpoint/models/fields/custom_field.php</file>
             <file>administrator/components/com_focalpoint/models/fields/othertypeslist.php</file>
