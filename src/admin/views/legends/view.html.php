@@ -54,7 +54,7 @@ class FocalpointViewLegends extends JViewLegacy
     /**
      * @var Registry
      */
-    protected $state;
+    protected $state = null;
 
     /**
      * @param string $tpl
@@ -103,7 +103,6 @@ class FocalpointViewLegends extends JViewLegacy
             parent::display($tpl);
 
             echo FocalpointHelper::renderAdminFooter();
-
 
         } catch (Exception $e) {
             $app->enqueueMessage($e->getMessage(), 'error');
