@@ -93,44 +93,26 @@ class FocalpointViewMap extends JViewLegacy
         $user  = JFactory::getUser();
         $isNew = ($this->item->id == 0);
 
-        if (isset($this->item->checked_out)) {
-            $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
-        } else {
-            $checkedOut = false;
-        }
-        $canDo = FocalpointHelper::getActions();
+        $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAP'), 'compass');
 
         if (!$checkedOut) {
-            if ($canDo->get('core.edit') || $canDo->get('core.create')) {
-                JToolBarHelper::apply('map.apply', 'JTOOLBAR_APPLY');
-                JToolBarHelper::save('map.save', 'JTOOLBAR_SAVE');
+            if ($user->authorise('core.edit', 'com_focalpoint')
+                || $user->authorise('core.create', 'com_focalpoint')) {
+                JToolBarHelper::apply('map.apply');
+                JToolBarHelper::save('map.save');
             }
-            if ($canDo->get('core.create')) {
-                JToolBarHelper::custom(
-                    'map.save2new',
-                    'save-new.png',
-                    'save-new_f2.png',
-                    'JTOOLBAR_SAVE_AND_NEW',
-                    false
-                );
+
+            if ($user->authorise('core.create', 'com_focalpoint')) {
+                JToolBarHelper::save2new('map.save2new');
             }
         }
 
-        if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom(
-                'map.save2copy',
-                'save-copy.png',
-                'save-copy_f2.png',
-                'JTOOLBAR_SAVE_AS_COPY',
-                false
-            );
+        if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
+            JToolBarHelper::save2copy('map.save2copy');
         }
 
-        JToolBarHelper::cancel(
-            'map.cancel',
-            $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE'
-        );
+        JToolBarHelper::cancel('map.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

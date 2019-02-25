@@ -125,52 +125,29 @@ class FocalpointViewMaps extends JViewLegacy
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAPS'), 'compass');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            JToolBarHelper::addNew('map.add', 'JTOOLBAR_NEW');
+            JToolBarHelper::addNew('map.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            JToolBarHelper::editList('map.edit', 'JTOOLBAR_EDIT');
+            JToolBarHelper::editList('map.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            JToolBarHelper::divider();
-            JToolBarHelper::custom('maps.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-            JToolBarHelper::custom('maps.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-
-            JToolBarHelper::divider();
-            JToolBarHelper::archiveList('maps.archive', 'JTOOLBAR_ARCHIVE');
-
-            JToolBarHelper::custom('maps.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
+            JToolBarHelper::publishList('maps.publish');
+            JToolBarHelper::unpublishList('maps.unpublish');
+            JToolBarHelper::checkin('maps.checkin');
         }
 
         if ($user->authorise('core.delete', 'com_focalpoint')) {
             if ($this->state->get('filter.state') == -2) {
-                JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_EMPTY_TRASH');
+                JToolBarHelper::deleteList('', 'maps.delete');
             } else {
-                JToolBarHelper::trash('maps.trash', 'JTOOLBAR_TRASH');
+                JToolBarHelper::trash('maps.trash');
             }
 
             if ($user->authorise('core.admin', 'com_focalpoint')) {
                 JToolBarHelper::preferences('com_focalpoint');
             }
         }
-    }
-
-    /**
-     * Returns an array of fields the table can be sorted by
-     *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
-     *
-     * @since   3.0
-     */
-    protected function getSortFields()
-    {
-        return array(
-            'a.ordering'   => JText::_('JGRID_HEADING_ORDERING'),
-            'a.state'      => JText::_('JSTATUS'),
-            'a.title'      => JText::_('JGLOBAL_TITLE'),
-            'a.created_by' => JText::_('JAUTHOR'),
-            'a.id'         => JText::_('JGRID_HEADING_ID')
-        );
     }
 }
