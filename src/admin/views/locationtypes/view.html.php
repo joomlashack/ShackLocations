@@ -22,57 +22,94 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Pagination\Pagination;
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
-
-/**
- * View class for a list of Focalpoint Location Types.
- */
 class FocalpointViewLocationtypes extends JViewLegacy
 {
-    protected $items;
-    protected $pagination;
-    protected $state;
+    /**
+     * @var object[]
+     */
+    protected $items = null;
 
     /**
-     * Display the view
+     * @var Pagination
+     */
+    protected $pagination = null;
+
+    /**
+     * @var Form
+     */
+    public $filterForm = null;
+
+    /**
+     * @var mixed[]
+     */
+    public $activeFilters = null;
+
+    /**
+     * @var Registry
+     */
+    protected $state = null;
+
+    /**
+     * @param string $tpl
+     *
+     * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
-        $this->state = $this->get('State');
-        $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->filterForm = $this->get('FilterForm');
+        /** @var AdministratorApplication $app */
+        $app = JFactory::getApplication();
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
+        try {
+            /** @var FocalpointModellocationtypes $model */
+            $model = $this->getModel();
+
+            $this->state         = $model->getState();
+            $this->items         = $model->getItems();
+            $this->pagination    = $model->getPagination();
+            $this->filterForm    = $model->getFilterForm();
+            $this->activeFilters = $model->getActiveFilters();
+
+            if ($errors = $model->getErrors()) {
+                throw new Exception(implode("\n", $errors));
+            }
+
+            $this->addToolbar();
+
+            FocalpointHelper::addSubmenu('locationtypes');
+            $this->sidebar = JHtmlSidebar::render();
+
+            /*
+             * This is part of the getting started walk through. If we've gotten this far then the
+             * user has successfully saved their configuration, added a map and defined a legend.
+             * Check we have at least one location type defined
+             */
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('id')
+                ->from('#__focalpoint_locationtypes');
+
+            if (!$db->setQuery($query)->loadResult()) {
+                JFactory::getApplication()->input->set('task', 'showhelp');
+            }
+
+            parent::display($tpl);
+
+            echo FocalpointHelper::renderAdminFooter();
+
+        } catch (Exception $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
+
+        } catch (Throwable $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
         }
-
-        $this->addToolbar();
-
-        $input = JFactory::getApplication()->input;
-        $view = $input->getCmd('view', '');
-        FocalpointHelper::addSubmenu($view);
-        $this->sidebar = JHtmlSidebar::render();
-
-        // This is part of the getting started walk through. If we've gotten this far then the
-        // user has successfully saved their configuration, added a map and defined a legend.
-        // Check we have at least one location type defined
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select('id')->from('#__focalpoint_locationtypes');
-        $db->setQuery($query);
-        $types_exist = $db->loadResult();
-
-        if (!$types_exist) {
-            JFactory::getApplication()->input->set('task', 'showhelp');
-        }
-
-        parent::display($tpl);
-
-        echo FocalpointHelper::renderAdminFooter();
     }
 
     /**
@@ -107,11 +144,15 @@ class FocalpointViewLocationtypes extends JViewLegacy
 
             if (isset($this->items[0]->state)) {
                 JToolBarHelper::divider();
-                JToolBarHelper::custom('locationtypes.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-                JToolBarHelper::custom('locationtypes.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-            } else if (isset($this->items[0])) {
-                //If this component does not use state then show a direct delete button as we can not trash
-                JToolBarHelper::deleteList('', 'locationtypes.delete', 'JTOOLBAR_DELETE');
+                JToolBarHelper::custom('locationtypes.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH',
+                    true);
+                JToolBarHelper::custom('locationtypes.unpublish', 'unpublish.png', 'unpublish_f2.png',
+                    'JTOOLBAR_UNPUBLISH', true);
+            } else {
+                if (isset($this->items[0])) {
+                    //If this component does not use state then show a direct delete button as we can not trash
+                    JToolBarHelper::deleteList('', 'locationtypes.delete', 'JTOOLBAR_DELETE');
+                }
             }
 
             if (isset($this->items[0]->state)) {
@@ -119,7 +160,8 @@ class FocalpointViewLocationtypes extends JViewLegacy
                 JToolBarHelper::archiveList('locationtypes.archive', 'JTOOLBAR_ARCHIVE');
             }
             if (isset($this->items[0]->checked_out)) {
-                JToolBarHelper::custom('locationtypes.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
+                JToolBarHelper::custom('locationtypes.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN',
+                    true);
             }
         }
 
@@ -128,9 +170,11 @@ class FocalpointViewLocationtypes extends JViewLegacy
             if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
                 JToolBarHelper::deleteList('', 'locationtypes.delete', 'JTOOLBAR_EMPTY_TRASH');
                 JToolBarHelper::divider();
-            } else if ($canDo->get('core.edit.state')) {
-                JToolBarHelper::trash('locationtypes.trash', 'JTOOLBAR_TRASH');
-                JToolBarHelper::divider();
+            } else {
+                if ($canDo->get('core.edit.state')) {
+                    JToolBarHelper::trash('locationtypes.trash', 'JTOOLBAR_TRASH');
+                    JToolBarHelper::divider();
+                }
             }
         }
 
@@ -149,12 +193,12 @@ class FocalpointViewLocationtypes extends JViewLegacy
     protected function getSortFields()
     {
         return array(
-            'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-            'a.state' => JText::_('JSTATUS'),
-            'a.title' => JText::_('JGLOBAL_TITLE'),
+            'a.ordering'   => JText::_('JGRID_HEADING_ORDERING'),
+            'a.state'      => JText::_('JSTATUS'),
+            'a.title'      => JText::_('JGLOBAL_TITLE'),
             'legend_title' => JText::_('COM_FOCALPOINT_LOCATIONTYPES_LEGEND'),
             'a.created_by' => JText::_('JAUTHOR'),
-            'a.id' => JText::_('JGRID_HEADING_ID')
+            'a.id'         => JText::_('JGRID_HEADING_ID')
         );
     }
 }
