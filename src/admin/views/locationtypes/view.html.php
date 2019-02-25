@@ -119,86 +119,33 @@ class FocalpointViewLocationtypes extends JViewLegacy
      */
     protected function addToolbar()
     {
-        require_once JPATH_COMPONENT . '/helpers/focalpoint.php';
-
-        $state = $this->get('State');
-        $canDo = FocalpointHelper::getActions($state->get('filter.category_id'));
+        $user = JFactory::getUser();
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'), 'location');
 
-        //Check if the form exists before showing the add/edit buttons
-        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/locationtype';
-        if (file_exists($formPath)) {
-
-            if ($canDo->get('core.create')) {
-                JToolBarHelper::addNew('locationtype.add', 'JTOOLBAR_NEW');
-            }
-
-            if ($canDo->get('core.edit') && isset($this->items[0])) {
-                JToolBarHelper::editList('locationtype.edit', 'JTOOLBAR_EDIT');
-            }
-
+        if ($user->authorise('core.create', 'com_focalpoint')) {
+            JToolBarHelper::addNew('locationtype.add');
         }
 
-        if ($canDo->get('core.edit.state')) {
-
-            if (isset($this->items[0]->state)) {
-                JToolBarHelper::divider();
-                JToolBarHelper::custom('locationtypes.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH',
-                    true);
-                JToolBarHelper::custom('locationtypes.unpublish', 'unpublish.png', 'unpublish_f2.png',
-                    'JTOOLBAR_UNPUBLISH', true);
-            } else {
-                if (isset($this->items[0])) {
-                    //If this component does not use state then show a direct delete button as we can not trash
-                    JToolBarHelper::deleteList('', 'locationtypes.delete', 'JTOOLBAR_DELETE');
-                }
-            }
-
-            if (isset($this->items[0]->state)) {
-                JToolBarHelper::divider();
-                JToolBarHelper::archiveList('locationtypes.archive', 'JTOOLBAR_ARCHIVE');
-            }
-            if (isset($this->items[0]->checked_out)) {
-                JToolBarHelper::custom('locationtypes.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN',
-                    true);
-            }
+        if ($user->authorise('core.edit', 'com_focalpoint')) {
+            JToolBarHelper::editList('locationtype.edit');
         }
 
-        //Show trash and delete for components that uses the state field
-        if (isset($this->items[0]->state)) {
-            if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
-                JToolBarHelper::deleteList('', 'locationtypes.delete', 'JTOOLBAR_EMPTY_TRASH');
-                JToolBarHelper::divider();
-            } else {
-                if ($canDo->get('core.edit.state')) {
-                    JToolBarHelper::trash('locationtypes.trash', 'JTOOLBAR_TRASH');
-                    JToolBarHelper::divider();
-                }
-            }
+        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
+            JToolBarHelper::publishList('locationtypes.publish');
+            JToolBarHelper::unpublishList('locationtypes.unpublish');
+            JToolBarHelper::checkin('locationtypes.checkin');
         }
 
-        if ($canDo->get('core.admin')) {
+        if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
+            JToolBarHelper::deleteList('', 'locationtypes.delete');
+
+        } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
+            JToolBarHelper::trash('locationtypes.trash');
+        }
+
+        if ($user->authorise('core.admin', 'com_focalpoint')) {
             JToolBarHelper::preferences('com_focalpoint');
         }
-    }
-
-    /**
-     * Returns an array of fields the table can be sorted by
-     *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
-     *
-     * @since   3.0
-     */
-    protected function getSortFields()
-    {
-        return array(
-            'a.ordering'   => JText::_('JGRID_HEADING_ORDERING'),
-            'a.state'      => JText::_('JSTATUS'),
-            'a.title'      => JText::_('JGLOBAL_TITLE'),
-            'legend_title' => JText::_('COM_FOCALPOINT_LOCATIONTYPES_LEGEND'),
-            'a.created_by' => JText::_('JAUTHOR'),
-            'a.id'         => JText::_('JGRID_HEADING_ID')
-        );
     }
 }

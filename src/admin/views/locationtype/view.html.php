@@ -87,37 +87,25 @@ class FocalpointViewLocationtype extends JViewLegacy
         $user  = JFactory::getUser();
         $isNew = empty($this->item->id);
 
-        $canDo = FocalpointHelper::getActions();
-
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPE'), 'location');
 
-        if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
-            JToolBarHelper::apply('locationtype.apply', 'JTOOLBAR_APPLY');
-            JToolBarHelper::save('locationtype.save', 'JTOOLBAR_SAVE');
+        if ($user->authorise('core.edit', 'com_focalpoint')
+            || $user->authorise('core.create', 'com_focalpoint')
+        ) {
+            JToolBarHelper::apply('locationtype.apply');
+            JToolBarHelper::save('locationtype.save');
         }
 
-        if ($canDo->get('core.create')) {
-            JToolBarHelper::custom(
-                'locationtype.save2new',
-                'save-new.png',
-                'save-new_f2.png',
-                'JTOOLBAR_SAVE_AND_NEW',
-                false
-            );
+        if ($user->authorise('core.create', 'com_focalpoint')) {
+            JToolBarHelper::save2new('locationtype.save2new');
         }
 
-        if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::custom(
-                'locationtype.save2copy',
-                'save-copy.png',
-                'save-copy_f2.png',
-                'JTOOLBAR_SAVE_AS_COPY',
-                false
-            );
+        if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
+            JToolBarHelper::save2copy('locationtype.save2copy');
         }
 
         if (!($this->item->get('id'))) {
-            JToolBarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CANCEL');
+            JToolBarHelper::cancel('locationtype.cancel');
 
         } else {
             JToolBarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CLOSE');
