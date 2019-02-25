@@ -119,42 +119,32 @@ class FocalpointViewLegends extends JViewLegacy
      */
     protected function addToolbar()
     {
-        $canDo = FocalpointHelper::getActions($this->state->get('core.admin'));
+        $user = JFactory::getUser();
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
 
-        if ($canDo->get('core.create')) {
-            JToolBarHelper::addNew('legend.add', 'JTOOLBAR_NEW');
+        if ($user->authorise('core.create', 'com_focalpoint')) {
+            JToolBarHelper::addNew('legend.add');
         }
 
-        if ($canDo->get('core.edit')) {
-            JToolBarHelper::editList('legend.edit', 'JTOOLBAR_EDIT');
+        if ($user->authorise('core.edit', 'com_focalpoint')) {
+            JToolBarHelper::editList('legend.edit');
         }
 
-        if ($canDo->get('core.edit.state')) {
-            JToolBarHelper::divider();
-            JToolBarHelper::custom('legends.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-            JToolBarHelper::custom(
-                'legends.unpublish',
-                'unpublish.png',
-                'unpublish_f2.png',
-                'JTOOLBAR_UNPUBLISH',
-                true
-            );
-
-            JToolBarHelper::divider();
-            JToolBarHelper::archiveList('legends.archive', 'JTOOLBAR_ARCHIVE');
-            JToolBarHelper::custom('legends.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
+        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
+            JToolBarHelper::publishList('legends.publish');
+            JToolBarHelper::unpublishList('legends.unpublish');
+            JToolBarHelper::checkin('legends.checkin');
         }
 
-        if ($this->state->get('filter.state') == -2 && $canDo->get('core.delete')) {
-            JToolBarHelper::deleteList('', 'legends.delete', 'JTOOLBAR_EMPTY_TRASH');
+        if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
+            JToolBarHelper::deleteList('', 'legends.delete');
 
-        } elseif ($canDo->get('core.edit.state')) {
-            JToolBarHelper::trash('legends.trash', 'JTOOLBAR_TRASH');
+        } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
+            JToolBarHelper::trash('legends.trash');
         }
 
-        if ($canDo->get('core.admin')) {
+        if ($user->authorise('core.admin', 'com_focalpoint')) {
             JToolBarHelper::preferences('com_focalpoint');
         }
     }
