@@ -18,7 +18,7 @@
         </field>
         <field
                 name="legend"
-                type="legend"
+                type="shacklocations.legend"
                 label="COM_FOCALPOINT_LOCATIONTYPES_LEGEND"
                 description="COM_FOCALPOINT_FILTER_LEGEND"
                 onchange="this.form.submit();"

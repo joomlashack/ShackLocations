@@ -22,15 +22,13 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Form\Form;
+
 defined('JPATH_PLATFORM') or die;
 
 JFormHelper::loadFieldClass('predefinedlist');
 
-/**
- * Form Field to load a list of states
- * Used in place of the Joomla status field as FocalPoint does not use "archived"
- */
-class JFormFieldLegend extends JFormFieldPredefinedList
+class ShacklocationsFormFieldLegend extends JFormFieldPredefinedList
 {
     /**
      * The form field type.
@@ -49,20 +47,24 @@ class JFormFieldLegend extends JFormFieldPredefinedList
     protected $predefinedOptions = array();
 
     /**
-     * Constrct method to get the field input markup.
+     * ShacklocationsFormFieldLegend constructor.
+     *
+     * @param Form $form
      */
-    function __construct()
+    public function __construct($form = null)
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true)
             ->select('id,title')
             ->from('`#__focalpoint_legends`')
             ->where('`state` > -1');
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
+
+        $results = $db->setQuery($query)->loadObjectList();
+
         foreach ($results as $result) {
             $this->predefinedOptions[$result->id] = $result->title;
         }
+
+        parent::__construct($form);
     }
 }

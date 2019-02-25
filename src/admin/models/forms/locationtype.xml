@@ -37,7 +37,7 @@
         </field>
 
         <field name="legend"
-               type="legend"
+               type="shacklocations.legend"
                label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_LEGEND"
                required="true"
                description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_LEGEND"/>
