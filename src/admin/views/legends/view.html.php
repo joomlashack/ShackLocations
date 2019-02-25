@@ -22,58 +22,95 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Pagination\Pagination;
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
-
-/**
- * View class for a list of Focalpoint.
- */
 class FocalpointViewLegends extends JViewLegacy
 {
-    protected $items;
-    protected $pagination;
+    /**
+     * @var object[]
+     */
+    protected $items = null;
+
+    /**
+     * @var Pagination
+     */
+    protected $pagination = null;
+
+    /**
+     * @var Form
+     */
+    public $filterForm = null;
+
+    /**
+     * @var mixed[]
+     */
+    public $activeFilters = null;
+
+    /**
+     * @var Registry
+     */
     protected $state;
 
     /**
-     * Display the view
+     * @param string $tpl
+     *
+     * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
-        $this->state = $this->get('State');
-        $this->items = $this->get('Items');
-        $this->pagination = $this->get('Pagination');
-        $this->authors = $this->get('Authors');
-        $this->filterForm = $this->get('FilterForm');
+        /** @var AdministratorApplication $app */
+        $app = JFactory::getApplication();
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
+        try {
+            /** @var FocalpointModellegends $model */
+            $model = $this->getModel();
+
+            $this->state         = $model->getState();
+            $this->items         = $model->getItems();
+            $this->pagination    = $model->getPagination();
+            $this->filterForm    = $model->getFilterForm();
+            $this->activeFilters = $model->getActiveFilters();
+
+            // Check for errors.
+            if ($errors = $model->getErrors()) {
+                throw new Exception(implode("\n", $errors));
+            }
+
+            $this->addToolbar();
+
+            FocalpointHelper::addSubmenu('legends');
+            $this->sidebar = JHtmlSidebar::render();
+
+            /*
+             * This is part of the getting started walk through. If we've gotten this far then the
+             * user has successfully saved their configuration and defined a map.
+             * Check we have at least one legend defined
+             */
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('id')->from('#__focalpoint_legends');
+
+            if (!$db->setQuery($query)->loadResult()) {
+                JFactory::getApplication()->input->set('task', 'showhelp');
+            }
+
+            parent::display($tpl);
+
+            echo FocalpointHelper::renderAdminFooter();
+
+
+        } catch (Exception $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
+
+        } catch (Throwable $e) {
+            $app->enqueueMessage($e->getMessage(), 'error');
         }
-
-        $this->addToolbar();
-
-        $input = JFactory::getApplication()->input;
-        $view = $input->getCmd('view', '');
-        FocalpointHelper::addSubmenu($view);
-        $this->sidebar = JHtmlSidebar::render();
-
-        // This is part of the getting started walk through. If we've gotten this far then the
-        // user has successfully saved their configuration and defined a map.
-        // Check we have at least one legend defined
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select('id')->from('#__focalpoint_legends');
-        $db->setQuery($query);
-        $legends_exist = $db->loadResult();
-
-        if (!$legends_exist) {
-            JFactory::getApplication()->input->set('task', 'showhelp');
-        }
-
-        parent::display($tpl);
-
-        echo FocalpointHelper::renderAdminFooter();
     }
 
     /**
@@ -83,80 +120,43 @@ class FocalpointViewLegends extends JViewLegacy
      */
     protected function addToolbar()
     {
-        require_once JPATH_COMPONENT . '/helpers/focalpoint.php';
-
-        $state = $this->get('State');
-        $canDo = FocalpointHelper::getActions($state->get('core.admin'));
+        $canDo = FocalpointHelper::getActions($this->state->get('core.admin'));
 
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
 
-        //Check if the form exists before showing the add/edit buttons
-        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/legend';
-        if (file_exists($formPath)) {
+        if ($canDo->get('core.create')) {
+            JToolBarHelper::addNew('legend.add', 'JTOOLBAR_NEW');
+        }
 
-            if ($canDo->get('core.create')) {
-                JToolBarHelper::addNew('legend.add', 'JTOOLBAR_NEW');
-            }
-
-            if ($canDo->get('core.edit') && isset($this->items[0])) {
-                JToolBarHelper::editList('legend.edit', 'JTOOLBAR_EDIT');
-            }
-
+        if ($canDo->get('core.edit')) {
+            JToolBarHelper::editList('legend.edit', 'JTOOLBAR_EDIT');
         }
 
         if ($canDo->get('core.edit.state')) {
+            JToolBarHelper::divider();
+            JToolBarHelper::custom('legends.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+            JToolBarHelper::custom(
+                'legends.unpublish',
+                'unpublish.png',
+                'unpublish_f2.png',
+                'JTOOLBAR_UNPUBLISH',
+                true
+            );
 
-            if (isset($this->items[0]->state)) {
-                JToolBarHelper::divider();
-                JToolBarHelper::custom('legends.publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-                JToolBarHelper::custom('legends.unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-            } else if (isset($this->items[0])) {
-                //If this component does not use state then show a direct delete button as we can not trash
-                JToolBarHelper::deleteList('', 'legends.delete', 'JTOOLBAR_DELETE');
-            }
-
-            if (isset($this->items[0]->state)) {
-                JToolBarHelper::divider();
-                JToolBarHelper::archiveList('legends.archive', 'JTOOLBAR_ARCHIVE');
-            }
-            if (isset($this->items[0]->checked_out)) {
-                JToolBarHelper::custom('legends.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
-            }
+            JToolBarHelper::divider();
+            JToolBarHelper::archiveList('legends.archive', 'JTOOLBAR_ARCHIVE');
+            JToolBarHelper::custom('legends.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
         }
 
-        //Show trash and delete for components that uses the state field
-        if (isset($this->items[0]->state)) {
-            if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
-                JToolBarHelper::deleteList('', 'legends.delete', 'JTOOLBAR_EMPTY_TRASH');
-                JToolBarHelper::divider();
-            } else if ($canDo->get('core.edit.state')) {
-                JToolBarHelper::trash('legends.trash', 'JTOOLBAR_TRASH');
-                JToolBarHelper::divider();
-            }
+        if ($this->state->get('filter.state') == -2 && $canDo->get('core.delete')) {
+            JToolBarHelper::deleteList('', 'legends.delete', 'JTOOLBAR_EMPTY_TRASH');
+
+        } elseif ($canDo->get('core.edit.state')) {
+            JToolBarHelper::trash('legends.trash', 'JTOOLBAR_TRASH');
         }
 
         if ($canDo->get('core.admin')) {
             JToolBarHelper::preferences('com_focalpoint');
         }
-
-
-    }
-
-    /**
-     * Returns an array of fields the table can be sorted by
-     *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
-     *
-     * @since   3.0
-     */
-    protected function getSortFields()
-    {
-        return array(
-            'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-            'a.state' => JText::_('JSTATUS'),
-            'a.title' => JText::_('JGLOBAL_TITLE'),
-            'a.created_by' => JText::_('JAUTHOR'),
-            'a.id' => JText::_('JGRID_HEADING_ID')
-        );
     }
 }
