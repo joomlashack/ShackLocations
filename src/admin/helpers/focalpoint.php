@@ -27,22 +27,8 @@ defined('_JEXEC') or die;
 /**
  * Focalpoint helper.
  */
-class FocalpointHelper extends JHelperContent
+abstract class FocalpointHelper extends JHelperContent
 {
-    public static $extension = 'com_focalpoint';
-
-    /**
-     * Quick and dirty debug.
-     */
-    public static function printNdie($data)
-    {
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
-        die();
-    }
-
-
     /**
      * Configure the Linkbar.
      */
