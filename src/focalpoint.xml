@@ -68,6 +68,7 @@
             <folder>form</folder>
             <folder>helpers</folder>
             <folder>language</folder>
+            <folder>layouts</folder>
             <folder>library</folder>
             <folder>models</folder>
             <folder>sql</folder>
@@ -78,6 +79,7 @@
             <filename>config.xml</filename>
             <filename>controller.php</filename>
             <filename>focalpoint.php</filename>
+            <filename>include.php</filename>
             <filename>README.md</filename>
         </files>
     </administration>
