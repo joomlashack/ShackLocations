@@ -119,7 +119,7 @@ JSCRIPT;
                 <div class="fp_customfields fp_content">
                     <?php
                     foreach ($this->item->customfields as $key => $customfield) :
-                        $this->renderField($customfield);
+                        echo $this->renderField($customfield);
                     endforeach;
                     ?>
                 </div>

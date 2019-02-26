@@ -250,7 +250,7 @@ class FocalpointViewLocation extends JViewLegacy
      * @param object $field
      * @param bool   $hidelabel
      *
-     * @return void
+     * @return string
      * @throws Exception
      *
      */
@@ -264,8 +264,10 @@ class FocalpointViewLocation extends JViewLegacy
                 )
             );
 
-            echo JLayoutHelper::render('custom.field.' . $field->datatype, $data);
+            return JLayoutHelper::render('custom.field.' . $field->datatype, $data);
         }
+
+        return '';
     }
 
     /**
