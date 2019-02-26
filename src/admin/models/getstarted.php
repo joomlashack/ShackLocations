@@ -24,10 +24,6 @@
 
 defined('_JEXEC') or die;
 
-
-/**
- * Focalpoint model.
- */
 class FocalpointModelGetstarted extends JModelList
 {
     public function getForm($data = array(), $loadData = true)

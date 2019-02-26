@@ -22,76 +22,53 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\Registry\Registry;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
-
-/**
- * View class for a list of Focalpoint.
- */
 class FocalpointViewGetstarted extends JViewLegacy
 {
-    protected $items;
-    protected $pagination;
+    /**
+     * @var Registry
+     */
     protected $state;
 
     /**
-     * Display the view
+     * @param string $tpl
+     *
+     * @return void
+     * @throws Exception
      */
     public function display($tpl = null)
     {
-        $this->state = $this->get('State');
+        /** @var FocalpointModelGetstarted $model */
+        $model = $this->getModel();
+
+        $this->state = $model->getState();
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if ($errors = $model->getErrors()) {
             throw new Exception(implode("\n", $errors));
         }
 
         $this->addToolbar();
 
-        $input = JFactory::getApplication()->input;
-        $view = $input->getCmd('view', '');
+        $view = JFactory::getApplication()->input->getCmd('view');
         FocalpointHelper::addSubmenu($view);
+
         $this->sidebar = JHtmlSidebar::render();
 
         parent::display($tpl);
     }
 
-    /**
-     * Add the page title and toolbar.
-     *
-     * @since    1.6
-     */
     protected function addToolbar()
     {
-        require_once JPATH_COMPONENT . '/helpers/focalpoint.php';
-        $state = $this->get('State');
-        $canDo = FocalpointHelper::getActions($state->get('filter.category_id'));
-
         JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_GETSTARTED'), 'legends.png');
 
-        if ($canDo->get('core.admin')) {
+        $user = JFactory::getUser();
+
+        if ($user->authorise('core.admin', 'com_focalpoint')) {
             JToolBarHelper::preferences('com_focalpoint');
         }
-        return true;
-
-    }
-
-    /**
-     * Returns an array of fields the table can be sorted by
-     *
-     * @return  array  Array containing the field name to sort by as the key and display text as value
-     *
-     * @since   3.0
-     */
-    protected function getSortFields()
-    {
-        return array(
-            'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-            'a.state' => JText::_('JSTATUS'),
-            'a.title' => JText::_('JGLOBAL_TITLE'),
-            'a.created_by' => JText::_('JAUTHOR'),
-            'a.id' => JText::_('JGRID_HEADING_ID')
-        );
     }
 }
