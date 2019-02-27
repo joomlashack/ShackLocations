@@ -32,7 +32,7 @@ class FocalpointViewLegend extends JViewLegacy
     /**
      * @var CMSObject
      */
-    protected $state;
+    protected $state = null;
 
     /**
      * @var CMSObject

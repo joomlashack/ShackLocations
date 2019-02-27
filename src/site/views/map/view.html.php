@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die;
@@ -35,19 +36,19 @@ jimport('joomla.application.component.view');
 class FocalpointViewMap extends JViewLegacy
 {
     /**
-     * @var JObject
+     * @var CMSObject
      */
-    protected $state;
+    protected $state = null;
 
     /**
-     * @var JObject
+     * @var CMSObject
      */
-    protected $item;
+    protected $item = null;
 
     /**
      * @var Registry
      */
-    protected $params;
+    protected $params = null;
 
     /**
      * @var object
@@ -67,7 +68,6 @@ class FocalpointViewMap extends JViewLegacy
 
         /** @var FocalpointModelMap $model */
         $model = $this->getModel();
-        $user  = JFactory::getUser();
 
         $this->params = $app->getParams('com_focalpoint');
         $this->state  = $model->getState();

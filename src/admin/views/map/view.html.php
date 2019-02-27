@@ -32,17 +32,17 @@ class FocalpointViewMap extends JViewLegacy
     /**
      * @var CMSObject
      */
-    protected $state;
+    protected $state = null;
 
     /**
      * @var CMSObject
      */
-    protected $item;
+    protected $item = null;
 
     /**
      * @var Form
      */
-    protected $form;
+    protected $form = null;
 
     /**
      * @param string $tpl

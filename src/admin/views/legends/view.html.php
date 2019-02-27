@@ -24,8 +24,8 @@
 
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
-use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die;
 
@@ -52,7 +52,7 @@ class FocalpointViewLegends extends JViewLegacy
     public $activeFilters = null;
 
     /**
-     * @var Registry
+     * @var CMSObject
      */
     protected $state = null;
 

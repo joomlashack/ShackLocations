@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die;
@@ -30,19 +31,19 @@ defined('_JEXEC') or die;
 class FocalpointViewLocation extends JViewLegacy
 {
     /**
-     * @var JObject
+     * @var CMSObject
      */
-    protected $state;
+    protected $state = null;
 
     /**
-     * @var JObject
+     * @var CMSObject
      */
-    protected $item;
+    protected $item = null;
 
     /**
      * @var Registry
      */
-    protected $params;
+    protected $params = null;
 
     /**
      * @var object

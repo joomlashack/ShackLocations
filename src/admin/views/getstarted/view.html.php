@@ -22,16 +22,16 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\Registry\Registry;
+use Joomla\CMS\Object\CMSObject;
 
 defined('_JEXEC') or die;
 
 class FocalpointViewGetstarted extends JViewLegacy
 {
     /**
-     * @var Registry
+     * @var CMSObject
      */
-    protected $state;
+    protected $state = null;
 
     /**
      * @param string $tpl
