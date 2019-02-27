@@ -32,7 +32,7 @@ JHtml::_('jquery.ui', array('core', 'sortable'));
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task == 'locationtype.cancel' || document.formvalidator.isValid(document.id('locationtype-form'))) {
+        if (task === 'locationtype.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
             Joomla.submitform(task, document.getElementById('adminForm'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');

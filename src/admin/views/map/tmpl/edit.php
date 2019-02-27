@@ -37,8 +37,8 @@ $formFieldsets = $this->form->getFieldsets();
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task === 'map.cancel' || document.formvalidator.isValid(document.id('map-form'))) {
-            Joomla.submitform(task, document.getElementById('map-form'));
+        if (task === 'map.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+            Joomla.submitform(task, document.getElementById('adminForm'));
         } else {
             alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
         }
