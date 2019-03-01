@@ -261,6 +261,10 @@ class ShacklocationsFormFieldCustomfields extends JFormField
                 array(
                     JHtml::_('select.option', 1, JText::_('JYES')),
                     JHtml::_('select.option', 0, JText::_('JNO'))
+                ),
+                array(
+                    'option.key.toHtml'  => false,
+                    'option.text.toHtml' => false
                 )
             )
         );
