@@ -368,6 +368,10 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
                         array(
                             JHtml::_('select.option', 1, JText::_('JYES')),
                             JHtml::_('select.option', 0, JText::_('JNO'))
+                        ),
+                        array(
+                            'option.key.toHtml'  => false,
+                            'option.text.toHtml' => false
                         )
                     )
                 )
@@ -431,7 +435,19 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
             $option = JHtml::_('select.option', $option, $option);
         }
 
-        $fieldOptions = array_merge($options, array('options' => JHtml::_('select.options', $selectOptions)));
+        $fieldOptions = array_merge(
+            $options,
+            array(
+                'options' => JHtml::_(
+                    'select.options',
+                    $selectOptions,
+                    array(
+                        'option.key.toHtml'  => false,
+                        'option.text.toHtml' => false
+                    )
+                )
+            )
+        );
 
         $label       = $customField['label'];
         $description = $customField['description'];
