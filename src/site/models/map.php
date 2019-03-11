@@ -66,7 +66,7 @@ class FocalpointModelMap extends JModelForm
                 if (!$published || ($published == $table->state)) {
                     $this->item = new JObject($table->getProperties());
 
-                    $this->item->tabsdata = json_decode($this->item->tabsdata);
+                    $this->item->tabsdata = json_decode($this->item->tabsdata) ?: new stdClass();
                     $this->item->metadata = new Registry($this->item->metadata);
 
                     // Some additional tweaking for custom tabs
