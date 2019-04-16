@@ -60,31 +60,36 @@ class FocalpointModelMap extends JModelForm
             $this->item = false;
 
             $id    = $id ?: $this->getState('map.id');
-            $table = $this->getTable();
-            if ($table->load($id)) {
-                // Check published state.
-                $published = $this->getState('filter.published');
-                if (!$published || ($published == $table->state)) {
-                    $this->item = new JObject($table->getProperties());
+            if ($id) {
+                $table = $this->getTable();
+                if ($table->load($id)) {
+                    // Check published state.
+                    $published = $this->getState('filter.published');
+                    if (!$published || ($published == $table->state)) {
+                        $this->item = new JObject($table->getProperties());
 
-                    $this->item->tabsdata = json_decode($this->item->tabsdata) ?: new stdClass();
-                    $this->item->metadata = new Registry($this->item->metadata);
+                        $this->item->tabsdata = json_decode($this->item->tabsdata) ?: new stdClass();
+                        $this->item->metadata = new Registry($this->item->metadata);
 
-                    // Some additional tweaking for custom tabs
-                    $mapTabs = empty($this->item->tabsdata->tabs)
-                        ? array()
-                        : (array)$this->item->tabsdata->tabs;
+                        // Some additional tweaking for custom tabs
+                        $mapTabs = empty($this->item->tabsdata->tabs)
+                            ? array()
+                            : (array)$this->item->tabsdata->tabs;
 
-                    $this->item->tabsdata->tabs = $mapTabs;
+                        $this->item->tabsdata->tabs = $mapTabs;
 
-                    // Load the item params merged from component config
-                    $params = JComponentHelper::getParams('com_focalpoint');
-                    $params->merge(new Registry($this->item->params));
-                    $this->item->params = $params;
+                        // Load the item params merged from component config
+                        $params = JComponentHelper::getParams('com_focalpoint');
+                        $params->merge(new Registry($this->item->params));
+                        $this->item->params = $params;
+                    }
+
+                } elseif ($error = $table->getError()) {
+                    $this->setError($error);
                 }
-
-            } elseif ($error = $table->getError()) {
-                $this->setError($error);
+                
+            } else {
+                $this->setError(JText::_('JGLOBAL_RESOURCE_NOT_FOUND'));
             }
         }
 
