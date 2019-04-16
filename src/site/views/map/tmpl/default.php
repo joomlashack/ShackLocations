@@ -38,10 +38,6 @@ if ($this->item->params->get('loadBootstrap')) {
     JHtml::_('bootstrap.framework');
 }
 
-// Load FocalPoint Plugins. Trigger onBeforeRenderMap
-JPluginHelper::importPlugin('focalpoint');
-$pluginTabs = JFactory::getApplication()->triggerEvent('onBeforeRenderMap', array(&$this->item));
-
 // Set up width/height styles for the map and sidebar.
 $containerStyle = "";
 $mapStyle       = "";
@@ -196,7 +192,3 @@ $customTabs = $this->item->tabsdata->tabs;
 
 <?php
 echo $this->loadTemplate('mapjs_uncommented');
-
-// Load FocalPoint Plugins. Trigger onAfterRenderMap
-JPluginHelper::importPlugin('focalpoint');
-$pluginTabs = JFactory::getApplication()->triggerEvent('onAfterRenderMap', array(&$this->item));

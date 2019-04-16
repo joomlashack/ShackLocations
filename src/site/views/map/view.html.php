@@ -149,7 +149,14 @@ class FocalpointViewMap extends JViewLegacy
             }
         }
 
+        // Load FocalPoint Plugins. Trigger onBeforeRenderMap
+        JPluginHelper::importPlugin('focalpoint');
+        JFactory::getApplication()->triggerEvent('onBeforeRenderMap', array(&$this->item));
+
         parent::display($tpl);
+
+        // Load FocalPoint Plugins. Trigger onAfterRenderMap
+        JFactory::getApplication()->triggerEvent('onAfterRenderMap', array(&$this->item));
     }
 
     /**
