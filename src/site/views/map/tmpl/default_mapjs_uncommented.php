@@ -49,9 +49,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 // Load the Google API and initialise the map.
-$document = JFactory::getDocument();
-$document->addScript('//maps.googleapis.com/maps/api/js?key='.$this->item->params->get('apikey'));
-$document->addScript(JURI::base().'components/com_focalpoint/assets/js/infobox.js');
+JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
+JHtml::_('script', 'components/com_focalpoint/assets/js/infobox.js');
+
 $params             = JComponentHelper::getParams('com_focalpoint');
 $showlisttab        = $this->item->params->get('locationlist');
 $showmapsearch      = $this->item->params->get('mapsearchenabled');
@@ -62,8 +62,8 @@ $searchassist       = ", ".$this->item->params->get('searchassist');
 $fitbounds          = $this->item->params->get('fitbounds');
 $markerclusters     = $this->item->params->get('markerclusters');
 $listtabfirst       = $this->item->params->get('showlistfirst');
-if($markerclusters) {
-    $document->addScript(JURI::base().'plugins/focalpoint/markerclusters/assets/markerclusterer.js');
+if ($markerclusters) {
+    JHtml::_('script', 'plugins/focalpoint/markerclusters/assets/markerclusterer.js');
 }
 $script ='
 	var allowScrollTo = false;
@@ -491,4 +491,4 @@ $script .= '
     }
     google.maps.event.addDomListener(window, \'load\', initialize);
 ';
-$document->addScriptDeclaration($script);
+JFactory::getDocument()->addScriptDeclaration($script);
