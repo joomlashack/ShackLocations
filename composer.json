@@ -9,7 +9,9 @@
         "element-short"  : "focalpoint",
         "name"           : "ShackLocations",
         "client"         : "administrator",
-        "package-license": "free"
+        "package-license": "free",
+        "target-platform": "3.*",
+        "infourl"        : "/changelog/shack-locations-free/"
     },
     "authors"          : [
         {
