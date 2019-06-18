@@ -248,7 +248,7 @@
             <field name="mapsizecontrol"
                    type="list"
                    useglobal="true"
-                   class="chzn-single chzn-color-state"
+                   class="chzn-single"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_DESC">
                 <option value="1">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_CONFIG</option>

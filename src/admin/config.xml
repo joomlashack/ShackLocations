@@ -178,8 +178,8 @@
         </field>
 
         <field name="mapsizecontrol"
-               type="radio"
-               class="btn-group btn-group-yesno"
+               type="list"
+               class="chzn-single"
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_DESC">
