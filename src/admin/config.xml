@@ -247,8 +247,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_CONTENT_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_CONTENT_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
 
         <field name="infoshowphone"
@@ -257,8 +257,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_PHONE_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_PHONE_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
 
         <field name="infoshowintro"
@@ -267,8 +267,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_INTRO_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_INTRO_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
     </fieldset>
 
@@ -279,8 +279,8 @@
                default="0"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
 
         <field name="mapsearchprompt"
@@ -371,8 +371,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_GET_DIRECTIONS_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_GET_DIRECTIONS_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
 
         <field name="hideintrotext"
@@ -381,8 +381,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_HIDE_INTRO_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_HIDE_INTRO_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
     </fieldset>
 

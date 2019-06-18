@@ -133,6 +133,7 @@
             <field name="mapTypeControl"
                    type="list"
                    useglobal="true"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_DESC">
                 <option value="1">JENABLED</option>
@@ -142,6 +143,7 @@
             <field name="zoom"
                    type="list"
                    useglobal="true"
+                   class="chzn-single"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_DESC">
                 <option value="1">1</option>
@@ -167,8 +169,10 @@
             <field name="maxzoom"
                    type="list"
                    useglobal="true"
+                   class="chzn-single"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_DESC">
+                <option value="null">COM_FOCALPOINT_FORM_LBL_CONFIG_AUTO</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -189,12 +193,12 @@
                 <option value="18">18</option>
                 <option value="19">19</option>
                 <option value="20">20</option>
-                <option value="null">COM_FOCALPOINT_FORM_LBL_CONFIG_AUTO</option>
             </field>
 
             <field name="zoomControl"
                    type="list"
                    useglobal="true"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_CONTROLS_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_CONTROLS_DESC">
                 <option value="1">JENABLED</option>
@@ -204,6 +208,7 @@
             <field name="scrollwheel"
                    type="list"
                    useglobal="true"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_MOUSE_ZOOM_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_MOUSE_ZOOM_DESC">
                 <option value="1">JENABLED</option>
@@ -213,6 +218,7 @@
             <field name="draggable"
                    type="list"
                    useglobal="true"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_DRAGABLE_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_DRAGABLE_DESC">
                 <option value="1">JENABLED</option>
@@ -222,6 +228,7 @@
             <field name="panControl"
                    type="list"
                    useglobal="true"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_PAN_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_PAN_CONTROL_DESC">
                 <option value="1">JENABLED</option>
@@ -231,6 +238,7 @@
             <field name="streetViewControl"
                    type="list"
                    useglobal="true"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_STREETVIEW_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_STREETVIEW_CONTROL_DESC">
                 <option value="1">JENABLED</option>
@@ -240,11 +248,11 @@
             <field name="mapsizecontrol"
                    type="list"
                    useglobal="true"
-                   class="chzn-color-state"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_DESC">
-                <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_TEMPLATE</option>
                 <option value="1">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_CONFIG</option>
+                <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_TEMPLATE</option>
             </field>
 
             <field name="mapsizex"
@@ -260,6 +268,7 @@
             <field name="legendposition"
                    type="list"
                    useglobal="true"
+                   class="chzn-single"
                    default="below"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_DESC">
@@ -277,6 +286,7 @@
             <field name="showmarkers"
                    type="list"
                    useglobal="true"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_DESC">
                 <option value="on">JSHOW</option>
@@ -286,21 +296,21 @@
             <field name="locationlist"
                    type="list"
                    useglobal="true"
-                   class="chzn-color-state"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_DESC">
-                <option value="0">JNO</option>
                 <option value="1">JYES</option>
+                <option value="0">JNO</option>
             </field>
 
             <field name="showlistfirst"
                    type="list"
                    useglobal="true"
-                   class="chzn-color-state"
+                   class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_DESC">
-                <option value="0">JNO</option>
                 <option value="1">JYES</option>
+                <option value="0">JNO</option>
             </field>
 
         </fields>
