@@ -105,7 +105,7 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * Update map parameters from string true/false to 1/0 to match global versions
+     * Update map/config parameters from string true/false to 1/0 to match global versions
      */
     protected function fixMapParameters()
     {
@@ -134,6 +134,18 @@ class com_focalpointInstallerScript extends AbstractScript
                 $map->params = json_encode($params);
                 $db->updateObject('#__focalpoint_maps', $map, array('id'));
             }
+        }
+
+        /** @var JTableExtension $table */
+        $table = JTable::getInstance('Extension');
+        $table->load(array('element' => 'com_focalpoint', 'type' => 'component'));
+
+        $params = json_decode($table->params);
+        if (isset($params->mapTypeControl) && in_array($params->mapTypeControl, array('true', 'false'))) {
+            $params->mapTypeControl = $params->mapTypeControl == 'true' ? '1' : '0';
+
+            $table->params = json_encode($params);
+            $table->store();
         }
     }
 

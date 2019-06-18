@@ -42,11 +42,11 @@
         <field name="mapTypeControl"
                type="radio"
                class="btn-group btn-group-yesno"
-               default="false"
+               default="0"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_DESC">
-            <option value="true">JENABLED</option>
-            <option value="false">JDISABLED</option>
+            <option value="1">JENABLED</option>
+            <option value="0">JDISABLED</option>
         </field>
 
         <field name="zoom"
