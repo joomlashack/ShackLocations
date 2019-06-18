@@ -240,21 +240,21 @@ class com_focalpointInstallerScript extends AbstractScript
 
         $locations = $db->setQuery($query)->loadObjectList();
         foreach ($locations as $location) {
-            $values = json_decode($location->customfieldsdata, true);
+            if ($values = json_decode($location->customfieldsdata, true)) {
+                $fixedValues = array();
+                foreach ($values as $fieldKey => $value) {
+                    $keyParts = explode('.', $fieldKey);
+                    if (count($keyParts) == 3) {
+                        $fieldName = array_pop($keyParts);
+                        $hash      = array_pop($keyParts);
 
-            $fixedValues = array();
-            foreach ($values as $fieldKey => $value) {
-                $keyParts = explode('.', $fieldKey);
-                if (count($keyParts) == 3) {
-                    $fieldName = array_pop($keyParts);
-                    $hash      = array_pop($keyParts);
+                        $fixedValues[$hash] = array(
+                            $fieldName => $value
+                        );
 
-                    $fixedValues[$hash] = array(
-                        $fieldName => $value
-                    );
-
-                    $location->customfieldsdata = json_encode($fixedValues);
-                    $db->updateObject('#__focalpoint_locations', $location, array('id'));
+                        $location->customfieldsdata = json_encode($fixedValues);
+                        $db->updateObject('#__focalpoint_locations', $location, array('id'));
+                    }
                 }
             }
         }
