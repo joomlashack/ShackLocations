@@ -279,8 +279,8 @@
                    useglobal="true"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_DESC">
-                <option value="on">Show</option>
-                <option value="off">Hide</option>
+                <option value="on">JSHOW</option>
+                <option value="off">JHIDE</option>
             </field>
 
             <field name="locationlist"
