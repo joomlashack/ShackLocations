@@ -19,7 +19,8 @@
 
     <fieldset name="maps" label="Map / Display" description="">
         <field name="loadBootstrap"
-               type="list"
+               type="radio"
+               class="btn-group btn-group-yesno"
                default="0"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOAD_BOOTSTRAP_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOAD_BOOTSTRAPE_DESC">
@@ -39,8 +40,9 @@
         </field>
 
         <field name="mapTypeControl"
-               type="list"
-               default="FALSE"
+               type="radio"
+               class="btn-group btn-group-yesno"
+               default="false"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_DESC">
             <option value="true">JENABLED</option>
@@ -181,8 +183,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_DESC">
-            <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_TEMPLATE</option>
             <option value="1">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_CONFIG</option>
+            <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_TEMPLATE</option>
         </field>
 
         <field name="mapsizex"
@@ -223,8 +225,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
 
         <field name="showlistfirst"
@@ -233,8 +235,8 @@
                default="0"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_DESC">
-            <option value="0">JNO</option>
             <option value="1">JYES</option>
+            <option value="0">JNO</option>
         </field>
     </fieldset>
 

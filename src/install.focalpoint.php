@@ -86,6 +86,7 @@ class com_focalpointInstallerScript extends AbstractScript
                     break;
 
                 case 'update':
+                    $this->fixMapParameters();
                     $this->updateTabsdata();
                     $this->updateCustomFields();
                     $this->updateCustomFieldsData();
@@ -100,6 +101,39 @@ class com_focalpointInstallerScript extends AbstractScript
 
         } catch (Throwable $e) {
             $app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
+        }
+    }
+
+    /**
+     * Update map parameters from string true/false to 1/0 to match global versions
+     */
+    protected function fixMapParameters()
+    {
+        $db    = JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('id,params')
+            ->from('#__focalpoint_maps');
+
+
+        $maps = $db->setQuery($query)->loadObjectList();
+        foreach ($maps as $map) {
+            $params = json_decode($map->params, true);
+            if (array_intersect($params, array('true', 'false'))) {
+                foreach ($params as $name => $value) {
+                    switch ($value) {
+                        case 'true':
+                            $params[$name] = '1';
+                            break;
+
+                        case 'false':
+                            $params[$name] = '0';
+                            break;
+                    }
+                }
+
+                $map->params = json_encode($params);
+                $db->updateObject('#__focalpoint_maps', $map, array('id'));
+            }
         }
     }
 
