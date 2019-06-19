@@ -46,6 +46,19 @@ class FocalpointModelmap extends JModelAdmin
         return $form;
     }
 
+    protected function preprocessForm(\JForm $form, $data, $group = 'content')
+    {
+        try {
+            $proForm = JForm::getInstance('map.pro', 'map.pro');
+            $form->load($proForm->getXml());
+
+        } catch (Exception $error) {
+            // ignore
+        }
+
+        parent::preprocessForm($form, $data, $group);
+    }
+
     /**
      * @return CMSObject
      * @throws Exception
@@ -100,7 +113,7 @@ class FocalpointModelmap extends JModelAdmin
         $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
 
         if (!$table->id) {
-            $table->ordering   = $table->getNextOrder();
+            $table->ordering = $table->getNextOrder();
         }
     }
 }
