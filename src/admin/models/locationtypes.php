@@ -37,7 +37,7 @@ class FocalpointModellocationtypes extends JModelList
                     'a.state',
                     'a.title',
                     'a.legend',
-                    'state',
+                    'created_by.name',
                     'legend_title'
                 )
             )
