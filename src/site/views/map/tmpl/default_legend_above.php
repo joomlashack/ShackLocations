@@ -22,37 +22,81 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
-    $data = $this->item->markerdata;
-    $ulclass    = "";
-    $liclass    = "";
-    $html       = "";
-    $first      = true;
-	$columns = 4;
-	$count = 0;
+$data    = $this->item->markerdata;
+$ulclass = "";
+$liclass = "";
+$html    = "";
+$first   = true;
+$columns = 4;
+$count   = 0;
 
-	$html .='<div class="row-fluid">';
-    foreach ($data as $item) {
-        if ($item->legendalias != $ulclass) {
-            $ulclass = $item->legendalias;
-            if (!$first) {
-                $html .="</ul></div>";
-				$count +=1 ;
-				if ($count%$columns == 0) {
-					$html .='</div>';
-					$html .='<div class="row-fluid">';
-				}
-            }
-            $html .= '<div class="span'.(12/$columns).' '.$ulclass.'"><h4>'.$item->legend.'<small>'.$item->legendsubtitle.'</small></h4>';
-            $html .= '<ul class="sidebar '.$ulclass.'">';
-            $first = false;
-        }
-        if ($liclass != $item->locationtypealias) {
-			$html .= "<li><a data-marker-type='".$item->locationtype_id."' class='active markertoggles markers-".$item->locationtypealias."' href='#'>".$item->locationtype."</a></li>";
-			$liclass = $item->locationtypealias;
-        }
+$markers    = array();
+$lastLegend = null;
+$column     = 0;
+$subtitles  = false;
+foreach ($this->item->markerdata as $marker) {
+    if ($lastLegend && $lastLegend != $marker->legendalias) {
+        $column++;
     }
-	$html .="</ul></div></div>";
-	$html .= $this->loadTemplate('legend_buttons');
-    echo $html;
+    if (!isset($markers[$column])) {
+        $markers[$column] = (object)array(
+            'alias'    => $marker->legendalias,
+            'title'    => $marker->legend,
+            'subtitle' => $marker->legendsubtitle,
+            'markers'  => array()
+        );
+
+        $subtitles = $subtitles || (bool)$marker->legendsubtitle;
+    }
+    $markers[$column]->markers[] = $marker;
+
+    $lastLegend = $marker->legendalias;
+}
+
+$subtitle = '';
+$html     = array();
+$column   = -1;
+foreach ($markers as $legend) {
+    $column = (++$column % $columns);
+    if ($column == 0) {
+        $html[] = '<div class="row-fluid">';
+    }
+
+    if ($subtitles) {
+        $subtitle = sprintf('<small>%s</small>', $legend->subtitle ?: '&nbsp;');
+    }
+    $html[] = sprintf(
+        '<div class="span%s %s"><h4>%s%s</h4>',
+        (int)(12 / $columns),
+        $legend->alias,
+        $legend->title,
+        $subtitle
+    );
+    $html[] = sprintf('<ul class="sidebar %s">', $legend->alias);
+
+    $lastType = null;
+    foreach ($legend->markers as $marker) {
+        $html[] = sprintf(
+            '<li><a data-marker-type="%s" class="active markertoggles markers-%s" href="#">%s</a></li>',
+            $marker->locationtype_id,
+            $marker->locationtypealias,
+            $marker->locationtype
+        );
+    }
+
+    $html[] = '</ul>';
+    $html[] = '</div>';
+
+    if (($column + 1) >= $columns) {
+        $html[] = '</div>';
+    }
+}
+if (($column + 1) < $columns) {
+    $html[] = '</div>';
+}
+
+$html[] = $this->loadTemplate('legend_buttons');
+
+echo join("\n", $html);
