@@ -189,22 +189,3 @@ google.maps.event.addDomListener(window, 'load', initialize);
 JSCRIPT;
 
 JFactory::getDocument()->addScriptDeclaration($script);
-
-
-/*
-                 $jscript = <<<JSCRIPT
-;jQuery(document).ready(function($) {
-    $('#fp_searchAddressBtn').on('click', function(evt) {
-        evt.preventDefault();
-
-        if ($('#fp_searchAddress').val()) {
-            this.form.submit();
-        } else {
-            alert('I don\'t think so!');
-        }
-    });
-});
-JSCRIPT;
-                JFactory::getDocument()->addScriptDeclaration($jscript);
-
- */
