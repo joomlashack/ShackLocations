@@ -46,7 +46,7 @@
  *  	$this->renderField($field,$hidelabel, $buffer);
  */
 
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
 // Load the Google API and initialise the map.
 JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
