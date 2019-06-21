@@ -132,7 +132,7 @@ function updateActiveCount(marker) {
         locationPlural = '{$text->location}';
     }
 
-    jQuery('#activecount').html('{$text->showing}' + activeCount + ' ' + locationPlural + locationTxt + '.');
+    jQuery('#activecount').html('{$text->showing} ' + activeCount + ' ' + locationPlural + locationTxt + '.');
 
     if (activeCount == 0) {
         if (jQuery('.nolocations').length == 0) {
@@ -295,7 +295,7 @@ $script .= <<<JSCRIPT
             jQuery('#fp_locationlist').css('height', locationListHeight);
         });
         
-        jQuery('a[href="#tabs1-map"]').pn('click', function() {
+        jQuery('a[href="#tabs1-map"]').on('click', function() {
             jQuery('#fp_googleMap').css('display', 'block');
             jQuery('.fp-map-view .nav-tabs li.active').addClass('active');
             jQuery('#fp_locationlist_container').css('display', 'none');
@@ -365,7 +365,7 @@ $script .= <<<JSCRIPT
                 
             } else {
                 map.panTo(new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}));
-                map.setZoom({zoom}) . ');
+                map.setZoom({zoom});
             }
         }
         
@@ -414,7 +414,7 @@ $script .= <<<JSCRIPT
             if (marker[i].status < -999 ) {
                 marker[i].status += 5000;
                 marker[i].setMap(map);
-                jQuery('.fp_list_marker'+i).fadeIn(100,function() {
+                jQuery('.fp_list_marker' + i).fadeIn(100,function() {
                     jQuery(this).removeClass('fp_listitem_hidden');
                     jQuery(this).prependTo('#fp_locationlist .fp_ll_holder');
                 });
@@ -588,7 +588,7 @@ $script .= <<<JSCRIPT
         },100);
     }
 
-    if ('off' == '{$text->showMarkers}') {
+    if ('off' == '{$showMarkers}') {
         setTimeout(function(){
             jQuery('#fp_toggle').trigger('click');
         },100);
