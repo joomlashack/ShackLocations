@@ -140,7 +140,7 @@
 
 #fp_googleMap .infoboxlink {
     border-top: 1px solid #eee;
-    padding-top: 10px;
+    padding: 10px 20px 0;
 }
 
 #fp_googleMap .infoBox h4 {
