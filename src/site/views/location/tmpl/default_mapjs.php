@@ -36,115 +36,174 @@ defined('_JEXEC') or die('Restricted access');
 
 // Load the Google API and initialise the map.
 
-$document = JFactory::getDocument();
-$document->addScript('//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
-$document->addScript(JURI::base() . 'components/com_focalpoint/assets/js/infobox.js');
+JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
+JHtml::_('script', 'components/com_focalpoint/assets/js/infobox.js');
 
-$getdirections = $this->item->params->get('getdirections');
-$searchassist  = ", " . $this->item->params->get('searchassist');
+$params = (object)array(
+    'searchAssist'      => ', ' . $this->item->params->get('searchAssist'),
+    'zoomin'            => $this->item->params->get('zoomin'),
+    'mapTypeControl'    => $this->item->params->get('mapTypeControl'),
+    'zoomControl'       => $this->item->params->get('zoomControl'),
+    'scrollwheel'       => $this->item->params->get('scrollwheel'),
+    'streetViewControl' => $this->item->params->get('streetViewControl'),
+    'panControl'        => $this->item->params->get('panControl'),
+    'draggable'         => $this->item->params->get('draggable'),
+    'mapTypeId'         => 'google.maps.MapTypeId.' . $this->item->params->get('mapTypeId'),
+    'mapstyle'          => $this->item->params->get('mapstyle', '[]')
+);
+$text = (object)array(
+    'geocodeFail' => JText::_('COM_FOCALPOINT_GEOCODE_FAIL')
+);
 
-$script          = '
-    function initialize() {
-        var mapProp = {
-            center:new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . '),
-            zoom:' . $this->item->params->get('zoomin') . ',
-            mapTypeControl: ' . $this->item->params->get('mapTypeControl') . ',
-            zoomControl: ' . $this->item->params->get('zoomControl') . ',
-            scrollwheel: ' . $this->item->params->get('scrollwheel') . ',
-            streetViewControl: ' . $this->item->params->get('streetViewControl') . ',
-            panControl: ' . $this->item->params->get('panControl') . ',
-            draggable: ' . $this->item->params->get('draggable') . ',
-            mapTypeId:google.maps.MapTypeId.' . $this->item->params->get('mapTypeId') . ',
-            styles: ' . $this->item->params->get('mapstyle', "[]") . '
-        };
-        var map=new google.maps.Map(document.getElementById("fp_googleMap"),mapProp);
-        var markerSets = new Array();
-        var marker= new Array();    
-        var infoBox = new Array();
-	    var searchassist = "' . $searchassist . '";
-';
-$infodescription = "";
+$script = <<<JSCRIPT
+function initialize() {
+    var mapProp      = {
+            center           : new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}),
+            zoom             : {$params->zoomin},
+            mapTypeControl   : {$params->mapTypeControl},
+            zoomControl      : {$params->zoomControl},
+            scrollwheel      : {$params->scrollwheel},
+            streetViewControl: {$params->streetViewControl},
+            panControl       : {$params->panControl},
+            draggable        : {$params->draggable},
+            mapTypeId        : {$params->mapTypeId},
+            styles           : {$params->mapstyle}
+        },
+        map          = new google.maps.Map(document.getElementById('fp_googleMap'), mapProp),
+        markerSets   = [],
+        marker       = [],
+        infoBox      = [],
+        searchAssist = '{$params->searchAssist}';
+JSCRIPT;
+
+
+$infoDescription = "";
 if ($this->item->params->get('infoshowaddress') && $this->item->address != "") {
-    $infodescription .= "<p>" . JText::_($this->item->address) . "</p>";
+    $infoDescription .= "<p>" . JText::_($this->item->address) . "</p>";
 }
 if ($this->item->params->get('infoshowphone') && $this->item->phone != "") {
-    $infodescription .= "<p>" . JText::_($this->item->phone) . "</p>";
+    $infoDescription .= "<p>" . JText::_($this->item->phone) . "</p>";
 }
 if ($this->item->params->get('infoshowintro') && $this->item->description != "") {
-    $infodescription .= $this->item->description;
+    $infoDescription .= $this->item->description;
 }
-$boxtext = '<h4>' . addslashes($this->item->title) . '</h4><div class=\"infoboxcontent\">' . addslashes(str_replace("src=\"images",
-        "src=\"" . JUri::base(true) . "/images", (str_replace(array("\n", "\t", "\r"), '', $infodescription))));
-$boxtext .= '<div class=\"infopointer\"></div></div>';
 
-$script .= '
-        var myCenter' . $this->item->id . '=new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . ');
-        marker[' . $this->item->id . ']=new google.maps.Marker({
-            position:myCenter' . $this->item->id . ',
-            icon: "' . $this->item->marker . '"
-        });
-        marker[' . $this->item->id . '].setMap(map);
-        marker[' . $this->item->id . '].status = 1;    
-        var boxText' . $this->item->id . ' = "' . $boxtext . '";
+$boxText = sprintf(
+    '<h4>%s</h4><div class="infoboxcontent">%s<div class="infopointer"></div></div>',
+    $this->item->title,
+    $infoDescription
+);
+if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $boxText, $images)) {
+    $fixed = array();
+    foreach ($images[0] as $idx => $source) {
+        $imageUri    = JHtml::_('image', $images[1][$idx], null, null, false, 1);
+        $fixed[$idx] = str_replace($images[1][$idx], $imageUri, $source);
+    }
+    $boxText = str_replace($images[0], $fixed, $boxText);
+}
+$boxText = addslashes(str_replace(array("\n", "\t", "\r"), '', $boxText));
 
-        infoBox[' . $this->item->id . '] = new InfoBox({
-            content: boxText' . $this->item->id . ',
-            alignBottom: true, 
-            position: new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . '),
-            pixelOffset: new google.maps.Size(-160, -55),
-            maxWidth: 320,
-            zIndex: null,
-            closeBoxMargin: "7px 5px 1px 1px",
-            closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
-            infoBoxClearance: new google.maps.Size(20, 30)
-        });
-        
-        google.maps.event.addListener(marker[' . $this->item->id . '], \'click\', function() {
-            infoBox[' . $this->item->id . '].open(map,marker[' . $this->item->id . ']);
-        });';
+$script .= <<<JSCRIPT
+    var myCenter{$this->item->id} = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude});
+    
+    marker[{$this->item->id}] = new google.maps.Marker({
+        position:myCenter{$this->item->id},
+        icon: '{$this->item->marker}'
+    });
+    
+    marker[{$this->item->id}].setMap(map);
+    marker[{$this->item->id}].status = 1;    
+    var boxText{$this->item->id} = '{$boxText}';
+    
+    infoBox[{$this->item->id}] = new InfoBox({
+        content         : boxText{$this->item->id},
+        alignBottom     : true, 
+        position        : new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}),
+        pixelOffset     : new google.maps.Size(-160, -55),
+        maxWidth        : 320,
+        zIndex          : null,
+        closeBoxMargin  : '7px 5px 1px 1px',
+        closeBoxURL     : 'http://www.google.com/intl/en_us/mapfiles/close.gif',
+        infoBoxClearance: new google.maps.Size(20, 30)
+    });
+    
+    google.maps.event.addListener(marker[{$this->item->id}], 'click', function() {
+        infoBox[{$this->item->id}].open(map,marker[{$this->item->id}]);
+    });
+JSCRIPT;
 
-if ($getdirections) {
-    $script .= '
-		jQuery("#fp_searchAddressBtn").click(function() {
-			geocoder = new google.maps.Geocoder();
-			searchTxt = document.getElementById("fp_searchAddress").value;
-			if (searchTxt == "") {return false;}
-			geocoder.geocode( { "address": searchTxt+searchassist}, function(results, status) {
+if ($this->item->params->get('getdirections')) {
+    $script .= <<<JSCRIPT
+    jQuery('#fp_searchAddressBtn').on('click', function(evt) {
+        evt.preventDefault();
 
+        var \$address = jQuery('#fp_searchAddress'),
+            searchText = \$address.val();
+
+        if (!searchText) {
+            alert('I don\'t think so!');
+            return;
+        }
+
+        var geocoder = new google.maps.Geocoder();
+    
+        geocoder.geocode( { address: searchText+searchAssist }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                jQuery('#fp_googleMap_directions').html('');
+    
                 if (status == google.maps.GeocoderStatus.OK) {
-                    jQuery("#fp_googleMap_directions").html("");
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        var startLocation =	results[0].geometry.location;
+                    var startLocation =	results[0].geometry.location;
+                }
+                var directionsService = new google.maps.DirectionsService(),
+                    directionsDisplay = new google.maps.DirectionsRenderer();
+    
+                directionsDisplay.setMap(map);
+                directionsDisplay.setPanel(document.getElementById('fp_googleMap_directions'));
+    
+                var request = {
+                    origin     : startLocation,
+                    destination: myCenter{$this->item->id},
+                travelMode : google.maps.DirectionsTravelMode.DRIVING
+            };
+    
+                directionsService.route(request, function(response, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                        directionsDisplay.setDirections(response);
+                    } else {
+                        alert('{$text->geocodeFail}' + status);
                     }
-                    var directionsService = new google.maps.DirectionsService();
-                    var directionsDisplay = new google.maps.DirectionsRenderer();
-
-                    directionsDisplay.setMap(map);
-                    directionsDisplay.setPanel(document.getElementById("fp_googleMap_directions"));
-
-                    var request = {
-                        origin: startLocation,
-                        destination: myCenter' . $this->item->id . ',
-                        travelMode: google.maps.DirectionsTravelMode.DRIVING
-                    };
-
-                    directionsService.route(request, function(response, status) {
-                        if (status == google.maps.DirectionsStatus.OK) {
-                            directionsDisplay.setDirections(response);
-                        } else {
-                            alert("' . JText::_('COM_FOCALPOINT_GEOCODE_FAIL') . '" + status);
-                        }
-                    });
-				} else {
-                    alert("' . JText::_('COM_FOCALPOINT_GEOCODE_FAIL') . '" + status);
-				}
-			});
-		});';
+                });
+    
+            } else {
+                alert('{$text->geocodeFail}' + status);
+            }
+        });
+    });
+JSCRIPT;
 }
 
-$script .= '
-    }       
-    google.maps.event.addDomListener(window, \'load\', initialize);
-';
+$script .= <<<JSCRIPT
+}       
+google.maps.event.addDomListener(window, 'load', initialize);
+JSCRIPT;
 
-$document->addScriptDeclaration($script);
+JFactory::getDocument()->addScriptDeclaration($script);
+
+
+/*
+                 $jscript = <<<JSCRIPT
+;jQuery(document).ready(function($) {
+    $('#fp_searchAddressBtn').on('click', function(evt) {
+        evt.preventDefault();
+
+        if ($('#fp_searchAddress').val()) {
+            this.form.submit();
+        } else {
+            alert('I don\'t think so!');
+        }
+    });
+});
+JSCRIPT;
+                JFactory::getDocument()->addScriptDeclaration($jscript);
+
+ */

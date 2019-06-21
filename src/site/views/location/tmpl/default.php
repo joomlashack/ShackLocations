@@ -72,21 +72,6 @@ endif;
             <div id="fp_googleMap"></div>
             <?php
             if ($this->item->params->get('getdirections')) :
-                $jscript = <<<JSCRIPT
-;jQuery(document).ready(function($) {
-    $('#fp_searchAddressBtn').on('click', function(evt) {
-        evt.preventDefault();
-        
-        if ($('#fp_searchAddress').val()) {
-            this.form.submit();
-        } else {
-            alert('I don\'t think so!');
-        }
-    });
-});
-JSCRIPT;
-                JFactory::getDocument()->addScriptDeclaration($jscript);
-
                 ?>
                 <div id="fp_googleMap_directions"></div>
                 <div id="fp_map_actions" class="input-append">
@@ -100,7 +85,7 @@ JSCRIPT;
                                value=""/>
                         <button class="btn"
                                 id="fp_searchAddressBtn"
-                                type="submit">
+                                type="button">
                             <?php echo JText::_('COM_FOCALPOINT_GET_DIRECTIONS'); ?>
                         </button>
                     </form>
