@@ -58,7 +58,7 @@ $showmapsearch     = $this->item->params->get('mapsearchenabled');
 $mapsearchzoom     = $this->item->params->get('mapsearchzoom');
 $mapsearchrange    = $this->item->params->get('resultradius');
 $mapsearchprompt   = $this->item->params->get('mapsearchprompt');
-$searchassist      = ", " . $this->item->params->get('searchassist');
+$searchassist      = ', ' . $this->item->params->get('searchassist');
 $zoom              = $this->item->params->get('zoom');
 $maxZoom           = $this->item->params->get('maxzoom', 'null');
 $zoomControl       = $this->item->params->get('zoomControl');
@@ -72,13 +72,16 @@ $mapStyle          = $this->item->params->get('mapstyle', '[]');
 $fitbounds         = (int)(bool)$this->item->params->get('fitbounds');
 $markerclusters    = (int)(bool)$this->item->params->get('markerclusters');
 $listtabfirst      = (int)(bool)$this->item->params->get('showlistfirst');
+$showMarkers       = $this->item->params->get('showmarkers');
 $text              = (object)array(
-    'within'    => JText::_('COM_FOCALPOINT_WITHIN'),
-    'distance'  => JText::_('COM_FOCALPOINT_DISTANCE'),
-    'locations' => JText::_('COM_FOCALPOINT_LOCATIONS'),
-    'location'  => JText::_('COM_FOCALPOINT_LOCATION'),
-    'showing'   => JText::_('COM_FOCALPOINT_SHOWING'),
-    'notypes'   => JText::_('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED')
+    'within'     => JText::_('COM_FOCALPOINT_WITHIN'),
+    'distance'   => JText::_('COM_FOCALPOINT_DISTANCE'),
+    'locations'  => JText::_('COM_FOCALPOINT_LOCATIONS'),
+    'location'   => JText::_('COM_FOCALPOINT_LOCATION'),
+    'showing'    => JText::_('COM_FOCALPOINT_SHOWING'),
+    'notypes'    => JText::_('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'),
+    'hideButton' => JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL'),
+    'showButton' => JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL')
 );
 
 if ($markerclusters) {
@@ -165,374 +168,434 @@ function initialize() {
         columnCount   = 0;
 JSCRIPT;
 
-
 // Cycle through each location creating a marker and infobox.
 foreach ($this->item->markerdata as $marker) {
     //Assemble the infobox.
-    $marker->infodescription = "";
-    if ($marker->params->get('infoshowaddress') && $marker->address != "") {
-        $marker->infodescription .= "<p>" . JText::_($marker->address) . "</p>";
+    $infoDescription = '';
+    if ($marker->params->get('infoshowaddress') && $marker->address != '') {
+        $infoDescription .= '<p>' . JText::_($marker->address) . '</p>';
     }
-    if ($marker->params->get('infoshowphone') && $marker->phone != "") {
-        $marker->infodescription .= "<p>" . JText::_($marker->phone) . "</p>";
+    if ($marker->params->get('infoshowphone') && $marker->phone != '') {
+        $infoDescription .= '<p>' . JText::_($marker->phone) . '</p>';
     }
-    if ($marker->params->get('infoshowintro') && $marker->description != "") {
-        $marker->infodescription .= "<p>" . JText::_($marker->description) . "</p>";
+    if ($marker->params->get('infoshowintro') && $marker->description != '') {
+        $infoDescription .= '<p>' . JText::_($marker->description) . '</p>';
     }
 
-    // Example. If a custom fields was defined called "yourcustomfield" the following line would render
+    // Example. If a custom fields was defined called 'yourcustomfield' the following line would render
     // that field in the infobox and location list
     if (!empty($marker->customfields->yourcustomfield->data)) {
-        $marker->infodescription .= $this->renderField($marker->customfields->yourcustomfield, true, true);
+        $infoDescription .= $this->renderField($marker->customfields->yourcustomfield, true, true);
     }
 
-    $boxtext = '<h4>' . addslashes($marker->title) . '</h4><div class=\"infoboxcontent\">' . addslashes(str_replace("src=\"images",
-            "src=\"" . JUri::base(true) . "/images",
-            (str_replace(array("\n", "\t", "\r"), '', $marker->infodescription))));
+    $boxText = sprintf(
+        '<h4>%s</h4><div class="infoboxcontent">%s<div class="infopointer"></div></div>',
+        $marker->title,
+        $infoDescription
+    );
+    if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $boxText, $images)) {
+        $fixed = array();
+        foreach ($images[0] as $idx => $source) {
+            $imageUri    = JHtml::_('image', $images[1][$idx], null, null, false, 1);
+            $fixed[$idx] = str_replace($images[1][$idx], $imageUri, $source);
+        }
+        $boxText = str_replace($images[0], $fixed, $boxText);
+    }
+
     if (isset($marker->link)) {
-        $boxtext .= '<p class=\"infoboxlink\"><a title=\"' . addslashes($marker->title) . '\" href=\"' . $marker->link . '\">' . JText::_('COM_FOCALPOINT_FIND_OUT_MORE') . '</a></p>';
+        $boxText .= sprintf(
+            '<p class="infoboxlink">%s</p>',
+            JHtml::_('link', $marker->link, JText::_('COM_FOCALPOINT_FIND_OUT_MORE'), array('title' => $marker->title))
+        );
     }
+    $boxText .= '<div class="infopointer"></div></div>';
 
-    $boxtext .= '<div class=\"infopointer\"></div></div>';
-    $script  .= '
-    	if (jQuery.inArray(' . $marker->id . ' ,mappedMarkers) == -1) {
-			var myCenter' . $marker->id . '=new google.maps.LatLng(' . $marker->latitude . ',' . $marker->longitude . ');
-			marker[' . $marker->id . ']=new google.maps.Marker({
-				position:myCenter' . $marker->id . ',
-				icon: "' . $marker->marker . '"
-			});
-			var boxText' . $marker->id . ' = "' . $boxtext . '";
-			markerInfoBox[' . $marker->id . '] = new InfoBox({
-				content: boxText' . $marker->id . ',
-				alignBottom: true,
-				position: new google.maps.LatLng(' . $marker->latitude . ',' . $marker->longitude . '),
-				pixelOffset: new google.maps.Size(-160, -55),
-				maxWidth: 320,
-				zIndex: null,
-				closeBoxMargin: "7px 5px 1px 1px",
-				closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
-				infoBoxClearance: new google.maps.Size(20, 30)
-			});
-			google.maps.event.addListener(map, "click", function(e) {
-                contextMenu:true
-            });
-            if (markerclusters) {
-			    clusterMarkers.push(marker[' . $marker->id . ']);
-			} else {
-			    marker[' . $marker->id . '].setMap(map);
-			}
-			google.maps.event.addListener(marker[' . $marker->id . '], \'click\', function() {
-				if (mapinfobox == markerInfoBox[' . $marker->id . '] && mapinfobox.getVisible()) {
-					mapinfobox.close();
-				} else {
-					if (mapinfobox) {
-						mapinfobox.close()
-					}
-					mapinfobox = markerInfoBox[' . $marker->id . '];
-					mapinfobox.open(map,marker[' . $marker->id . ']);
-				}
-			});
-			if (showlisttab) {
-				jQuery("#fp_locationlist .fp_ll_holder").append("<div class=\"fp_list_marker' . $marker->id . ' fp_listitem\">"+boxText' . $marker->id . '+"</div>");
-			}
-			marker[' . $marker->id . '].status = 0;
-			marker[' . $marker->id . '].lat=' . $marker->latitude . ';
-			marker[' . $marker->id . '].lng= ' . $marker->longitude . ';
-			jQuery(".fp_list_marker' . $marker->id . '").status = 0;
+    $boxText = addslashes(str_replace(array("\n", "\t", "\r"), '', $boxText));
+
+    $script .= <<<JSCRIPT
+    if (jQuery.inArray({$marker->id} ,mappedMarkers) == -1) {
+        var myCenter{$marker->id} = new google.maps.LatLng({$marker->latitude}, {$marker->longitude});
+        marker[{$marker->id}] = new google.maps.Marker({
+            position:myCenter{$marker->id},
+            icon: '{$marker->marker}'
+        });
+    
+        var boxText{$marker->id} = '{$boxText}';
+        markerInfoBox[{$marker->id}] = new InfoBox({
+            content         : boxText{$marker->id},
+            alignBottom     : true,
+            position        : new google.maps.LatLng({$marker->latitude}, {$marker->longitude}),
+            pixelOffset     : new google.maps.Size(-160, -55),
+            maxWidth        : 320,
+            zIndex          : null,
+            closeBoxMargin  : '7px 5px 1px 1px',
+            closeBoxURL     : 'http://www.google.com/intl/en_us/mapfiles/close.gif',
+            infoBoxClearance: new google.maps.Size(20, 30)
+        });
+        
+        google.maps.event.addListener(map, 'click', function(e) {
+            contextMenu:true
+        });
+    
+        if (markerclusters) {
+            clusterMarkers.push(marker[{$marker->id}]);
+    
+        } else {
+            marker[{$marker->id}].setMap(map);
         }
-		marker[' . $marker->id . '].status += 1;
-		jQuery(".fp_list_marker' . $marker->id . '").status +=1;
-
-        if(typeof markerSets[' . $marker->locationtype_id . '] === \'undefined\') {
-            markerSets[' . $marker->locationtype_id . '] = new Array();
+    
+        google.maps.event.addListener(marker[{$marker->id}], 'click', function() {
+            if (mapinfobox == markerInfoBox[{$marker->id}] && mapinfobox.getVisible()) {
+                mapinfobox.close();
+        
+            } else {
+                if (mapinfobox) {
+                    mapinfobox.close()
+                }
+        
+                mapinfobox = markerInfoBox[{$marker->id}];
+                mapinfobox.open(map,marker[{$marker->id}]);
+            }
+        });
+    
+        if (showlisttab) {
+            jQuery('#fp_locationlist .fp_ll_holder').append('<div class="fp_list_marker{$marker->id} fp_listitem">'
+                + boxText{$marker->id} + '</div>');
         }
-        mappedMarkers.push(' . $marker->id . ')
-        markerSets[' . $marker->locationtype_id . '].push(' . $marker->id . ');
-
-    ';
+    
+        marker[{$marker->id}].status = 0;
+        marker[{$marker->id}].lat = {$marker->latitude};
+        marker[{$marker->id}].lng = {$marker->longitude};
+        jQuery('.fp_list_marker{$marker->id}').status = 0;
+    }
+    marker[{$marker->id}].status += 1;
+    jQuery('.fp_list_marker{$marker->id}').status +=1;
+    
+    if(typeof markerSets[{$marker->locationtype_id}] === 'undefined') {
+        markerSets[{$marker->locationtype_id}] = [];
+    }
+    
+    mappedMarkers.push({$marker->id});
+    markerSets[{$marker->locationtype_id}].push({$marker->id});
+JSCRIPT;
 }
 
 // Close the initialize() function. Use JQuery for the click events on the sidebar links (a.markertoggles)
 // and setup the load event.
-$script .= '
-        if (showlisttab) {
-			jQuery("#locationlisttab").click(function(e){
-				e.preventDefault();
-				jQuery("a[href=\"#tabs1-map\"]").tab(\'show\');
-				jQuery("#fp_googleMap").css("display","none");
-				jQuery(".fp-map-view .nav-tabs li.active").removeClass("active");
-				jQuery("#fp_locationlist_container").css("display","block");
-				jQuery("#locationlisttab").parent().addClass("active");
-				var locationListHeight = jQuery("#fp_locationlist .fp_ll_holder").outerHeight();
-				jQuery("#fp_locationlist").css("height", locationListHeight);
-			});
-			jQuery(\'a[href="#tabs1-map"]\').click(function(){
-				jQuery("#fp_googleMap").css("display","block");
-				jQuery(".fp-map-view .nav-tabs li.active").addClass("active");
-				jQuery("#fp_locationlist_container").css("display","none");
-				jQuery("#locationlisttab").parent().removeClass("active");
-			});
-		}
-        jQuery(".markertoggles").click(function() {
-		    marker.forEach(function(m,i){
-                markerInfoBox[i].close();
-            });
-            el = jQuery(this);
-            mid = el.attr("data-marker-type");
-            var arrlength = markerSets[mid].length;
-            if (el.hasClass("active")) {
-            	for (var i = 0; i < arrlength; i++) {
-            		marker[markerSets[mid][i]].status -= 1;
-                    if ( marker[markerSets[mid][i]].status == 0) {
+$script .= <<<JSCRIPT
+    if (showlisttab) {
+        jQuery('#locationlisttab').on ('click', function(e) {
+            e.preventDefault();
+            jQuery('a[href="#tabs1-map"]').tab('show');
+            jQuery('#fp_googleMap').css('display','none');
+            jQuery('.fp-map-view .nav-tabs li.active').removeClass('active');
+            jQuery('#fp_locationlist_container').css('display', 'block');
+            jQuery('#locationlisttab').parent().addClass('active');
+            var locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
+            jQuery('#fp_locationlist').css('height', locationListHeight);
+        });
+        
+        jQuery('a[href="#tabs1-map"]').pn('click', function() {
+            jQuery('#fp_googleMap').css('display', 'block');
+            jQuery('.fp-map-view .nav-tabs li.active').addClass('active');
+            jQuery('#fp_locationlist_container').css('display', 'none');
+            jQuery('#locationlisttab').parent().removeClass('active');
+        });
+    }
+    
+    jQuery('.markertoggles').on('click', function() {
+        marker.forEach(function(m,i) {
+            markerInfoBox[i].close();
+        });
+        
+        el = jQuery(this);
+        mid = el.attr('data-marker-type');
 
-                    	if (!markerclusters) {
-                    	    marker[markerSets[mid][i]].setMap();
-                    	}
-                    	markerInfoBox[markerSets[mid][i]].close();
-                    	jQuery(".fp_list_marker"+markerSets[mid][i]).fadeOut(100,function(){
-							jQuery(this).addClass("fp_listitem_hidden");
-							jQuery(this).appendTo("#fp_locationlist .fp_ll_holder");
-                    	});
-
-                	}
-            	}
-            	el.removeClass("active");
-           	} else {
-           		for (var i = 0; i < arrlength; i++) {
-            		marker[markerSets[mid][i]].status += 1;
-                    if ( marker[markerSets[mid][i]].status == 1) {
-
-                        if (!markerclusters) {
-                    	    marker[markerSets[mid][i]].setMap(map);
-                    	}
-
-                    	jQuery(".fp_list_marker"+markerSets[mid][i]).prependTo("#fp_locationlist .fp_ll_holder");
-                    	jQuery(".fp_list_marker"+markerSets[mid][i]).fadeIn(100,function(){
-							jQuery(this).removeClass("fp_listitem_hidden");
-                    	});
+        var arrlength = markerSets[mid].length;
+        if (el.hasClass('active')) {
+            for (var i = 0; i < arrlength; i++) {
+                marker[markerSets[mid][i]].status -= 1;
+                if ( marker[markerSets[mid][i]].status == 0) {
+                    if (!markerclusters) {
+                        marker[markerSets[mid][i]].setMap();
                     }
-            	}
-                el.addClass("active");
-            }
-            if (fitbounds) {
-                var bounds = new google.maps.LatLngBounds();
-                var newbounds = false;
-                marker.map(function(m){
-                    if (m.status > 0) {
-                        newbounds = true;
-                        var thisbounds = new google.maps.LatLng(m.lat,m.lng);
-                        bounds.extend(thisbounds);
-                    }
-                });
-                if (newbounds) {
-                    map.fitBounds(bounds);
-                } else {
-                    map.panTo(new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . '));
-                    map.setZoom(' . $this->item->params->get('zoom') . ');
+
+                    markerInfoBox[markerSets[mid][i]].close();
+                    jQuery('.fp_list_marker' + markerSets[mid][i]).fadeOut(100,function() {
+                        jQuery(this).addClass('fp_listitem_hidden');
+                        jQuery(this).appendTo('#fp_locationlist .fp_ll_holder');
+                    });
                 }
             }
-            if (markerclusters) {
-                clusterMarkers = [];
-                marker.forEach(function(m,i){
-					if(marker[i].status > 0){
-					    clusterMarkers.push(marker[i]);
-					}
-				});
-                markerCluster.clearMarkers();
-                markerCluster = new MarkerClusterer(map, clusterMarkers, {
-                    styles: clusterStyles
-                });
+
+            el.removeClass('active');
+
+        } else {
+            for (var i = 0; i < arrlength; i++) {
+                marker[markerSets[mid][i]].status += 1;
+                
+                if ( marker[markerSets[mid][i]].status == 1) {
+                    if (!markerclusters) {
+                        marker[markerSets[mid][i]].setMap(map);
+                    }
+
+                    jQuery('.fp_list_marker' + markerSets[mid][i]).prependTo('#fp_locationlist .fp_ll_holder');
+                    jQuery('.fp_list_marker' + markerSets[mid][i]).fadeIn(100,function() {
+                        jQuery(this).removeClass('fp_listitem_hidden');
+                    });
+                }
             }
-			setTimeout(function(){
-			var locationListHeight = jQuery("#fp_locationlist .fp_ll_holder").outerHeight();
-				jQuery("#fp_locationlist").css("height", locationListHeight);
-			},150);
-			updateActiveCount(marker,searchTxt);
-			if (allowScrollTo == true){
-				//jQuery("html, body").animate({
-				//	scrollTop: jQuery("#fp_main").offset().top
-				//},300);
-			}
-            return false;
-        });
-        jQuery("ul.nav-tabs > li >a").click(function() {
-            setTimeout(function(){
-                google.maps.event.trigger(map, \'resize\');
-                map.panTo(new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . '));
-                map.setZoom(' . $this->item->params->get('zoom') . ');
-            },500); 
-        });
-        jQuery(window).resize(function() {
-            map.panTo(new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . ')); 
-        });
-		jQuery("#fp_reset").click(function() {
-			allowScrollTo = false;
-			jQuery("#fp_searchAddress").val(mapsearchprompt);
-			jQuery("#fp_searchAddressBtn").attr("disabled", true);
-			searchTxt = "";
-			marker.forEach(function(m,i){
-				if (marker[i].status < -999 ){
-					marker[i].status += 5000;
-					marker[i].setMap(map);
-					jQuery(".fp_list_marker"+i).fadeIn(100,function(){
-						jQuery(this).removeClass("fp_listitem_hidden");
-						jQuery(this).prependTo("#fp_locationlist .fp_ll_holder");
-					});
-				}
-			});
-			jQuery("#fp_toggle").each(function(){
-				if ("on" == "' . $this->item->params->get('showmarkers') . '") {
-					jQuery(this).data("togglestate","off");
-					jQuery(this).html("' . JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL') . '");
-					jQuery(".markertoggles").each(function(e){
-						if (jQuery(this).hasClass("active")) {
-							jQuery(this).trigger("click");
-						}
-						jQuery(this).trigger("click");
-					});
-				} else {
-					jQuery(this).data("togglestate","on");
-					jQuery(this).html("' . JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL') . '");
-					jQuery(".markertoggles").each(function(e){
-						if (jQuery(this).hasClass("active")) {
-							jQuery(this).trigger("click");
-						}
-					});
-				}
-			});
-			allowScrollTo = true;
-			map.panTo(new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . '));
-			map.setZoom(' . $this->item->params->get('zoom') . ');
-		});
-		jQuery("#fp_toggle").click(function() {
-			allowScrollTo = false;
-			if (jQuery(this).data("togglestate") == "on") {
-				jQuery(this).data("togglestate","off");
-				jQuery(this).html("' . JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL') . '");
-				jQuery(".markertoggles").each(function(e){
-					if (!jQuery(this).hasClass("active")) {
-						jQuery(this).trigger("click");
-					}
-				});
-			} else {
-				jQuery(this).data("togglestate","on");
-				jQuery(this).html("' . JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL') . '");
-				jQuery(".markertoggles").each(function(e){
-					if (jQuery(this).hasClass("active")) {
-						jQuery(this).trigger("click");
-					}
-				});
-			}
-			allowScrollTo = true;
-		});
-		if (showmapsearch) {
-			var geocoder;
-			var resultLat;
-			var resultLng;
-			jQuery("#fp_searchAddress").keypress(function(e){
-                if (e.which == 13) {
-                    return false;
+            
+            el.addClass('active');
+        }
+        
+        if (fitbounds) {
+            var bounds = new google.maps.LatLngBounds();
+            var newbounds = false;
+            marker.map(function(m) {
+                if (m.status > 0) {
+                    newbounds = true;
+                    var thisbounds = new google.maps.LatLng(m.lat,m.lng);
+                    bounds.extend(thisbounds);
                 }
             });
-			jQuery("#fp_searchAddressBtn").click(function() {
-				geocoder = new google.maps.Geocoder();
-				searchTxt = document.getElementById("fp_searchAddress").value;
-				if (searchTxt == "") {return false;}
-				geocoder.geocode( { "address": searchTxt+searchassist}, function(results, status) {
-					if (status == google.maps.GeocoderStatus.OK) {
-
-						resultLat = results[0].geometry.location.lat();
-						resultLng = results[0].geometry.location.lng();
-						allowScrollTo = false;
-						marker.forEach(function(m,i){
-							if (marker[i].status < -999 ){
-								marker[i].status += 5000;
-								if (!markerclusters){
-								    marker[i].setMap(map);
-								}
-								jQuery(".fp_list_marker"+i).fadeIn(100,function(){
-									jQuery(this).removeClass("fp_listitem_hidden");
-									jQuery(this).prependTo("#fp_locationlist .fp_ll_holder");
-								});
-							}
-						});
-						jQuery("#fp_toggle").each(function(){
-							jQuery(this).data("togglestate","off");
-							jQuery(this).html("' . JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL') . '");
-							jQuery(".markertoggles").each(function(e){
-								if (jQuery(this).hasClass("active")) {
-									jQuery(this).trigger("click");
-								}
-								jQuery(this).trigger("click");
-							});
-						});
-						marker.forEach(function(m,i){
-							var dLat = resultLat-m.lat;
-							var dLong = resultLng-m.lng;
-							var distance = Math.sqrt(dLat*dLat + dLong*dLong)*111.32;
-							if (distance > mapsearchrange) {
-								marker[i].status -= 5000;
-                    			if ( marker[i].status < 1) {
-                    				markerInfoBox[i].close();
-                    				if (!markerclusters){
-                    				    marker[i].setMap();
-                    				}
-                    				jQuery(".fp_list_marker"+i).fadeOut(100,function(){
-										jQuery(this).addClass("fp_listitem_hidden");
-										jQuery(this).appendTo("#fp_locationlist .fp_ll_holder");
-                    				});
-                    			}
-							}
-                    		updateActiveCount(marker,searchTxt);
-							allowScrollTo = true;
-						});
-                        if (markerclusters) {
-                            clusterMarkers = [];
-                            marker.forEach(function(m,i){
-                                if(marker[i].status > 0){
-                                    clusterMarkers.push(marker[i]);
-                                }
-                            });
-
-                            markerCluster.clearMarkers();
-                            markerCluster = new MarkerClusterer(map, clusterMarkers, {
-                                styles: clusterStyles
-                            });
-                        }
-                        map.setCenter(results[0].geometry.location);
-						map.setZoom(mapsearchzoom);
-						setTimeout(function(){
-							var locationListHeight = jQuery("#fp_locationlist .fp_ll_holder").outerHeight();
-							jQuery("#fp_locationlist").css("height", locationListHeight);
-						},500);
-					} else {
-						alert("Geocode was not successful for the following reason: " + status);
-					}
-				});
-			});
-		}
-        jQuery("#fp_toggle").trigger("click");
-        allowScrollTo = true;
-        updateActiveCount(marker);
-
-        if (markerclusters){
+            
+            if (newbounds) {
+                map.fitBounds(bounds);
+                
+            } else {
+                map.panTo(new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}));
+                map.setZoom({zoom}) . ');
+            }
+        }
+        
+        if (markerclusters) {
+            clusterMarkers = [];
+            marker.forEach(function(m,i) {
+                if(marker[i].status > 0) {
+                    clusterMarkers.push(marker[i]);
+                }
+            });
+            
+            markerCluster.clearMarkers();
             markerCluster = new MarkerClusterer(map, clusterMarkers, {
                 styles: clusterStyles
             });
         }
 
-        if (showlisttab && (listtabfirst == 1)) {
-            setTimeout(function(){
-                jQuery("#locationlisttab").trigger("click");
-            },100);
-        }
+        setTimeout(function() {
+            var locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
+            jQuery('#fp_locationlist').css('height', locationListHeight);
+        },150);
+        
+        updateActiveCount(marker, searchTxt);
 
-        if ("off" == "' . $this->item->params->get('showmarkers') . '") {
-            setTimeout(function(){
-                jQuery("#fp_toggle").trigger("click");
-            },100);
+        return false;
+    });
+    
+    jQuery('ul.nav-tabs > li >a').click(function() {
+        setTimeout(function() {
+            google.maps.event.trigger(map, 'resize');
+            map.panTo(new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}));
+            map.setZoom({$zoom});
+        },500); 
+    });
+
+    jQuery(window).resize(function() {
+        map.panTo(new google.maps.LatLng(' . $this->item->latitude . ',' . $this->item->longitude . ')); 
+    });
+
+    jQuery('#fp_reset').click(function() {
+        allowScrollTo = false;
+        jQuery('#fp_searchAddress').val(mapsearchprompt);
+        jQuery('#fp_searchAddressBtn').attr('disabled', true);
+        searchTxt = '';
+        marker.forEach(function(m,i) {
+            if (marker[i].status < -999 ) {
+                marker[i].status += 5000;
+                marker[i].setMap(map);
+                jQuery('.fp_list_marker'+i).fadeIn(100,function() {
+                    jQuery(this).removeClass('fp_listitem_hidden');
+                    jQuery(this).prependTo('#fp_locationlist .fp_ll_holder');
+                });
+            }
+        });
+        
+        jQuery('#fp_toggle').each(function() {
+            if ('on' == '{$showMarkers}') {
+                jQuery(this).data('togglestate','off');
+                jQuery(this).html('{$text->hideButton}');
+                jQuery('.markertoggles').each(function(e) {
+                    if (jQuery(this).hasClass('active')) {
+                        jQuery(this).trigger('click');
+                    }
+                    jQuery(this).trigger('click');
+                });
+                
+            } else {
+                jQuery(this).data('togglestate', 'on');
+                jQuery(this).html('{$text->showButton}');
+                jQuery('.markertoggles').each(function(e) {
+                    if (jQuery(this).hasClass('active')) {
+                        jQuery(this).trigger('click');
+                    }
+                });
+            }
+        });
+        
+        allowScrollTo = true;
+        map.panTo(new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}));
+        map.setZoom({$zoom});
+    });
+    
+    jQuery('#fp_toggle').click(function() {
+        allowScrollTo = false;
+        if (jQuery(this).data('togglestate') == 'on') {
+            jQuery(this).data('togglestate', 'off');
+            jQuery(this).html('{$text->hideButton}');
+            jQuery('.markertoggles').each(function(e) {
+                if (!jQuery(this).hasClass('active')) {
+                    jQuery(this).trigger('click');
+                }
+            });
+            
+        } else {
+            jQuery(this).data('togglestate', 'on');
+            jQuery(this).html('{$text->showButton}');
+            jQuery('.markertoggles').each(function(e) {
+                if (jQuery(this).hasClass('active')) {
+                    jQuery(this).trigger('click');
+                }
+            });
         }
+        
+        allowScrollTo = true;
+    });
+
+    if (showmapsearch) {
+        var geocoder,
+            resultLat,
+            resultLng;
+
+        jQuery('#fp_searchAddress').keypress(function(e) {
+            if (e.which == 13) {
+                return false;
+            }
+        });
+
+        jQuery('#fp_searchAddressBtn').on('click', function() {
+            geocoder = new google.maps.Geocoder();
+            searchTxt = document.getElementById('fp_searchAddress').value;
+            if (searchTxt == '') {
+                return false;
+            }
+
+            geocoder.geocode({ address: searchTxt+searchassist}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    resultLat = results[0].geometry.location.lat();
+                    resultLng = results[0].geometry.location.lng();
+                    allowScrollTo = false;
+                    marker.forEach(function(m, i) {
+                        if (marker[i].status < -999 ) {
+                            marker[i].status += 5000;
+                            if (!markerclusters) {
+                                marker[i].setMap(map);
+                            }
+                            
+                            jQuery('.fp_list_marker' + i).fadeIn(100, function() {
+                                jQuery(this).removeClass('fp_listitem_hidden');
+                                jQuery(this).prependTo('#fp_locationlist .fp_ll_holder');
+                            });
+                        }
+                    });
+                    
+                    jQuery('#fp_toggle').each(function() {
+                        jQuery(this).data('togglestate','off');
+                        jQuery(this).html('{$text->hideButton}');
+                        jQuery('.markertoggles').each(function(e) {
+                            if (jQuery(this).hasClass('active')) {
+                                jQuery(this).trigger('click');
+                            }
+                            
+                            jQuery(this).trigger('click');
+                        });
+                    });
+                    
+                    marker.forEach(function(m, i) {
+                        var dLat = resultLat-m.lat;
+                        var dLong = resultLng-m.lng;
+                        var distance = Math.sqrt(dLat*dLat + dLong*dLong) * 111.32;
+                        if (distance > mapsearchrange) {
+                            marker[i].status -= 5000;
+                            if ( marker[i].status < 1) {
+                                markerInfoBox[i].close();
+                                if (!markerclusters) {
+                                    marker[i].setMap();
+                                }
+    
+                                jQuery('.fp_list_marker'+i).fadeOut(100,function() {
+                                    jQuery(this).addClass('fp_listitem_hidden');
+                                    jQuery(this).appendTo('#fp_locationlist .fp_ll_holder');
+                                });
+                            }
+                        }
+
+                        updateActiveCount(marker,searchTxt);
+                        allowScrollTo = true;
+                    });
+
+                    if (markerclusters) {
+                        clusterMarkers = [];
+                        marker.forEach(function(m, i) {
+                            if (marker[i].status > 0) {
+                                clusterMarkers.push(marker[i]);
+                            }
+                        });
+
+                        markerCluster.clearMarkers();
+                        markerCluster = new MarkerClusterer(map, clusterMarkers, {
+                            styles: clusterStyles
+                        });
+                    }
+                    
+                    map.setCenter(results[0].geometry.location);
+                    map.setZoom(mapsearchzoom);
+                    setTimeout(function() {
+                        var locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
+                        jQuery('#fp_locationlist').css('height', locationListHeight);
+                    },500);
+
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        });
     }
-    google.maps.event.addDomListener(window, \'load\', initialize);
-';
+
+    jQuery('#fp_toggle').trigger('click');
+    allowScrollTo = true;
+    updateActiveCount(marker);
+
+    if (markerclusters) {
+        markerCluster = new MarkerClusterer(map, clusterMarkers, {
+            styles: clusterStyles
+        });
+    }
+
+    if (showlisttab && (listtabfirst == 1)) {
+        setTimeout(function() {
+            jQuery('#locationlisttab').trigger('click');
+        },100);
+    }
+
+    if ('off' == '{$text->showMarkers}') {
+        setTimeout(function(){
+            jQuery('#fp_toggle').trigger('click');
+        },100);
+    }
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+JSCRIPT;
+
 JFactory::getDocument()->addScriptDeclaration($script);
