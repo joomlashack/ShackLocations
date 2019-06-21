@@ -52,7 +52,8 @@ $params = (object)array(
     'mapstyle'          => $this->item->params->get('mapstyle', '[]')
 );
 $text = (object)array(
-    'geocodeFail' => JText::_('COM_FOCALPOINT_GEOCODE_FAIL')
+    'geocodeFail' => JText::_('COM_FOCALPOINT_GEOCODE_FAIL'),
+    'searchAddressRequired' => JText::_('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED')
 );
 
 $script = <<<JSCRIPT
@@ -141,7 +142,7 @@ if ($this->item->params->get('getdirections')) {
             searchText = \$address.val();
 
         if (!searchText) {
-            alert('I don\'t think so!');
+            alert('{$text->searchAddressRequired}');
             return;
         }
 
