@@ -191,4 +191,4 @@ $customTabs = $this->item->tabsdata->tabs;
     </div>
 
 <?php
-echo $this->loadTemplate('mapjs_uncommented');
+echo $this->loadTemplate('mapjs');
