@@ -93,6 +93,10 @@ class FocalpointModellocationtype extends JModelAdmin
             if (isset($item->customfields)) {
                 $item->customfields = json_decode($item->customfields, true);
             }
+
+            if (empty($item->id)) {
+                $item->created_by = JFactory::getUser()->id;
+            }
         }
 
         return $item;
