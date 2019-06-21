@@ -22,29 +22,4 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die('Restricted access');
-
-    $data = $this->item->markerdata;
-    $ulclass    = "";
-    $liclass    = "";
-    $html       = "";
-    $first      = true;
-
-    foreach ($data as $item) {
-        if ($item->legendalias != $ulclass) {
-            $ulclass = $item->legendalias;
-            if (!$first) {
-                $html .="</ul></div>";
-            }
-            $html .= '<div class="'.$ulclass.'"><h4>'.$item->legend."<small>".$item->legendsubtitle."</small></h4>";
-            $html .= '<ul class="sidebar '.$ulclass.'">';
-            $first = false;
-        }
-        if ($liclass != $item->locationtypealias) {
-			$html .= "<li><a data-marker-type='".$item->locationtype_id."' class='active markertoggles markers-".$item->locationtypealias."' href='#'>".$item->locationtype."</a></li>";
-			$liclass = $item->locationtypealias;
-        }
-    }
-    $html .="</ul></div>";
-	$html .= $this->loadTemplate('legend_buttons');
-    echo $html;
+echo $this->loadTemplate('legend_right');

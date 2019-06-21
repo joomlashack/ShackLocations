@@ -24,49 +24,23 @@
 
 defined('_JEXEC') or die();
 
-$data    = $this->item->markerdata;
-$ulclass = "";
-$liclass = "";
-$html    = "";
-$first   = true;
-$columns = 4;
-$count   = 0;
+$hasSubtitles = null;
+$markers = $this->chunkLegends($this->item->markerdata, $hasSubtitles);
 
-$markers    = array();
-$lastLegend = null;
-$column     = 0;
-$subtitles  = false;
-foreach ($this->item->markerdata as $marker) {
-    if ($lastLegend && $lastLegend != $marker->legendalias) {
-        $column++;
-    }
-    if (!isset($markers[$column])) {
-        $markers[$column] = (object)array(
-            'alias'    => $marker->legendalias,
-            'title'    => $marker->legend,
-            'subtitle' => $marker->legendsubtitle,
-            'markers'  => array()
-        );
-
-        $subtitles = $subtitles || (bool)$marker->legendsubtitle;
-    }
-    $markers[$column]->markers[] = $marker;
-
-    $lastLegend = $marker->legendalias;
-}
-
-$subtitle = '';
 $html     = array();
+$columns  = 4;
 $column   = -1;
+$subtitle = '';
 foreach ($markers as $legend) {
     $column = (++$column % $columns);
     if ($column == 0) {
         $html[] = '<div class="row-fluid">';
     }
 
-    if ($subtitles) {
+    if ($hasSubtitles) {
         $subtitle = sprintf('<small>%s</small>', $legend->subtitle ?: '&nbsp;');
     }
+
     $html[] = sprintf(
         '<div class="span%s %s"><h4>%s%s</h4>',
         (int)(12 / $columns),

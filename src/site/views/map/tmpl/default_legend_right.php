@@ -22,29 +22,41 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
-    $data = $this->item->markerdata;
-    $ulclass    = "";
-    $liclass    = "";
-    $first      = true;
-	$html		= "";
-    foreach ($data as $item) {
-        if ($item->legendalias != $ulclass) {
-            $ulclass = $item->legendalias;
-            if (!$first) {
-                $html .="</ul></div>";
-            }
-            $html .= '<div class="'.$ulclass.'"><h4>'.$item->legend."<small>".$item->legendsubtitle."</small></h4>";
-            $html .= '<ul class="sidebar">';
-            $first = false;
-        }
-        if ($liclass != $item->locationtypealias) {
-			$html .= "<li><a data-marker-type='".$item->locationtype_id."' class='active markertoggles markers-".$item->locationtypealias."' href='#'>".$item->locationtype."</a></li>";
-			$liclass = $item->locationtypealias;
-        }
+$markers = $this->chunkLegends($this->item->markerdata);
+
+$html       = array();
+$subtitle   = '';
+$lastLegend = null;
+foreach ($markers as $legend) {
+    if ($lastLegend && $lastLegend != $legend->alias) {
+        $html[] = '</ul>';
+        $html[] = '</div>';
     }
-    $html .="</ul>";
-	$html .='</div>';
-	$html .= $this->loadTemplate('legend_buttons');
-    echo $html;
+
+    $subtitle = $legend->subtitle ? sprintf('<small>%s</small>', $legend->subtitle) : '';
+
+    $html[] = sprintf(
+        '<div class="%s"><h4>%s%s</h4>',
+        $legend->alias,
+        $legend->title,
+        $subtitle
+    );
+
+    $html[] = '<ul class="sidebar">';
+    foreach ($legend->markers as $marker) {
+        $html[] = sprintf(
+            '<li><a data-marker-type="%s" class="active markertoggles markers-%s" href="#">%s</a></li>',
+            $marker->locationtype_id,
+            $marker->locationtypealias,
+            $marker->locationtype
+        );
+    }
+    $html[] = '</ul>';
+    $html[] = '</div>';
+}
+
+$html[] = $this->loadTemplate('legend_buttons');
+
+echo join("\n", $html);

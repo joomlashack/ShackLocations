@@ -237,4 +237,42 @@ class FocalpointViewMap extends JViewLegacy
             $this->document->setMetadata('author', $this->item->metadata->get('author'));
         }
     }
+
+    /**
+     * Turn flat array of legend markers into separate columns
+     *
+     * @param array $markerData
+     * @param bool  $hasSubtitles A returned value for use by the caller
+     *
+     * @return object[]
+     */
+    protected function chunkLegends(array $markerData, &$hasSubtitles = null)
+    {
+        $column  = 0;
+        $markers = array();
+
+        // Rearrange marker array into columns
+        $lastLegend   = null;
+        $hasSubtitles = false;
+        foreach ($markerData as $marker) {
+            if ($lastLegend && $lastLegend != $marker->legendalias) {
+                $column++;
+            }
+            if (!isset($markers[$column])) {
+                $markers[$column] = (object)array(
+                    'alias'    => $marker->legendalias,
+                    'title'    => $marker->legend,
+                    'subtitle' => $marker->legendsubtitle,
+                    'markers'  => array()
+                );
+
+                $hasSubtitles = $hasSubtitles || (bool)$marker->legendsubtitle;
+            }
+            $markers[$column]->markers[] = $marker;
+
+            $lastLegend = $marker->legendalias;
+        }
+
+        return $markers;
+    }
 }
