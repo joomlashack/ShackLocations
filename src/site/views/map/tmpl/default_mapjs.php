@@ -365,7 +365,7 @@ $script .= <<<JSCRIPT
                 
             } else {
                 map.panTo(new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}));
-                map.setZoom({zoom});
+                map.setZoom({$zoom});
             }
         }
         
