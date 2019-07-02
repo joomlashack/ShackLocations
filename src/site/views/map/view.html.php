@@ -249,17 +249,32 @@ class FocalpointViewMap extends JViewLegacy
     protected function chunkLegends(array $markerData, &$hasSubtitles = null)
     {
         $column  = 0;
-        $markers = array();
+        $legends = array();
+
+        $uniqueMarkers = array_filter(
+            $markerData,
+            function ($marker) {
+                static $keys = array();
+                $key = md5($marker->legendalias . $marker->locationtypealias);
+
+                $result = !in_array($key, $keys);
+                if ($result) {
+                    $keys[] = $key;
+                }
+
+                return $result;
+            }
+        );
 
         // Rearrange marker array into columns
         $lastLegend   = null;
         $hasSubtitles = false;
-        foreach ($markerData as $marker) {
+        foreach ($uniqueMarkers as $marker) {
             if ($lastLegend && $lastLegend != $marker->legendalias) {
                 $column++;
             }
-            if (!isset($markers[$column])) {
-                $markers[$column] = (object)array(
+            if (!isset($legends[$column])) {
+                $legends[$column] = (object)array(
                     'alias'    => $marker->legendalias,
                     'title'    => $marker->legend,
                     'subtitle' => $marker->legendsubtitle,
@@ -268,11 +283,11 @@ class FocalpointViewMap extends JViewLegacy
 
                 $hasSubtitles = $hasSubtitles || (bool)$marker->legendsubtitle;
             }
-            $markers[$column]->markers[] = $marker;
+            $legends[$column]->markers[] = $marker;
 
             $lastLegend = $marker->legendalias;
         }
 
-        return $markers;
+        return $legends;
     }
 }
