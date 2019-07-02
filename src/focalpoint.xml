@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0.0" method="upgrade">
     <name>COM_FOCALPOINT</name>
-    <creationDate>July 01 2019</creationDate>
+    <creationDate>July 02 2019</creationDate>
     <copyright>Copyright (C) 2018. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <author>Joomlashack</author>
     <authorEmail>help@joomlashack.com</authorEmail>
     <authorUrl>https://www.joomlashack.com</authorUrl>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
     <description>COM_FOCALPOINT_DESCRIPTION</description>
     <variant>FREE</variant>
 
