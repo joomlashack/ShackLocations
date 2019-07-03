@@ -130,6 +130,10 @@ class FocalpointModellocation extends JModelAdmin
      */
     public function save($data)
     {
+        if (empty($data['othertypes'])) {
+            $data['othertypes'] = array();
+        }
+
         if (parent::save($data)) {
             $id = $data['id'] ?: $this->getDbo()->insertid();
             $this->updateTypes($id, $data);
@@ -148,10 +152,6 @@ class FocalpointModellocation extends JModelAdmin
      */
     protected function updateTypes($id, array $data)
     {
-        if (empty($data['othertypes'])) {
-            $data['othertypes'] = array();
-        }
-
         $db = $this->getDbo();
 
         // Remove existing xrefs
