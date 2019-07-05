@@ -99,9 +99,8 @@ var map             = null,
     fitbounds       = {$fitbounds},
     markerclusters  = {$markerclusters} && (typeof clusterOptions !== 'undefined'),
     listtabfirst    = {$listtabfirst},
-    mapCenter       = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude});
-
-var marker = [];
+    mapCenter       = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}),
+    marker          = [];
 
 function updateActiveCount(marker) {
     var locationTxt = '',
