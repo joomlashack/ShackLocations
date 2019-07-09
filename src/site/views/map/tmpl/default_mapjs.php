@@ -84,10 +84,6 @@ $text              = (object)array(
     'showButton' => JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL')
 );
 
-if ($markerclusters) {
-    JHtml::_('script', 'plugins/focalpoint/markerclusters/assets/markerclusterer.js');
-}
-
 $script = <<<JSCRIPT
 var map             = null,
     markerCluster   = null,
@@ -101,15 +97,10 @@ var map             = null,
     mapsearchprompt = '{$mapsearchprompt}',
     searchassist    = '{$searchassist}',
     fitbounds       = {$fitbounds},
-    markerclusters  = {$markerclusters},
+    markerclusters  = {$markerclusters} && (typeof clusterOptions !== 'undefined'),
     listtabfirst    = {$listtabfirst},
-    mapCenter       = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude});
-
-if (typeof clusterStyles === 'undefined') {
-    var clusterStyles = [];
-}
-
-var marker = [];
+    mapCenter       = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}),
+    marker          = [];
 
 function updateActiveCount(marker) {
     var locationTxt = '',
@@ -378,9 +369,7 @@ $script .= <<<JSCRIPT
             });
             
             markerCluster.clearMarkers();
-            markerCluster = new MarkerClusterer(map, clusterMarkers, {
-                styles: clusterStyles
-            });
+            markerCluster = new MarkerClusterer(map, clusterMarkers, clusterOptions);
         }
 
         setTimeout(function() {
@@ -553,9 +542,7 @@ $script .= <<<JSCRIPT
                         });
 
                         markerCluster.clearMarkers();
-                        markerCluster = new MarkerClusterer(map, clusterMarkers, {
-                            styles: clusterStyles
-                        });
+                        markerCluster = new MarkerClusterer(map, clusterMarkers, clusterOptions);
                     }
                     
                     map.setCenter(results[0].geometry.location);
@@ -577,9 +564,7 @@ $script .= <<<JSCRIPT
     updateActiveCount(marker);
 
     if (markerclusters) {
-        markerCluster = new MarkerClusterer(map, clusterMarkers, {
-            styles: clusterStyles
-        });
+        markerCluster = new MarkerClusterer(map, clusterMarkers, clusterOptions);
     }
 
     if (showlisttab && (listtabfirst == 1)) {
