@@ -143,11 +143,19 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
 
                 return $subField;
             }
+
+            $error = JText::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_UNKNOWN', $fieldType);
+
+        } else {
+            $error = JText::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_CONFIGURATION', $fieldType, $fieldName);
         }
 
         JFactory::getApplication()->enqueueMessage('Custom field configuration issue', 'Warning');
 
-        return '<p>' . $fieldType . ' under construction</p>';
+        return sprintf(
+            '<div class="alert">%s</div>',
+            empty($error) ? '**syserr**' : $error
+        );
     }
 
     /**
