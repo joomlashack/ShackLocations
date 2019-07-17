@@ -39,15 +39,8 @@ $value     = empty($displayData['data']) ? null : $displayData['data'];
 
 if ($value) :
     if ($showLabel && $label) :
-        ?>
-        <p class="fp_customfield fp_textarea">
-        <span class="fp_label">
-            <?php echo $label . ': '; ?>
-        </span>
-            <?php echo $value; ?>
-        </p>
-        <?php
-    else :
-        echo $value;
+        echo sprintf('<span class="fp_label">%s: </span>', $label);
     endif;
+    echo $value;
+    echo '</p>';
 endif;

@@ -38,7 +38,7 @@ $label     = empty($displayData['label']) ? null : $displayData['label'];
 $value     = empty($displayData['data']) ? null : $displayData['data'];
 
 if ($value) :
-    if ($url = empty($value['url']) ? null : $value['url']) {
+    if ($url = empty($value['url']) ? null : $value['url']) :
         $link = JHtml::_(
             'link',
             $url,
@@ -46,17 +46,11 @@ if ($value) :
             empty($value['target']) ? null : 'target="_blank"'
         );
 
+        echo '<p class="fp_customfield fp_link">';
         if ($showLabel && $label) :
-            ?>
-            <p class="fp_customfield fp_;ink">
-        <span class="fp_label">
-            <?php echo $label . ': '; ?>
-        </span>
-                <?php echo $link; ?>
-            </p>
-            <?php
-        else :
-            echo $link;
+            echo sprintf('<span class="fp_label">%s: </span>', $label);
         endif;
-    }
+        echo $link;
+        echo '</p>';
+    endif;
 endif;

@@ -38,24 +38,18 @@ $label     = empty($displayData['label']) ? null : $displayData['label'];
 $value     = empty($displayData['data']) ? null : $displayData['data'];
 
 if ($value) :
-    if ($email = empty($value['email']) ? null : $value['email']) {
+    if ($email = empty($value['email']) ? null : $value['email']) :
         $link = JHtml::_(
             'link',
             'mailto:' . $email,
             empty($value['linktext']) ? $email : $value['linktext']
         );
 
+        echo '<p class="fp_customfield fp_email">';
         if ($showLabel && $label) :
-            ?>
-            <p class="fp_customfield fp_email">
-        <span class="fp_label">
-            <?php echo $label . ': '; ?>
-        </span>
-                <?php echo $link; ?>
-            </p>
-            <?php
-        else :
-            echo $link;
+            echo sprintf('<span class="fp_label">%s: </span>', $label);
         endif;
-    }
+        echo $link;
+        echo '</p>';
+    endif;
 endif;

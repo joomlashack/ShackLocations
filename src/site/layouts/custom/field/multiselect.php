@@ -38,16 +38,13 @@ $label     = empty($displayData['label']) ? null : $displayData['label'];
 $value     = empty($displayData['data']) ? null : $displayData['data'];
 
 if ($value) :
+    echo '<p class="fp_customfield fp_textbox">';
     if ($showLabel && $label) :
-        $list = join('<br><span class="fp_label"></span>', (array)$value);
-        ?>
-        <p class="fp_customfield fp_textbox">
-        <span class="fp_label">
-            <?php echo $label . ': '; ?>
-        </span><?php echo $list; ?>
-        </p>
-        <?php
+        echo sprintf('<span class="fp_label">%s: </span>', $label);
+        echo join('<br><span class="fp_label"></span>', (array)$value);
     else :
-        echo $list;
+        echo join('<br>', (array)$value);
     endif;
+
+    echo '</p>';
 endif;
