@@ -85,6 +85,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         $this->loadAssets($options);
 
         $htmlOutput = array(
+            sprintf('<input type="hidden" name="%s"/>', $this->name),
             '<div class="span7 sl-subfield-wrapper">',
         );
 
