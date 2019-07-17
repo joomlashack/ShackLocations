@@ -226,6 +226,10 @@
     margin-bottom: 15px;
 }
 
+.fp_customfields {
+	margin: 20px 0;
+}
+
 .fp_field_label,
 .fp_label {
     font-weight: bold;
