@@ -197,7 +197,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
 
         } else {
             $blockHtml = array(
-                '<fieldset class="clarfix">',
+                '<fieldset class="clearfix">',
                 sprintf(
                     '<legend><i class="icon-ban-circle"></i>&nbsp;%s</legend>',
                     JText::sprintf('COM_FOCALPOINT_CUSTOMFIELD_TYPE_UNKNOWN', $type)
