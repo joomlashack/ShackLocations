@@ -238,7 +238,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
             $this->renderSubfield($hash, 'type', 'hidden', '', array_merge($options, $hiddenOptions)),
             $this->renderSubfield($hash, 'name', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_NAME', $options, true),
             $this->renderSubfield($hash, 'description', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP', $options),
-            $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options, true)
+            $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options)
         );
 
         $typeRenderer = 'renderSubfield' . ucfirst($type);
@@ -315,7 +315,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     {
         $fieldOptions = array(
             'attributes' => array(
-                'rows' => 20,
+                'rows'     => 20,
                 'required' => 'true'
             )
         );
