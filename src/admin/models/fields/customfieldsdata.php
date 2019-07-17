@@ -173,7 +173,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         $attributes = array(
             'name'        => $name,
             'type'        => $type,
-            'label'       => $label ?: ucwords(preg_replace('/[-_]/', ' ', $name)),
+            'label'       => $label,
             'description' => $description
         );
         if (!empty($options['attributes'])) {
