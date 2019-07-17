@@ -134,10 +134,11 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      * @param string $type
      * @param string $label
      * @param array  $options
+     * @param bool   $required
      *
      * @return string
      */
-    protected function renderSubfield($hash, $name, $type, $label, $options)
+    protected function renderSubfield($hash, $name, $type, $label, $options, $required = false)
     {
         $baseGroup = $this->fieldGroup['name'];
         $groupName = $baseGroup . '.' . $hash;
@@ -153,6 +154,10 @@ class ShacklocationsFormFieldCustomfields extends JFormField
 
         if (!empty($options['attributes'])) {
             $attributes = array_merge($attributes, $options['attributes']);
+        }
+
+        if ($required) {
+            $attributes['required'] = 'true';
         }
 
         if (empty($options['options'])) {
@@ -231,9 +236,9 @@ class ShacklocationsFormFieldCustomfields extends JFormField
 
         $renderedFields = array(
             $this->renderSubfield($hash, 'type', 'hidden', '', array_merge($options, $hiddenOptions)),
-            $this->renderSubfield($hash, 'name', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_NAME', $options),
+            $this->renderSubfield($hash, 'name', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_NAME', $options, true),
             $this->renderSubfield($hash, 'description', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP', $options),
-            $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options)
+            $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options, true)
         );
 
         $typeRenderer = 'renderSubfield' . ucfirst($type);
@@ -310,7 +315,8 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     {
         $fieldOptions = array(
             'attributes' => array(
-                'rows' => 20
+                'rows' => 20,
+                'required' => 'true'
             )
         );
 
