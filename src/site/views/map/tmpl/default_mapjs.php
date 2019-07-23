@@ -87,7 +87,7 @@ $text              = (object)array(
 $script = <<<JSCRIPT
 var map             = null,
     markerCluster   = null,
-    clusterMarkers  = [];
+    clusterMarkers  = [],
     allowScrollTo   = false,
     searchTxt       = '',
     showlisttab     = {$showlisttab},
@@ -137,7 +137,7 @@ function updateActiveCount(marker) {
 
 function initialize() {
     var mapProperties = {
-        center           : new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}),
+        center           : mapCenter,
         zoom             : {$zoom},
         maxZoom          : {$maxZoom},
         mapTypeControl   : {$mapTypeControl},
@@ -154,9 +154,7 @@ function initialize() {
     var markerSets    = [],
         markerInfoBox = [],
         mappedMarkers = [],
-        mapinfobox    = false,
-        columns       = 4,
-        columnCount   = 0;
+        mapinfobox    = false;
 JSCRIPT;
 
 // Cycle through each location creating a marker and infobox.
@@ -180,7 +178,7 @@ foreach ($this->item->markerdata as $marker) {
     }
 
     $boxText = sprintf(
-        '<h4>%s</h4><div class="infoboxcontent">%s<div class="infopointer"></div></div>',
+        '<h4>%s</h4><div class="infoboxcontent">%s',
         $marker->title,
         $infoDescription
     );
