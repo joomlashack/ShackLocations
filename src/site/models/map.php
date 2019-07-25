@@ -181,14 +181,21 @@ class FocalpointModelMap extends JModelForm
                     'b.state = 1',
                     'c.state = 1'
                 )
-            )
-            ->order(
+            );
+
+        $order     = $item->params->get('locationorder', 'ordering');
+        $direction = $item->params->get('locationorderdir', 'asc');
+        if ($item->params->get('locationgroup')) {
+            $query->order(
                 array(
-                    'c.ordering ASC',
-                    'b.ordering ASC',
-                    'a.ordering ASC'
+                    "c.{$order} {$direction}",
+                    "b.{$order} {$direction}",
+                    "a.{$order} {$direction}"
                 )
             );
+        } else {
+            $query->order('a.' . $order . ' ' . $direction);
+        }
 
         $db->setQuery($query);
         $results = $db->loadObjectList();

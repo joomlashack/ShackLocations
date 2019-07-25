@@ -229,12 +229,42 @@
             <option value="0">JNO</option>
         </field>
 
+        <field name="locationorder"
+               type="list"
+               default="ordering"
+               label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_ORDER_LBL"
+               showon="locationlist:1">
+            <option value="ordering">COM_FOCALPOINT_OPTION_ORDERING</option>
+            <option value="title">COM_FOCALPOINT_OPTION_TITLE</option>
+        </field>
+
+        <field name="locationorderdir"
+               type="list"
+               default="asc"
+               label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_ORDER_DIR_LBL"
+               showon="locationlist:1">
+            <option value="asc">COM_FOCALPOINT_OPTION_ASC</option>
+            <option value="desc">COM_FOCALPOINT_OPTION_DESC</option>
+        </field>
+
+        <field name="locationgroup"
+               type="radio"
+               class="btn-group btn-group-yesno"
+               default="1"
+               label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_GROUP_LBL"
+               description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_GROUP_DESC"
+               showon="locationlist:1">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
         <field name="showlistfirst"
                type="radio"
                class="btn-group btn-group-yesno"
                default="0"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_LBL"
-               description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_DESC">
+               description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_DESC"
+               showon="locationlist:1">
             <option value="1">JYES</option>
             <option value="0">JNO</option>
         </field>
