@@ -59,7 +59,7 @@ class FocalpointModelMap extends JModelForm
         if ($this->item === null) {
             $this->item = false;
 
-            $id    = $id ?: $this->getState('map.id');
+            $id = $id ?: $this->getState('map.id');
             if ($id) {
                 $table = $this->getTable();
                 if ($table->load($id)) {
@@ -82,12 +82,14 @@ class FocalpointModelMap extends JModelForm
                         $params = JComponentHelper::getParams('com_focalpoint');
                         $params->merge(new Registry($this->item->params));
                         $this->item->params = $params;
+
+                        $this->item->markerdata = $this->getMarkerData($this->item);
                     }
 
                 } elseif ($error = $table->getError()) {
                     $this->setError($error);
                 }
-                
+
             } else {
                 $this->setError(JText::_('JGLOBAL_RESOURCE_NOT_FOUND'));
             }
@@ -124,12 +126,12 @@ class FocalpointModelMap extends JModelForm
     }
 
     /**
-     * @param int $id
+     * @param object $item
      *
      * @return object[]
      * @throws Exception
      */
-    public function getMarkerData($id = null)
+    protected function getMarkerData($item)
     {
         /** @var SiteApplication $app */
         $app    = JFactory::getApplication();
@@ -174,19 +176,26 @@ class FocalpointModelMap extends JModelForm
             ->innerJoin('#__focalpoint_legends AS c ON  c.id = b.legend')
             ->where(
                 array(
-                    'a.map_id = ' . (int)$id,
+                    'a.map_id = ' . (int)$item->id,
                     'a.state = 1',
                     'b.state = 1',
                     'c.state = 1'
                 )
-            )
-            ->order(
+            );
+
+        $order     = $item->params->get('locationorder', 'ordering');
+        $direction = $item->params->get('locationorderdir', 'asc');
+        if ($item->params->get('locationgroup')) {
+            $query->order(
                 array(
-                    'c.ordering ASC',
-                    'b.ordering ASC',
-                    'a.ordering ASC'
+                    "c.{$order} {$direction}",
+                    "b.{$order} {$direction}",
+                    "a.{$order} {$direction}"
                 )
             );
+        } else {
+            $query->order('a.' . $order . ' ' . $direction);
+        }
 
         $db->setQuery($query);
         $results = $db->loadObjectList();

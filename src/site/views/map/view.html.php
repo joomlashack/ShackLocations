@@ -73,8 +73,6 @@ class FocalpointViewMap extends JViewLegacy
         $this->state  = $model->getState();
         $this->item   = $model->getData();
 
-        $this->item->markerdata = $model->getMarkerData($this->item->id);
-
         // Check for errors.
         if ($errors = $model->getErrors()) {
             throw new Exception(implode("\n", $errors));
