@@ -52,8 +52,8 @@ $params = (object)array(
     'mapstyle'          => $this->item->params->get('mapstyle', '[]')
 );
 $text = (object)array(
-    'geocodeFail' => JText::_('COM_FOCALPOINT_GEOCODE_FAIL'),
-    'searchAddressRequired' => JText::_('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED')
+    'geocodeFail' => JText::_('COM_FOCALPOINT_GEOCODE_FAIL', true),
+    'searchAddressRequired' => JText::_('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED', true)
 );
 
 $script = <<<JSCRIPT
@@ -78,15 +78,15 @@ function initialize() {
 JSCRIPT;
 
 
-$infoDescription = "";
-if ($this->item->params->get('infoshowaddress') && $this->item->address != "") {
-    $infoDescription .= "<p>" . JText::_($this->item->address) . "</p>";
+$infoDescription = '';
+if ($this->item->params->get('infoshowaddress') && $this->item->address != '') {
+    $infoDescription .= '<p>' . JText::_($this->item->address) . '</p>';
 }
-if ($this->item->params->get('infoshowphone') && $this->item->phone != "") {
-    $infoDescription .= "<p>" . JText::_($this->item->phone) . "</p>";
+if ($this->item->params->get('infoshowphone') && $this->item->phone != '') {
+    $infoDescription .= '<p>' . JText::_($this->item->phone) . '</p>';
 }
-if ($this->item->params->get('infoshowintro') && $this->item->description != "") {
-    $infoDescription .= $this->item->description;
+if ($this->item->params->get('infoshowintro') && $this->item->description != '') {
+    $infoDescription .= '<p>\'' . JText::_($this->item->description) . '</p>';
 }
 
 $boxText = sprintf(
