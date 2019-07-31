@@ -162,13 +162,13 @@ foreach ($this->item->markerdata as $marker) {
     //Assemble the infobox.
     $infoDescription = '';
     if ($marker->params->get('infoshowaddress') && $marker->address != '') {
-        $infoDescription .= '<p>' . JText::_($marker->address, true) . '</p>';
+        $infoDescription .= '<p>' . JText::_($marker->address) . '</p>';
     }
     if ($marker->params->get('infoshowphone') && $marker->phone != '') {
-        $infoDescription .= '<p>' . JText::_($marker->phone, true) . '</p>';
+        $infoDescription .= '<p>' . JText::_($marker->phone) . '</p>';
     }
     if ($marker->params->get('infoshowintro') && $marker->description != '') {
-        $infoDescription .= '<p>' . JText::_($marker->description, true) . '</p>';
+        $infoDescription .= '<p>' . JText::_($marker->description) . '</p>';
     }
 
     // Example. If a custom fields was defined called 'yourcustomfield' the following line would render
@@ -197,7 +197,7 @@ foreach ($this->item->markerdata as $marker) {
             JHtml::_(
                 'link',
                 $marker->link,
-                JText::_('COM_FOCALPOINT_FIND_OUT_MORE', true),
+                JText::_('COM_FOCALPOINT_FIND_OUT_MORE'),
                 array('title' => $marker->title)
             )
         );
