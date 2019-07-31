@@ -74,14 +74,14 @@ $markerclusters    = (int)(bool)$this->item->params->get('markerclusters');
 $listtabfirst      = (int)(bool)$this->item->params->get('showlistfirst');
 $showMarkers       = $this->item->params->get('showmarkers');
 $text              = (object)array(
-    'within'     => JText::_('COM_FOCALPOINT_WITHIN'),
-    'distance'   => JText::_('COM_FOCALPOINT_DISTANCE'),
-    'locations'  => JText::_('COM_FOCALPOINT_LOCATIONS'),
-    'location'   => JText::_('COM_FOCALPOINT_LOCATION'),
-    'showing'    => JText::_('COM_FOCALPOINT_SHOWING'),
-    'notypes'    => JText::_('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'),
-    'hideButton' => JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL'),
-    'showButton' => JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL')
+    'within'     => JText::_('COM_FOCALPOINT_WITHIN', true),
+    'distance'   => JText::_('COM_FOCALPOINT_DISTANCE', true),
+    'locations'  => JText::_('COM_FOCALPOINT_LOCATIONS', true),
+    'location'   => JText::_('COM_FOCALPOINT_LOCATION', true),
+    'showing'    => JText::_('COM_FOCALPOINT_SHOWING', true),
+    'notypes'    => JText::_('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED', true),
+    'hideButton' => JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL', true),
+    'showButton' => JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL', true)
 );
 
 $script = <<<JSCRIPT
@@ -162,13 +162,13 @@ foreach ($this->item->markerdata as $marker) {
     //Assemble the infobox.
     $infoDescription = '';
     if ($marker->params->get('infoshowaddress') && $marker->address != '') {
-        $infoDescription .= '<p>' . JText::_($marker->address) . '</p>';
+        $infoDescription .= '<p>' . JText::_($marker->address, true) . '</p>';
     }
     if ($marker->params->get('infoshowphone') && $marker->phone != '') {
-        $infoDescription .= '<p>' . JText::_($marker->phone) . '</p>';
+        $infoDescription .= '<p>' . JText::_($marker->phone, true) . '</p>';
     }
     if ($marker->params->get('infoshowintro') && $marker->description != '') {
-        $infoDescription .= '<p>' . JText::_($marker->description) . '</p>';
+        $infoDescription .= '<p>' . JText::_($marker->description, true) . '</p>';
     }
 
     // Example. If a custom fields was defined called 'yourcustomfield' the following line would render
@@ -194,7 +194,12 @@ foreach ($this->item->markerdata as $marker) {
     if (isset($marker->link)) {
         $boxText .= sprintf(
             '<p class="infoboxlink">%s</p>',
-            JHtml::_('link', $marker->link, JText::_('COM_FOCALPOINT_FIND_OUT_MORE'), array('title' => $marker->title))
+            JHtml::_(
+                'link',
+                $marker->link,
+                JText::_('COM_FOCALPOINT_FIND_OUT_MORE', true),
+                array('title' => $marker->title)
+            )
         );
     }
     $boxText .= '<div class="infopointer"></div></div>';
