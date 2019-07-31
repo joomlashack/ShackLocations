@@ -157,20 +157,21 @@ class FocalpointModelLocation extends JModelForm
             ->from('#__focalpoint_locationtypes')
             ->where('id = ' . $type);
 
-        $fieldsettings = json_decode($db->setQuery($query)->loadResult());
+        $customFields  = array();
+        $fieldSettings = json_decode($db->setQuery($query)->loadResult());
+        if ($fieldSettings) {
+            foreach ($fieldSettings as $hash => $customField) {
+                if (!empty($customFieldsData[$hash])) {
+                    $fieldName = $customField->name;
+                    $fieldData = $customFieldsData[$hash];
 
-        $customFields = array();
-        foreach ($fieldsettings as $hash => $customField) {
-            if (!empty($customFieldsData[$hash])) {
-                $fieldName = $customField->name;
-                $fieldData = $customFieldsData[$hash];
-
-                if (isset($fieldData[$fieldName])) {
-                    $customFields[$fieldName] = (object)array(
-                        'datatype' => $customField->type,
-                        'label'    => $customField->label,
-                        'data'     => $fieldData[$fieldName]
-                    );
+                    if (isset($fieldData[$fieldName])) {
+                        $customFields[$fieldName] = (object)array(
+                            'datatype' => $customField->type,
+                            'label'    => $customField->label,
+                            'data'     => $fieldData[$fieldName]
+                        );
+                    }
                 }
             }
         }
