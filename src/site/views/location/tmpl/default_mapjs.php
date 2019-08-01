@@ -86,7 +86,7 @@ if ($this->item->params->get('infoshowphone') && $this->item->phone != '') {
     $infoDescription .= '<p>' . JText::_($this->item->phone) . '</p>';
 }
 if ($this->item->params->get('infoshowintro') && $this->item->description != '') {
-    $infoDescription .= '<p>\'' . JText::_($this->item->description) . '</p>';
+    $infoDescription .= '<p>' . JText::_($this->item->description) . '</p>';
 }
 
 $boxText = sprintf(
