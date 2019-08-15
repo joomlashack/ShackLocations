@@ -114,6 +114,8 @@ endif;
         </div>
 
         <div class="fp_right_column span4">
+            <?php echo JHtml::_('content.prepare', '{loadposition shacklocations-above-info}'); ?>
+
             <?php
             if ($this->item->address || $this->item->phone) :
                 ?>
@@ -140,6 +142,8 @@ endif;
                 <?php
             endif;
 
+            echo JHtml::_('content.prepare', '{loadposition shacklocations-below-info}');
+
             if ($this->item->image) :
                 ?>
                 <div class="fp_article_image">
@@ -147,6 +151,8 @@ endif;
                 </div>
                 <?php
             endif;
+
+            echo JHtml::_('content.prepare', '{loadposition shacklocations-below-image}');
             ?>
         </div>
     </div>
@@ -159,6 +165,8 @@ endif;
     </div>
     <?php
     echo $this->loadTemplate('mapjs');
+
+    echo JHtml::_('content.prepare', '{loadposition shacklocations-below-map}');
 
     if (JFactory::getApplication()->input->getBool("debug")) :
         echo "<pre>";
