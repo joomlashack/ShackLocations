@@ -24,10 +24,6 @@
 
 defined('_JEXEC') or die;
 
-//Load admin language file
-$lang = JFactory::getLanguage();
-$lang->load('com_focalpoint', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
-
 if ($this->item->params->get('loadBootstrap')) :
     JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
     JHtml::_('bootstrap.framework');

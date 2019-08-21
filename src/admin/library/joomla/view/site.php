@@ -27,4 +27,11 @@ defined('_JEXEC') or die();
 
 class FocalpointViewSite extends FocalpointView
 {
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
+
+        $lang = JFactory::getLanguage();
+        $lang->load('com_focalpoint', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
+    }
 }
