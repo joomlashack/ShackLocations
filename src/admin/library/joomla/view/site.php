@@ -27,16 +27,4 @@ defined('_JEXEC') or die();
 
 class FocalpointViewSite extends FocalpointView
 {
-    /**
-     * @param string` $default
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function setDocumentTitle($default = null)
-    {
-        $title = $this->activeMenu ? $this->activeMenu->getParams()->get('page_title') : null;
-
-        parent::setDocumentTitle($title ?: $default);
-    }
 }
