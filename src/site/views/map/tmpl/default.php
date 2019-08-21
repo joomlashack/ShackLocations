@@ -68,7 +68,7 @@ if (!empty($mapsizey)) {
     $containerStyle .= "min-height:" . $mapsizey . "; ";
 }
 
-$pageClass = $this->getPageClass('fp-map-view legend_' . $legendposition);
+$pageClass  = $this->getPageClass('fp-map-view legend_' . $legendposition);
 $customTabs = $this->item->tabsdata->tabs;
 
 ?>
@@ -78,11 +78,11 @@ $customTabs = $this->item->tabsdata->tabs;
             ?>
             <h1><?php echo $this->item->page_title; ?></h1>
             <h2><?php echo $this->item->title; ?></h2>
-            <?php
+        <?php
         else :
             ?>
             <h1><?php echo $this->item->title; ?></h1>
-            <?php
+        <?php
         endif;
 
         if ($this->item->text) :
@@ -90,46 +90,39 @@ $customTabs = $this->item->tabsdata->tabs;
             <div class="fp_mapintro clearfix">
                 <?php echo $this->item->text; ?>
             </div>
-            <?php
+        <?php
         endif;
         ?>
         <div id="fp_main" class="clearfix">
-            <?php
-            if ($customTabs || $showlisttab) :
-                ?>
+            <?php if ($customTabs || $showlisttab) : ?>
             <div id="tab-container" class="tab-container">
                 <ul class='nav nav-tabs'>
-                    <?php
-                    if ($showlisttab && $listtabfirst) :
-                        ?>
-                        <li class=''><a id="locationlisttab" href="#"><?php echo JText::_('COM_FOCALPOINT_LIST') ?></a>
+                    <?php if ($showlisttab && $listtabfirst) : ?>
+                        <li class=''>
+                            <a id="locationlisttab" href="#"><?php echo JText::_('COM_FOCALPOINT_LIST') ?></a>
                         </li>
-                        <?php
-                    endif;
-                    ?>
-                    <li class='active'><a href="#tabs1-map"
-                                          data-toggle="tab"><?php echo JText::_('COM_FOCALPOINT_MAP') ?></a></li>
-                    <?php
-                    if ($showlisttab && !$listtabfirst) :
-                        ?>
-                        <li class=''><a id="locationlisttab" href="#"><?php echo JText::_('COM_FOCALPOINT_LIST') ?></a>
+                    <?php endif; ?>
+
+                    <li class='active'>
+                        <a href="#tabs1-map" data-toggle="tab"><?php echo JText::_('COM_FOCALPOINT_MAP') ?></a>
+                    </li>
+
+                    <?php if ($showlisttab && !$listtabfirst) : ?>
+                        <li>
+                            <a id="locationlisttab" href="#"><?php echo JText::_('COM_FOCALPOINT_LIST') ?></a>
                         </li>
-                        <?php
-                    endif;
+                    <?php endif;
 
                     if ($customTabs) :
                         foreach ($customTabs as $key => $tab) :
                             ?>
                             <li><a href="#tabs1-<?php echo $key; ?>" data-toggle="tab"><?php echo $tab->name; ?></a>
                             </li>
-                            <?php
-                        endforeach;
+                        <?php endforeach;
                     endif;
                     ?>
                 </ul>
-                <?php
-            endif;
-            ?>
+                <?php endif; ?>
                 <div class="tab-content">
                     <?php
                     if ($customTabs || $showlisttab) :
@@ -138,25 +131,29 @@ $customTabs = $this->item->tabsdata->tabs;
                     ?>
                     <div id="fp_googleMapContainer" class="<?php echo $sidebarClass; ?>"
                          style="<?php echo $containerStyle; ?>">
-                        <?php if ($legendposition == "above" || $legendposition == "left") { ?>
+                        <?php if ($legendposition == "above" || $legendposition == "left") : ?>
                             <div id="fp_googleMapSidebar" style="<?php echo $sidebarStyle; ?>">
                                 <?php echo $this->loadTemplate('legend_' . $legendposition); ?>
                             </div>
-                        <?php } ?>
+                        <?php endif; ?>
+
                         <div id="fp_googleMap" style="<?php echo $mapStyle; ?>"></div>
-                        <?php if ($showlisttab) { ?>
+
+                        <?php if ($showlisttab) : ?>
                             <div id="fp_locationlist_container">
                                 <div id="fp_locationlist" class="" style="<?php echo $mapStyle; ?>">
                                     <div class="fp_ll_holder"></div>
                                 </div>
                             </div>
-                        <?php } ?>
-                        <?php if ($legendposition == "below" || $legendposition == "right") { ?>
+                        <?php endif;
+
+                        if ($legendposition == "below" || $legendposition == "right") : ?>
                             <div id="fp_googleMapSidebar" style="<?php echo $sidebarStyle; ?>">
                                 <?php echo $this->loadTemplate('legend_' . $legendposition); ?>
                             </div>
-                        <?php } ?>
+                        <?php endif; ?>
                     </div>
+
                     <?php
                     if ($customTabs || $showlisttab) :
                         echo '</div>';
@@ -167,15 +164,15 @@ $customTabs = $this->item->tabsdata->tabs;
                                 <div id="tabs1-<?php echo $key; ?>" class="fp-custom-tab tab-pane">
                                     <?php echo $tab->content; ?>
                                 </div>
-                                <?php
-                            endforeach;
+                            <?php endforeach;
                         endif;
                     endif;
                     ?>
                 </div>
             </div>
+
             <?php
-            if (JFactory::getApplication()->input->getBool("debug")) :
+            if ($this->app->input->getBool("debug")) :
                 echo sprintf(
                     '<textarea style="width:100%;height:500px;"><pre>%s</pre></textarea>',
                     print_r($this->item, 1)
@@ -184,6 +181,5 @@ $customTabs = $this->item->tabsdata->tabs;
             ?>
         </div>
     </div>
-
 <?php
 echo $this->loadTemplate('mapjs');
