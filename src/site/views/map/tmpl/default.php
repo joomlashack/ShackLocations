@@ -68,31 +68,23 @@ if (!empty($mapsizey)) {
     $containerStyle .= "min-height:" . $mapsizey . "; ";
 }
 
-$pageClass  = $this->getPageClass('fp-map-view legend_' . $legendposition);
-$customTabs = $this->item->tabsdata->tabs;
+$pageHeading = $this->getPageHeading($this->item->title);
+$pageClass   = $this->getPageClass('fp-map-view legend_' . $legendposition);
+$customTabs  = $this->item->tabsdata->tabs;
 
 ?>
     <div id="focalpoint" class="<?php echo $pageClass; ?>">
-        <?php
-        if (isset($this->item->page_title)) :
-            ?>
-            <h1><?php echo $this->item->page_title; ?></h1>
-            <h2><?php echo $this->item->title; ?></h2>
-        <?php
-        else :
-            ?>
-            <h1><?php echo $this->item->title; ?></h1>
-        <?php
-        endif;
+        <?php if ($pageHeading) : ?>
+            <h1><?php echo $pageHeading; ?></h1>
+        <?php endif;
 
         if ($this->item->text) :
             ?>
             <div class="fp_mapintro clearfix">
                 <?php echo $this->item->text; ?>
             </div>
-        <?php
-        endif;
-        ?>
+        <?php endif; ?>
+        
         <div id="fp_main" class="clearfix">
             <?php if ($customTabs || $showlisttab) : ?>
             <div id="tab-container" class="tab-container">
