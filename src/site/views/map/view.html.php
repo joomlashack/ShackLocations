@@ -26,14 +26,9 @@ use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-jimport('joomla.application.component.view');
-
-/**
- * View to edit
- */
-class FocalpointViewMap extends JViewLegacy
+class FocalpointViewMap extends FocalpointViewSite
 {
     /**
      * @var CMSObject

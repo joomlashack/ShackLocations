@@ -28,7 +28,7 @@ use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die;
 
-class FocalpointViewLocation extends JViewLegacy
+class FocalpointViewLocation extends FocalpointViewSite
 {
     /**
      * @var CMSObject
