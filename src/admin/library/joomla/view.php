@@ -86,4 +86,16 @@ class FocalpointView extends JViewLegacy
 
         return $showHeading ? $pageHeading : null;
     }
+
+    /**
+     * @param string $base
+     *
+     * @return string
+     */
+    protected function getPageClass($base = '')
+    {
+        $suffix = (string)$this->params->get('pageclass_sfx');
+
+        return trim($base . ' ' . $suffix);
+    }
 }

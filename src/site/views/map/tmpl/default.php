@@ -72,11 +72,11 @@ if (!empty($mapsizey)) {
     $containerStyle .= "min-height:" . $mapsizey . "; ";
 }
 
-$pageclass_sfx = $this->item->params->get('pageclass_sfx');
+$pageClass = $this->getPageClass('fp-map-view legend_' . $legendposition);
 $customTabs = $this->item->tabsdata->tabs;
 
 ?>
-    <div id="focalpoint" class="fp-map-view <?php echo "legend_" . $legendposition . " " . $pageclass_sfx; ?>">
+    <div id="focalpoint" class="<?php echo $pageClass; ?>">
         <?php
         if (isset($this->item->page_title)) :
             ?>
