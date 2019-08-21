@@ -109,7 +109,10 @@ class FocalpointViewMap extends FocalpointViewSite
         }
 
         // Setup metadata
-        $this->prepareDocument();
+        $this->item->page_title = $this->getPageHeading();
+
+        $this->setDocumentTitle($this->item->title);
+        $this->setDocumentMetadata($this->item->metadata);
 
         // Scan for custom field tags in the description and replace accordingly.
         foreach ($this->item->markerdata as &$markerdata) {
@@ -146,60 +149,6 @@ class FocalpointViewMap extends FocalpointViewSite
 
         // Load FocalPoint Plugins. Trigger onAfterRenderMap
         JFactory::getApplication()->triggerEvent('onAfterRenderMap', array(&$this->item));
-    }
-
-    /**
-     * Prepares the document by setting up page titles and metadata.
-     *
-     * @return void
-     * @throws Exception
-     */
-    protected function prepareDocument()
-    {
-        $app   = JFactory::getApplication();
-        $menus = $app->getMenu();
-
-        $this->item->page_title = $this->getPageHeading();
-
-        $this->setDocumentTitle($this->item->title);
-
-        $articlemeta = ($this->item->metadata->get('metadesc'));
-        if ($articlemeta) {
-            $this->document->setDescription($this->item->metadata->get('metadesc'));
-
-        } elseif ($menu) {
-            if ($menu->params->get('menu-meta_description')) {
-                $this->document->setDescription($this->params->get('menu-meta_description'));
-            }
-        }
-
-        $articlekeywords = ($this->item->metadata->get('metakey'));
-        if ($articlekeywords) {
-            $this->document->setMetadata('keywords', $this->item->metadata->get('metakey'));
-
-        } elseif ($menu) {
-            if ($menu->params->get('menu-meta_keywords')) {
-                $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-            }
-        }
-
-        $articlerobots = ($this->item->metadata->get('robots'));
-        if ($articlerobots) {
-            $this->document->setMetadata('robots', $this->item->metadata->get('robots'));
-
-        } elseif ($this->params->get('robots')) {
-            $this->document->setMetadata('robots', $this->params->get('robots'));
-        }
-
-        $articlerights = ($this->item->metadata->get('rights'));
-        if ($articlerights) {
-            $this->document->setMetadata('rights', $this->item->metadata->get('rights'));
-        }
-
-        $articleauthor = ($this->item->metadata->get('author'));
-        if ($articleauthor) {
-            $this->document->setMetadata('author', $this->item->metadata->get('author'));
-        }
     }
 
     /**

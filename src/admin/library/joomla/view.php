@@ -98,4 +98,41 @@ class FocalpointView extends JViewLegacy
 
         return trim($base . ' ' . $suffix);
     }
+
+    /**
+     * @param mixed $defaults
+     *
+     * @return void
+     */
+    protected function setDocumentMetadata($defaults)
+    {
+        if (!$defaults instanceof Registry) {
+            $defaults = new Registry($defaults);
+        }
+
+        $description = $this->params->get('menu-meta_description') ?: $defaults->get('metadesc');
+        if ($description) {
+            $this->document->setDescription($description);
+        }
+
+        $keywords = $this->params->get('menu-meta_keywords') ?: $defaults->get('metakey');
+        if ($keywords) {
+            $this->document->setMetadata('keywords', $keywords);
+        }
+
+        $robots = $this->params->get('robots') ?: $defaults->get('robots');
+        if ($robots) {
+            $this->document->setMetadata('robots', $robots);
+        }
+
+        $rights = $defaults->get('rights');
+        if ($rights) {
+            $this->document->setMetadata('rights', $rights);
+        }
+
+        $author = $defaults->get('author');
+        if ($author) {
+            $this->document->setMetadata('author', $author);
+        }
+    }
 }
