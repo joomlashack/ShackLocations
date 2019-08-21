@@ -41,11 +41,6 @@ class FocalpointViewLocation extends FocalpointViewSite
     protected $item = null;
 
     /**
-     * @var Registry
-     */
-    protected $params = null;
-
-    /**
      * @var object
      */
     protected $outputfield;
@@ -58,9 +53,6 @@ class FocalpointViewLocation extends FocalpointViewSite
      */
     public function display($tpl = null)
     {
-        /** @var SiteApplication $app */
-        $app = JFactory::getApplication();
-
         /** @var FocalpointModelLocation $model */
         $model = $this->getModel();
 
@@ -68,7 +60,6 @@ class FocalpointViewLocation extends FocalpointViewSite
 
         $this->state  = $model->getState();
         $this->item   = $model->getData();
-        $this->params = $app->getParams('com_focalpoint');
 
         // Check for errors.
         if ($errors = $model->getErrors()) {
@@ -85,14 +76,8 @@ class FocalpointViewLocation extends FocalpointViewSite
         JPluginHelper::importPlugin('focalpoint');
         JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
 
-        $this->item->metadata = new Registry($this->item->metadata);
-
-        $params             = new Registry($this->item->params);
-        $this->item->params = clone $this->params;
-        $this->item->params->merge($params);
-
-        $this->prepareDocument();
-
+        $this->params->merge($this->item->params);
+        
         JPluginHelper::importPlugin('content');
         $this->item->text = $this->item->description;
         JFactory::getApplication()->triggerEvent(
@@ -117,9 +102,13 @@ class FocalpointViewLocation extends FocalpointViewSite
             )
         );
         $this->item->fulldescription = $this->item->text;
+        unset($this->item->text);
 
-        $this->item->description     = $this->replace_custom_field_tags($this->item->description);
-        $this->item->fulldescription = $this->replace_custom_field_tags($this->item->fulldescription);
+        $this->item->description     = $this->replaceCustomFieldTags($this->item->description);
+        $this->item->fulldescription = $this->replaceCustomFieldTags($this->item->fulldescription);
+
+        $this->setDocumentTitle($this->item->title);
+        $this->setDocumentMetadata($this->item->metadata);
 
         parent::display($tpl);
     }
@@ -132,7 +121,7 @@ class FocalpointViewLocation extends FocalpointViewSite
      * @return string
      * @throws Exception
      */
-    public function replace_custom_field_tags($text)
+    protected function replaceCustomFieldTags($text)
     {
         $regex = '/{(.*?)}/i';
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
@@ -159,71 +148,6 @@ class FocalpointViewLocation extends FocalpointViewSite
         }
 
         return $text;
-    }
-
-    /**
-     * Prepares the document by setting up page titles and metadata.
-     *
-     * @return void
-     * @throws Exception
-     */
-    protected function prepareDocument()
-    {
-        $app   = JFactory::getApplication();
-        $menus = $app->getMenu();
-        $menu  = $menus->getActive();
-
-        // Set page title
-        if ($menu) {
-            if ($menu->params->get('show_page_heading') && $menu->params->get('page_heading')) {
-                $this->item->page_title = $menu->params->get('page_heading');
-            }
-        }
-
-        $this->setDocumentTitle($this->item->title);
-
-        // Set the page meta description. Article Meta over rides menu meta.
-        $articlemeta = ($this->item->metadata->get('metadesc'));
-        if ($articlemeta) {
-            $this->document->setDescription($this->item->metadata->get('metadesc'));
-
-        } elseif ($menu) {
-            if ($menu->params->get('menu-meta_description')) {
-                $this->document->setDescription($this->params->get('menu-meta_description'));
-            }
-        }
-
-        // Set the page keywords
-        $articlekeywords = ($this->item->metadata->get('metakey'));
-        if ($articlekeywords) {
-            $this->document->setMetadata('keywords', $this->item->metadata->get('metakey'));
-
-        } elseif ($menu) {
-            if ($menu->params->get('menu-meta_keywords')) {
-                $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-            }
-        }
-
-        // Set the robots declarations
-        $articlerobots = ($this->item->metadata->get('robots'));
-        if ($articlerobots) {
-            $this->document->setMetadata('robots', $this->item->metadata->get('robots'));
-
-        } elseif ($this->params->get('robots')) {
-            $this->document->setMetadata('robots', $this->params->get('robots'));
-        }
-
-        // Set rights declaration
-        $articlerights = ($this->item->metadata->get('rights'));
-        if ($articlerights) {
-            $this->document->setMetadata('rights', $this->item->metadata->get('rights'));
-        }
-
-        // Set the author declaration
-        $articleauthor = ($this->item->metadata->get('author'));
-        if ($articleauthor) {
-            $this->document->setMetadata('author', $this->item->metadata->get('author'));
-        }
     }
 
     /**
