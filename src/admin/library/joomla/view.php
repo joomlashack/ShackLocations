@@ -22,19 +22,21 @@
  */
 
 use Joomla\CMS\Application\CMSApplication;
-use Joomla\CMS\Menu\MenuItem;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
 class FocalpointView extends JViewLegacy
 {
-    /** @var CMSApplication */
+    /**
+     * @var CMSApplication
+     */
     protected $app = null;
 
     /**
-     * @var MenuItem
+     * @var Registry
      */
-    protected $activeMenu = null;
+    protected $params = null;
 
     /**
      * FocalpointView constructor.
@@ -49,8 +51,11 @@ class FocalpointView extends JViewLegacy
 
         $this->app = JFactory::getApplication();
 
-        if ($menu = $this->app->getMenu()) {
-            $this->activeMenu = $menu->getActive();
+        if (method_exists($this->app, 'getParams')) {
+            $this->params = $this->app->getParams('com_focalpoint');
+
+        } else {
+            $this->params = JComponentHelper::getParams('com_focalpoint');
         }
     }
 
@@ -63,7 +68,7 @@ class FocalpointView extends JViewLegacy
     public function setDocumentTitle($default = null)
     {
         if (method_exists(parent::class, 'setDocumentTitle')) {
-            $title = $this->activeMenu ? $this->activeMenu->getParams()->get('page_title') : null;
+            $title = $this->params->get('page_title');
 
             parent::setDocumentTitle($title ?: $default);
         }

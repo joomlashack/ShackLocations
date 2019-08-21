@@ -64,7 +64,6 @@ class FocalpointViewMap extends FocalpointViewSite
         /** @var FocalpointModelMap $model */
         $model = $this->getModel();
 
-        $this->params = $app->getParams('com_focalpoint');
         $this->state  = $model->getState();
         $this->item   = $model->getData();
 
