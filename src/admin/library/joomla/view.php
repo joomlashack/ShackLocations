@@ -73,4 +73,17 @@ class FocalpointView extends JViewLegacy
             parent::setDocumentTitle($title ?: $default);
         }
     }
+
+    /**
+     * @param string $default
+     *
+     * @return string
+     */
+    protected function getPageHeading($default = null)
+    {
+        $pageHeading = $this->params->get('page_heading') ?: $default;
+        $showHeading = $this->params->get('show_page_heading');
+
+        return $showHeading ? $pageHeading : null;
+    }
 }

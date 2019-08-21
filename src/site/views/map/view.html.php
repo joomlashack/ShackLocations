@@ -161,14 +161,8 @@ class FocalpointViewMap extends FocalpointViewSite
     {
         $app   = JFactory::getApplication();
         $menus = $app->getMenu();
-        $title = null;
 
-        $menu = $menus->getActive();
-        if ($menu) {
-            if ($menu->params->get('show_page_heading') && $menu->params->get('page_heading')) {
-                $this->item->page_title = $menu->params->get('page_heading');
-            }
-        }
+        $this->item->page_title = $this->getPageHeading();
 
         $this->setDocumentTitle($this->item->title);
 
