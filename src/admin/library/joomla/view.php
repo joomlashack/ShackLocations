@@ -62,8 +62,10 @@ class FocalpointView extends JViewLegacy
      */
     public function setDocumentTitle($default = null)
     {
-        $title = $this->activeMenu ? $this->activeMenu->getParams()->get('page_title') : null;
+        if (method_exists(parent::class, 'setDocumentTitle')) {
+            $title = $this->activeMenu ? $this->activeMenu->getParams()->get('page_title') : null;
 
-        parent::setDocumentTitle($title ?: $default);
+            parent::setDocumentTitle($title ?: $default);
+        }
     }
 }
