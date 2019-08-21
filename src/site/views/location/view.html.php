@@ -180,7 +180,7 @@ class FocalpointViewLocation extends FocalpointViewSite
             }
         }
 
-        $this->setBrowserTitle($this->item->title);
+        $this->setDocumentTitle($this->item->title);
 
         // Set the page meta description. Article Meta over rides menu meta.
         $articlemeta = ($this->item->metadata->get('metadesc'));

@@ -171,7 +171,7 @@ class FocalpointViewMap extends FocalpointViewSite
             }
         }
 
-        $this->setBrowserTitle($this->item->title);
+        $this->setDocumentTitle($this->item->title);
 
         $articlemeta = ($this->item->metadata->get('metadesc'));
         if ($articlemeta) {
