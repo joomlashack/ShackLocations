@@ -271,7 +271,6 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single"
-                   default="below"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_DESC">
                 <option value="above">COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_OPT_ABOVE</option>
