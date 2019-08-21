@@ -25,10 +25,10 @@
 defined('_JEXEC') or die();
 
 // Location List tab parameters
-$showlisttab  = $this->item->params->get('locationlist');
-$listtabfirst = $this->item->params->get('showlistfirst');
+$showlisttab  = $this->params->get('locationlist');
+$listtabfirst = $this->params->get('showlistfirst');
 
-if ($this->item->params->get('loadBootstrap')) {
+if ($this->params->get('loadBootstrap')) {
     JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
     JHtml::_('bootstrap.framework');
 }
@@ -39,18 +39,18 @@ $mapStyle       = "";
 $sidebarStyle   = "";
 $mapsizexouter  = "auto";
 $mapsizey       = "0";
-$legendposition = $this->item->params->get('legendposition');
+$legendposition = $this->params->get('legendposition');
 $sidebarClass   = "fp_vert fp_" . $legendposition;
-if ($this->item->params->get('mapsizecontrol') == 1) {
-    $mapsizexouter    = $this->item->params->get('mapsizex');
-    $mapsizey         = $this->item->params->get('mapsizey');
+if ($this->params->get('mapsizecontrol') == 1) {
+    $mapsizexouter    = $this->params->get('mapsizex');
+    $mapsizey         = $this->params->get('mapsizey');
     $mapsizexouterfmt = str_replace(str_split(' 0123456789'), '', $mapsizexouter);
     $mapsizexouteramt = str_replace(str_split(' px%'), '', $mapsizexouter);
     $mapsizex         = "auto";
     $mapStyle         .= "min-height: " . $mapsizey . "; ";
 
     if ($legendposition == "left" || $legendposition == "right") {
-        $sidebarx     = str_replace(str_split(' px%'), '', $this->item->params->get('sidebarx'));
+        $sidebarx     = str_replace(str_split(' px%'), '', $this->params->get('sidebarx'));
         $mapsizex     = $mapsizexouteramt * (1 - ($sidebarx / 100)) . $mapsizexouterfmt;
         $mapStyle     .= "width: " . $mapsizex . "; ";
         $sidebarStyle .= "width: " . $sidebarx . "%; ";

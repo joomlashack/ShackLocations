@@ -76,6 +76,8 @@ class FocalpointViewMap extends FocalpointViewSite
         $offset = $this->state->get('list.offset');
         JPluginHelper::importPlugin('content');
 
+        $this->params->merge($this->item->params);
+        
         JFactory::getApplication()->triggerEvent(
             'onContentPrepare',
             array(
