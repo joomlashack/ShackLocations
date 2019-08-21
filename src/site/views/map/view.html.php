@@ -77,7 +77,8 @@ class FocalpointViewMap extends FocalpointViewSite
         JPluginHelper::importPlugin('content');
 
         $this->params->merge($this->item->params);
-        
+
+        JPluginHelper::importPlugin('content');
         JFactory::getApplication()->triggerEvent(
             'onContentPrepare',
             array(
@@ -109,9 +110,6 @@ class FocalpointViewMap extends FocalpointViewSite
             $tab->content = $tab->text;
             unset($tab->text);
         }
-
-        // Setup metadata
-        $this->item->page_title = $this->getPageHeading();
 
         $this->setDocumentTitle($this->item->title);
         $this->setDocumentMetadata($this->item->metadata);
