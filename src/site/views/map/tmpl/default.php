@@ -22,8 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
-$params = JComponentHelper::getParams('com_focalpoint');
+defined('_JEXEC') or die();
 
 // Location List tab parameters
 $showlisttab  = $this->item->params->get('locationlist');

@@ -58,9 +58,6 @@ class FocalpointViewMap extends FocalpointViewSite
      */
     public function display($tpl = null)
     {
-        /** @var SiteApplication $app */
-        $app = JFactory::getApplication();
-
         /** @var FocalpointModelMap $model */
         $model = $this->getModel();
 
