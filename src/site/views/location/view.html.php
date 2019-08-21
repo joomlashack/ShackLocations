@@ -178,28 +178,9 @@ class FocalpointViewLocation extends FocalpointViewSite
             if ($menu->params->get('show_page_heading') && $menu->params->get('page_heading')) {
                 $this->item->page_title = $menu->params->get('page_heading');
             }
-
-            if ($menu->params->get('page_title')) {
-                $title = $menu->params->get('page_title');
-
-            } else {
-                $title = $this->item->title;
-            }
-
-        } else {
-            $title = $this->item->title;
         }
 
-        if (empty($title)) {
-            $title = $app->get('sitename');
-
-        } elseif ($app->get('sitename_pagetitles', 0) == 1) {
-            $title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
-
-        } elseif ($app->get('sitename_pagetitles', 0) == 2) {
-            $title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
-        }
-        $this->document->setTitle($title);
+        $this->setBrowserTitle($this->item->title);
 
         // Set the page meta description. Article Meta over rides menu meta.
         $articlemeta = ($this->item->metadata->get('metadesc'));

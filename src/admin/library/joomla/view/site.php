@@ -27,4 +27,29 @@ defined('_JEXEC') or die();
 
 class FocalpointViewSite extends FocalpointView
 {
+    /**
+     * @param string` $default
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function setBrowserTitle($default = null)
+    {
+        $params = $this->activeMenu ? $this->activeMenu->getParams() : new Registry();
+
+        $title     = $params->get('page_title') ?: $default;
+        $siteTitle = $this->app->get('sitename');
+
+        if ($title && $title != $siteTitle) {
+            $titleType = $this->app->get('sitename_pagetitles', 0);
+            if ($titleType == 1) {
+                $title = JText::sprintf('JPAGETITLE', $siteTitle, $title);
+
+            } elseif ($titleType == 2) {
+                $title = JText::sprintf('JPAGETITLE', $title, $siteTitle);
+            }
+        }
+
+        $this->document->setTitle($title);
+    }
 }
