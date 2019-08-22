@@ -77,7 +77,7 @@ class FocalpointViewLocation extends FocalpointViewSite
         JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
 
         $this->params->merge($this->item->params);
-        
+
         JPluginHelper::importPlugin('content');
         $this->item->text = $this->item->description;
         JFactory::getApplication()->triggerEvent(
@@ -144,7 +144,6 @@ class FocalpointViewLocation extends FocalpointViewSite
                     }
                 }
             }
-
         }
 
         return $text;
