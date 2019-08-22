@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
@@ -75,6 +76,11 @@ class FocalpointModelLocation extends JModelForm
                 $this->item->marker       = $this->getMarker($this->item);
                 $this->item->address      = str_replace('||', ' <br>', $this->item->address);
                 $this->item->backlink     = $this->getBackLink($this->item->map_id);
+                $this->item->metadata     = new Registry($this->item->metadata);
+
+                $params = JComponentHelper::getParams('com_focalpoint');
+                $params->merge(new Registry($this->item->params));
+                $this->item->params = $params;
 
             } elseif ($error = $table->getError()) {
                 $this->setError($error);
