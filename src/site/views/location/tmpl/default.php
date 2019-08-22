@@ -83,8 +83,8 @@ $pageClass   = $this->getPageClass('fp-location-view');
                         </button>
                     </form>
                 </div>
-                <?php
-            endif;
+
+            <?php endif;
 
             if (!$this->item->params->get('hideintrotext')) :
                 echo $this->item->description;
@@ -92,8 +92,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
 
             echo $this->item->fulldescription;
 
-            if ($this->item->customfields) :
-                ?>
+            if ($this->item->customfields) : ?>
                 <div class="fp_customfields fp_content">
                     <?php
                     foreach ($this->item->customfields as $key => $customfield) :
@@ -101,25 +100,18 @@ $pageClass   = $this->getPageClass('fp-location-view');
                     endforeach;
                     ?>
                 </div>
-                <?php
-            endif;
-            ?>
+            <?php endif; ?>
         </div>
 
         <div class="fp_right_column span4">
-            <?php
-            if ($this->item->address || $this->item->phone) :
-                ?>
+            <?php if ($this->item->address || $this->item->phone) : ?>
                 <div class="row-fluid fp_address">
-                    <?php
-                    if ($this->item->address) :
-                        ?>
+                    <?php if ($this->item->address) : ?>
                         <div class="span12">
                             <h3><?php echo JText::_('COM_FOCALPOINT_ADDRESS'); ?>:</h3>
                             <p><?php echo $this->item->address; ?></p>
                         </div>
-                        <?php
-                    endif;
+                    <?php endif;
 
                     if ($this->item->phone) :
                         ?>
@@ -127,22 +119,20 @@ $pageClass   = $this->getPageClass('fp-location-view');
                             <h3><?php echo JText::_('COM_FOCALPOINT_PHONE'); ?>:</h3>
                             <p><?php echo $this->item->phone; ?></p>
                         </div>
-                        <?php
-                    endif; ?>
+                    <?php endif; ?>
+
                 </div>
-                <?php
-            endif;
+            <?php endif;
 
             if ($this->item->image) :
                 ?>
                 <div class="fp_article_image">
                     <p><img src="<?php echo $this->item->image; ?>" title=""/></p>
                 </div>
-                <?php
-            endif;
-            ?>
+            <?php endif; ?>
         </div>
     </div>
+
     <div class="row-fluid">
         <?php
         if ($backLink) :
@@ -150,13 +140,12 @@ $pageClass   = $this->getPageClass('fp-location-view');
         endif;
         ?>
     </div>
+
     <?php
     echo $this->loadTemplate('mapjs');
 
-    if (JFactory::getApplication()->input->getBool("debug")) :
-        echo "<pre>";
-        print_r($this->item);
-        echo "</pre>";
+    if ($this->app->input->getBool('debug')) :
+        echo '<pre>' . print_r($this->item, 1) . '</pre>';
     endif;
     ?>
 </div>
