@@ -105,6 +105,8 @@
             <file>administrator/components/com_focalpoint/models/fields/createdby.php</file>
             <file>administrator/components/com_focalpoint/models/fields/custom_field.php</file>
             <file>administrator/components/com_focalpoint/models/fields/othertypeslist.php</file>
+            <file>plugins/focalpoint/mapstyles/assets/styles.json</file>
+            <file>plugins/focalpoint/mapstyles/fields/snazzyselect.php</file>
             <file>administrator/components/com_focalpoint/models/fields/statusalt.php</file>
             <file>administrator/components/com_focalpoint/models/fields/timecreated.php</file>
             <file>administrator/components/com_focalpoint/models/fields/timeupdated.php</file>
