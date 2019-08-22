@@ -25,6 +25,13 @@ defined('_JEXEC') or die();
 
 if (!defined('SHACKLOC_LOADED')) {
     define('SHACKLOC_LOADED', true);
+    define('SHACKLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
+    define('SHACKLOC_SITE', JPATH_SITE . '/components/com_focalpoint');
+    define('SHACKLOC_LIBRARY', SHACKLOC_ADMIN . '/library');
+
+    // Setup autoload libraries
+    require_once SHACKLOC_LIBRARY . '/AutoLoader.php';
+    AutoLoader::registerCamelBase('Focalpoint', SHACKLOC_LIBRARY . '/joomla');
 
     // Application specific loads
     switch (JFactory::getApplication()->getName()) {

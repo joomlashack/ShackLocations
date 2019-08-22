@@ -26,14 +26,9 @@ use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\Registry\Registry;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-jimport('joomla.application.component.view');
-
-/**
- * View to edit
- */
-class FocalpointViewMap extends JViewLegacy
+class FocalpointViewMap extends FocalpointViewSite
 {
     /**
      * @var CMSObject
@@ -63,13 +58,9 @@ class FocalpointViewMap extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        /** @var SiteApplication $app */
-        $app = JFactory::getApplication();
-
         /** @var FocalpointModelMap $model */
         $model = $this->getModel();
 
-        $this->params = $app->getParams('com_focalpoint');
         $this->state  = $model->getState();
         $this->item   = $model->getData();
 
@@ -85,6 +76,9 @@ class FocalpointViewMap extends JViewLegacy
         $offset = $this->state->get('list.offset');
         JPluginHelper::importPlugin('content');
 
+        $this->params->merge($this->item->params);
+
+        JPluginHelper::importPlugin('content');
         JFactory::getApplication()->triggerEvent(
             'onContentPrepare',
             array(
@@ -117,8 +111,8 @@ class FocalpointViewMap extends JViewLegacy
             unset($tab->text);
         }
 
-        // Setup metadata
-        $this->prepareDocument();
+        $this->setDocumentTitle($this->item->title);
+        $this->setDocumentMetadata($this->item->metadata);
 
         // Scan for custom field tags in the description and replace accordingly.
         foreach ($this->item->markerdata as &$markerdata) {
@@ -155,85 +149,6 @@ class FocalpointViewMap extends JViewLegacy
 
         // Load FocalPoint Plugins. Trigger onAfterRenderMap
         JFactory::getApplication()->triggerEvent('onAfterRenderMap', array(&$this->item));
-    }
-
-    /**
-     * Prepares the document by setting up page titles and metadata.
-     *
-     * @return void
-     * @throws Exception
-     */
-    protected function prepareDocument()
-    {
-        $app   = JFactory::getApplication();
-        $menus = $app->getMenu();
-        $title = null;
-
-        $menu = $menus->getActive();
-        if ($menu) {
-            if ($menu->params->get('show_page_heading') && $menu->params->get('page_heading')) {
-                $this->item->page_title = $menu->params->get('page_heading');
-            }
-
-            if ($menu->params->get('page_title')) {
-                $title = $menu->params->get('page_title');
-
-            } else {
-                $title = $this->item->title;
-            }
-
-        } else {
-            $title = $this->item->title;
-        }
-
-        if (empty($title)) {
-            $title = $app->get('sitename');
-
-        } elseif ($app->get('sitename_pagetitles', 0) == 1) {
-            $title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
-
-        } elseif ($app->get('sitename_pagetitles', 0) == 2) {
-            $title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
-        }
-        $this->document->setTitle($title);
-
-        $articlemeta = ($this->item->metadata->get('metadesc'));
-        if ($articlemeta) {
-            $this->document->setDescription($this->item->metadata->get('metadesc'));
-
-        } elseif ($menu) {
-            if ($menu->params->get('menu-meta_description')) {
-                $this->document->setDescription($this->params->get('menu-meta_description'));
-            }
-        }
-
-        $articlekeywords = ($this->item->metadata->get('metakey'));
-        if ($articlekeywords) {
-            $this->document->setMetadata('keywords', $this->item->metadata->get('metakey'));
-
-        } elseif ($menu) {
-            if ($menu->params->get('menu-meta_keywords')) {
-                $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-            }
-        }
-
-        $articlerobots = ($this->item->metadata->get('robots'));
-        if ($articlerobots) {
-            $this->document->setMetadata('robots', $this->item->metadata->get('robots'));
-
-        } elseif ($this->params->get('robots')) {
-            $this->document->setMetadata('robots', $this->params->get('robots'));
-        }
-
-        $articlerights = ($this->item->metadata->get('rights'));
-        if ($articlerights) {
-            $this->document->setMetadata('rights', $this->item->metadata->get('rights'));
-        }
-
-        $articleauthor = ($this->item->metadata->get('author'));
-        if ($articleauthor) {
-            $this->document->setMetadata('author', $this->item->metadata->get('author'));
-        }
     }
 
     /**

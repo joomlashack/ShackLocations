@@ -24,10 +24,6 @@
 
 defined('_JEXEC') or die;
 
-//Load admin language file
-$lang = JFactory::getLanguage();
-$lang->load('com_focalpoint', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
-
 if ($this->item->params->get('loadBootstrap')) :
     JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
     JHtml::_('bootstrap.framework');
@@ -45,22 +41,19 @@ else :
     );
 endif;
 
+$pageHeading = $this->getPageHeading();
+$pageClass   = $this->getPageClass('fp-location-view');
+
 ?>
-<div id="focalpoint" class="fp-location-view">
+<div id="focalpoint" class="<?php echo $pageClass; ?>">
     <div class="row-fluid">
-        <?php
-        if (empty($this->item->page_title)) :
-            $itemTitleTag = 'h1';
-        else :
-            $itemTitleTag = 'h2';
-            ?>
-            <h1><?php echo $this->item->page_title; ?></h1>
-            <?php
-        endif;
+        <?php if ($pageHeading) : ?>
+            <h1><?php echo $pageHeading; ?></h1>
+        <?php endif;
 
         echo sprintf(
             '<%1$s%2$s>%3$s</%1$s>',
-            $itemTitleTag,
+            $pageHeading ? 'h2' : 'h1',
             $backLink ? ' class="backlink"' : '',
             trim($backLink . ' ' . $this->item->title)
         );
@@ -90,8 +83,8 @@ endif;
                         </button>
                     </form>
                 </div>
-                <?php
-            endif;
+
+            <?php endif;
 
             if (!$this->item->params->get('hideintrotext')) :
                 echo $this->item->description;
@@ -99,8 +92,7 @@ endif;
 
             echo $this->item->fulldescription;
 
-            if ($this->item->customfields) :
-                ?>
+            if ($this->item->customfields) : ?>
                 <div class="fp_customfields fp_content">
                     <?php
                     foreach ($this->item->customfields as $key => $customfield) :
@@ -108,27 +100,19 @@ endif;
                     endforeach;
                     ?>
                 </div>
-                <?php
-            endif;
-            ?>
+            <?php endif; ?>
         </div>
 
         <div class="fp_right_column span4">
             <?php echo JHtml::_('content.prepare', '{loadposition shacklocations-above-info}'); ?>
-
-            <?php
-            if ($this->item->address || $this->item->phone) :
-                ?>
+            <?php if ($this->item->address || $this->item->phone) : ?>
                 <div class="row-fluid fp_address">
-                    <?php
-                    if ($this->item->address) :
-                        ?>
+                    <?php if ($this->item->address) : ?>
                         <div class="span12">
                             <h3><?php echo JText::_('COM_FOCALPOINT_ADDRESS'); ?>:</h3>
                             <p><?php echo $this->item->address; ?></p>
                         </div>
-                        <?php
-                    endif;
+                    <?php endif;
 
                     if ($this->item->phone) :
                         ?>
@@ -136,11 +120,10 @@ endif;
                             <h3><?php echo JText::_('COM_FOCALPOINT_PHONE'); ?>:</h3>
                             <p><?php echo $this->item->phone; ?></p>
                         </div>
-                        <?php
-                    endif; ?>
+                    <?php endif; ?>
+
                 </div>
-                <?php
-            endif;
+            <?php endif;
 
             echo JHtml::_('content.prepare', '{loadposition shacklocations-below-info}');
 
@@ -149,13 +132,13 @@ endif;
                 <div class="fp_article_image">
                     <p><img src="<?php echo $this->item->image; ?>" title=""/></p>
                 </div>
-                <?php
-            endif;
+            <?php endif;
 
             echo JHtml::_('content.prepare', '{loadposition shacklocations-below-image}');
             ?>
         </div>
     </div>
+
     <div class="row-fluid">
         <?php
         if ($backLink) :
@@ -163,15 +146,14 @@ endif;
         endif;
         ?>
     </div>
+
     <?php
     echo $this->loadTemplate('mapjs');
 
     echo JHtml::_('content.prepare', '{loadposition shacklocations-below-map}');
 
-    if (JFactory::getApplication()->input->getBool("debug")) :
-        echo "<pre>";
-        print_r($this->item);
-        echo "</pre>";
+    if ($this->app->input->getBool('debug')) :
+        echo '<pre>' . print_r($this->item, 1) . '</pre>';
     endif;
     ?>
 </div>
