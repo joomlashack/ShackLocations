@@ -104,7 +104,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
         </div>
 
         <div class="fp_right_column span4">
-            <?php echo JHtml::_('content.prepare', '{loadposition shacklocations-above-info}'); ?>
+            <?php echo $this->renderModule('shacklocations-above-info'); ?>
             <?php if ($this->item->address || $this->item->phone) : ?>
                 <div class="row-fluid fp_address">
                     <?php if ($this->item->address) : ?>
@@ -125,7 +125,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
                 </div>
             <?php endif;
 
-            echo JHtml::_('content.prepare', '{loadposition shacklocations-below-info}');
+            echo $this->renderModule('shacklocations-below-info');
 
             if ($this->item->image) :
                 ?>
@@ -134,7 +134,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
                 </div>
             <?php endif;
 
-            echo JHtml::_('content.prepare', '{loadposition shacklocations-below-image}');
+            echo $this->renderModule('shacklocations-below-image');
             ?>
         </div>
     </div>
@@ -150,7 +150,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
     <?php
     echo $this->loadTemplate('mapjs');
 
-    echo JHtml::_('content.prepare', '{loadposition shacklocations-below-map}');
+    echo $this->renderModule('shacklocations-below-map');
 
     if ($this->app->input->getBool('debug')) :
         echo '<pre>' . print_r($this->item, 1) . '</pre>';

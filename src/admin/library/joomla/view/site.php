@@ -34,4 +34,26 @@ class FocalpointViewSite extends FocalpointView
         $lang = JFactory::getLanguage();
         $lang->load('com_focalpoint', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
     }
+
+    /**
+     * Render the modules in a position
+     *
+     * @param string $position
+     * @param mixed  $attribs
+     *
+     * @return string
+     */
+    public static function renderModule($position, $attribs = array())
+    {
+        $results = JModuleHelper::getModules($position);
+        $content = '';
+
+        ob_start();
+        foreach ($results as $result) {
+            $content .= JModuleHelper::renderModule($result, $attribs);
+        }
+        ob_end_clean();
+
+        return $content;
+    }
 }
