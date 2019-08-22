@@ -67,12 +67,11 @@ class FocalpointRouter extends JComponentRouterBase
                 unset($query['id']);
 
                 if ($targetMenu = $this->findMenu($view, $id)) {
-                    $alias = $targetMenu->alias;
-                } else {
-                    $alias = $this->getAlias($view, $id);
-                }
+                    $query['Itemid'] = $targetMenu->id;
 
-                $segments[] = $alias;
+                } else {
+                    $segments[] = $this->getAlias($view, $id);
+                }
             }
         }
 
