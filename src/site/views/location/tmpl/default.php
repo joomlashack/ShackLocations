@@ -41,22 +41,19 @@ else :
     );
 endif;
 
+$pageHeading = $this->getPageHeading();
+$pageClass   = $this->getPageClass('fp-location-view');
+
 ?>
-<div id="focalpoint" class="fp-location-view">
+<div id="focalpoint" class="<?php echo $pageClass; ?>">
     <div class="row-fluid">
-        <?php
-        if (empty($this->item->page_title)) :
-            $itemTitleTag = 'h1';
-        else :
-            $itemTitleTag = 'h2';
-            ?>
-            <h1><?php echo $this->item->page_title; ?></h1>
-            <?php
-        endif;
+        <?php if ($pageHeading) : ?>
+            <h1><?php echo $pageHeading; ?></h1>
+        <?php endif;
 
         echo sprintf(
             '<%1$s%2$s>%3$s</%1$s>',
-            $itemTitleTag,
+            $pageHeading ? 'h2' : 'h1',
             $backLink ? ' class="backlink"' : '',
             trim($backLink . ' ' . $this->item->title)
         );
