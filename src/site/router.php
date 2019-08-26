@@ -57,22 +57,21 @@ class FocalpointRouter extends JComponentRouterBase
             $view = $query['view'];
             unset($query['view']);
 
-        } elseif ($menuItem) {
-            $view = $menuItem->query['view'];
+        } else {
+            $view = $menuItem ? $menuItem->query['view'] : null;
         }
 
-        if (!$menuItem || $view != $menuItem->query['view']) {
+        if ($view != $menuItem->query['view']) {
             if (!empty($query['id'])) {
                 $id = $query['id'];
                 unset($query['id']);
 
                 if ($targetMenu = $this->findMenu($view, $id)) {
-                    $alias = $targetMenu->alias;
-                } else {
-                    $alias = $this->getAlias($view, $id);
-                }
+                    $query['Itemid'] = $targetMenu->id;
 
-                $segments[] = $alias;
+                } else {
+                    $segments[] = $this->getAlias($view, $id);
+                }
             }
         }
 
@@ -97,9 +96,16 @@ class FocalpointRouter extends JComponentRouterBase
                 $db = JFactory::getDbo();
 
                 $sqlQuery = $db->getQuery(true)
-                    ->select('id')
+                    ->select('id, map_id')
                     ->from('#__focalpoint_locations')
                     ->where('alias = ' . $db->quote($locationAlias));
+
+                if (!empty($menuItem)
+                && $menuItem->query['option'] == 'com_focalpoint'
+                    && $menuItem->query['view'] == 'map'
+                ) {
+                    $sqlQuery->where('map_id = ' . (int)$menuItem->getParams()->get('item_id'));
+                }
 
                 if ($locationId = (int)$db->setQuery($sqlQuery)->loadResult()) {
                     $vars['view'] = 'location';
