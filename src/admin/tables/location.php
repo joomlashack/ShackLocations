@@ -36,7 +36,8 @@ class FocalpointTablelocation extends JTable
     );
 
     protected $_columnAlias = array(
-        'published' => 'state'
+        'published' => 'state',
+        'catid'     => 'type'
     );
 
     public function __construct(&$db)

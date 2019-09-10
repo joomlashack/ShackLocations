@@ -127,11 +127,34 @@ class FocalpointModellocation extends JModelAdmin
      * @param array $data
      *
      * @return bool
+     * @throws Exception
      */
     public function save($data)
     {
+        $app = JFactory::getApplication();
+
         if (empty($data['othertypes'])) {
             $data['othertypes'] = array();
+        }
+
+        if ($app->input->getCmd('task') == 'save2copy') {
+            $original = clone $this->getTable();
+            $original->load($app->input->getInt('id'));
+
+            if ($data['title'] == $original->title) {
+                list($title, $alias) = $this->generateNewTitle($data['type'], $data['alias'], $data['title']);
+
+                $data['title'] = $title;
+                $data['alias'] = $alias;
+
+            } else {
+                if ($data['alias'] == $original->alias) {
+                    $data['alias'] = '';
+                }
+            }
+
+            $data['state'] = 0;
+
         }
 
         if (parent::save($data)) {
