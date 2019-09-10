@@ -186,7 +186,7 @@ class FocalpointModellocation extends JModelAdmin
             ->execute();
 
         // normalize/filter selected ids between type and othertypes
-        $typeIds = array_merge(
+        $typeIds    = array_merge(
             array($data['type']),
             empty($data['othertypes']) ? array() : $data['othertypes']
         );
