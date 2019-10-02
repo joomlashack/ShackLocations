@@ -173,8 +173,8 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         $attributes = array(
             'name'        => $name,
             'type'        => $type,
-            'label'       => $label,
-            'description' => $description
+            'label'       => addslashes(htmlspecialchars($label)),
+            'description' => addslashes(htmlspecialchars($description))
         );
         if (!empty($options['attributes'])) {
             $attributes = array_merge($attributes, $options['attributes']);
