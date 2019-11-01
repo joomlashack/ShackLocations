@@ -52,4 +52,34 @@ class FocalpointTablelocationtype extends JTable
 
         return false;
     }
+
+    /**
+     * @return bool
+     */
+    public function check()
+    {
+        if (parent::check()) {
+            if (!empty($this->customfields)) {
+                $customfields = is_string($this->customfields)
+                    ? json_decode($this->customfields, true)
+                    : $this->customfields;
+
+                if (is_array($customfields)) {
+                    $filter = JFilterInput::getInstance();
+
+                    foreach ($customfields as &$field) {
+                        $field['name'] = $filter->clean($field['name'], 'cmd');
+                    }
+
+                    $this->customfields = json_encode($customfields);
+
+                } else {
+                    $this->setError(JText::_('COM_FOCALPOINT_ERROR_CUSTOMFIELDS_INVALID'));
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
 }
