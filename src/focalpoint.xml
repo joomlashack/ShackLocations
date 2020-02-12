@@ -95,7 +95,21 @@
         <targetplatform>3.7</targetplatform>
         <phpminimum>5.6</phpminimum>
 
-        <relatedExtensions/>
+        <relatedExtensions uninstall="true" publish="true" downgrade="true">
+            <extension type="plugin"
+                       group="system"
+                       element="ossystem"
+                       ordering="first"
+                       downgrade="false"
+                       uninstall="false">OSSystem</extension>
+
+            <extension type="plugin"
+                       group="system"
+                       element="osmylicensesmanager"
+                       ordering="last"
+                       downgrade="false"
+                       uninstall="false">OSMyLicensesManager</extension>
+        </relatedExtensions>
 
         <include>AllediaFreeDefaultFiles</include>
 
