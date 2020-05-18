@@ -124,7 +124,7 @@ $script .= <<<JSCRIPT
         maxWidth        : 320,
         zIndex          : null,
         closeBoxMargin  : '7px 5px 1px 1px',
-        closeBoxURL     : 'http://www.google.com/intl/en_us/mapfiles/close.gif',
+        closeBoxURL     : 'https://www.google.com/intl/en_us/mapfiles/close.gif',
         infoBoxClearance: new google.maps.Size(20, 30)
     });
     
