@@ -142,16 +142,20 @@
                type="sql"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_MAPLINK_ID"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_MAPLINK_ID"
-               query="SELECT 0 AS `id`, '- Please select -' AS `title` UNION SELECT `id`, `title` FROM `#__focalpoint_maps`"
+               query="SELECT `id`, `title` FROM `#__focalpoint_maps`"
                key_field="id"
                value_field="title"
-               showon="linktype:2"/>
+               showon="linktype:2">
+            <option value="">COM_FOCALPOINT_OPTION_SELECT</option>
+        </field>
 
         <field name="menulink"
                type="menuitem"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_MENUITEM"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_MENUITEM"
-               showon="linktype:4"/>
+               showon="linktype:4">
+            <option value="">COM_FOCALPOINT_OPTION_SELECT</option>
+        </field>
     </fieldset>
 
     <fieldset name="metadata" label="COM_FOCALPOINT_FIELDSET_META_LABEL">

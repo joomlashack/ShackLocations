@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
@@ -151,6 +152,36 @@ class FocalpointModellocation extends JModelAdmin
             $this->updateTypes($id, $data);
 
             return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validate($form, $data, $group = null)
+    {
+        if (parent::validate($form, $data, $group)) {
+            switch ($data['linktype']) {
+                case 2:
+                    if (empty($data['maplinkid'])) {
+                        $this->setError(Text::_('COM_FOCALPOINT_ERROR_LINKTYPE_MAPLINKID_REQUIRED'));
+                        return false;
+                    }
+                    break;
+
+                case 4:
+                    // Menu link
+                    if (empty($data['menulink'])) {
+                        $this->setError(Text::_('COM_FOCALPOINT_ERROR_LINKTYPE_MENULINK_REQUIRED'));
+                        return false;
+                    }
+                    break;
+
+            }
+
+            return $data;
         }
 
         return false;
