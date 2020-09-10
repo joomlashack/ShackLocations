@@ -44,8 +44,10 @@ class FocalpointModelMap extends JModelForm
         $app = JFactory::getApplication();
 
         $id = $app->input->getInt('id') ?: $app->getParams()->get('item_id');
-
         $this->setState('map.id', $id);
+
+        $menu = $app->getMenu()->getActive();
+        $this->setState('menu.id', $menu ? $menu->id : null);
     }
 
     /**
@@ -240,9 +242,7 @@ class FocalpointModelMap extends JModelForm
             switch ($result->linktype) {
                 case '0':
                     // Current Page (Own page)
-                    if ($menu = $app->getMenu()->getActive()) {
-                        $linkQuery['Itemid'] = $menu->id;
-                    }
+                    $linkQuery['Itemid'] = $this->getState('menu.id');
                     break;
 
                 case '1':
@@ -251,8 +251,8 @@ class FocalpointModelMap extends JModelForm
                         $result->link = $result->altlink;
                         $linkQuery    = null;
 
-                    } elseif ($menu = $app->getMenu()->getActive()) {
-                        $linkQuery['Itemid'] = $menu->id;
+                    } elseif ($menuId = $this->getState('menu.id')) {
+                        $linkQuery['Itemid'] = $menuId;
                     }
                     break;
 
