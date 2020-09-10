@@ -21,17 +21,18 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ModuleHelper;
 
 defined('_JEXEC') or die();
 
 class FocalpointViewSite extends FocalpointView
 {
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
 
-        $lang = JFactory::getLanguage();
+        $lang = Factory::getLanguage();
         $lang->load('com_focalpoint', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
     }
 
@@ -43,14 +44,14 @@ class FocalpointViewSite extends FocalpointView
      *
      * @return string
      */
-    public static function renderModule($position, $attribs = array())
+    public static function renderModule($position, $attribs = [])
     {
-        $results = JModuleHelper::getModules($position);
+        $results = ModuleHelper::getModules($position);
         $content = '';
 
         ob_start();
         foreach ($results as $result) {
-            $content .= JModuleHelper::renderModule($result, $attribs);
+            $content .= ModuleHelper::renderModule($result, $attribs);
         }
         ob_end_clean();
 

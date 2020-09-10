@@ -23,16 +23,15 @@
  */
 
 use Alledia\Framework\Joomla\Extension\Licensed;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Helper\ContentHelper;
 
 defined('_JEXEC') or die;
 
-/**
- * Focalpoint helper.
- */
-abstract class FocalpointHelper extends JHelperContent
+abstract class FocalpointHelper extends ContentHelper
 {
     /**
-     * Configure the Linkbar.
+     * @inheritDoc
      */
     public static function addSubmenu($vName)
     {
@@ -57,25 +56,27 @@ abstract class FocalpointHelper extends JHelperContent
             'index.php?option=com_focalpoint&view=locations',
             $vName == 'locations'
         );
-
     }
 
     /**
-     * Gets a list of the actions that can be performed.
-     *
-     * @return    JObject
-     * @since    1.6
+     * @inheritDoc
      */
     public static function getActions($component = '', $section = '', $id = 0)
     {
-        $user = JFactory::getUser();
+        $user   = Factory::getUser();
         $result = new JObject;
 
         $assetName = 'com_focalpoint';
 
-        $actions = array(
-            'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
-        );
+        $actions = [
+            'core.admin',
+            'core.manage',
+            'core.create',
+            'core.edit',
+            'core.edit.own',
+            'core.edit.state',
+            'core.delete'
+        ];
 
         foreach ($actions as $action) {
             $result->set($action, $user->authorise($action, $assetName));

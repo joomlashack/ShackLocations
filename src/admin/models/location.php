@@ -22,7 +22,8 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Form\Form;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
@@ -37,37 +38,32 @@ class FocalpointModellocation extends JModelAdmin
      */
     protected $item = null;
 
-    public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = array())
+    public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = [])
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($type, $prefix, $config);
     }
 
     /**
-     * @param array $data
-     * @param bool  $loadData
-     *
-     * @return Form
-     * @throws Exception
+     * @inheritDoc
      */
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm(
             'com_focalpoint.location',
             'location',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
 
         return $form;
     }
 
     /**
-     * @return array|CMSObject|mixed
-     * @throws Exception
+     * @inheritDoc
      */
     protected function loadFormData()
     {
         $app  = JFactory::getApplication();
-        $data = $app->getUserState('com_focalpoint.edit.location.data', array());
+        $data = $app->getUserState('com_focalpoint.edit.location.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -77,9 +73,7 @@ class FocalpointModellocation extends JModelAdmin
     }
 
     /**
-     * @param int $pk
-     *
-     * @return CMSObject
+     * @inheritDoc
      */
     public function getItem($pk = null)
     {
@@ -94,20 +88,18 @@ class FocalpointModellocation extends JModelAdmin
         }
 
         if (empty($item->id)) {
-            $item->created_by = JFactory::getUser()->id;
+            $item->created_by = Factory::getUser()->id;
         }
 
         return $item;
     }
 
     /**
-     * @param Table $table
-     *
-     * @return void
+     * @inheritDoc
      */
     protected function prepareTable($table)
     {
-        $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
+        $table->alias = OutputFilter::stringURLSafe($table->alias ?: $table->title);
 
         if (!$table->id) {
             $table->ordering = $table->getNextOrder();
@@ -124,17 +116,14 @@ class FocalpointModellocation extends JModelAdmin
     }
 
     /**
-     * @param array $data
-     *
-     * @return bool
-     * @throws Exception
+     * @inheritDoc
      */
     public function save($data)
     {
         $app = JFactory::getApplication();
 
         if (empty($data['othertypes'])) {
-            $data['othertypes'] = array();
+            $data['othertypes'] = [];
         }
 
         if ($app->input->getCmd('task') == 'save2copy') {
@@ -187,8 +176,8 @@ class FocalpointModellocation extends JModelAdmin
 
         // normalize/filter selected ids between type and othertypes
         $typeIds    = array_merge(
-            array($data['type']),
-            empty($data['othertypes']) ? array() : $data['othertypes']
+            [$data['type']],
+            empty($data['othertypes']) ? [] : $data['othertypes']
         );
         $typeValues = array_map(
             function ($typeId) use ($id) {

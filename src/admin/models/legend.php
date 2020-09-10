@@ -22,7 +22,8 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
@@ -30,17 +31,17 @@ class FocalpointModellegend extends JModelAdmin
 {
     protected $text_prefix = 'COM_FOCALPOINT';
 
-    public function getTable($type = 'Legend', $prefix = 'FocalpointTable', $config = array())
+    public function getTable($type = 'Legend', $prefix = 'FocalpointTable', $config = [])
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($type, $prefix, $config);
     }
 
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm(
             'com_focalpoint.legend',
             'legend',
-            array('control' => 'jform', 'load_data' => $loadData)
+            ['control' => 'jform', 'load_data' => $loadData]
         );
         if (empty($form)) {
             return false;
@@ -50,12 +51,11 @@ class FocalpointModellegend extends JModelAdmin
     }
 
     /**
-     * @return CMSObject
-     * @throws Exception
+     * @inheritDoc
      */
     protected function loadFormData()
     {
-        $data = JFactory::getApplication()->getUserState('com_focalpoint.edit.legend.data', array());
+        $data = Factory::getApplication()->getUserState('com_focalpoint.edit.legend.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -65,11 +65,14 @@ class FocalpointModellegend extends JModelAdmin
         return $data;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
             if (empty($item->id)) {
-                $item->created_by = JFactory::getUser()->id;
+                $item->created_by = Factory::getUser()->id;
             }
         }
 
@@ -77,7 +80,7 @@ class FocalpointModellegend extends JModelAdmin
     }
 
     /**
-     * @param JTable $table
+     * @param Table $table
      *
      * @return void
      */
@@ -86,7 +89,7 @@ class FocalpointModellegend extends JModelAdmin
         $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
 
         if (!$table->id) {
-            $table->ordering   = $table->getNextOrder();
+            $table->ordering = $table->getNextOrder();
         }
     }
 }

@@ -23,6 +23,13 @@
  */
 
 use Alledia\Installer\AbstractScript;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Installer\InstallerAdapter;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Extension;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die;
 
@@ -36,19 +43,16 @@ if (file_exists(__DIR__ . '/admin/library/Installer/AbstractScript.php')) {
 class com_focalpointInstallerScript extends AbstractScript
 {
     /**
-     * @param JInstallerAdapter $parent
-     *
-     * @return bool
-     * @throws Exception
+     * @inheritDoc
      */
     public function update($parent)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         try {
             if (parent::update($parent)) {
                 if (version_compare($this->previousManifest->version, '1.2', 'lt')) {
-                    $this->setMessage(JText::_('COM_FOCALPOINT_INSTALL_V12_NOTICE'), 'notice', true);
+                    $this->setMessage(Text::_('COM_FOCALPOINT_INSTALL_V12_NOTICE'), 'notice', true);
                 }
 
                 return true;
@@ -69,14 +73,11 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * @param string            $type
-     * @param JInstallerAdapter $parent
-     *
-     * @throws Exception
+     * @inheritDoc
      */
     public function postflight($type, $parent)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         try {
             switch ($type) {
@@ -109,7 +110,7 @@ class com_focalpointInstallerScript extends AbstractScript
      */
     protected function fixMapParameters()
     {
-        $db    = JFactory::getDbo();
+        $db    = Factory::getDbo();
         $query = $db->getQuery(true)
             ->select('id,params')
             ->from('#__focalpoint_maps');
@@ -118,7 +119,7 @@ class com_focalpointInstallerScript extends AbstractScript
         $maps = $db->setQuery($query)->loadObjectList();
         foreach ($maps as $map) {
             $params = json_decode($map->params, true);
-            if (array_intersect($params, array('true', 'false'))) {
+            if (array_intersect($params, ['true', 'false'])) {
                 foreach ($params as $name => $value) {
                     switch ($value) {
                         case 'true':
@@ -132,16 +133,16 @@ class com_focalpointInstallerScript extends AbstractScript
                 }
 
                 $map->params = json_encode($params);
-                $db->updateObject('#__focalpoint_maps', $map, array('id'));
+                $db->updateObject('#__focalpoint_maps', $map, ['id']);
             }
         }
 
-        /** @var JTableExtension $table */
-        $table = JTable::getInstance('Extension');
-        $table->load(array('element' => 'com_focalpoint', 'type' => 'component'));
+        /** @var Extension $table */
+        $table = Table::getInstance('Extension');
+        $table->load(['element' => 'com_focalpoint', 'type' => 'component']);
 
         $params = json_decode($table->params);
-        if (isset($params->mapTypeControl) && in_array($params->mapTypeControl, array('true', 'false'))) {
+        if (isset($params->mapTypeControl) && in_array($params->mapTypeControl, ['true', 'false'])) {
             $params->mapTypeControl = $params->mapTypeControl == 'true' ? '1' : '0';
 
             $table->params = json_encode($params);
@@ -157,11 +158,11 @@ class com_focalpointInstallerScript extends AbstractScript
         $source      = $this->installer->getPath('source') . '/assets/markers';
         $destination = JPATH_SITE . '/images/markers';
 
-        if (JFolder::move($source, $destination)) {
-            $this->setMessage(JText::sprintf('COM_FOCALPOINT_INSTALL_MARKER_SUCCESS', $destination), 'notice');
+        if (Folder::move($source, $destination)) {
+            $this->setMessage(Text::sprintf('COM_FOCALPOINT_INSTALL_MARKER_SUCCESS', $destination), 'notice');
 
         } else {
-            $this->setMessage(JText::_('COM_FOCALPOINT_INSTALL_MARKER_FAIL'), 'notice');
+            $this->setMessage(Text::_('COM_FOCALPOINT_INSTALL_MARKER_FAIL'), 'notice');
         }
     }
 
@@ -171,9 +172,9 @@ class com_focalpointInstallerScript extends AbstractScript
     protected function removeObsoleteFiles()
     {
         $files = array_merge(
-            JFolder::files(JPATH_SITE . '/language', '.*focalpoint.*', true, true),
-            JFolder::files(JPATH_ADMINISTRATOR . '/language', '.*focalpoint.*', true, true),
-            JFolder::files(
+            Folder::files(JPATH_SITE . '/language', '.*focalpoint.*', true, true),
+            Folder::files(JPATH_ADMINISTRATOR . '/language', '.*focalpoint.*', true, true),
+            Folder::files(
                 JPATH_SITE . '/components/com_focalpoint/views',
                 '^default_customfield_.*\.php$',
                 true,
@@ -182,7 +183,7 @@ class com_focalpointInstallerScript extends AbstractScript
         );
 
         foreach ($files as $file) {
-            JFile::delete($file);
+            File::delete($file);
         }
     }
 
@@ -193,15 +194,13 @@ class com_focalpointInstallerScript extends AbstractScript
      */
     protected function updateTabsdata()
     {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
 
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'id',
-                    'tabsdata'
-                )
-            )
+            ->select([
+                'id',
+                'tabsdata'
+            ])
             ->from('#__focalpoint_maps');
 
         $maps = $db->setQuery($query)->loadObjectList();
@@ -209,10 +208,10 @@ class com_focalpointInstallerScript extends AbstractScript
         $fixed = 0;
         foreach ($maps as $map) {
             if ($tabsdata = json_decode($map->tabsdata)) {
-                $newData = array();
+                $newData = [];
                 if (!isset($tabsdata->tabs)) {
                     foreach ($tabsdata as $hash => $tab) {
-                        if (in_array($hash, array('mapstyle'))) {
+                        if (in_array($hash, ['mapstyle'])) {
                             $newData[$hash] = $tab;
                         } else {
                             $newData['tabs'][$hash] = $tab;
@@ -221,7 +220,7 @@ class com_focalpointInstallerScript extends AbstractScript
                 }
                 if ($newData) {
                     $map->tabsdata = json_encode($newData);
-                    $fixed         += (int)$db->updateObject('#__focalpoint_maps', $map, array('id'));
+                    $fixed         += (int)$db->updateObject('#__focalpoint_maps', $map, ['id']);
                 }
             }
         }
@@ -234,16 +233,14 @@ class com_focalpointInstallerScript extends AbstractScript
      */
     protected function updateCustomFields()
     {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
 
         $locationTypes = $db->setQuery(
             $db->getQuery(true)
-                ->select(
-                    array(
-                        'id',
-                        'customfields'
-                    )
-                )
+                ->select([
+                    'id',
+                    'customfields'
+                ])
                 ->from('#__focalpoint_locationtypes')
                 ->where('customfields != ' . $db->quote(''))
         )
@@ -252,7 +249,7 @@ class com_focalpointInstallerScript extends AbstractScript
         foreach ($locationTypes as $locationType) {
             $customFields = json_decode($locationType->customfields, true);
             if (substr_count(key($customFields), '.') == 1) {
-                $locationType->customfields = array();
+                $locationType->customfields = [];
                 foreach ($customFields as $key => $customField) {
                     list($type, $hash) = explode('.', $key);
 
@@ -261,7 +258,7 @@ class com_focalpointInstallerScript extends AbstractScript
                 }
 
                 $locationType->customfields = json_encode($locationType->customfields);
-                $db->updateObject('#__focalpoint_locationtypes', $locationType, array('id'));
+                $db->updateObject('#__focalpoint_locationtypes', $locationType, ['id']);
             }
         }
     }
@@ -273,33 +270,31 @@ class com_focalpointInstallerScript extends AbstractScript
      */
     protected function updateCustomFieldsData()
     {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
 
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'id',
-                    'customfieldsdata'
-                )
-            )
+            ->select([
+                'id',
+                'customfieldsdata'
+            ])
             ->from('#__focalpoint_locations');
 
         $locations = $db->setQuery($query)->loadObjectList();
         foreach ($locations as $location) {
             if ($values = json_decode($location->customfieldsdata, true)) {
-                $fixedValues = array();
+                $fixedValues = [];
                 foreach ($values as $fieldKey => $value) {
                     $keyParts = explode('.', $fieldKey);
                     if (count($keyParts) == 3) {
                         $fieldName = array_pop($keyParts);
                         $hash      = array_pop($keyParts);
 
-                        $fixedValues[$hash] = array(
+                        $fixedValues[$hash] = [
                             $fieldName => $value
-                        );
+                        ];
 
                         $location->customfieldsdata = json_encode($fixedValues);
-                        $db->updateObject('#__focalpoint_locations', $location, array('id'));
+                        $db->updateObject('#__focalpoint_locations', $location, ['id']);
                     }
                 }
             }

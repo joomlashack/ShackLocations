@@ -22,29 +22,24 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
-
-/**
- * Map controller class.
- */
-class FocalpointControllerMap extends JControllerForm
+class FocalpointControllerMap extends FormController
 {
     protected $view_list = 'maps';
 
     /**
-     * @param JModelLegacy $model
-     * @param array        $validData
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
-    protected function postSaveHook(\JModelLegacy $model, $validData = array())
+    protected function postSaveHook(\JModelLegacy $model, $validData = [])
     {
         parent::postSaveHook($model, $validData);
 
-        JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onAfterMapSave', $validData);
+        PluginHelper::importPlugin('focalpoint');
+        Factory::getApplication()->triggerEvent('onAfterMapSave', $validData);
     }
 }

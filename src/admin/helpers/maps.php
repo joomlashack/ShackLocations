@@ -22,11 +22,8 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
-/**
- *  Mapping class based Google Maps API v3
- */
 class mapsAPI
 {
     /**
@@ -65,6 +62,6 @@ class mapsAPI
             throw new Exception("HTTP_FAIL_" . $httpCode, $httpCode);
         }
 
-        return array($latitude, $longitude);
+        return [$latitude, $longitude];
     }
 }

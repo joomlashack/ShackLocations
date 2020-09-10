@@ -22,6 +22,7 @@
  */
 
 use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
@@ -39,17 +40,13 @@ class FocalpointView extends JViewLegacy
     protected $params = null;
 
     /**
-     * FocalpointView constructor.
-     *
-     * @param array $config
-     *
-     * @throws Exception
+     * @inheritDoc
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
 
-        $this->app = JFactory::getApplication();
+        $this->app = Factory::getApplication();
 
         if (method_exists($this->app, 'getParams')) {
             $this->params = $this->app->getParams('com_focalpoint');
@@ -60,10 +57,7 @@ class FocalpointView extends JViewLegacy
     }
 
     /**
-     * @param string` $default
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function setDocumentTitle($default = null)
     {

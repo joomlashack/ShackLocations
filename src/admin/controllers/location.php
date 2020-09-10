@@ -22,41 +22,37 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
+
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
-
-/**
- * Location controller class.
- */
-class FocalpointControllerLocation extends JControllerForm
+class FocalpointControllerLocation extends FormController
 {
     protected $view_list = 'locations';
 
     /**
-     * Method to save a record overrides JControllerForm::save().
-     *
-     * @param   string $key The name of the primary key of the URL variable.
-     * @param   string $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-     *
-     * @return  boolean  True if successful, false otherwise.
-     *
-     * @since   11.1
+     * @inheritDoc
      */
     public function save($key = null, $urlVar = null)
     {
-        // Check for request forgeries.
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+        Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
-        // Initialise variables.
-        $app = JFactory::getApplication();
-        $lang = JFactory::getLanguage();
-        $model = $this->getModel();
-        $table = $model->getTable();
-        $data = JRequest::getVar('jform', array(), 'post', 'array');
+        /**
+         * @var FocalpointModelLocation $model
+         * @var FocalpointTablelocation $table
+         */
+        $app     = Factory::getApplication();
+        $lang    = Factory::getLanguage();
+        $model   = $this->getModel();
+        $table   = $model->getTable();
+        $data    = $app->input->get('jform', [], 'array');
         $checkin = property_exists($table, 'checked_out');
-        $context = "$this->option.edit.$this->context";
-        $task = $this->getTask();
+        $context = "{$this->option}.edit.{$this->context}";
+        $task    = $this->getTask();
 
         // Determine the name of the primary key for the data.
         if (empty($key)) {
@@ -68,70 +64,67 @@ class FocalpointControllerLocation extends JControllerForm
             $urlVar = $key;
         }
 
-        $recordId = JRequest::getInt($urlVar);
+        $recordId = $app->input->getInt($urlVar);
+
+        $redirectToList = Route::_(
+            sprintf(
+                'index.php?option=%s&view=%s' . $this->getRedirectToListAppend(),
+                $this->option,
+                $this->view_list
+            ),
+            false
+        );
 
         if (!$this->checkEditId($context, $recordId)) {
             // Somehow the person just went to the form and tried to save it. We don't allow that.
-            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $recordId));
+            $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $recordId));
             $this->setMessage($this->getError(), 'error');
 
-            $this->setRedirect(
-                JRoute::_(
-                    'index.php?option=' . $this->option . '&view=' . $this->view_list
-                    . $this->getRedirectToListAppend(), false
-                )
-            );
+            $this->setRedirect($redirectToList);
 
             return false;
         }
 
-        // Populate the row id from the session.
+        $redirectToEdit = Route::_(
+            sprintf(
+                'index.php?option=%s&view=%s' . $this->getRedirectToItemAppend($recordId, $urlVar),
+                $this->option,
+                $this->view_list
+            ),
+            false
+        );
+
+
         $data[$key] = $recordId;
 
         // The save2copy task needs to be handled slightly differently.
         if ($task == 'save2copy') {
-            // Check-in the original row.
             if ($checkin && $model->checkin($data[$key]) === false) {
                 // Check-in failed. Go back to the item and display a notice.
-                $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+                $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
                 $this->setMessage($this->getError(), 'error');
 
-                $this->setRedirect(
-                    JRoute::_(
-                        'index.php?option=' . $this->option . '&view=' . $this->view_item
-                        . $this->getRedirectToItemAppend($recordId, $urlVar), false
-                    )
-                );
+                $this->setRedirect($redirectToEdit);
 
                 return false;
             }
 
             // Reset the ID and then treat the request as for Apply.
             $data[$key] = 0;
-            $task = 'apply';
+            $task       = 'apply';
         }
 
         // Access check.
         if (!$this->allowSave($data, $key)) {
-            $this->setError(JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
+            $this->setError(Text::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
 
-            $this->setRedirect(
-                JRoute::_(
-                    'index.php?option=' . $this->option . '&view=' . $this->view_list
-                    . $this->getRedirectToListAppend(), false
-                )
-            );
+            $this->setRedirect($redirectToEdit);
 
             return false;
         }
 
-        //echo"<pre>";print_r($data);die("</pre>");
-
-        //Process custom fields.
         if (!empty($data['custom'])) {
-
-            //JSON encode the data and store it in customfieldsdata
             $data['customfieldsdata'] = $model->toJSON($data['custom']);
 
             //remove the individual data from processing.
@@ -148,12 +141,8 @@ class FocalpointControllerLocation extends JControllerForm
             return false;
         }
 
-        // Test whether the data is valid.
         $validData = $model->validate($form, $data);
-
-        // Check for validation errors.
         if ($validData === false) {
-            // Get the validation messages.
             $errors = $model->getErrors();
 
             // Push up to three validation messages out to the user.
@@ -168,32 +157,18 @@ class FocalpointControllerLocation extends JControllerForm
             // Save the data in the session.
             $app->setUserState($context . '.data', $data);
 
-            // Redirect back to the edit screen.
-            $this->setRedirect(
-                JRoute::_(
-                    'index.php?option=' . $this->option . '&view=' . $this->view_item
-                    . $this->getRedirectToItemAppend($recordId, $urlVar), false
-                )
-            );
+            $this->setRedirect($redirectToEdit);
 
             return false;
         }
 
-        // Attempt to save the data.
         if (!$model->save($validData)) {
-            // Save the data in the session.
             $app->setUserState($context . '.data', $validData);
 
-            // Redirect back to the edit screen.
-            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
+            $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
             $this->setMessage($this->getError(), 'error');
 
-            $this->setRedirect(
-                JRoute::_(
-                    'index.php?option=' . $this->option . '&view=' . $this->view_item
-                    . $this->getRedirectToItemAppend($recordId, $urlVar), false
-                )
-            );
+            $this->setRedirect($redirectToEdit);
 
             return false;
         }
@@ -204,21 +179,16 @@ class FocalpointControllerLocation extends JControllerForm
             $app->setUserState($context . '.data', $validData);
 
             // Check-in failed, so go back to the record and display a notice.
-            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
+            $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
             $this->setMessage($this->getError(), 'error');
 
-            $this->setRedirect(
-                JRoute::_(
-                    'index.php?option=' . $this->option . '&view=' . $this->view_item
-                    . $this->getRedirectToItemAppend($recordId, $urlVar), false
-                )
-            );
+            $this->setRedirect($redirectToEdit);
 
             return false;
         }
 
         $this->setMessage(
-            JText::_(
+            Text::_(
                 ($lang->hasKey($this->text_prefix . ($recordId == 0 && $app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS')
                     ? $this->text_prefix
                     : 'JLIB_APPLICATION') . ($recordId == 0 && $app->isSite() ? '_SUBMIT' : '') . '_SAVE_SUCCESS'
@@ -234,13 +204,7 @@ class FocalpointControllerLocation extends JControllerForm
                 $app->setUserState($context . '.data', null);
                 $model->checkout($recordId);
 
-                // Redirect back to the edit screen.
-                $this->setRedirect(
-                    JRoute::_(
-                        'index.php?option=' . $this->option . '&view=' . $this->view_item
-                        . $this->getRedirectToItemAppend($recordId, $urlVar), false
-                    )
-                );
+                $this->setRedirect($redirectToEdit);
                 break;
 
             case 'save2new':
@@ -249,12 +213,7 @@ class FocalpointControllerLocation extends JControllerForm
                 $app->setUserState($context . '.data', null);
 
                 // Redirect back to the edit screen.
-                $this->setRedirect(
-                    JRoute::_(
-                        'index.php?option=' . $this->option . '&view=' . $this->view_item
-                        . $this->getRedirectToItemAppend(null, $urlVar), false
-                    )
-                );
+                $this->setRedirect($redirectToEdit);
                 break;
 
             default:
@@ -262,17 +221,10 @@ class FocalpointControllerLocation extends JControllerForm
                 $this->releaseEditId($context, $recordId);
                 $app->setUserState($context . '.data', null);
 
-                // Redirect to the list screen.
-                $this->setRedirect(
-                    JRoute::_(
-                        'index.php?option=' . $this->option . '&view=' . $this->view_list
-                        . $this->getRedirectToListAppend(), false
-                    )
-                );
+                $this->setRedirect($redirectToList);
                 break;
         }
 
-        // Invoke the postSave method to allow for the child class to access the model.
         $this->postSaveHook($model, $validData);
 
         return true;

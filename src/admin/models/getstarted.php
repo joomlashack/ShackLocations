@@ -22,11 +22,13 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\MVC\Model\ListModel;
+
 defined('_JEXEC') or die;
 
-class FocalpointModelGetstarted extends JModelList
+class FocalpointModelGetstarted extends ListModel
 {
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         return false;
     }

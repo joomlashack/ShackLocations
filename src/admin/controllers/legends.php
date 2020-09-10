@@ -24,22 +24,13 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * Legends list controller class.
- */
 class FocalpointControllerLegends extends JControllerAdmin
 {
     /**
-     * Proxy for getModel.
-     * @since    1.6
+     * @inheritDoc
      */
-    public function getModel($name = 'legend', $prefix = 'FocalpointModel')
+    public function getModel($name = 'legend', $prefix = 'FocalpointModel', $config = [])
     {
-        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
-        return $model;
+        return parent::getModel($name, $prefix, ['ignore_request' => true]);
     }
-
-
 }

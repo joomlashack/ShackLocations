@@ -22,35 +22,37 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\MVC\Model\ListModel;
+
 defined('_JEXEC') or die;
 
-class FocalpointModellegends extends JModelList
+class FocalpointModellegends extends ListModel
 {
-    public function __construct($config = array())
+    /**
+     * @inheritDoc
+     */
+    public function __construct($config = [])
     {
         $config = array_merge_recursive(
             $config,
-            array(
-                'filter_fields' => array(
+            [
+                'filter_fields' => [
                     'a.id',
                     'a.ordering',
                     'a.state',
                     'a.title',
                     'a.created_by',
                     'state'
-                )
-            )
+                ]
+            ]
         );
 
         parent::__construct($config);
     }
 
     /**
-     * @param string $ordering
-     * @param string $direction
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     protected function populateState($ordering = null, $direction = null)
     {
@@ -63,33 +65,36 @@ class FocalpointModellegends extends JModelList
         $this->setState('filter.state', $published);
 
 
-        $params = JComponentHelper::getParams('com_focalpoint');
+        $params = ComponentHelper::getParams('com_focalpoint');
         $this->setState('params', $params);
 
         parent::populateState('a.title', 'asc');
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getStoreId($id = '')
     {
-        // Compile the store id.
         $id .= ':' . $this->getState('filter.search');
         $id .= ':' . $this->getState('filter.state');
 
         return parent::getStoreId($id);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getListQuery()
     {
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'a.*',
-                    'uc.name AS editor',
-                    'created_by.name AS created_by'
-                )
-            )
+            ->select([
+                'a.*',
+                'uc.name AS editor',
+                'created_by.name AS created_by'
+            ])
             ->from('`#__focalpoint_legends` AS a')
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
             ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
@@ -114,10 +119,10 @@ class FocalpointModellegends extends JModelList
                         '(%s)',
                         join(
                             ' OR ',
-                            array(
+                            [
                                 'a.title LIKE ' . $search,
                                 'a.subtitle LIKE ' . $search
-                            )
+                            ]
                         )
                     )
                 );

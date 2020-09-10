@@ -22,13 +22,13 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Controller\AdminController;
 
 defined('_JEXEC') or die();
 
-class FocalpointControllerMaps extends JControllerAdmin
+class FocalpointControllerMaps extends AdminController
 {
-    public function getModel($name = 'Map', $prefix = 'FocalpointModel', $config = array())
+    public function getModel($name = 'Map', $prefix = 'FocalpointModel', $config = [])
     {
         return parent::getModel($name, $prefix, $config);
     }
