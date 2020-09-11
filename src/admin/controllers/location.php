@@ -89,11 +89,10 @@ class FocalpointControllerLocation extends FormController
             sprintf(
                 'index.php?option=%s&view=%s' . $this->getRedirectToItemAppend($recordId, $urlVar),
                 $this->option,
-                $this->view_list
+                $this->view_item
             ),
             false
         );
-
 
         $data[$key] = $recordId;
 
@@ -119,7 +118,7 @@ class FocalpointControllerLocation extends FormController
             $this->setError(Text::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
 
-            $this->setRedirect($redirectToEdit);
+            $this->setRedirect($redirectToList);
 
             return false;
         }
@@ -212,7 +211,6 @@ class FocalpointControllerLocation extends FormController
                 $this->releaseEditId($context, $recordId);
                 $app->setUserState($context . '.data', null);
 
-                // Redirect back to the edit screen.
                 $this->setRedirect($redirectToEdit);
                 break;
 
