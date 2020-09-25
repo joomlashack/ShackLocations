@@ -22,49 +22,47 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Form\Form;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('predefinedlist');
+FormHelper::loadFieldClass('List');
 
-class ShacklocationsFormFieldLegend extends JFormFieldPredefinedList
+class ShacklocationsFormFieldLegend extends JFormFieldList
 {
     /**
-     * The form field type.
-     *
-     * @var    string
-     * @since  3.2
+     * @inheritdoc
      */
     public $type = 'legend';
 
     /**
-     * Available statuses
-     *
-     * @var  array
-     * @since  3.2
+     * @var object[]
      */
-    protected $predefinedOptions = array();
+    protected $options = null;
 
     /**
-     * ShacklocationsFormFieldLegend constructor.
-     *
-     * @param Form $form
+     * @inheritDoc
      */
-    public function __construct($form = null)
+    public function getOptions()
     {
-        $db    = JFactory::getDbo();
-        $query = $db->getQuery(true)
-            ->select('id,title')
-            ->from('`#__focalpoint_legends`')
-            ->where('`state` > -1');
+        if ($this->options === null) {
+            $db    = Factory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('id,title')
+                ->from($db->quoteName('#__focalpoint_legends'))
+                ->where($db->quoteName('state') . ' > -1');
 
-        $results = $db->setQuery($query)->loadObjectList();
+            $this->options = [];
 
-        foreach ($results as $result) {
-            $this->predefinedOptions[$result->id] = $result->title;
+            $legends = $db->setQuery($query)->loadObjectList();
+            foreach ($legends as $legend) {
+                $this->options[] = HTMLHelper::_('select.option', $legend->id, $legend->title);
+            }
+
         }
 
-        parent::__construct($form);
+        return array_merge(parent::getOptions(), $this->options);
     }
 }
