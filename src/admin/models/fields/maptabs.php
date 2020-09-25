@@ -21,11 +21,15 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 
-class ShacklocationsFormFieldMaptabs extends JFormField
+class ShacklocationsFormFieldMaptabs extends FormField
 {
     /**
      * @var bool
@@ -47,6 +51,9 @@ class ShacklocationsFormFieldMaptabs extends JFormField
      */
     protected $tabGroup = null;
 
+    /**
+     * @inheritDoc
+     */
     public function setup(SimpleXMLElement $element, $value, $group = null)
     {
         if (parent::setup($element, $value, $group)) {
@@ -70,42 +77,36 @@ class ShacklocationsFormFieldMaptabs extends JFormField
      * The field is actually a group of fields that will be stored
      * as an array or object
      *
-     * @param array $options
-     *
-     * @return string
+     * @inheritDoc
      * @throws Exception
      */
-    public function renderField($options = array())
+    public function renderField($options = [])
     {
         $this->loadAssets($options);
 
-        $htmlOutput = array(
-            '<div class="span7 sl-subfield-wrapper">',
-        );
+        $htmlOutput = ['<div class="span7 sl-subfield-wrapper">'];
 
-        $values = (array)($this->value ?: array());
+        $values = (array)($this->value ?: []);
         foreach ($values as $hash => $data) {
-            $htmlOutput[] = $this->getFieldBlock(
-                array(
-                    $this->renderSubfield($hash, 'name', 'text', JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'), $options),
-                    $this->renderSubfield($hash, 'content', 'editor', '', $options)
-                )
-            );
+            $htmlOutput[] = $this->getFieldBlock([
+                $this->renderSubfield($hash, 'name', 'text', Text::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'), $options),
+                $this->renderSubfield($hash, 'content', 'editor', '', $options)
+            ]);
         }
 
         $appendButton = '<div>'
             . '<button class="btn btn-small button-apply btn-success sl-subfield-append">'
             . '<span class="icon-plus icon-white"></span>'
-            . 'New Tab'
+            . Text::_('COM_FOCALPOINT_FORM_FIELD_MAPTABS_NEW')
             . '</button>'
             . '</div>';
 
         $htmlOutput = array_merge(
             $htmlOutput,
-            array(
+            [
                 $appendButton,
                 '</div>'
-            )
+            ]
         );
 
         return join('', $htmlOutput);
@@ -149,12 +150,12 @@ class ShacklocationsFormFieldMaptabs extends JFormField
      */
     protected function getFieldBlock($fields)
     {
-        $blockHtml = array(
+        $blockHtml = [
             '<fieldset class="clearfix">',
             '<legend><i class="icon-menu"></i>&nbsp;Tab</legend>',
             $this->getTrashButton(),
             $this->getInsertButton()
-        );
+        ];
 
         foreach ((array)$fields as $fieldHtml) {
             $blockHtml[] = $fieldHtml;
@@ -173,12 +174,10 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         if (static::$trashButton === null) {
             static::$trashButton = sprintf(
                 '<a %s></a>',
-                ArrayHelper::toString(
-                    array(
-                        'class' => 'hasTip sl-subfield-delete icon-cancel',
-                        'title' => 'Delete this tab'
-                    )
-                )
+                ArrayHelper::toString([
+                    'class' => 'hasTip sl-subfield-delete icon-cancel',
+                    'title' => Text::_('COM_FOCALPOINT_FORM_FIELD_MAPTABS_DELETE')
+                ])
             );
         }
 
@@ -193,12 +192,10 @@ class ShacklocationsFormFieldMaptabs extends JFormField
         if (static::$insertButton === null) {
             static::$insertButton = sprintf(
                 '<a %s></a>',
-                ArrayHelper::toString(
-                    array(
-                        'class' => 'hasTip sl-subfield-insert icon-plus',
-                        'title' => 'Insert new tab before this one'
-                    )
-                )
+                ArrayHelper::toString([
+                    'class' => 'hasTip sl-subfield-insert icon-plus',
+                    'title' => Text::_('COM_FOCALPOINT_FORM_FIELD_MAPTABS_INSERT')
+                ])
             );
         }
 
@@ -215,7 +212,7 @@ class ShacklocationsFormFieldMaptabs extends JFormField
     protected function loadAssets($options)
     {
         if (!static::$assetsLoaded) {
-            JHtml::_('jquery.ui', array('core', 'sortable'));
+            HTMLHelper::_('jquery.ui', ['core', 'sortable']);
 
             $dummyId = 'BLANKFIELD';
 
@@ -223,22 +220,23 @@ class ShacklocationsFormFieldMaptabs extends JFormField
                 $dummyId,
                 'name',
                 'text',
-                JText::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'),
+                Text::_('COM_FOCALPOINT_CUSTOMFIELD_NAME'),
                 $options
             );
 
             $fieldBlock = preg_replace(
                 '/\n?\r?/',
                 '',
-                $this->getFieldBlock(
-                    array(
-                        $nameField,
-                        '<p class="alert"><span class="icon-info"></span>Save this configuration to make this tab editable.</p>'
+                $this->getFieldBlock([
+                    $nameField,
+                    sprintf(
+                        '<p class="alert"><span class="icon-info"></span>%s</p>',
+                        Text::_('COM_FOCALPOINT_FORM_FIELD_MAPTABS_SAVE_CONFIG')
                     )
-                )
+                ])
             );
 
-            JFactory::getDocument()->addScriptDeclaration(
+            Factory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
 ;jQuery(document).ready(function($) {
     var dummyId    = /{$dummyId}/g,
