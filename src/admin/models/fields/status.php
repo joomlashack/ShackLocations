@@ -22,20 +22,21 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Form\FormHelper;
+
 defined('JPATH_PLATFORM') or die;
 
-JFormHelper::loadFieldClass('predefinedlist');
+FormHelper::loadFieldClass('predefinedlist');
 
-/**
- * Form Field to load a list of states
- * Used in place of the Joomla status field as FocalPoint does not use "archived"
- */
 class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
 {
-    protected $predefinedOptions = array(
+    /**
+     * @inheritdoc
+     */
+    protected $predefinedOptions = [
         '1'  => 'JPUBLISHED',
         '0'  => 'JUNPUBLISHED',
         '-2' => 'JTRASHED',
         '*'  => 'JALL'
-    );
+    ];
 }
