@@ -21,12 +21,20 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Form\FormField;
+
 defined('_JEXEC') or die();
 
-class ShacklocationsFormFieldGeocoder extends JFormField
+class ShacklocationsFormFieldGeocoder extends FormField
 {
+    /**
+     * @inheritdoc
+     */
     protected $layout = 'shacklocations.form.field.geocoder';
 
+    /**
+     * @inheritDoc
+     */
     protected function getlabel()
     {
         return '';
