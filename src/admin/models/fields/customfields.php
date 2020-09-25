@@ -21,18 +21,25 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 
-class ShacklocationsFormFieldCustomfields extends JFormField
+class ShacklocationsFormFieldCustomfields extends FormField
 {
     /**
      * @var bool
      */
     protected static $assetsLoaded = false;
 
-    protected $fieldTypes = array(
+    /**
+     * @var string[]
+     */
+    protected $fieldTypes = [
         'textbox',
         'link',
         'email',
@@ -40,7 +47,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         'image',
         'selectlist',
         'multiselect'
-    );
+    ];
 
     /**
      * @var string
@@ -52,6 +59,10 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected $fieldGroup = null;
 
+    /**
+     * @inheritDoc
+     *
+     */
     public function setup(SimpleXMLElement $element, $value, $group = null)
     {
         if (parent::setup($element, $value, $group)) {
@@ -72,22 +83,16 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     }
 
     /**
-     * The field is actually a group of fields that will be stored
-     * as an array or object
-     *
-     * @param array $options
-     *
-     * @return string
-     * @throws Exception
+     * @inheritDoc
      */
-    public function renderField($options = array())
+    public function renderField($options = [])
     {
         $this->loadAssets($options);
 
-        $htmlOutput = array(
+        $htmlOutput = [
             sprintf('<input type="hidden" name="%s"/>', $this->name),
             '<div class="span7 sl-subfield-wrapper">',
-        );
+        ];
 
         if ($this->value) {
             foreach ($this->value as $hash => $data) {
@@ -106,7 +111,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected function createNewButtons()
     {
-        $newButtons = array('<ul class="inline">');
+        $newButtons = ['<ul class="inline">'];
 
         foreach ($this->fieldTypes as $fieldType) {
             $newButtons[] = '<li>'
@@ -115,7 +120,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
                     $fieldType
                 )
                 . '<span class="icon-plus icon-white"></span>'
-                . JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $fieldType)
+                . Text::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $fieldType)
                 . '</button>'
                 . '</li>';
         }
@@ -146,11 +151,11 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         $fieldGroup         = $this->fieldGroup->addChild('fields');
         $fieldGroup['name'] = $hash;
 
-        $attributes = array(
+        $attributes = [
             'name'  => $name,
             'type'  => $type,
             'label' => $label
-        );
+        ];
 
         if (!empty($options['attributes'])) {
             $attributes = array_merge($attributes, $options['attributes']);
@@ -188,27 +193,27 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     {
         $type = empty($data['type']) ? null : $data['type'];
         if ($type) {
-            $blockHeader = JText::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $data['type']);
+            $blockHeader = Text::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $data['type']);
 
             $blockHtml = array_merge(
-                array(
+                [
                     '<fieldset class="clearfix">',
                     sprintf('<legend><i class="icon-menu"></i>&nbsp;%s</legend>', $blockHeader),
                     $this->getTrashButton()
-                ),
+                ],
                 $this->getSubfields($hash, $data, $options),
-                array('</fieldset>')
+                ['</fieldset>']
             );
 
         } else {
-            $blockHtml = array(
+            $blockHtml = [
                 '<fieldset class="clearfix">',
                 sprintf(
                     '<legend><i class="icon-ban-circle"></i>&nbsp;%s</legend>',
-                    JText::sprintf('COM_FOCALPOINT_CUSTOMFIELD_TYPE_UNKNOWN', $type)
+                    Text::sprintf('COM_FOCALPOINT_CUSTOMFIELD_TYPE_UNKNOWN', $type)
                 ),
                 '</fieldset>'
-            );
+            ];
         }
 
         return join('', $blockHtml);
@@ -225,21 +230,21 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     {
         $type = empty($data['type']) ? null : $data['type'];
         if (!$type) {
-            return array('Bad field ' . print_r($data, 1));
+            return ['Bad field ' . print_r($data, 1)];
         }
 
-        $hiddenOptions = array(
-            'attributes' => array(
+        $hiddenOptions = [
+            'attributes' => [
                 'default' => $type
-            )
-        );
+            ]
+        ];
 
-        $renderedFields = array(
+        $renderedFields = [
             $this->renderSubfield($hash, 'type', 'hidden', '', array_merge($options, $hiddenOptions)),
             $this->renderSubfield($hash, 'name', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_NAME', $options, true),
             $this->renderSubfield($hash, 'description', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP', $options),
             $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options)
-        );
+        ];
 
         $typeRenderer = 'renderSubfield' . ucfirst($type);
         if (method_exists($this, $typeRenderer)) {
@@ -257,29 +262,29 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected function renderSubfieldTextarea($hash, $options)
     {
-        $fieldOptions = array(
-            'attributes' => array(
+        $fieldOptions = [
+            'attributes' => [
                 'class'   => 'btn-group btn-group-yesno',
                 'default' => 0
-            ),
-            'options'    => JHtml::_(
+            ],
+            'options'    => HTMLHelper::_(
                 'select.options',
-                array(
-                    JHtml::_('select.option', 1, JText::_('JYES')),
-                    JHtml::_('select.option', 0, JText::_('JNO'))
-                ),
-                array(
+                [
+                    HTMLHelper::_('select.option', 1, Text::_('JYES')),
+                    HTMLHelper::_('select.option', 0, Text::_('JNO'))
+                ],
+                [
                     'option.key.toHtml'  => false,
                     'option.text.toHtml' => false
-                )
+                ]
             )
-        );
+        ];
 
         $renderedField = $this->renderSubfield(
             $hash,
             'loadeditor',
             'radio',
-            JText::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'),
+            Text::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'),
             array_merge($options, $fieldOptions)
         );
 
@@ -313,12 +318,12 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected function renderSubfieldSelectlist($hash, $options)
     {
-        $fieldOptions = array(
-            'attributes' => array(
+        $fieldOptions = [
+            'attributes' => [
                 'rows'     => 20,
                 'required' => 'true'
-            )
-        );
+            ]
+        ];
 
         $renderedField = $this->renderSubfield(
             $hash,
@@ -350,12 +355,10 @@ class ShacklocationsFormFieldCustomfields extends JFormField
         if (static::$trashButton === null) {
             static::$trashButton = sprintf(
                 '<a %s></a>',
-                ArrayHelper::toString(
-                    array(
-                        'class' => 'hasTip sl-subfield-delete icon-cancel',
-                        'title' => 'Delete this field'
-                    )
-                )
+                ArrayHelper::toString([
+                    'class' => 'hasTip sl-subfield-delete icon-cancel',
+                    'title' => 'Delete this field'
+                ])
             );
         }
 
@@ -373,18 +376,18 @@ class ShacklocationsFormFieldCustomfields extends JFormField
     {
         if (!static::$assetsLoaded) {
             $dummyId = 'BLANKFIELD';
-            $blanks  = array();
+            $blanks  = [];
 
             foreach ($this->fieldTypes as $fieldType) {
-                $data = array('type' => $fieldType);
+                $data = ['type' => $fieldType];
 
                 $blanks[$fieldType] = preg_replace('/\n?\r?/', '', $this->getFieldBlock($dummyId, $data, $options));
             }
             $blanks = json_encode($blanks);
 
-            JHtml::_('jquery.ui', array('core', 'sortable'));
+            HTMLHelper::_('jquery.ui', ['core', 'sortable']);
 
-            JFactory::getDocument()->addScriptDeclaration(
+            Factory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
 ;jQuery(document).ready(function($) {
     var dummyId    = /{$dummyId}/g,
