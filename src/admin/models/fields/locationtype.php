@@ -22,12 +22,17 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Form\FormHelper;
+
 defined('JPATH_PLATFORM') or die;
 
-JFormHelper::loadFieldType('GroupedList');
+FormHelper::loadFieldType('GroupedList');
 
 class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
 {
+    /**
+     * @inheritdoc
+     */
     public $type = 'locationtype';
 
     /**
@@ -35,6 +40,9 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
      */
     protected static $typeOptions = null;
 
+    /**
+     * @inheritDoc
+     */
     protected function getInput()
     {
         if ($this->multiple) {
@@ -73,36 +81,35 @@ JSCODE;
         return parent::getInput();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getGroups()
     {
         if (static::$typeOptions === null) {
             $db = JFactory::getDbo();
 
             $query = $db->getQuery(true)
-                ->select(
-                    array(
-                        'a.id',
-                        'a.title',
-                        'b.title AS legend'
-                    )
-                )
+                ->select([
+                    'a.id',
+                    'a.title',
+                    'b.title AS legend'
+                ])
                 ->from('#__focalpoint_locationtypes AS a')
                 ->innerJoin('#__focalpoint_legends AS b on a.legend = b.id')
                 ->where('a.state > -1')
-                ->order(
-                    array(
-                        'b.ordering ASC',
-                        'a.ordering ASC'
-                    )
-                );
+                ->order([
+                    'b.ordering ASC',
+                    'a.ordering ASC'
+                ]);
 
             $types      = $db->setQuery($query)->loadObjectList();
             $lastLegend = null;
 
-            static::$typeOptions = array();
+            static::$typeOptions = [];
             foreach ($types as $type) {
                 if ($type->legend !== $lastLegend) {
-                    static::$typeOptions[$type->legend] = array();
+                    static::$typeOptions[$type->legend] = [];
                 }
                 static::$typeOptions[$type->legend][] = JHtml::_('select.option', $type->id, $type->title);
 
