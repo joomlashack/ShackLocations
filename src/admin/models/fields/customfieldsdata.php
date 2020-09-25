@@ -21,12 +21,13 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 
-class ShacklocationsFormFieldCustomfieldsdata extends JFormField
+class ShacklocationsFormFieldCustomfieldsdata extends FormField
 {
     /**
      * @var FormField
@@ -43,6 +44,9 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      */
     protected $fieldGroup = null;
 
+    /**
+     * @inheritDoc
+     */
     public function setup(SimpleXMLElement $element, $value, $group = null)
     {
         if (parent::setup($element, $value, $group)) {
@@ -71,15 +75,12 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
     }
 
     /**
-     * @param array $options
-     *
-     * @return string
-     * @throws Exception
+     * @inheritDoc
      */
-    public function renderField($options = array())
+    public function renderField($options = [])
     {
         if ($customFields = $this->getCustomFields()) {
-            $renderedFields = array();
+            $renderedFields = [];
 
             foreach ($customFields as $hash => $value) {
                 if (isset($customFields[$hash])) {
@@ -89,7 +90,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
 
         } else {
             if ($this->typeField->value) {
-                $db = JFactory::getDbo();
+                $db = Factory::getDbo();
 
                 $locationType = $db->setQuery(
                     $db->getQuery(true)
@@ -106,12 +107,12 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
             }
 
 
-            $renderedFields = array(
+            $renderedFields = [
                 '<div class="tab-description alert alert-info">',
                 '<span class="icon-info" aria-hidden="true"></span>',
                 $message,
                 '</div>'
-            );
+            ];
         }
 
         return join("\n", $renderedFields);
@@ -150,7 +151,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
             $error = JText::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_CONFIGURATION', $fieldType, $fieldName);
         }
 
-        JFactory::getApplication()->enqueueMessage('Custom field configuration issue', 'Warning');
+        Factory::getApplication()->enqueueMessage('Custom field configuration issue', 'Warning');
 
         return sprintf(
             '<div class="alert">%s</div>',
@@ -170,12 +171,12 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      */
     protected function renderSubfield($type, $name, $label, $description, $groupName, array $options)
     {
-        $attributes = array(
+        $attributes = [
             'name'        => $name,
             'type'        => $type,
             'label'       => addslashes(htmlspecialchars($label)),
             'description' => addslashes(htmlspecialchars($description))
-        );
+        ];
         if (!empty($options['attributes'])) {
             $attributes = array_merge($attributes, $options['attributes']);
         }
@@ -215,10 +216,10 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         $subFieldGroup         = $fieldGroup->addChild('fields');
         $subFieldGroup['name'] = $fieldName;
 
-        $renderedSubfields = array(
+        $renderedSubfields = [
             '<fieldset>',
             sprintf('<legend>%s</legend>', $customField['label'])
-        );
+        ];
 
         foreach ($subFields as $name => $subField) {
             $fieldOptions = empty($subField['options']) ? $options : array_merge($options, $subField['options']);
@@ -258,7 +259,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      */
     protected function safeTranslate($constant)
     {
-        if (JFactory::getLanguage()->hasKey($constant)) {
+        if (Factory::getLanguage()->hasKey($constant)) {
             return JText::_($constant);
         }
 
@@ -331,11 +332,11 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
 
         $fieldOptions = array_merge(
             $options,
-            array(
-                'attributes' => array(
+            [
+                'attributes' => [
                     'directory' => $customField['directory']
-                )
-            )
+                ]
+            ]
         );
 
         return $this->renderSubfield('media', $fieldName, $label, $description, $groupName, $fieldOptions);
@@ -357,34 +358,30 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         array $customField,
         array $options
     ) {
-        $subFields = array(
-            'url'      => array(
-                'type' => 'text'
-            ),
-            'linktext' => array(
-                'type' => 'text'
-            ),
-            'target'   => array(
+        $subFields = [
+            'url'      => ['type' => 'text'],
+            'linktext' => ['type' => 'text'],
+            'target'   => [
                 'type'    => 'radio',
-                'options' => array(
-                    'attributes' => array(
+                'options' => [
+                    'attributes' => [
                         'class'   => 'btn-group btn-group-yesno',
                         'default' => '1'
-                    ),
+                    ],
                     'options'    => JHtml::_(
                         'select.options',
-                        array(
+                        [
                             JHtml::_('select.option', 1, JText::_('JYES')),
                             JHtml::_('select.option', 0, JText::_('JNO'))
-                        ),
-                        array(
+                        ],
+                        [
                             'option.key.toHtml'  => false,
                             'option.text.toHtml' => false
-                        )
+                        ]
                     )
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $customField, $subFields, $options);
     }
@@ -405,14 +402,10 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
         array $customField,
         array $options
     ) {
-        $subFields = array(
-            'email'    => array(
-                'type' => 'email'
-            ),
-            'linktext' => array(
-                'type' => 'text'
-            )
-        );
+        $subFields = [
+            'email'    => ['type' => 'email'],
+            'linktext' => ['type' => 'text']
+        ];
 
         return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $customField, $subFields, $options);
     }
@@ -445,16 +438,16 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
 
         $fieldOptions = array_merge(
             $options,
-            array(
+            [
                 'options' => JHtml::_(
                     'select.options',
                     $selectOptions,
-                    array(
+                    [
                         'option.key.toHtml'  => false,
                         'option.text.toHtml' => false
-                    )
+                    ]
                 )
-            )
+            ]
         );
 
         $label       = $customField['label'];
@@ -483,11 +476,9 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
     ) {
         $fieldOptions = array_merge(
             $options,
-            array(
-                'attributes' => array(
-                    'multiple' => 'true'
-                )
-            )
+            [
+                'attributes' => ['multiple' => 'true']
+            ]
         );
 
         return $this->renderSubfieldSelectlist($fieldName, $fieldGroup, $groupName, $customField, $fieldOptions);
@@ -503,7 +494,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
     protected function getCustomFields()
     {
         if ($this->customFields === null && $this->typeField) {
-            $db = JFactory::getDbo();
+            $db = Factory::getDbo();
 
             $query = $db->getQuery(true)
                 ->select('customfields')
