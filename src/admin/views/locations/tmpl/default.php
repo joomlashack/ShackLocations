@@ -54,13 +54,13 @@ if ($saveOrder) {
         <div id="j-sidebar-container" class="span2">
             <?php echo $this->sidebar; ?>
         </div>
-        <?php
+    <?php
     endif;
     ?>
     <div id="j-main-container" class="<?php echo $mainClass; ?>">
         <?php
         if ($task != "congratulations") :
-            echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+            echo JLayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
@@ -69,13 +69,13 @@ if ($saveOrder) {
                 <div class="hero-unit" style="text-align:left;">
                     <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_LOCATIONS_NEW'); ?>
                 </div>
-                <?php
+            <?php
             else :
                 ?>
                 <div class="alert alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-                <?php
+            <?php
             endif;
 
         else :
@@ -181,9 +181,9 @@ if ($saveOrder) {
                     <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->map_id; ?>">
                         <td class="order nowrap center hidden-phone">
                             <?php
-                            $iconAttribs = array(
+                            $iconAttribs = [
                                 'class' => 'sortable-handler'
-                            );
+                            ];
 
                             if (!$canChange) :
                                 $iconAttribs['class'] .= ' inactive';
@@ -204,7 +204,7 @@ if ($saveOrder) {
                                        name="order[]"
                                        size="5"
                                        value="<?php echo $item->ordering; ?>"/>
-                                <?php
+                            <?php
                             endif;
                             ?>
                         </td>
@@ -273,7 +273,7 @@ if ($saveOrder) {
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 endforeach;
                 ?>
                 </tbody>

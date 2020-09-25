@@ -56,8 +56,8 @@ class FocalpointViewLocation extends FocalpointViewSite
 
         $user = JFactory::getUser();
 
-        $this->state  = $model->getState();
-        $this->item   = $model->getData();
+        $this->state = $model->getState();
+        $this->item  = $model->getData();
 
         // Check for errors.
         if ($errors = $model->getErrors()) {
@@ -72,7 +72,7 @@ class FocalpointViewLocation extends FocalpointViewSite
         }
 
         JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
+        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', [&$this->item]);
 
         $this->params->merge($this->item->params);
 
@@ -80,24 +80,24 @@ class FocalpointViewLocation extends FocalpointViewSite
         $this->item->text = $this->item->description;
         JFactory::getApplication()->triggerEvent(
             'onContentPrepare',
-            array(
+            [
                 'com_focalpoint.location',
                 &$this->item,
                 &$this->params,
                 $limitstart = 0
-            )
+            ]
         );
         $this->item->description = $this->item->text;
 
         $this->item->text = $this->item->fulldescription;
         JFactory::getApplication()->triggerEvent(
             'onContentPrepare',
-            array(
+            [
                 'com_focalpoint.location',
                 &$this->item,
                 &$this->params,
                 $limitstart = 0
-            )
+            ]
         );
         $this->item->fulldescription = $this->item->text;
         unset($this->item->text);
@@ -162,9 +162,9 @@ class FocalpointViewLocation extends FocalpointViewSite
         if (!empty($field->datatype)) {
             $data = array_merge(
                 get_object_vars($field),
-                array(
+                [
                     'showlabel' => !$hidelabel
-                )
+                ]
             );
 
             return JLayoutHelper::render('custom.field.' . $field->datatype, $data);

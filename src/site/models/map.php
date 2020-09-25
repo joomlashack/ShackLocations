@@ -75,7 +75,7 @@ class FocalpointModelMap extends JModelForm
 
                         // Some additional tweaking for custom tabs
                         $mapTabs = empty($this->item->tabsdata->tabs)
-                            ? array()
+                            ? []
                             : (array)$this->item->tabsdata->tabs;
 
                         $this->item->tabsdata->tabs = $mapTabs;
@@ -107,7 +107,7 @@ class FocalpointModelMap extends JModelForm
      *
      * @return Table
      */
-    public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = array())
+    public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = [])
     {
         $this->addTablePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
 
@@ -122,7 +122,7 @@ class FocalpointModelMap extends JModelForm
      *
      * @return null
      */
-    public function getForm($customFieldsData = array(), $loadData = true)
+    public function getForm($customFieldsData = [], $loadData = true)
     {
         return null;
     }
@@ -142,59 +142,54 @@ class FocalpointModelMap extends JModelForm
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'c.title AS legend',
-                    'c.subtitle AS legendsubtitle',
-                    'c.alias AS legendalias',
-                    'b.title AS locationtype',
-                    'b.id AS locationtype_id',
-                    'b.alias AS locationtypealias',
-                    'e.marker AS marker_type',
-                    'a.id',
-                    'a.state',
-                    'a.title',
-                    'a.alias',
-                    'a.map_id',
-                    'a.type',
-                    'a.address',
-                    'a.phone',
-                    'a.description',
-                    'a.customfieldsdata',
-                    'a.latitude',
-                    'a.longitude',
-                    'a.marker AS marker_location',
-                    'a.linktype',
-                    'a.altlink',
-                    'a.maplinkid',
-                    'a.menulink',
-                    'a.params'
-                )
-            )
+            ->select([
+                'c.title AS legend',
+                'c.subtitle AS legendsubtitle',
+                'c.alias AS legendalias',
+                'b.title AS locationtype',
+                'b.id AS locationtype_id',
+                'b.alias AS locationtypealias',
+                'e.marker AS marker_type',
+                'a.id',
+                'a.state',
+                'a.title',
+                'a.alias',
+                'a.map_id',
+                'a.type',
+                'a.address',
+                'a.phone',
+                'a.description',
+                'a.customfieldsdata',
+                'a.latitude',
+                'a.longitude',
+                'a.marker AS marker_location',
+                'a.linktype',
+                'a.altlink',
+                'a.maplinkid',
+                'a.menulink',
+                'a.params'
+            ])
             ->from('#__focalpoint_locations AS a')
             ->innerJoin('#__focalpoint_locationtypes AS e on e.id = a.type')
             ->innerJoin('#__focalpoint_location_type_xref AS d ON d.location_id = a.id')
             ->innerJoin('#__focalpoint_locationtypes AS b ON b.id = d.locationtype_id')
             ->innerJoin('#__focalpoint_legends AS c ON  c.id = b.legend')
-            ->where(
-                array(
-                    'a.map_id = ' . (int)$item->id,
-                    'a.state = 1',
-                    'b.state = 1',
-                    'c.state = 1'
-                )
-            );
+            ->where([
+                'a.map_id = ' . (int)$item->id,
+                'a.state = 1',
+                'b.state = 1',
+                'c.state = 1'
+            ]);
 
         $order     = $item->params->get('locationorder', 'ordering');
         $direction = $item->params->get('locationorderdir', 'asc');
         if ($item->params->get('locationgroup')) {
-            $query->order(
-                array(
-                    "c.{$order} {$direction}",
-                    "b.{$order} {$direction}",
-                    "a.{$order} {$direction}"
-                )
-            );
+            $query->order([
+                "c.{$order} {$direction}",
+                "b.{$order} {$direction}",
+                "a.{$order} {$direction}"
+            ]);
+
         } else {
             $query->order('a.' . $order . ' ' . $direction);
         }
@@ -232,11 +227,11 @@ class FocalpointModelMap extends JModelForm
             /*
              * Create $result->link.
              */
-            $linkQuery = array(
+            $linkQuery = [
                 'option' => 'com_focalpoint',
                 'view'   => 'location',
                 'id'     => $result->id
-            );
+            ];
 
             $result->link = null;
             switch ($result->linktype) {
@@ -273,10 +268,10 @@ class FocalpointModelMap extends JModelForm
                     // Menu Item
                     if ($result->menulink) {
                         if ($targetMenu = $app->getMenu()->getItem($result->menulink)) {
-                            $linkQuery = array(
+                            $linkQuery = [
                                 'option' => $targetMenu->query['option'],
                                 'Itemid' => $targetMenu->id
-                            );
+                            ];
                         }
                     }
                     break;

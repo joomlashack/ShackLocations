@@ -26,19 +26,19 @@ defined('_JEXEC') or die;
 
 class FocalpointModelmaps extends JModelList
 {
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         $config = array_merge_recursive(
-            array(
-                'filter_fields' => array(
+            [
+                'filter_fields' => [
                     'a.created_by',
                     'a.id',
                     'a.ordering',
                     'a.state',
                     'a.title',
                     'state'
-                )
-            ),
+                ]
+            ],
             $config
         );
 
@@ -82,13 +82,11 @@ class FocalpointModelmaps extends JModelList
 
         // Select the required fields from the table.
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'a.*',
-                    'uc.name AS editor',
-                    'created_by.name AS created_by'
-                )
-            )
+            ->select([
+                'a.*',
+                'uc.name AS editor',
+                'created_by.name AS created_by'
+            ])
             ->from('#__focalpoint_maps AS a')
             ->leftJoin('#__users AS uc ON uc.id = a.checked_out')
             ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
@@ -113,10 +111,10 @@ class FocalpointModelmaps extends JModelList
                         '(%s)',
                         join(
                             ' OR ',
-                            array(
+                            [
                                 'a.title LIKE ' . $search,
                                 'a.text LIKE ' . $search
-                            )
+                            ]
                         )
                     )
                 );

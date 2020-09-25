@@ -69,7 +69,7 @@ class FocalpointViewMap extends JViewLegacy
             $this->addToolbar();
 
             JPluginHelper::importPlugin('focalpoint');
-            JFactory::getApplication()->triggerEvent('onBeforeMapLoad', array(&$this->item));
+            JFactory::getApplication()->triggerEvent('onBeforeMapLoad', [&$this->item]);
 
             parent::display($tpl);
 

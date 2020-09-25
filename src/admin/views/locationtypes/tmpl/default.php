@@ -42,9 +42,9 @@ if ($saveOrder) :
     JHtml::_('sortablelist.sortable', 'locationTypesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 endif;
 
-$mainContainer = array(
+$mainContainer = [
     'id' => 'j-main-container'
-);
+];
 if (!empty($this->sidebar)) {
     $mainContainer['class'] = 'span10';
 }
@@ -66,7 +66,7 @@ if (!empty($this->sidebar)) {
         <?php
         // Search tools bar
         if ($task != 'showhelp') :
-            echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+            echo JLayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
@@ -234,7 +234,7 @@ if (!empty($this->sidebar)) {
                                         'link',
                                         $editLink,
                                         $this->escape($item->title),
-                                        array('title' => JText::_('JACTION_EDIT'))
+                                        ['title' => JText::_('JACTION_EDIT')]
                                     );
                                 else :
                                     echo $this->escape($item->title);

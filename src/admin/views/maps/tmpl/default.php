@@ -52,7 +52,7 @@ if ($saveOrder) {
     <div id="j-main-container" class="span10">
         <?php
         if ($task != "showhelp") :
-            echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+            echo JLayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
@@ -64,13 +64,13 @@ if ($saveOrder) {
                         <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_MAPS_NEW'); ?>
                     </div>
                 </div>
-                <?php
+            <?php
             else :
                 ?>
                 <div class="alert alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-                <?php
+            <?php
             endif;
         else :
             ?>
@@ -162,7 +162,7 @@ if ($saveOrder) {
                                        name="order[]"
                                        size="5"
                                        value="<?php echo $item->ordering; ?>"/>
-                                <?php
+                            <?php
                             endif;
                             ?>
                         </td>
@@ -196,7 +196,7 @@ if ($saveOrder) {
                                         'link',
                                         JRoute::_('index.php?option=com_focalpoint&task=map.edit&id=' . $item->id),
                                         $this->escape($item->title),
-                                        array('title' => JText::_('JACTION_EDIT'))
+                                        ['title' => JText::_('JACTION_EDIT'])
                                     );
                                 else :
                                     echo $this->escape($item->title);
@@ -212,7 +212,7 @@ if ($saveOrder) {
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 endforeach;
                 ?>
                 </tbody>

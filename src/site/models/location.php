@@ -102,19 +102,15 @@ class FocalpointModelLocation extends JModelForm
         $link = 'index.php?option=com_focalpoint&view=map';
 
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'id',
-                    'params'
-                )
-            )
+            ->select([
+                'id',
+                'params'
+            ])
             ->from('#__menu')
-            ->where(
-                array(
-                    'link = ' . $db->quote($link),
-                    'published=1'
-                )
-            );
+            ->where([
+                'link = ' . $db->quote($link),
+                'published=1'
+            ]);
 
         $menus = $db->setQuery($query)->loadObjectList();
         foreach ($menus as $menu) {
@@ -163,7 +159,7 @@ class FocalpointModelLocation extends JModelForm
             ->from('#__focalpoint_locationtypes')
             ->where('id = ' . $type);
 
-        $customFields  = array();
+        $customFields  = [];
         $fieldSettings = json_decode($db->setQuery($query)->loadResult());
         if ($fieldSettings) {
             foreach ($fieldSettings as $hash => $customField) {
@@ -228,14 +224,14 @@ class FocalpointModelLocation extends JModelForm
         return $marker;
     }
 
-    public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = array())
+    public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = [])
     {
         $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 
         return JTable::getInstance($type, $prefix, $config);
     }
 
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         return null;
     }

@@ -26,11 +26,9 @@ defined('_JEXEC') or die;
 
 class FocalpointTablelegend extends JTable
 {
-    protected $_jsonEncode = array('params');
+    protected $_jsonEncode = ['params'];
 
-    protected $_columnAlias = array(
-        'published' => 'state'
-    );
+    protected $_columnAlias = ['published' => 'state'];
 
     /**
      * Constructor
@@ -42,7 +40,7 @@ class FocalpointTablelegend extends JTable
         parent::__construct('#__focalpoint_legends', 'id', $db);
     }
 
-    public function bind($src, $ignore = array())
+    public function bind($src, $ignore = [])
     {
         if (parent::bind($src, $ignore)) {
             if (empty($this->alias) && !empty($this->title)) {

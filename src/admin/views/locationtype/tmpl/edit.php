@@ -28,7 +28,7 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('jquery.ui', array('core', 'sortable'));
+JHtml::_('jquery.ui', ['core', 'sortable']);
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
@@ -51,7 +51,7 @@ JHtml::_('jquery.ui', array('core', 'sortable'));
 
     echo $this->form->renderFieldset('hidden');
 
-    echo JHtml::_('bootstrap.startTabSet', 'locationtype', array('active' => 'general'));
+    echo JHtml::_('bootstrap.startTabSet', 'locationtype', ['active' => 'general']);
     echo JHtml::_('bootstrap.addTab', 'locationtype', 'general', JText::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
     ?>
     <div class="row-fluid">

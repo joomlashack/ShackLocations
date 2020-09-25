@@ -26,12 +26,12 @@ defined('_JEXEC') or die;
 
 class FocalpointModellocationtypes extends JModelList
 {
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         $config = array_merge_recursive(
             $config,
-            array(
-                'filter_fields' => array(
+            [
+                'filter_fields' => [
                     'a.id',
                     'a.ordering',
                     'a.state',
@@ -39,8 +39,8 @@ class FocalpointModellocationtypes extends JModelList
                     'a.legend',
                     'created_by.name',
                     'legend_title'
-                )
-            )
+                ]
+            ]
         );
 
         parent::__construct($config);
@@ -85,14 +85,12 @@ class FocalpointModellocationtypes extends JModelList
         $db = $this->getDbo();
 
         $query = $db->getQuery(true)
-            ->select(
-                array(
-                    'a.*',
-                    'uc.name AS editor',
-                    'b.title AS legend_title',
-                    'created_by.name AS created_by'
-                )
-            )
+            ->select([
+                'a.*',
+                'uc.name AS editor',
+                'b.title AS legend_title',
+                'created_by.name AS created_by'
+            ])
             ->from('`#__focalpoint_locationtypes` AS a')
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
             ->leftJoin('#__focalpoint_legends AS b ON b.id = a.legend')
@@ -100,7 +98,7 @@ class FocalpointModellocationtypes extends JModelList
 
         $published = $this->getState('filter.state');
         if ($published == '') {
-            $query->where('(a.state IN (0, 1))');
+            $query->where('a.state IN (0, 1)');
 
         } else {
             $query->where('a.state = ' . (int)$published);
@@ -118,10 +116,10 @@ class FocalpointModellocationtypes extends JModelList
                         '(%s)',
                         join(
                             ' OR ',
-                            array(
+                            [
                                 'a.title LIKE ' . $search,
                                 'a.description LIKE ' . $search
-                            )
+                            ]
                         )
                     )
                 );

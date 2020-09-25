@@ -26,7 +26,7 @@ defined('_JEXEC') or die();
 
 $markers = $this->chunkLegends($this->item->markerdata);
 
-$html       = array();
+$html       = [];
 $subtitle   = '';
 $lastLegend = null;
 foreach ($markers as $legend) {

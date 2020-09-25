@@ -30,14 +30,14 @@ class FocalpointModelmap extends JModelAdmin
 {
     protected $text_prefix = 'COM_FOCALPOINT';
 
-    public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = array())
+    public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = [])
     {
         return JTable::getInstance($type, $prefix, $config);
     }
 
-    public function getForm($data = array(), $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm('com_focalpoint.map', 'map', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm('com_focalpoint.map', 'map', ['control' => 'jform', 'load_data' => $loadData]);
         if (empty($form)) {
             return false;
         }
@@ -64,7 +64,7 @@ class FocalpointModelmap extends JModelAdmin
      */
     protected function loadFormData()
     {
-        $data = JFactory::getApplication()->getUserState('com_focalpoint.edit.map.data', array());
+        $data = JFactory::getApplication()->getUserState('com_focalpoint.edit.map.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -83,7 +83,7 @@ class FocalpointModelmap extends JModelAdmin
     public function save($data)
     {
         JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapSave', array(&$data));
+        JFactory::getApplication()->triggerEvent('onBeforeMapSave', [&$data]);
 
         return parent::save($data);
     }

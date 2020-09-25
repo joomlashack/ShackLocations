@@ -40,7 +40,7 @@ class FocalpointRouter extends JComponentRouterBase
 {
     protected $menuItems = null;
 
-    protected $alias = array();
+    protected $alias = [];
 
     /**
      * @param array $query
@@ -49,7 +49,7 @@ class FocalpointRouter extends JComponentRouterBase
      */
     public function build(&$query)
     {
-        $segments = array();
+        $segments = [];
 
         $menuItem = empty($query['Itemid']) ? $this->menu->getActive() : $this->menu->getItem($query['Itemid']);
 
@@ -85,7 +85,7 @@ class FocalpointRouter extends JComponentRouterBase
      */
     public function parse(&$segments)
     {
-        $vars = array();
+        $vars = [];
 
         if ($segments) {
             $menuItem = $this->menu->getActive();
@@ -101,7 +101,7 @@ class FocalpointRouter extends JComponentRouterBase
                     ->where('alias = ' . $db->quote($locationAlias));
 
                 if (!empty($menuItem)
-                && $menuItem->query['option'] == 'com_focalpoint'
+                    && $menuItem->query['option'] == 'com_focalpoint'
                     && $menuItem->query['view'] == 'map'
                 ) {
                     $sqlQuery->where('map_id = ' . (int)$menuItem->getParams()->get('item_id'));
@@ -128,11 +128,11 @@ class FocalpointRouter extends JComponentRouterBase
         if ($this->menuItems === null) {
             $menuItems = $this->menu->getItems('component', 'com_focalpoint');
 
-            $this->menuItems = array();
+            $this->menuItems = [];
             foreach ($menuItems as $menuItem) {
                 $menuView = $menuItem->query['view'];
                 if (!isset($this->menuItems[$menuView])) {
-                    $this->menuItems[$menuView] = array();
+                    $this->menuItems[$menuView] = [];
                 }
 
                 $parameterId = $menuItem->getParams()->get('item_id');
@@ -157,14 +157,14 @@ class FocalpointRouter extends JComponentRouterBase
     protected function getAlias($view, $id)
     {
         if (empty($this->alias[$view][$id])) {
-            $tables = array(
+            $tables = [
                 'location' => 'locations',
                 'map'      => 'maps'
-            );
+            ];
 
             if (!empty($tables[$view])) {
                 if (!isset($this->alias[$view])) {
-                    $this->alias[$view] = array();
+                    $this->alias[$view] = [];
                 }
 
                 $db = JFactory::getDbo();

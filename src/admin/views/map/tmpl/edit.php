@@ -30,7 +30,7 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('jquery.ui', array('core', 'sortable'));
+JHtml::_('jquery.ui', ['core', 'sortable']);
 JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();
@@ -55,7 +55,7 @@ $formFieldsets = $this->form->getFieldsets();
     echo $this->form->renderFieldset('hidden');
     echo JLayoutHelper::render('joomla.edit.title_alias', $this);
 
-    echo JHtml::_('bootstrap.startTabSet', 'map', array('active' => 'basic'));
+    echo JHtml::_('bootstrap.startTabSet', 'map', ['active' => 'basic']);
 
     echo JHtml::_('bootstrap.addTab', 'map', 'basic', JText::_($formFieldsets['basic']->label));
     ?>
@@ -84,7 +84,7 @@ $formFieldsets = $this->form->getFieldsets();
                     <span class="icon-info" aria-hidden="true"></span>
                     <?php echo $tabDescription; ?>
                 </div>
-                <?php
+            <?php
             endif;
 
             echo $this->form->renderFieldset('tabs');
@@ -96,7 +96,7 @@ $formFieldsets = $this->form->getFieldsets();
 
     // Allow pluginsto add form tabs
     JPluginHelper::importPlugin('focalpoint');
-    JFactory::getApplication()->triggerEvent('onLoadMapTabs', array($this->form));
+    JFactory::getApplication()->triggerEvent('onLoadMapTabs', [$this->form]);
 
     echo JHtml::_('bootstrap.addTab', 'map', 'metadata', JText::_($formFieldsets['metadata']->label));
     ?>

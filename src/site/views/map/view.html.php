@@ -60,8 +60,8 @@ class FocalpointViewMap extends FocalpointViewSite
         /** @var FocalpointModelMap $model */
         $model = $this->getModel();
 
-        $this->state  = $model->getState();
-        $this->item   = $model->getData();
+        $this->state = $model->getState();
+        $this->item  = $model->getData();
 
         // Check for errors.
         if ($errors = $model->getErrors()) {
@@ -70,7 +70,7 @@ class FocalpointViewMap extends FocalpointViewSite
 
         // Load FocalPoint Plugins. Trigger onBeforeMapPrepareRender
         JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', array(&$this->item));
+        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender',[&$this->item]);
 
         $offset = $this->state->get('list.offset');
         JPluginHelper::importPlugin('content');
@@ -80,12 +80,12 @@ class FocalpointViewMap extends FocalpointViewSite
         JPluginHelper::importPlugin('content');
         JFactory::getApplication()->triggerEvent(
             'onContentPrepare',
-            array(
+            [
                 'com_focalpoint.map',
                 &$this->item,
                 &$this->params,
                 $offset
-            )
+            ]
         );
 
         // Trigger onContentPrepare for any custom map tabs
@@ -98,12 +98,12 @@ class FocalpointViewMap extends FocalpointViewSite
             $tab->text = $tab->content;
             JFactory::getApplication()->triggerEvent(
                 'onContentPrepare',
-                array(
+                [
                     'com_focalpoint.map',
                     &$tab,
                     &$this->params,
                     $offset
-                )
+                ]
             );
 
             $tab->content = $tab->text;
@@ -142,12 +142,12 @@ class FocalpointViewMap extends FocalpointViewSite
 
         // Load FocalPoint Plugins. Trigger onBeforeRenderMap
         JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeRenderMap', array(&$this->item));
+        JFactory::getApplication()->triggerEvent('onBeforeRenderMap', [&$this->item]);
 
         parent::display($tpl);
 
         // Load FocalPoint Plugins. Trigger onAfterRenderMap
-        JFactory::getApplication()->triggerEvent('onAfterRenderMap', array(&$this->item));
+        JFactory::getApplication()->triggerEvent('onAfterRenderMap', [&$this->item]);
     }
 
     /**
@@ -161,12 +161,12 @@ class FocalpointViewMap extends FocalpointViewSite
     protected function chunkLegends(array $markerData, &$hasSubtitles = null)
     {
         $column  = 0;
-        $legends = array();
+        $legends = [];
 
         $uniqueMarkers = array_filter(
             $markerData,
             function ($marker) {
-                static $keys = array();
+                static $keys = [];
                 $key = md5($marker->legendalias . $marker->locationtypealias);
 
                 $result = !in_array($key, $keys);
@@ -186,12 +186,12 @@ class FocalpointViewMap extends FocalpointViewSite
                 $column++;
             }
             if (!isset($legends[$column])) {
-                $legends[$column] = (object)array(
+                $legends[$column] = (object)[
                     'alias'    => $marker->legendalias,
                     'title'    => $marker->legend,
                     'subtitle' => $marker->legendsubtitle,
-                    'markers'  => array()
-                );
+                    'markers'  => []
+                ];
 
                 $hasSubtitles = $hasSubtitles || (bool)$marker->legendsubtitle;
             }

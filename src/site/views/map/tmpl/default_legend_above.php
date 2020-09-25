@@ -27,7 +27,7 @@ defined('_JEXEC') or die();
 $hasSubtitles = null;
 $markers = $this->chunkLegends($this->item->markerdata, $hasSubtitles);
 
-$html     = array();
+$html     = [];
 $columns  = 4;
 $column   = -1;
 $subtitle = '';

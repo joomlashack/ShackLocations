@@ -26,12 +26,12 @@ defined('_JEXEC') or die;
 
 class FocalpointModellocations extends JModelList
 {
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         $config = array_merge_recursive(
             $config,
-            array(
-                'filter_fields' => array(
+            [
+                'filter_fields' => [
                     'a.ordering',
                     'a.state',
                     'a.title',
@@ -42,8 +42,8 @@ class FocalpointModellocations extends JModelList
                     'state',
                     'map_id',
                     'type'
-                )
-            )
+                ]
+            ]
         );
 
 
@@ -93,7 +93,7 @@ class FocalpointModellocations extends JModelList
      * different modules that might need different sets of data or different
      * ordering requirements.
      *
-     * @param    string $id A prefix for the store id.
+     * @param string $id A prefix for the store id.
      *
      * @return    string        A store id.
      * @since    1.6

@@ -183,7 +183,7 @@ foreach ($this->item->markerdata as $marker) {
         $infoDescription
     );
     if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $boxText, $images)) {
-        $fixed = array();
+        $fixed = [];
         foreach ($images[0] as $idx => $source) {
             $imageUri    = JHtml::_('image', $images[1][$idx], null, null, false, 1);
             $fixed[$idx] = str_replace($images[1][$idx], $imageUri, $source);
@@ -198,7 +198,7 @@ foreach ($this->item->markerdata as $marker) {
                 'link',
                 $marker->link,
                 JText::_('COM_FOCALPOINT_FIND_OUT_MORE'),
-                array('title' => $marker->title)
+                ['title' => $marker->title]
             )
         );
     }

@@ -22,15 +22,19 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('behavior.tooltip');
+HTMLHelper::_('behavior.formvalidation');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $params = JComponentHelper::getParams('com_focalpoint');
-JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
+HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();
 
@@ -40,7 +44,7 @@ $formFieldsets = $this->form->getFieldsets();
         if (task === 'location.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
             Joomla.submitform(task, document.getElementById('adminForm'));
         } else {
-            alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
+            alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
         }
     }
 </script>
@@ -55,11 +59,11 @@ $formFieldsets = $this->form->getFieldsets();
     echo $this->form->renderFieldset('hidden');
     unset($formFieldsets['hidden']);
 
-    echo JLayoutHelper::render('joomla.edit.title_alias', $this);
+    echo LayoutHelper::render('joomla.edit.title_alias', $this);
 
-    echo JHtml::_('bootstrap.startTabSet', 'location', array('active' => 'basic'));
+    echo HTMLHelper::_('bootstrap.startTabSet', 'location', ['active' => 'basic']);
 
-    echo JHtml::_('bootstrap.addTab', 'location', 'basic', JText::_($formFieldsets['basic']->label));
+    echo HTMLHelper::_('bootstrap.addTab', 'location', 'basic', Text::_($formFieldsets['basic']->label));
     ?>
     <div class="row-fluid">
         <div class="span9">
@@ -81,14 +85,14 @@ $formFieldsets = $this->form->getFieldsets();
         </div>
     </div>
     <?php
-    echo JHtml::_('bootstrap.endTab');
+    echo HTMLHelper::_('bootstrap.endTab');
 
     foreach ($formFieldsets as $fieldsetName => $fieldset) :
-        echo JHtml::_(
+        echo HTMLHelper::_(
             'bootstrap.addTab',
             'location',
             $fieldsetName,
-            JText::_($fieldset->label)
+            Text::_($fieldset->label)
         );
         ?>
         <div class="form-horizontal">
@@ -97,21 +101,21 @@ $formFieldsets = $this->form->getFieldsets();
                 ?>
                 <div class="tab-description alert alert-info">
                     <span class="icon-info" aria-hidden="true"></span>
-                    <?php echo JText::_($fieldset->description); ?>
+                    <?php echo Text::_($fieldset->description); ?>
                 </div>
                 <?php
             endif;
 
             echo $this->form->renderFieldset($fieldsetName);
-            echo JHtml::_('bootstrap.endTab');
+            echo HTMLHelper::_('bootstrap.endTab');
             ?>
         </div>
         <?php
     endforeach;
 
-    echo JHtml::_('bootstrap.endTabSet');
+    echo HTMLHelper::_('bootstrap.endTabSet');
     ?>
     <input type="hidden" name="task" value=""/>
-    <?php echo JHtml::_('form.token'); ?>
+    <?php echo HTMLHelper::_('form.token'); ?>
 
 </form>

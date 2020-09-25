@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
@@ -53,13 +54,13 @@ endif;
         <div id="j-sidebar-container" class="span2">
             <?php echo $this->sidebar; ?>
         </div>
-        <?php
+    <?php
     endif;
     ?>
     <div id="j-main-container" class="<?php echo $mainClass; ?>">
         <?php
         if ($task != "showhelp") :
-            echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
@@ -70,13 +71,13 @@ endif;
                         <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_LEGENDS'); ?>
                     </div>
                 </div>
-                <?php
+            <?php
             else :
                 ?>
                 <div class="alert alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-                <?php
+            <?php
             endif;
         else :
             ?>
@@ -152,9 +153,8 @@ endif;
                     <tr class="row<?php echo $i % 2; ?>" sortable-group-id="0">
                         <td class="order nowrap center hidden-phone">
                             <?php
-                            $sortableAttribs = array(
-                                'class' => 'sortable-handler'
-                            );
+                            $sortableAttribs = ['class' => 'sortable-handler'];
+
                             if (!$canChange) :
                                 $sortableAttribs['class'] .= ' inactive';
 
@@ -174,7 +174,7 @@ endif;
                                        style="display:none"
                                        name="order[]"
                                        value="<?php echo $item->ordering; ?>"/>
-                                <?php
+                            <?php
                             endif;
                             ?>
                         </td>
@@ -234,7 +234,7 @@ endif;
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                    <?php
+                <?php
                 endforeach;
                 ?>
                 </tbody>

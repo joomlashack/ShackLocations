@@ -31,7 +31,7 @@ class AutoLoader
      *
      * @var array
      */
-    protected static $prefixes = array();
+    protected static $prefixes =[];
 
     /**
      * Associative array of prefixes for loading specialized camelCase classes
@@ -39,7 +39,7 @@ class AutoLoader
      *
      * @var array
      */
-    protected static $camelPrefixes = array();
+    protected static $camelPrefixes =[];
 
     /**
      * @var AutoLoader
@@ -90,7 +90,7 @@ class AutoLoader
 
         // initialise the namespace prefix array
         if (empty(static::$prefixes[$prefix])) {
-            static::$prefixes[$prefix] = array();
+            static::$prefixes[$prefix] =[];
         }
 
         // retain the base directory for the namespace prefix
