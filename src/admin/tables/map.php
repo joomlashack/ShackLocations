@@ -22,10 +22,6 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Access\Rules;
-use Joomla\CMS\Table\Asset;
-use Joomla\Utilities\ArrayHelper;
-
 defined('_JEXEC') or die();
 
 class FocalpointTablemap extends JTable

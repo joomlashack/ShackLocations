@@ -23,7 +23,6 @@
  */
 
 use Joomla\CMS\Object\CMSObject;
-use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
@@ -46,7 +45,7 @@ class FocalpointModelmap extends JModelAdmin
         return $form;
     }
 
-    protected function preprocessForm(\JForm $form, $data, $group = 'content')
+    protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         try {
             $proForm = JForm::getInstance('map.pro', 'map.pro');

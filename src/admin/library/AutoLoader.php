@@ -175,7 +175,7 @@ class AutoLoader
      * @param string $baseDir
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public static function registerCamelBase($prefix, $baseDir)
     {

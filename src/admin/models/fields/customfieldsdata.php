@@ -43,7 +43,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends JFormField
      */
     protected $fieldGroup = null;
 
-    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    public function setup(SimpleXMLElement $element, $value, $group = null)
     {
         if (parent::setup($element, $value, $group)) {
             $typeField     = explode('.', (string)$element['locationtype'] ?: 'type');

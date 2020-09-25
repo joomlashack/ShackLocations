@@ -35,7 +35,7 @@ class FocalpointControllerMap extends FormController
     /**
      * @inheritDoc
      */
-    protected function postSaveHook(\JModelLegacy $model, $validData = [])
+    protected function postSaveHook(JModelLegacy $model, $validData = [])
     {
         parent::postSaveHook($model, $validData);
 

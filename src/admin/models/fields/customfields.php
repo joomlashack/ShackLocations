@@ -52,7 +52,7 @@ class ShacklocationsFormFieldCustomfields extends JFormField
      */
     protected $fieldGroup = null;
 
-    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    public function setup(SimpleXMLElement $element, $value, $group = null)
     {
         if (parent::setup($element, $value, $group)) {
             if ($parent = $element->xpath('parent::fieldset')) {

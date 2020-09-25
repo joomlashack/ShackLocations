@@ -22,9 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Object\CMSObject;
-use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die;
 

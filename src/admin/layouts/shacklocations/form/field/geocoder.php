@@ -22,7 +22,6 @@
  */
 
 use Joomla\CMS\Layout\FileLayout;
-use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 

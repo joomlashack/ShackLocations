@@ -22,8 +22,6 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Joomla\Utilities\ArrayHelper;
-
 defined('_JEXEC') or die();
 
 class FocalpointTablelocation extends JTable
