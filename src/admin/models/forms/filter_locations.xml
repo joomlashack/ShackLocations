@@ -15,7 +15,7 @@
         </field>
 
         <field name="map_id"
-               type="maps"
+               type="shacklocations.maps"
                label="- Map -"
                description="JOPTION_FILTER_CATEGORY_DESC"
                onchange="this.form.submit();">

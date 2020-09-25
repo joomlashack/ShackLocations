@@ -22,47 +22,41 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('JPATH_PLATFORM') or die;
 
-JFormHelper::loadFieldClass('predefinedlist');
+FormHelper::loadFieldClass('List');
 
-/**
- * Form Field to load a list of states
- * Used in place of the Joomla status field as FocalPoint does not use "archived"
- */
-class JFormFieldMaps extends JFormFieldPredefinedList
+class ShacklocationsFormFieldMaps extends JFormFieldList
 {
     /**
-     * The form field type.
-     *
-     * @var    string
-     * @since  3.2
+     * @var string[]
      */
-    public $type = 'maps';
+    protected $options = null;
 
     /**
-     * Available statuses
-     *
-     * @var  array
-     * @since  3.2
+     * @inheritDoc
      */
-    protected $predefinedOptions = array();
-
-    /**
-     * Constrct method to get the field input markup.
-     */
-    function __construct()
+    public function getOptions()
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query
-            ->select('id,title')
-            ->from('`#__focalpoint_maps`')
-            ->where('`state` > -1');
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-        foreach ($results as $result) {
-            $this->predefinedOptions[$result->id] = $result->title;
+        if ($this->options === null) {
+            $db    = Factory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('id,title')
+                ->from($db->quoteName('#__focalpoint_maps'))
+                ->where($db->quoteName('state') . ' > -1');
+
+            $this->options = [];
+
+            $maps = $db->setQuery($query)->loadObjectList();
+            foreach ($maps as $map) {
+                $this->options[] = HTMLHelper::_('select.option', $map->id, $map->title);
+            }
         }
+
+        return array_merge(parent::getOptions(), $this->options);
     }
 }
