@@ -22,25 +22,29 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user      = Factory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDir   = $this->escape($this->state->get('list.direction'));
 $saveOrder = $listOrder == 'a.ordering';
-$task      = JFactory::getApplication()->input->getCmd('task');
+$task      = Factory::getApplication()->input->getCmd('task');
 
 if ($saveOrder) {
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=maps.saveOrderAjax&tmpl=component';
-    JHtml::_('sortablelist.sortable', 'mapsList', 'adminForm', strtolower($listDir), $saveOrderingUrl);
+    HTMLHelper::_('sortablelist.sortable', 'mapsList', 'adminForm', strtolower($listDir), $saveOrderingUrl);
 }
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=maps'); ?>"
+<form action="<?php echo Route::_('index.php?option=com_focalpoint&view=maps'); ?>"
       method="post"
       name="adminForm"
       id="adminForm">
@@ -79,7 +83,7 @@ if ($saveOrder) {
                 <tr>
                     <th width="1%" class="nowrap center hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             '',
                             'a.ordering',
@@ -94,16 +98,16 @@ if ($saveOrder) {
                     </th>
 
                     <th width="1%" class="hidden-phone">
-                        <?php echo JHtml::_('grid.checkall'); ?>
+                        <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
 
                     <th width="1%" style="min-width:55px" class="nowrap center">
-                        <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDir, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDir, $listOrder); ?>
                     </th>
 
                     <th>
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_MAPS_TITLE',
                             'a.title',
@@ -115,7 +119,7 @@ if ($saveOrder) {
 
                     <th width="10%" class="nowrap hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_MAPS_CREATED_BY',
                             'a.created_by',
@@ -126,7 +130,7 @@ if ($saveOrder) {
                     </th>
 
                     <th width="1%" class="nowrap hidden-phone">
-                        <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDir, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDir, $listOrder); ?>
                     </th>
                 </tr>
                 </thead>
@@ -148,7 +152,7 @@ if ($saveOrder) {
                                 $iconClass = ' inactive';
                             } elseif (!$saveOrder) {
                                 $iconClass = ' inactive tip-top hasTooltip" title="'
-                                    . JHtml::tooltipText('JORDERINGDISABLED');
+                                    . HTMLHelper::tooltipText('JORDERINGDISABLED');
                             }
                             ?>
                             <span class="sortable-handler<?php echo $iconClass ?>">
@@ -168,12 +172,12 @@ if ($saveOrder) {
                         </td>
 
                         <td class="center hidden-phone">
-                            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                            <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                         </td>
 
                         <td class="center">
                             <div class="btn-group">
-                                <?php echo JHtml::_('jgrid.published', $item->state, $i, 'maps.', $canChange, 'cb'); ?>
+                                <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'maps.', $canChange, 'cb'); ?>
                             </div>
                         </td>
 
@@ -181,7 +185,7 @@ if ($saveOrder) {
                             <div class="pull-left">
                                 <?php
                                 if ($item->checked_out) :
-                                    echo JHtml::_(
+                                    echo HTMLHelper::_(
                                         'jgrid.checkedout',
                                         $i,
                                         $item->editor,
@@ -192,11 +196,11 @@ if ($saveOrder) {
                                 endif;
 
                                 if ($canEdit) :
-                                    echo JHtml::_(
+                                    echo HTMLHelper::_(
                                         'link',
-                                        JRoute::_('index.php?option=com_focalpoint&task=map.edit&id=' . $item->id),
+                                        Route::_('index.php?option=com_focalpoint&task=map.edit&id=' . $item->id),
                                         $this->escape($item->title),
-                                        ['title' => JText::_('JACTION_EDIT'])
+                                        ['title' => JText::_('JACTION_EDIT')]
                                     );
                                 else :
                                     echo $this->escape($item->title);
@@ -224,7 +228,7 @@ if ($saveOrder) {
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="boxchecked" value="0"/>
-        <?php echo JHtml::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
 

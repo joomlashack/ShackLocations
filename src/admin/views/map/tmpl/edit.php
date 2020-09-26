@@ -22,42 +22,47 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+
 defined('_JEXEC') or die;
 
-$params = JComponentHelper::getParams('com_focalpoint');
+$params = ComponentHelper::getParams('com_focalpoint');
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('jquery.ui', ['core', 'sortable']);
-JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('jquery.ui', ['core', 'sortable']);
+HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task === 'map.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+        if (task === 'map.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
             Joomla.submitform(task, document.getElementById('adminForm'));
-        } else {
-            alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
         }
     }
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+<form name="adminForm"
+      id="adminForm"
+      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      name="adminForm"
-      id="adminForm"
       class="form-validate">
 
     <?php
     echo $this->form->renderFieldset('hidden');
-    echo JLayoutHelper::render('joomla.edit.title_alias', $this);
+    echo LayoutHelper::render('joomla.edit.title_alias', $this);
 
-    echo JHtml::_('bootstrap.startTabSet', 'map', ['active' => 'basic']);
+    echo HTMLHelper::_('bootstrap.startTabSet', 'map', ['active' => 'basic']);
 
-    echo JHtml::_('bootstrap.addTab', 'map', 'basic', JText::_($formFieldsets['basic']->label));
+    echo HTMLHelper::_('bootstrap.addTab', 'map', 'basic', JText::_($formFieldsets['basic']->label));
     ?>
     <div class="row-fluid">
         <div class="form-vertical">
@@ -70,15 +75,15 @@ $formFieldsets = $this->form->getFieldsets();
         </div>
     </div>
     <?php
-    echo JHtml::_('bootstrap.endTab');
+    echo HTMLHelper::_('bootstrap.endTab');
 
     $tabFieldset = $formFieldsets['tabs'];
-    echo JHtml::_('bootstrap.addTab', 'map', 'tabs', JText::_($tabFieldset->label));
+    echo HTMLHelper::_('bootstrap.addTab', 'map', 'tabs', JText::_($tabFieldset->label));
     ?>
     <div class="row-fluid">
         <div class="form-vertical">
             <?php
-            if ($tabDescription = JText::_($tabFieldset->description)) :
+            if ($tabDescription = Text::_($tabFieldset->description)) :
                 ?>
                 <div class="tab-description alert alert-info">
                     <span class="icon-info" aria-hidden="true"></span>
@@ -92,13 +97,13 @@ $formFieldsets = $this->form->getFieldsets();
         </div>
     </div>
     <?php
-    echo JHtml::_('bootstrap.endTab');
+    echo HTMLHelper::_('bootstrap.endTab');
 
     // Allow pluginsto add form tabs
-    JPluginHelper::importPlugin('focalpoint');
-    JFactory::getApplication()->triggerEvent('onLoadMapTabs', [$this->form]);
+    PluginHelper::importPlugin('focalpoint');
+    Factory::getApplication()->triggerEvent('onLoadMapTabs', [$this->form]);
 
-    echo JHtml::_('bootstrap.addTab', 'map', 'metadata', JText::_($formFieldsets['metadata']->label));
+    echo HTMLHelper::_('bootstrap.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
     ?>
     <div class="row-fluid">
         <div class="form-horizontal">
@@ -106,9 +111,9 @@ $formFieldsets = $this->form->getFieldsets();
         </div>
     </div>
     <?php
-    echo JHtml::_('bootstrap.endTab');
+    echo HTMLHelper::_('bootstrap.endTab');
 
-    echo JHtml::_('bootstrap.addTab', 'map', 'params', JText::_($formFieldsets['params']->label));
+    echo HTMLHelper::_('bootstrap.addTab', 'map', 'params', Text::_($formFieldsets['params']->label));
     ?>
     <div class="row-fluid">
         <div class="form-horizontal">
@@ -116,11 +121,11 @@ $formFieldsets = $this->form->getFieldsets();
         </div>
     </div>
     <?php
-    echo JHtml::_('bootstrap.endTab');
+    echo HTMLHelper::_('bootstrap.endTab');
 
-    echo JHtml::_('bootstrap.endTabSet');
+    echo HTMLHelper::_('bootstrap.endTabSet');
     ?>
 
     <input type="hidden" name="task" value=""/>
-    <?php echo JHtml::_('form.token'); ?>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
