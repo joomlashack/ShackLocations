@@ -100,11 +100,13 @@ class FocalpointModellegends extends ListModel
             ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
 
         $published = $this->getState('filter.state');
-        if ($published == '') {
-            $query->where('(a.state IN (0, 1))');
+        if ($published != '*') {
+            if ($published == '') {
+                $query->where('(a.state IN (0, 1))');
 
-        } else {
-            $query->where('a.state = ' . (int)$published);
+            } else {
+                $query->where('a.state = ' . (int)$published);
+            }
         }
 
         $search = $this->getState('filter.search');

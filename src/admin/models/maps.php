@@ -91,12 +91,15 @@ class FocalpointModelmaps extends JModelList
             ->leftJoin('#__users AS uc ON uc.id = a.checked_out')
             ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
 
+        // Filter by published
         $published = $this->getState('filter.state');
-        if (is_numeric($published)) {
-            $query->where('a.state = ' . (int)$published);
+        if ($published != '*') {
+            if ($published == '') {
+                $query->where('(a.state IN (0, 1))');
 
-        } elseif ($published === '') {
-            $query->where('(a.state IN (0, 1))');
+            } else {
+                $query->where('a.state = ' . (int)$published);
+            }
         }
 
         $search = $this->getState('filter.search');

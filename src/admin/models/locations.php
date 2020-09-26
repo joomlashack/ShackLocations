@@ -144,13 +144,14 @@ class FocalpointModellocations extends JModelList
         $query->select('created_by.name AS created_by');
         $query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
 
-        // Filter by published state
+        // Filter by published
         $published = $this->getState('filter.state');
-        if (is_numeric($published)) {
-            $query->where('a.state = ' . (int)$published);
-        } else {
-            if ($published === '') {
+        if ($published != '*') {
+            if ($published == '') {
                 $query->where('(a.state IN (0, 1))');
+
+            } else {
+                $query->where('a.state = ' . (int)$published);
             }
         }
 
