@@ -22,13 +22,14 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $user      = JFactory::getUser();
 $userId    = $user->get('id');
@@ -39,7 +40,7 @@ $task      = JFactory::getApplication()->input->getCmd('task');
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=locationtypes.saveOrderAjax&tmpl=component';
-    JHtml::_('sortablelist.sortable', 'locationTypesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    HTMLHelper::_('sortablelist.sortable', 'locationTypesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 endif;
 
 $mainContainer = [
@@ -87,7 +88,7 @@ if (!empty($this->sidebar)) {
                 <tr>
                     <th width="1%" class="nowrap center hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             '',
                             'a.ordering',
@@ -102,16 +103,16 @@ if (!empty($this->sidebar)) {
                     </th>
 
                     <th width="1%" class="hidden-phone">
-                        <?php echo JHtml::_('grid.checkall'); ?>
+                        <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
 
                     <th width="1%" style="min-width:55px" class="nowrap center">
-                        <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                     </th>
 
                     <th>
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONTYPES_TITLE',
                             'a.title',
@@ -123,7 +124,7 @@ if (!empty($this->sidebar)) {
 
                     <th>
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONTYPES_LEGEND',
                             'legend_title',
@@ -135,7 +136,7 @@ if (!empty($this->sidebar)) {
 
                     <th width="10%" class="nowrap hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONTYPES_CREATED_BY',
                             'created_by.name',
@@ -147,7 +148,7 @@ if (!empty($this->sidebar)) {
 
                     <th width="1%" class="nowrap hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'JGRID_HEADING_ID',
                             'a.id',
@@ -179,7 +180,7 @@ if (!empty($this->sidebar)) {
                             elseif (!$saveOrder) :
                                 $class .= sprintf(
                                     ' inactive tip-top hasTooltip" title="%s"',
-                                    JHtml::tooltipText('JORDERINGDISABLED')
+                                    HTMLHelper::tooltipText('JORDERINGDISABLED')
                                 );
                             endif;
                             ?>
@@ -197,13 +198,13 @@ if (!empty($this->sidebar)) {
                         </td>
 
                         <td class="center hidden-phone">
-                            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                            <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                         </td>
 
                         <td class="center">
                             <div class="btn-group">
                                 <?php
-                                echo JHtml::_(
+                                echo HTMLHelper::_(
                                     'jgrid.published',
                                     $item->state,
                                     $i,
@@ -219,7 +220,7 @@ if (!empty($this->sidebar)) {
                             <div class="pull-left">
                                 <?php
                                 if ($item->checked_out) :
-                                    echo JHtml::_(
+                                    echo HTMLHelper::_(
                                         'jgrid.checkedout',
                                         $i,
                                         $item->editor,
@@ -230,7 +231,7 @@ if (!empty($this->sidebar)) {
                                 endif;
 
                                 if ($canEdit || $canEditOwn) :
-                                    echo JHtml::_(
+                                    echo HTMLHelper::_(
                                         'link',
                                         $editLink,
                                         $this->escape($item->title),
@@ -265,6 +266,6 @@ if (!empty($this->sidebar)) {
 
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="boxchecked" value="0"/>
-        <?php echo JHtml::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>

@@ -22,20 +22,20 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.keepalive');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('jquery.ui', ['core', 'sortable']);
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('formbehavior.chosen', 'select');
+HTMLHelper::_('jquery.ui', ['core', 'sortable']);
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task === 'locationtype.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+        if (task === 'locationtype.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
             Joomla.submitform(task, document.getElementById('adminForm'));
-        } else {
-            alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
         }
     }
 </script>
@@ -51,8 +51,8 @@ JHtml::_('jquery.ui', ['core', 'sortable']);
 
     echo $this->form->renderFieldset('hidden');
 
-    echo JHtml::_('bootstrap.startTabSet', 'locationtype', ['active' => 'general']);
-    echo JHtml::_('bootstrap.addTab', 'locationtype', 'general', JText::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
+    echo HTMLHelper::_('bootstrap.startTabSet', 'locationtype', ['active' => 'general']);
+    echo HTMLHelper::_('bootstrap.addTab', 'locationtype', 'general', JText::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
     ?>
     <div class="row-fluid">
         <div class="form-horizontal">
@@ -60,9 +60,9 @@ JHtml::_('jquery.ui', ['core', 'sortable']);
         </div>
     </div>
     <?php
-    echo JHtml::_('bootstrap.endTab');
+    echo HTMLHelper::_('bootstrap.endTab');
 
-    echo JHtml::_(
+    echo HTMLHelper::_(
         'bootstrap.addTab',
         'locationtype',
         'customfields',
@@ -76,11 +76,11 @@ JHtml::_('jquery.ui', ['core', 'sortable']);
     </div>
     <?php
 
-    echo JHtml::_('bootstrap.endTab');
+    echo HTMLHelper::_('bootstrap.endTab');
 
-    echo JHtml::_('bootstrap.endTabSet');
+    echo HTMLHelper::_('bootstrap.endTabSet');
 
     ?>
     <input type="hidden" name="task" value=""/>
-    <?php echo JHtml::_('form.token'); ?>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
