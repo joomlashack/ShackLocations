@@ -22,6 +22,9 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die;
 
 class FocalpointModellocationtypes extends JModelList
@@ -55,7 +58,7 @@ class FocalpointModellocationtypes extends JModelList
      */
     protected function populateState($ordering = null, $direction = null)
     {
-        $app = JFactory::getApplication('administrator');
+        $app = Factory::getApplication('administrator');
 
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
@@ -66,7 +69,7 @@ class FocalpointModellocationtypes extends JModelList
         $legend = $app->getUserStateFromRequest($this->context . '.filter.legend', 'filter_legend', '', 'string');
         $this->setState('filter.legend', $legend);
 
-        $params = JComponentHelper::getParams('com_focalpoint');
+        $params = ComponentHelper::getParams('com_focalpoint');
         $this->setState('params', $params);
 
         parent::populateState('a.title', 'asc');

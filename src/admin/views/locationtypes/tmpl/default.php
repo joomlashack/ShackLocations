@@ -22,7 +22,11 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
@@ -31,12 +35,12 @@ HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $saveOrder = $listOrder == 'a.ordering';
-$task      = JFactory::getApplication()->input->getCmd('task');
+$task      = Factory::getApplication()->input->getCmd('task');
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=locationtypes.saveOrderAjax&tmpl=component';
@@ -51,7 +55,7 @@ if (!empty($this->sidebar)) {
 }
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=locationtypes'); ?>"
+<form action="<?php echo Route::_('index.php?option=com_focalpoint&view=locationtypes'); ?>"
       method="post"
       id="adminForm"
       name="adminForm">
@@ -67,19 +71,19 @@ if (!empty($this->sidebar)) {
         <?php
         // Search tools bar
         if ($task != 'showhelp') :
-            echo JLayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
             if ($task == 'showhelp') : ?>
                 <div class="fp_locationtypes_view">
                     <div class="hero-unit" style="text-align:left;">
-                        <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_LOCATIONTYPES_NEW'); ?>
+                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LOCATIONTYPES_NEW'); ?>
                     </div>
                 </div>
             <?php else : ?>
                 <div class="alert alert-no-items">
-                    <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                    <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
             <?php endif; ?>
         <?php else : ?>
@@ -168,7 +172,7 @@ if (!empty($this->sidebar)) {
                     $canEditOwn = $user->authorise('core.edit.own', 'com_focalpoint');
                     $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                     $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
-                    $editLink = JRoute::_('index.php?option=com_focalpoint&task=locationtype.edit&id=' . $item->id);
+                    $editLink = Route::_('index.php?option=com_focalpoint&task=locationtype.edit&id=' . $item->id);
                     ?>
 
                     <tr class="<?php echo 'row' . ($i % 2); ?>" sortable-group-id="<?php echo $item->legend; ?>">
@@ -235,7 +239,7 @@ if (!empty($this->sidebar)) {
                                         'link',
                                         $editLink,
                                         $this->escape($item->title),
-                                        ['title' => JText::_('JACTION_EDIT')]
+                                        ['title' => Text::_('JACTION_EDIT')]
                                     );
                                 else :
                                     echo $this->escape($item->title);

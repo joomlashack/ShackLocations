@@ -22,8 +22,10 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -82,33 +84,33 @@ class FocalpointViewLocationtype extends JViewLegacy
      */
     protected function addToolbar()
     {
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user  = JFactory::getUser();
+        $user  = Factory::getUser();
         $isNew = empty($this->item->id);
 
-        JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPE'), 'location');
+        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPE'), 'location');
 
         if ($user->authorise('core.edit', 'com_focalpoint')
             || $user->authorise('core.create', 'com_focalpoint')
         ) {
-            JToolBarHelper::apply('locationtype.apply');
-            JToolBarHelper::save('locationtype.save');
+            ToolBarHelper::apply('locationtype.apply');
+            ToolBarHelper::save('locationtype.save');
         }
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            JToolBarHelper::save2new('locationtype.save2new');
+            ToolBarHelper::save2new('locationtype.save2new');
         }
 
         if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
-            JToolBarHelper::save2copy('locationtype.save2copy');
+            ToolBarHelper::save2copy('locationtype.save2copy');
         }
 
         if (!($this->item->get('id'))) {
-            JToolBarHelper::cancel('locationtype.cancel');
+            ToolBarHelper::cancel('locationtype.cancel');
 
         } else {
-            JToolBarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CLOSE');
+            ToolBarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CLOSE');
         }
     }
 }

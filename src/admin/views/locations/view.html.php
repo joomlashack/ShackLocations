@@ -23,9 +23,11 @@
  */
 
 use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -65,7 +67,7 @@ class FocalpointViewLocations extends JViewLegacy
     public function display($tpl = null)
     {
         /** @var AdministratorApplication $app */
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         try {
             /** @var FocalpointModellocations $model */
@@ -91,12 +93,13 @@ class FocalpointViewLocations extends JViewLegacy
              * user has successfully created a map, legend and location tyeps.
              * Check we have at least one location defined
              */
-            $db    = JFactory::getDbo();
+            $db    = Factory::getDbo();
             $query = $db->getQuery(true)
-                ->select('id')->from('#__focalpoint_locations');
+                ->select('id')
+                ->from('#__focalpoint_locations');
 
             if (!$db->setQuery($query)->loadResult()) {
-                JFactory::getApplication()->input->set('task', 'congratulations');
+                Factory::getApplication()->input->set('task', 'congratulations');
             }
 
             parent::display($tpl);
@@ -113,34 +116,34 @@ class FocalpointViewLocations extends JViewLegacy
 
     protected function addToolbar()
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
-        JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONS'), 'location');
+        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONS'), 'location');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            JToolBarHelper::addNew('location.add');
+            ToolBarHelper::addNew('location.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            JToolBarHelper::editList('location.edit');
+            ToolBarHelper::editList('location.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            JToolBarHelper::publishList('locations.publish');
-            JToolBarHelper::unpublishList('locations.unpublish');
-            JToolBarHelper::checkin('locations.checkin');
+            ToolBarHelper::publishList('locations.publish');
+            ToolBarHelper::unpublishList('locations.unpublish');
+            ToolBarHelper::checkin('locations.checkin');
         }
 
 
         if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            JToolBarHelper::deleteList('', 'locations.delete');
+            ToolBarHelper::deleteList('', 'locations.delete');
 
         } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            JToolBarHelper::trash('locations.trash');
+            ToolBarHelper::trash('locations.trash');
         }
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
-            JToolBarHelper::preferences('com_focalpoint');
+            ToolBarHelper::preferences('com_focalpoint');
         }
     }
 }

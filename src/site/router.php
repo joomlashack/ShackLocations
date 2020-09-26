@@ -22,9 +22,10 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Menu\MenuItem;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 /*
  * Component Routes
@@ -93,7 +94,7 @@ class FocalpointRouter extends JComponentRouterBase
             if (!$menuItem || $menuItem->query['view'] !== 'location') {
                 $locationAlias = array_pop($segments);
 
-                $db = JFactory::getDbo();
+                $db = Factory::getDbo();
 
                 $sqlQuery = $db->getQuery(true)
                     ->select('id, map_id')
@@ -167,7 +168,7 @@ class FocalpointRouter extends JComponentRouterBase
                     $this->alias[$view] = [];
                 }
 
-                $db = JFactory::getDbo();
+                $db = Factory::getDbo();
 
                 $sqlQuery = $db->getQuery(true)
                     ->select('alias')

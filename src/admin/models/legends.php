@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die;
@@ -56,7 +57,7 @@ class FocalpointModellegends extends ListModel
      */
     protected function populateState($ordering = null, $direction = null)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);

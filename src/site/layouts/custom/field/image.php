@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\FileLayout;
 
 defined('_JEXEC') or die();
@@ -38,7 +39,7 @@ $label     = empty($displayData['label']) ? null : $displayData['label'];
 $value     = empty($displayData['data']) ? null : $displayData['data'];
 
 if ($value) :
-    $value = JHtml::image($value, $label, 'class="fp_customfield fp_image"');
+    $value = HTMLHelper::_('image', $value, $label, 'class="fp_customfield fp_image"');
 
     echo '<p class="fp_customfield fp_textbox">';
     if ($showLabel && $label) :

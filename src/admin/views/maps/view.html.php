@@ -23,9 +23,11 @@
  */
 
 use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
@@ -65,7 +67,7 @@ class FocalpointViewMaps extends JViewLegacy
     public function display($tpl = null)
     {
         /** @var AdministratorApplication $app */
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         try {
             /** @var FocalpointModelMaps $model */
@@ -91,10 +93,11 @@ class FocalpointViewMaps extends JViewLegacy
              * user has successfully saved their configuration.
              * Check we have at least one map defined
              */
-            $db = JFactory::getDbo();
+            $db = Factory::getDbo();
 
             $query = $db->getQuery(true)
-                ->select('COUNT(*)')->from('#__focalpoint_maps');
+                ->select('COUNT(*)')
+                ->from('#__focalpoint_maps');
 
             $mapsExist = $db->setQuery($query)->loadResult();
             if (!$mapsExist) {
@@ -120,33 +123,34 @@ class FocalpointViewMaps extends JViewLegacy
      */
     protected function addToolbar()
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
-        JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAPS'), 'compass');
+        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAPS'), 'compass');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            JToolBarHelper::addNew('map.add');
+            ToolBarHelper::addNew('map.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            JToolBarHelper::editList('map.edit');
+            ToolBarHelper::editList('map.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            JToolBarHelper::publishList('maps.publish');
-            JToolBarHelper::unpublishList('maps.unpublish');
-            JToolBarHelper::checkin('maps.checkin');
+            ToolBarHelper::publishList('maps.publish');
+            ToolBarHelper::unpublishList('maps.unpublish');
+            ToolBarHelper::checkin('maps.checkin');
         }
 
         if ($user->authorise('core.delete', 'com_focalpoint')) {
             if ($this->state->get('filter.state') == -2) {
-                JToolBarHelper::deleteList('', 'maps.delete');
+                ToolBarHelper::deleteList('', 'maps.delete');
+
             } else {
-                JToolBarHelper::trash('maps.trash');
+                ToolBarHelper::trash('maps.trash');
             }
 
             if ($user->authorise('core.admin', 'com_focalpoint')) {
-                JToolBarHelper::preferences('com_focalpoint');
+                ToolBarHelper::preferences('com_focalpoint');
             }
         }
     }

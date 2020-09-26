@@ -22,6 +22,9 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die();
 
 class FocalpointController extends JControllerLegacy
@@ -37,21 +40,23 @@ class FocalpointController extends JControllerLegacy
      */
     public function display($cachable = false, $urlparams = false)
     {
+        $app= Factory::getApplication();
+
         /*
          * The first thing a user needs to do is configure options. This checks if component parameters exists
          * If not it redirects to the getting started view.
          */
-        $params     = JComponentHelper::getParams('com_focalpoint');
+        $params     = ComponentHelper::getParams('com_focalpoint');
         $paramsdata = $params->jsonSerialize();
         if (!count((array)$paramsdata)) {
-            JFactory::getApplication()->input->set('view', 'getstarted');
+            $app->input->set('view', 'getstarted');
             setcookie("ppr", 1, time() + 604800);
         }
 
-        $view = JFactory::getApplication()->input->getCmd('view', $this->default_view);
-        JFactory::getApplication()->input->set('view', $view);
+        $view = Factory::getApplication()->input->getCmd('view', $this->default_view);
+        $app->input->set('view', $view);
 
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
 
         // Check we have at least one locationtype defined
         $query = $db->getQuery(true)
@@ -61,16 +66,16 @@ class FocalpointController extends JControllerLegacy
         $typesExist = $db->setQuery($query)->loadResult();
 
         if (!$typesExist
-            && ($view != "maps"
-                && $view != "map"
-                && $view != "legends"
-                && $view != "legend"
-                && $view != "locationtypes"
-                && $view != "locationtype"
-                && $view != "getstarted")
+            && ($view != 'maps'
+                && $view != 'map'
+                && $view != 'legends'
+                && $view != 'legend'
+                && $view != 'locationtypes'
+                && $view != 'locationtype'
+                && $view != 'getstarted')
         ) {
-            JFactory::getApplication()->input->set('view', 'getstarted');
-            JFactory::getApplication()->input->set('task', 'locationtype');
+            $app->input->set('view', 'getstarted');
+            $app->input->set('task', 'locationtype');
         }
 
         // Check we have at least one legend defined
@@ -87,8 +92,8 @@ class FocalpointController extends JControllerLegacy
                 && $view != "legend"
                 && $view != "getstarted")
         ) {
-            JFactory::getApplication()->input->set('view', 'getstarted');
-            JFactory::getApplication()->input->set('task', 'legend');
+            $app->input->set('view', 'getstarted');
+            $app->input->set('task', 'legend');
         }
 
         // Check we have at least one map defined
@@ -99,8 +104,8 @@ class FocalpointController extends JControllerLegacy
         $mapsExists = $db->setQuery($query)->loadResult();
 
         if (!$mapsExists && ($view != "maps" && $view != "map" && $view != "getstarted")) {
-            JFactory::getApplication()->input->set('view', 'getstarted');
-            JFactory::getApplication()->input->set('task', 'map');
+            $app->input->set('view', 'getstarted');
+            $app->input->set('task', 'map');
         }
 
         parent::display($cachable, $urlparams);

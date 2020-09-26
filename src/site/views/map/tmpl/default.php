@@ -22,6 +22,8 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die();
 
 // Location List tab parameters
@@ -29,8 +31,8 @@ $showlisttab  = $this->params->get('locationlist');
 $listtabfirst = $this->params->get('showlistfirst');
 
 if ($this->params->get('loadBootstrap')) {
-    JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
-    JHtml::_('bootstrap.framework');
+    HTMLHelper::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
+    HTMLHelper::_('bootstrap.framework');
 }
 
 // Set up width/height styles for the map and sidebar.
@@ -84,7 +86,7 @@ $customTabs  = $this->item->tabsdata->tabs;
                 <?php echo $this->item->text; ?>
             </div>
         <?php endif; ?>
-        
+
         <div id="fp_main" class="clearfix">
             <?php if ($customTabs || $showlisttab) : ?>
             <div id="tab-container" class="tab-container">

@@ -23,9 +23,11 @@
  */
 
 use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -65,7 +67,7 @@ class FocalpointViewLegends extends JViewLegacy
     public function display($tpl = null)
     {
         /** @var AdministratorApplication $app */
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         try {
             /** @var FocalpointModellegends $model */
@@ -92,12 +94,13 @@ class FocalpointViewLegends extends JViewLegacy
              * user has successfully saved their configuration and defined a map.
              * Check we have at least one legend defined
              */
-            $db    = JFactory::getDbo();
+            $db    = Factory::getDbo();
             $query = $db->getQuery(true)
-                ->select('id')->from('#__focalpoint_legends');
+                ->select('id')
+                ->from('#__focalpoint_legends');
 
             if (!$db->setQuery($query)->loadResult()) {
-                JFactory::getApplication()->input->set('task', 'showhelp');
+                $app->input->set('task', 'showhelp');
             }
 
             parent::display($tpl);
@@ -119,33 +122,33 @@ class FocalpointViewLegends extends JViewLegacy
      */
     protected function addToolbar()
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
-        JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
+        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            JToolBarHelper::addNew('legend.add');
+            ToolBarHelper::addNew('legend.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            JToolBarHelper::editList('legend.edit');
+            ToolBarHelper::editList('legend.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            JToolBarHelper::publishList('legends.publish');
-            JToolBarHelper::unpublishList('legends.unpublish');
-            JToolBarHelper::checkin('legends.checkin');
+            ToolBarHelper::publishList('legends.publish');
+            ToolBarHelper::unpublishList('legends.unpublish');
+            ToolBarHelper::checkin('legends.checkin');
         }
 
         if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            JToolBarHelper::deleteList('', 'legends.delete');
+            ToolBarHelper::deleteList('', 'legends.delete');
 
         } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            JToolBarHelper::trash('legends.trash');
+            ToolBarHelper::trash('legends.trash');
         }
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
-            JToolBarHelper::preferences('com_focalpoint');
+            ToolBarHelper::preferences('com_focalpoint');
         }
     }
 }

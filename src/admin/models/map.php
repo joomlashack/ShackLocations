@@ -22,7 +22,9 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
 
@@ -64,7 +66,7 @@ class FocalpointModelmap extends JModelAdmin
      */
     protected function loadFormData()
     {
-        $data = JFactory::getApplication()->getUserState('com_focalpoint.edit.map.data', []);
+        $data = Factory::getApplication()->getUserState('com_focalpoint.edit.map.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -82,8 +84,8 @@ class FocalpointModelmap extends JModelAdmin
      */
     public function save($data)
     {
-        JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapSave', [&$data]);
+        PluginHelper::importPlugin('focalpoint');
+        Factory::getApplication()->triggerEvent('onBeforeMapSave', [&$data]);
 
         return parent::save($data);
     }
@@ -92,7 +94,7 @@ class FocalpointModelmap extends JModelAdmin
     {
         if ($item = parent::getItem($pk)) {
             if (empty($item->id)) {
-                $item->created_by = JFactory::getUser()->id;
+                $item->created_by = Factory::getUser()->id;
             }
 
             $item->tabsdata = json_decode($item->tabsdata, true);

@@ -63,7 +63,7 @@ class FocalpointModellocation extends JModelAdmin
      */
     protected function loadFormData()
     {
-        $app  = JFactory::getApplication();
+        $app  = Factory::getApplication();
         $data = $app->getUserState('com_focalpoint.edit.location.data', []);
 
         if (empty($data)) {
@@ -121,7 +121,7 @@ class FocalpointModellocation extends JModelAdmin
      */
     public function save($data)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         if (empty($data['othertypes'])) {
             $data['othertypes'] = [];

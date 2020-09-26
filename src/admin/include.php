@@ -21,6 +21,9 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die();
 
 if (!defined('SHACKLOC_LOADED')) {
@@ -34,13 +37,13 @@ if (!defined('SHACKLOC_LOADED')) {
     AutoLoader::registerCamelBase('Focalpoint', SHACKLOC_LIBRARY . '/joomla');
 
     // Application specific loads
-    switch (JFactory::getApplication()->getName()) {
+    switch (Factory::getApplication()->getName()) {
         case 'site':
-            JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
+            HTMLHelper::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
             break;
 
         case 'administrator':
-            JHtml::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
+            HTMLHelper::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
             JLoader::register('FocalpointHelper', __DIR__ . '/helpers/focalpoint.php');
             JLoader::register('mapsAPI', __DIR__ . '/helpers/maps.php');
 
@@ -51,7 +54,7 @@ if (!defined('SHACKLOC_LOADED')) {
                 if (file_exists($allediaFrameworkPath)) {
                     require_once $allediaFrameworkPath;
                 } else {
-                    JFactory::getApplication()
+                    Factory::getApplication()
                         ->enqueueMessage(JText::_('COM_FOCALPOINT_ERROR_FRAMEWORK_NOT_FOUND'), 'error');
                 }
             }

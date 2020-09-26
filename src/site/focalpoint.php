@@ -22,10 +22,13 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
+
 defined('_JEXEC') or die();
 
 require_once JPATH_COMPONENT_ADMINISTRATOR . '/include.php';
 
-$controller	= JControllerLegacy::getInstance('Focalpoint');
-$controller->execute(JFactory::getApplication()->input->getCmd('task'));
+$controller = BaseController::getInstance('Focalpoint');
+$controller->execute(Factory::getApplication()->input->getCmd('task'));
 $controller->redirect();

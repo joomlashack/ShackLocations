@@ -22,8 +22,10 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
@@ -90,9 +92,9 @@ class FocalpointViewLocation extends JViewLegacy
      */
     protected function addToolbar()
     {
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user  = JFactory::getUser();
+        $user  = Factory::getUser();
         $isNew = empty($this->item->id);
         if (isset($this->item->checked_out)) {
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
@@ -101,23 +103,23 @@ class FocalpointViewLocation extends JViewLegacy
         }
         $canDo = FocalpointHelper::getActions();
 
-        JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATION'), 'location.png');
+        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATION'), 'location.png');
 
         if (!$checkedOut) {
             if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
-                JToolBarHelper::apply('location.apply');
-                JToolBarHelper::save('location.save');
+                ToolBarHelper::apply('location.apply');
+                ToolBarHelper::save('location.save');
             }
 
             if ($canDo->get('core.create')) {
-                JToolBarHelper::save2new('location.save2new');
+                ToolBarHelper::save2new('location.save2new');
             }
         }
 
         if (!$isNew && $canDo->get('core.create')) {
-            JToolBarHelper::save2copy('location.save2copy');
+            ToolBarHelper::save2copy('location.save2copy');
         }
 
-        JToolBarHelper::cancel('location.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
+        ToolBarHelper::cancel('location.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

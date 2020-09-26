@@ -22,7 +22,10 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die;
 
@@ -44,17 +47,14 @@ class FocalpointViewLocation extends FocalpointViewSite
     protected $outputfield;
 
     /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
         /** @var FocalpointModelLocation $model */
         $model = $this->getModel();
 
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         $this->state = $model->getState();
         $this->item  = $model->getData();
@@ -71,14 +71,14 @@ class FocalpointViewLocation extends FocalpointViewSite
             }
         }
 
-        JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender', [&$this->item]);
+        PluginHelper::importPlugin('focalpoint');
+        Factory::getApplication()->triggerEvent('onBeforeMapPrepareRender', [&$this->item]);
 
         $this->params->merge($this->item->params);
 
-        JPluginHelper::importPlugin('content');
+        PluginHelper::importPlugin('content');
         $this->item->text = $this->item->description;
-        JFactory::getApplication()->triggerEvent(
+        Factory::getApplication()->triggerEvent(
             'onContentPrepare',
             [
                 'com_focalpoint.location',
@@ -90,7 +90,7 @@ class FocalpointViewLocation extends FocalpointViewSite
         $this->item->description = $this->item->text;
 
         $this->item->text = $this->item->fulldescription;
-        JFactory::getApplication()->triggerEvent(
+        Factory::getApplication()->triggerEvent(
             'onContentPrepare',
             [
                 'com_focalpoint.location',
@@ -167,7 +167,7 @@ class FocalpointViewLocation extends FocalpointViewSite
                 ]
             );
 
-            return JLayoutHelper::render('custom.field.' . $field->datatype, $data);
+            return LayoutHelper::render('custom.field.' . $field->datatype, $data);
         }
 
         return '';
@@ -181,7 +181,7 @@ class FocalpointViewLocation extends FocalpointViewSite
      */
     protected function renderCustomField()
     {
-        JFactory::getApplication()->enqueueMessage(
+        Factory::getApplication()->enqueueMessage(
             'The template override is using an obsolete method and requires updating'
         );
     }

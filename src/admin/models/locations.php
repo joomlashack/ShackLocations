@@ -22,6 +22,8 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die;
 
 class FocalpointModellocations extends JModelList
@@ -58,8 +60,7 @@ class FocalpointModellocations extends JModelList
      */
     protected function populateState($ordering = null, $direction = null)
     {
-        // Initialise variables.
-        $app = JFactory::getApplication('administrator');
+        $app = Factory::getApplication('administrator');
 
         // Load the filter state.
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');

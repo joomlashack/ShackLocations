@@ -46,11 +46,14 @@
  *  	$this->renderField($field,$hidelabel, $buffer);
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die();
 
 // Load the Google API and initialise the map.
-JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
-JHtml::_('script', 'components/com_focalpoint/assets/js/infobox.js');
+HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
+HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
 
 $params            = JComponentHelper::getParams('com_focalpoint');
 $showlisttab       = $this->item->params->get('locationlist');
@@ -185,7 +188,7 @@ foreach ($this->item->markerdata as $marker) {
     if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $boxText, $images)) {
         $fixed = [];
         foreach ($images[0] as $idx => $source) {
-            $imageUri    = JHtml::_('image', $images[1][$idx], null, null, false, 1);
+            $imageUri    = HTMLHelper::_('image', $images[1][$idx], null, null, false, 1);
             $fixed[$idx] = str_replace($images[1][$idx], $imageUri, $source);
         }
         $boxText = str_replace($images[0], $fixed, $boxText);
@@ -194,7 +197,7 @@ foreach ($this->item->markerdata as $marker) {
     if (isset($marker->link)) {
         $boxText .= sprintf(
             '<p class="infoboxlink">%s</p>',
-            JHtml::_(
+            HTMLHelper::_(
                 'link',
                 $marker->link,
                 JText::_('COM_FOCALPOINT_FIND_OUT_MORE'),
@@ -204,7 +207,7 @@ foreach ($this->item->markerdata as $marker) {
     }
     $boxText .= '<div class="infopointer"></div></div>';
 
-    $boxText = addslashes(str_replace(array("\n", "\t", "\r"), '', $boxText));
+    $boxText = addslashes(str_replace(["\n", "\t", "\r"], '', $boxText));
 
     $script .= <<<JSCRIPT
     if (jQuery.inArray({$marker->id} ,mappedMarkers) == -1) {
@@ -586,4 +589,4 @@ $script .= <<<JSCRIPT
 google.maps.event.addDomListener(window, 'load', initialize);
 JSCRIPT;
 
-JFactory::getDocument()->addScriptDeclaration($script);
+Factory::getDocument()->addScriptDeclaration($script);

@@ -22,39 +22,54 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+
 defined('_JEXEC') or die;
 
-$task = JFactory::getApplication()->input->getCmd('task', 'config');
+$task = Factory::getApplication()->input->getCmd('task', 'config');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=legends'); ?>" method="post" name="adminForm"
-      id="adminForm" class="fp_<?php echo $task; ?> tmpl_<?php echo JFactory::getApplication()->getTemplate(); ?>">
-    <?php if (!empty($this->sidebar)) : ?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this->sidebar; ?>
-    </div>
-    <div id="j-main-container" class="span10">
-        <?php else : ?>
-        <div id="j-main-container">
-            <?php endif; ?>
-
-            <div id="fp_pointer"></div>
-            <div class="hero-unit" style="text-align:left;">
-                <?php if ($task == 'config') { ?>
-                    <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_CONFIG'); ?>
-                <?php } ?>
-
-                <?php if ($task == 'map') { ?>
-                    <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_MAPS'); ?>
-                <?php } ?>
-
-                <?php if ($task == 'legend') { ?>
-                    <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_LEGENDS'); ?>
-                <?php } ?>
-
-                <?php if ($task == 'locationtype') { ?>
-                    <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_LOCATIONTYPES'); ?>
-                <?php } ?>
-            </div>
-
+<form name="adminForm"
+      id="adminForm"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&view=legends'); ?>"
+      method="post"
+      class="fp_<?php echo $task; ?> tmpl_<?php echo Factory::getApplication()->getTemplate(); ?>">
+    <?php
+    $class = '';
+    if (!empty($this->sidebar)) :
+        $class = 'span10';
+        ?>
+        <div id="j-sidebar-container" class="span2">
+            <?php echo $this->sidebar; ?>
         </div>
+    <?php endif; ?>
+    <div id="j-main-container" class="<?php echo $class; ?>>">
+        <div id="fp_pointer"></div>
+        <div class="hero-unit" style="text-align:left;">
+            <?php
+            switch ($task) {
+                case 'config':
+                    $message = 'COM_FOCALPOINT_GETSTARTED_CONFIG';
+                    break;
+
+                case 'map':
+                    $message = 'COM_FOCALPOINT_GETSTARTED_MAPS';
+                    break;
+
+                case 'legend':
+                    $message = 'COM_FOCALPOINT_GETSTARTED_LEGENDS';
+                    break;
+
+                case 'locationtype':
+                    $message = 'COM_FOCALPOINT_GETSTARTED_LOCATIONTYPES';
+                    break;
+            }
+
+            if (!empty($message)) :
+                echo Text::_($message);
+            endif;
+            ?>
+        </div>
+    </div>
 </form>

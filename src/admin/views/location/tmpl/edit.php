@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -51,7 +52,7 @@ $formFieldsets = $this->form->getFieldsets();
       action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      class="tmpl_<?php echo JFactory::getApplication()->getTemplate(); ?> form-validate">
+      class="tmpl_<?php echo Factory::getApplication()->getTemplate(); ?> form-validate">
 
     <?php
     echo $this->form->renderFieldset('hidden');

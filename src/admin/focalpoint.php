@@ -22,16 +22,20 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\MVC\Controller\BaseController;
+
 defined('_JEXEC') or die;
-JHtml::_('behavior.tabstate');
+HTMLHelper::_('behavior.tabstate');
 
 // Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_focalpoint')) {
+if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
     throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
 require_once __DIR__ . '/include.php';
 
-$controller = JControllerLegacy::getInstance('Focalpoint');
-$controller->execute(JFactory::getApplication()->input->getCmd('task'));
+$controller = BaseController::getInstance('Focalpoint');
+$controller->execute(Factory::getApplication()->input->getCmd('task'));
 $controller->redirect();

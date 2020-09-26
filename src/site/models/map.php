@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 
@@ -36,12 +37,12 @@ class FocalpointModelMap extends JModelForm
     protected $item = null;
 
     /**
-     * @throws Exception
+     * @inheritDoc
      */
     protected function populateState()
     {
         /** @var SiteApplication $app */
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         $id = $app->input->getInt('id') ?: $app->getParams()->get('item_id');
         $this->setState('map.id', $id);
@@ -101,29 +102,21 @@ class FocalpointModelMap extends JModelForm
     }
 
     /**
-     * @param string $type
-     * @param string $prefix
-     * @param array  $config
-     *
-     * @return Table
+     * @inheritDoc
      */
     public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = [])
     {
         $this->addTablePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
 
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($type, $prefix, $config);
     }
 
     /**
-     * We're using the form model but don't have any forms to load on the front end
-     *
-     * @param array $customFieldsData
-     * @param bool  $loadData
-     *
-     * @return null
+     * @inheritDoc
      */
     public function getForm($customFieldsData = [], $loadData = true)
     {
+        // We aren't using forms in this model
         return null;
     }
 
@@ -136,7 +129,7 @@ class FocalpointModelMap extends JModelForm
     protected function getMarkerData($item)
     {
         /** @var SiteApplication $app */
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $params = $app->getParams('com_focalpoint');
 
         $db = $this->getDbo();
@@ -321,11 +314,11 @@ class FocalpointModelMap extends JModelForm
                     if (!empty($fieldSettings->{$fieldKey})) {
                         $field = $fieldSettings->{$fieldKey};
 
-                        $result->customfields->{$field->name} = (object)array(
+                        $result->customfields->{$field->name} = (object)[
                             'datatype' => $dataType,
                             'label'    => $field->label,
                             'data'     => $value
-                        );
+                        ];
                     }
                 }
             }

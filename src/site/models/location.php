@@ -23,6 +23,10 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -42,7 +46,7 @@ class FocalpointModelLocation extends JModelForm
     protected function populateState()
     {
         /** @var SiteApplication $app */
-        $app = JFactory::getApplication('com_focalpoint');
+        $app = Factory::getApplication('com_focalpoint');
 
         $locationId = $app->input->getInt('id', $app->getParams()->get('item_id'));
         $this->setState('location.id', $locationId);
@@ -97,7 +101,7 @@ class FocalpointModelLocation extends JModelForm
      */
     public function getItemid($mapId)
     {
-        $db = JFactory::getDbo();
+        $db = $this->getDbo();
 
         $link = 'index.php?option=com_focalpoint&view=map';
 
@@ -152,7 +156,7 @@ class FocalpointModelLocation extends JModelForm
             return null;
         }
 
-        $db = JFactory::getDbo();
+        $db = $this->getDbo();
 
         $query = $db->getQuery(true)
             ->select('customfields')
@@ -168,11 +172,11 @@ class FocalpointModelLocation extends JModelForm
                     $fieldData = $customFieldsData[$hash];
 
                     if (isset($fieldData[$fieldName])) {
-                        $customFields[$fieldName] = (object)array(
+                        $customFields[$fieldName] = (object)[
                             'datatype' => $customField->type,
                             'label'    => $customField->label,
                             'data'     => $fieldData[$fieldName]
-                        );
+                        ];
                     }
                 }
             }
@@ -182,18 +186,18 @@ class FocalpointModelLocation extends JModelForm
     }
 
     /**
-     * @param JObject $location
+     * @param CMSObject $location
      *
      * @return string
      * @throws Exception
      */
-    protected function getMarker(JObject $location)
+    protected function getMarker(CMSObject $location)
     {
         $marker = $location->get('marker');
 
         if (!$marker) {
             if ($locationId = (int)$location->get('id')) {
-                $db    = JFactory::getDbo();
+                $db    = $this->getDbo();
                 $query = $db->getQuery(true)
                     ->select('a.marker')
                     ->from('#__focalpoint_locationtypes AS a')
@@ -211,14 +215,14 @@ class FocalpointModelLocation extends JModelForm
              */
 
             /** @var SiteApplication $app */
-            $app = JFactory::getApplication();
+            $app = Factory::getApplication();
 
             $params = $app->getParams('com_focalpoint');
             $marker = $params->get('marker');
         }
 
         if ($marker) {
-            $marker = JHtml::_('image', $marker, null, null, false, true);
+            $marker = HTMLHelper::_('image', $marker, null, null, false, true);
         }
 
         return $marker;
@@ -228,7 +232,7 @@ class FocalpointModelLocation extends JModelForm
     {
         $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($type, $prefix, $config);
     }
 
     public function getForm($data = [], $loadData = true)

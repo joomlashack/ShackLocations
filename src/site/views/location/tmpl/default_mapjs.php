@@ -32,12 +32,15 @@
 //
 // *********************************************************
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die('Restricted access');
 
 // Load the Google API and initialise the map.
 
-JHtml::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
-JHtml::_('script', 'components/com_focalpoint/assets/js/infobox.js');
+HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
+HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
 
 $params = (object)array(
     'searchAssist'      => ', ' . $this->item->params->get('searchAssist'),
@@ -97,12 +100,12 @@ $boxText = sprintf(
 if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $boxText, $images)) {
     $fixed = [];
     foreach ($images[0] as $idx => $source) {
-        $imageUri    = JHtml::_('image', $images[1][$idx], null, null, false, 1);
+        $imageUri    = HTMLHelper::_('image', $images[1][$idx], null, null, false, 1);
         $fixed[$idx] = str_replace($images[1][$idx], $imageUri, $source);
     }
     $boxText = str_replace($images[0], $fixed, $boxText);
 }
-$boxText = addslashes(str_replace(array("\n", "\t", "\r"), '', $boxText));
+$boxText = addslashes(str_replace(["\n", "\t", "\r"], '', $boxText));
 
 $script .= <<<JSCRIPT
     var myCenter{$this->item->id} = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude});
@@ -188,4 +191,4 @@ $script .= <<<JSCRIPT
 google.maps.event.addDomListener(window, 'load', initialize);
 JSCRIPT;
 
-JFactory::getDocument()->addScriptDeclaration($script);
+Factory::getDocument()->addScriptDeclaration($script);

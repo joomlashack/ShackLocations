@@ -22,7 +22,9 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
 defined('JPATH_PLATFORM') or die;
 
@@ -74,7 +76,7 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
     });
 })(jQuery);
 JSCODE;
-                JFactory::getDocument()->addScriptDeclaration($js);
+                Factory::getDocument()->addScriptDeclaration($js);
             }
         }
 
@@ -87,7 +89,7 @@ JSCODE;
     protected function getGroups()
     {
         if (static::$typeOptions === null) {
-            $db = JFactory::getDbo();
+            $db = Factory::getDbo();
 
             $query = $db->getQuery(true)
                 ->select([
@@ -111,7 +113,7 @@ JSCODE;
                 if ($type->legend !== $lastLegend) {
                     static::$typeOptions[$type->legend] = [];
                 }
-                static::$typeOptions[$type->legend][] = JHtml::_('select.option', $type->id, $type->title);
+                static::$typeOptions[$type->legend][] = HTMLHelper::_('select.option', $type->id, $type->title);
 
                 $lastLegend = $type->legend;
             }

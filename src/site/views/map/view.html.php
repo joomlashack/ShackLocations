@@ -22,7 +22,9 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
@@ -57,6 +59,8 @@ class FocalpointViewMap extends FocalpointViewSite
      */
     public function display($tpl = null)
     {
+        $app = Factory::getApplication();
+
         /** @var FocalpointModelMap $model */
         $model = $this->getModel();
 
@@ -69,16 +73,16 @@ class FocalpointViewMap extends FocalpointViewSite
         }
 
         // Load FocalPoint Plugins. Trigger onBeforeMapPrepareRender
-        JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeMapPrepareRender',[&$this->item]);
+        PluginHelper::importPlugin('focalpoint');
+        $app->triggerEvent('onBeforeMapPrepareRender', [&$this->item]);
 
         $offset = $this->state->get('list.offset');
-        JPluginHelper::importPlugin('content');
+        PluginHelper::importPlugin('content');
 
         $this->params->merge($this->item->params);
 
-        JPluginHelper::importPlugin('content');
-        JFactory::getApplication()->triggerEvent(
+        PluginHelper::importPlugin('content');
+        $app->triggerEvent(
             'onContentPrepare',
             [
                 'com_focalpoint.map',
@@ -96,7 +100,7 @@ class FocalpointViewMap extends FocalpointViewSite
             }
 
             $tab->text = $tab->content;
-            JFactory::getApplication()->triggerEvent(
+            $app->triggerEvent(
                 'onContentPrepare',
                 [
                     'com_focalpoint.map',
@@ -122,10 +126,10 @@ class FocalpointViewMap extends FocalpointViewSite
                 foreach ($matches as $match) {
                     foreach ($markerdata->customfields as $name => $customfield) {
                         if ($name == $match[1]) {
-                            $this->outputfield = (object)array(
+                            $this->outputfield = (object)[
                                 'hidelabel' => true,
                                 'data'      => $customfield->data
-                            );
+                            ];
 
                             ob_start();
                             echo $this->loadTemplate('customfield_' . $customfield->datatype);
@@ -141,13 +145,13 @@ class FocalpointViewMap extends FocalpointViewSite
         }
 
         // Load FocalPoint Plugins. Trigger onBeforeRenderMap
-        JPluginHelper::importPlugin('focalpoint');
-        JFactory::getApplication()->triggerEvent('onBeforeRenderMap', [&$this->item]);
+        PluginHelper::importPlugin('focalpoint');
+        $app->triggerEvent('onBeforeRenderMap', [&$this->item]);
 
         parent::display($tpl);
 
         // Load FocalPoint Plugins. Trigger onAfterRenderMap
-        JFactory::getApplication()->triggerEvent('onAfterRenderMap', [&$this->item]);
+        $app->triggerEvent('onAfterRenderMap', [&$this->item]);
     }
 
     /**

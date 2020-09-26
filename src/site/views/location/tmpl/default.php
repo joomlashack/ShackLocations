@@ -22,18 +22,20 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die;
 
 if ($this->item->params->get('loadBootstrap')) :
-    JHtml::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
-    JHtml::_('bootstrap.framework');
+    HTMLHelper::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
+    HTMLHelper::_('bootstrap.framework');
 endif;
 
 if (empty($this->item->backlink)) :
     $backLink = null;
 
 else :
-    $backLink = JHtml::_(
+    $backLink = HTMLHelper::_(
         'link',
         $this->item->backlink,
         JText::_('COM_FOCALPOINT_BACK_TO_MAP'),

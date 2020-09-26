@@ -23,6 +23,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -368,11 +369,11 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                         'class'   => 'btn-group btn-group-yesno',
                         'default' => '1'
                     ],
-                    'options'    => JHtml::_(
+                    'options'    => HTMLHelper::_(
                         'select.options',
                         [
-                            JHtml::_('select.option', 1, JText::_('JYES')),
-                            JHtml::_('select.option', 0, JText::_('JNO'))
+                            HTMLHelper::_('select.option', 1, JText::_('JYES')),
+                            HTMLHelper::_('select.option', 0, JText::_('JNO'))
                         ],
                         [
                             'option.key.toHtml'  => false,
@@ -433,13 +434,13 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
         );
 
         foreach ($selectOptions as &$option) {
-            $option = JHtml::_('select.option', $option, $option);
+            $option = HTMLHelper::_('select.option', $option, $option);
         }
 
         $fieldOptions = array_merge(
             $options,
             [
-                'options' => JHtml::_(
+                'options' => HTMLHelper::_(
                     'select.options',
                     $selectOptions,
                     [

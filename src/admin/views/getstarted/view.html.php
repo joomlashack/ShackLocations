@@ -22,7 +22,10 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -53,7 +56,7 @@ class FocalpointViewGetstarted extends JViewLegacy
 
         $this->addToolbar();
 
-        $view = JFactory::getApplication()->input->getCmd('view');
+        $view = Factory::getApplication()->input->getCmd('view');
         FocalpointHelper::addSubmenu($view);
 
         $this->sidebar = JHtmlSidebar::render();
@@ -63,12 +66,12 @@ class FocalpointViewGetstarted extends JViewLegacy
 
     protected function addToolbar()
     {
-        JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_GETSTARTED'), 'legends.png');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_GETSTARTED'), 'legends.png');
 
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
-            JToolBarHelper::preferences('com_focalpoint');
+            ToolBarHelper::preferences('com_focalpoint');
         }
     }
 }

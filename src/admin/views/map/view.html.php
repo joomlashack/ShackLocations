@@ -22,8 +22,11 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
@@ -52,7 +55,7 @@ class FocalpointViewMap extends JViewLegacy
      */
     public function display($tpl = null)
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         try {
             /** @var FocalpointModelMap $model */
@@ -68,8 +71,8 @@ class FocalpointViewMap extends JViewLegacy
 
             $this->addToolbar();
 
-            JPluginHelper::importPlugin('focalpoint');
-            JFactory::getApplication()->triggerEvent('onBeforeMapLoad', [&$this->item]);
+            PluginHelper::importPlugin('focalpoint');
+            $app->triggerEvent('onBeforeMapLoad', [&$this->item]);
 
             parent::display($tpl);
 
@@ -88,31 +91,32 @@ class FocalpointViewMap extends JViewLegacy
      */
     protected function addToolbar()
     {
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user  = JFactory::getUser();
+        $user  = Factory::getUser();
         $isNew = ($this->item->id == 0);
 
         $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
 
-        JToolBarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAP'), 'compass');
+        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAP'), 'compass');
 
         if (!$checkedOut) {
             if ($user->authorise('core.edit', 'com_focalpoint')
-                || $user->authorise('core.create', 'com_focalpoint')) {
-                JToolBarHelper::apply('map.apply');
-                JToolBarHelper::save('map.save');
+                || $user->authorise('core.create', 'com_focalpoint')
+            ) {
+                ToolBarHelper::apply('map.apply');
+                ToolBarHelper::save('map.save');
             }
 
             if ($user->authorise('core.create', 'com_focalpoint')) {
-                JToolBarHelper::save2new('map.save2new');
+                ToolBarHelper::save2new('map.save2new');
             }
         }
 
         if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
-            JToolBarHelper::save2copy('map.save2copy');
+            ToolBarHelper::save2copy('map.save2copy');
         }
 
-        JToolBarHelper::cancel('map.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
+        ToolBarHelper::cancel('map.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

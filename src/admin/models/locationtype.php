@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
@@ -73,7 +74,7 @@ class FocalpointModellocationtype extends JModelAdmin
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $data = JFactory::getApplication()->getUserState('com_focalpoint.edit.locationtype.data', []);
+        $data = Factory::getApplication()->getUserState('com_focalpoint.edit.locationtype.data', []);
 
         if (empty($data)) {
             $data = $this->getItem();
@@ -95,7 +96,7 @@ class FocalpointModellocationtype extends JModelAdmin
             }
 
             if (empty($item->id)) {
-                $item->created_by = JFactory::getUser()->id;
+                $item->created_by = Factory::getUser()->id;
             }
         }
 

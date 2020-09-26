@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\FileLayout;
 
 defined('_JEXEC') or die();
@@ -39,7 +40,7 @@ $value     = empty($displayData['data']) ? null : $displayData['data'];
 
 if ($value) :
     if ($email = empty($value['email']) ? null : $value['email']) :
-        $link = JHtml::_(
+        $link = HTMLHelper::_(
             'link',
             'mailto:' . $email,
             empty($value['linktext']) ? $email : $value['linktext']
