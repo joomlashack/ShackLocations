@@ -22,25 +22,27 @@
  * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
-$user      = JFactory::getUser();
+$user      = Factory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $saveOrder = $listOrder == 'a.ordering';
-$task      = JFactory::getApplication()->input->getCmd('task');
+$task      = Factory::getApplication()->input->getCmd('task');
 $mainClass = empty($this->sidebar) ? 'span12' : 'span10';
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=legends.saveOrderAjax&tmpl=component';
-    JHtml::_('sortablelist.sortable', 'legendsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    HTMLHelper::_('sortablelist.sortable', 'legendsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 endif;
 ?>
 
@@ -86,7 +88,7 @@ endif;
                 <tr>
                     <th width="1%" class="nowrap center hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             '',
                             'a.ordering',
@@ -100,14 +102,14 @@ endif;
                         ?>
                     </th>
                     <th width="1%" class="hidden-phone">
-                        <?php echo JHtml::_('grid.checkall'); ?>
+                        <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
                     <th width="1%" style="min-width:55px" class="nowrap center">
-                        <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                     </th>
                     <th>
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LEGENDS_TITLE',
                             'a.title',
@@ -118,7 +120,7 @@ endif;
                     </th>
                     <th width="10%" class="nowrap hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LEGENDS_CREATED_BY',
                             'a.created_by',
@@ -129,7 +131,7 @@ endif;
                     </th>
                     <th width="1%" class="nowrap hidden-phone">
                         <?php
-                        echo JHtml::_(
+                        echo HTMLHelper::_(
                             'searchtools.sort',
                             'JGRID_HEADING_ID',
                             'a.id',
@@ -160,7 +162,7 @@ endif;
 
                             elseif (!$saveOrder) :
                                 $sortableAttribs['class'] .= ' inactive tip-top hasTooltip';
-                                $sortableAttribs['title'] = JHtml::tooltipText('JORDERINGDISABLED');
+                                $sortableAttribs['title'] = HTMLHelper::tooltipText('JORDERINGDISABLED');
                             endif;
 
                             echo sprintf(
@@ -174,19 +176,19 @@ endif;
                                        style="display:none"
                                        name="order[]"
                                        value="<?php echo $item->ordering; ?>"/>
-                            <?php
+                                 <?php
                             endif;
                             ?>
                         </td>
 
                         <td class="center hidden-phone">
-                            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                            <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                         </td>
 
                         <td class="center">
                             <div class="btn-group">
                                 <?php
-                                echo JHtml::_(
+                                echo HTMLHelper::_(
                                     'jgrid.published',
                                     $item->state,
                                     $i,
@@ -202,7 +204,7 @@ endif;
                             <div class="pull-left">
                                 <?php
                                 if ($item->checked_out) :
-                                    echo JHtml::_(
+                                    echo HTMLHelper::_(
                                         'jgrid.checkedout',
                                         $i,
                                         $item->editor,
@@ -213,7 +215,7 @@ endif;
                                 endif;
 
                                 if ($canEdit) :
-                                    echo JHtml::_(
+                                    echo HTMLHelper::_(
                                         'link',
                                         JRoute::_('index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id),
                                         $this->escape($item->title),
@@ -246,7 +248,7 @@ endif;
         <div>
             <input type="hidden" name="task" value=""/>
             <input type="hidden" name="boxchecked" value="0"/>
-            <?php echo JHtml::_('form.token'); ?>
+            <?php echo HTMLHelper::_('form.token'); ?>
         </div>
     </div>
 </form>
