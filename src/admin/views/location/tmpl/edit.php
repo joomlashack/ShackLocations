@@ -28,8 +28,8 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die;
 
-HTMLHelper::_('behavior.tooltip');
-HTMLHelper::_('behavior.formvalidation');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
@@ -41,10 +41,8 @@ $formFieldsets = $this->form->getFieldsets();
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task === 'location.cancel' || document.formvalidator.isValid(document.id('adminForm'))) {
+        if (task === 'location.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
             Joomla.submitform(task, document.getElementById('adminForm'));
-        } else {
-            alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>');
         }
     }
 </script>
