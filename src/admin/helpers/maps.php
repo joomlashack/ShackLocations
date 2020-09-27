@@ -36,7 +36,7 @@ class mapsAPI
     {
         $address = urlencode($geoaddress);
 
-        $geocodeURL = "//maps.googleapis.com/maps/api/geocode/json?address=" . $address . "&sensor=false";
+        $geocodeURL = "//maps.googleapis.com/maps/api/geocode/json?address=" . $address;
 
         $ch = curl_init($geocodeURL);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
