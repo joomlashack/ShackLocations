@@ -50,7 +50,7 @@
         </field>
 
         <field name="map_id"
-               type="shacklocations.maps"
+               type="shacklocations.map"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_MAP_ID"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_MAP_ID"
                required="true"

@@ -26,37 +26,37 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
 FormHelper::loadFieldClass('List');
 
-class ShacklocationsFormFieldMaps extends JFormFieldList
+class ShacklocationsFormFieldMap extends JFormFieldList
 {
     /**
      * @var string[]
      */
-    protected $options = null;
+    protected static $options = null;
 
     /**
      * @inheritDoc
      */
     public function getOptions()
     {
-        if ($this->options === null) {
+        if (static::$options === null) {
+            static::$options = [];
+
             $db    = Factory::getDbo();
             $query = $db->getQuery(true)
                 ->select('id,title')
                 ->from($db->quoteName('#__focalpoint_maps'))
                 ->where($db->quoteName('state') . ' > -1');
 
-            $this->options = [];
-
             $maps = $db->setQuery($query)->loadObjectList();
             foreach ($maps as $map) {
-                $this->options[] = HTMLHelper::_('select.option', $map->id, $map->title);
+                static::$options[] = HTMLHelper::_('select.option', $map->id, $map->title);
             }
         }
 
-        return array_merge(parent::getOptions(), $this->options);
+        return array_merge(parent::getOptions(), static::$options);
     }
 }

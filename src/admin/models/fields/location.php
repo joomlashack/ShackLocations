@@ -23,19 +23,23 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 FormHelper::loadFieldClass('List');
 
-class ShacklocationsFormFieldLegend extends JFormFieldList
+/**
+ * Loads a select list of Shack Locations.
+ */
+class ShacklocationsFormFieldLocation extends JFormFieldList
 {
     /**
      * @inheritdoc
      */
-    public $type = 'shacklocations.legend';
+    public $type = 'shacklocations.location';
 
     /**
      * @var object[]
@@ -50,15 +54,15 @@ class ShacklocationsFormFieldLegend extends JFormFieldList
         if (static::$options === null) {
             static::$options = [];
 
-            $db    = Factory::getDbo();
+            $db = Factory::getDbo();
             $query = $db->getQuery(true)
-                ->select('id,title')
-                ->from($db->quoteName('#__focalpoint_legends'))
-                ->where($db->quoteName('state') . ' > -1');
+                ->select('id, title')
+                ->from('#__focalpoint_locations')
+                ->order('title');
+            $locations = $db->setQuery($query)->loadObjectList();
 
-            $legends = $db->setQuery($query)->loadObjectList();
-            foreach ($legends as $legend) {
-                static::$options[] = HTMLHelper::_('select.option', $legend->id, $legend->title);
+            foreach ($locations as $location) {
+                static::$options[] = HTMLHelper::_('select.option', $location->id, $location->title);
             }
         }
 
