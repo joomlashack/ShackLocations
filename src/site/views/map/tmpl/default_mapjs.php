@@ -88,7 +88,7 @@ $text              = (object)array(
 );
 
 $script = <<<JSCRIPT
-var map             = null,
+let map             = null,
     markerCluster   = null,
     clusterMarkers  = [],
     allowScrollTo   = false,
@@ -106,7 +106,7 @@ var map             = null,
     marker          = [];
 
 function updateActiveCount(marker) {
-    var locationTxt = '',
+    let locationTxt = '',
         status      = '',
         activeCount = 0;
 
@@ -121,7 +121,7 @@ function updateActiveCount(marker) {
     if (searchTxt !== '') {
         locationTxt = ' ({$text->within} ' + mapsearchrange + '{$text->distance} ' + searchTxt + ')';
     }
-    var locationPlural = '{$text->locations}';
+    let locationPlural = '{$text->locations}';
     if (activeCount == 1) {
         locationPlural = '{$text->location}';
     }
@@ -137,7 +137,6 @@ function updateActiveCount(marker) {
         jQuery('.nolocations').remove();
     }
 }
-
 function initialize() {
     var mapProperties = {
         center           : mapCenter,
@@ -154,7 +153,7 @@ function initialize() {
     };
     
     map = new google.maps.Map(document.getElementById('fp_googleMap'), mapProperties);
-    var markerSets    = [],
+    let markerSets    = [],
         markerInfoBox = [],
         mappedMarkers = [],
         mapinfobox    = false;
@@ -211,13 +210,13 @@ foreach ($this->item->markerdata as $marker) {
 
     $script .= <<<JSCRIPT
     if (jQuery.inArray({$marker->id} ,mappedMarkers) == -1) {
-        var myCenter{$marker->id} = new google.maps.LatLng({$marker->latitude}, {$marker->longitude});
+        let myCenter{$marker->id} = new google.maps.LatLng({$marker->latitude}, {$marker->longitude});
         marker[{$marker->id}] = new google.maps.Marker({
             position:myCenter{$marker->id},
             icon: '{$marker->marker}'
         });
     
-        var boxText{$marker->id} = '{$boxText}';
+        let boxText{$marker->id} = '{$boxText}';
         markerInfoBox[{$marker->id}] = new InfoBox({
             content         : boxText{$marker->id},
             alignBottom     : true,
@@ -288,7 +287,7 @@ $script .= <<<JSCRIPT
             jQuery('.fp-map-view .nav-tabs li.active').removeClass('active');
             jQuery('#fp_locationlist_container').css('display', 'block');
             jQuery('#locationlisttab').parent().addClass('active');
-            var locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
+            let locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
             jQuery('#fp_locationlist').css('height', locationListHeight);
         });
         
@@ -308,9 +307,9 @@ $script .= <<<JSCRIPT
         el = jQuery(this);
         mid = el.attr('data-marker-type');
 
-        var arrlength = markerSets[mid].length;
+        let arrlength = markerSets[mid].length;
         if (el.hasClass('active')) {
-            for (var i = 0; i < arrlength; i++) {
+            for (let i = 0; i < arrlength; i++) {
                 marker[markerSets[mid][i]].status -= 1;
                 if ( marker[markerSets[mid][i]].status == 0) {
                     if (!markerclusters) {
@@ -328,7 +327,7 @@ $script .= <<<JSCRIPT
             el.removeClass('active');
 
         } else {
-            for (var i = 0; i < arrlength; i++) {
+            for (let i = 0; i < arrlength; i++) {
                 marker[markerSets[mid][i]].status += 1;
                 
                 if ( marker[markerSets[mid][i]].status == 1) {
@@ -347,12 +346,12 @@ $script .= <<<JSCRIPT
         }
         
         if (fitbounds) {
-            var bounds = new google.maps.LatLngBounds();
-            var newbounds = false;
+            let bounds = new google.maps.LatLngBounds();
+            let newbounds = false;
             marker.map(function(m) {
                 if (m.status > 0) {
                     newbounds = true;
-                    var thisbounds = new google.maps.LatLng(m.lat,m.lng);
+                    let thisbounds = new google.maps.LatLng(m.lat,m.lng);
                     bounds.extend(thisbounds);
                 }
             });
@@ -379,7 +378,7 @@ $script .= <<<JSCRIPT
         }
 
         setTimeout(function() {
-            var locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
+            let locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
             jQuery('#fp_locationlist').css('height', locationListHeight);
         },150);
         
@@ -468,7 +467,7 @@ $script .= <<<JSCRIPT
     });
 
     if (showmapsearch) {
-        var geocoder,
+        let geocoder,
             resultLat,
             resultLng;
 
@@ -517,9 +516,9 @@ $script .= <<<JSCRIPT
                     });
                     
                     marker.forEach(function(m, i) {
-                        var dLat = resultLat-m.lat;
-                        var dLong = resultLng-m.lng;
-                        var distance = Math.sqrt(dLat*dLat + dLong*dLong) * 111.32;
+                        let dLat = resultLat-m.lat;
+                        let dLong = resultLng-m.lng;
+                        let distance = Math.sqrt(dLat*dLat + dLong*dLong) * 111.32;
                         if (distance > mapsearchrange) {
                             marker[i].status -= 5000;
                             if ( marker[i].status < 1) {
@@ -554,7 +553,7 @@ $script .= <<<JSCRIPT
                     map.setCenter(results[0].geometry.location);
                     map.setZoom(mapsearchzoom);
                     setTimeout(function() {
-                        var locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
+                        let locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
                         jQuery('#fp_locationlist').css('height', locationListHeight);
                     },500);
 

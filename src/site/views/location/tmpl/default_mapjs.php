@@ -42,7 +42,7 @@ defined('_JEXEC') or die('Restricted access');
 HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
 HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
 
-$params = (object)array(
+$params = (object)[
     'searchAssist'      => ', ' . $this->item->params->get('searchAssist'),
     'zoomin'            => $this->item->params->get('zoomin'),
     'mapTypeControl'    => $this->item->params->get('mapTypeControl'),
@@ -53,15 +53,15 @@ $params = (object)array(
     'draggable'         => $this->item->params->get('draggable'),
     'mapTypeId'         => 'google.maps.MapTypeId.' . $this->item->params->get('mapTypeId'),
     'mapstyle'          => $this->item->params->get('mapstyle', '[]')
-);
-$text = (object)array(
-    'geocodeFail' => JText::_('COM_FOCALPOINT_GEOCODE_FAIL', true),
+];
+$text   = (object)[
+    'geocodeFail'           => JText::_('COM_FOCALPOINT_GEOCODE_FAIL', true),
     'searchAddressRequired' => JText::_('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED', true)
-);
+];
 
 $script = <<<JSCRIPT
 function initialize() {
-    var mapProp      = {
+    let mapProp      = {
             center           : new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}),
             zoom             : {$params->zoomin},
             mapTypeControl   : {$params->mapTypeControl},
@@ -108,7 +108,7 @@ if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $boxText, $images)) {
 $boxText = addslashes(str_replace(["\n", "\t", "\r"], '', $boxText));
 
 $script .= <<<JSCRIPT
-    var myCenter{$this->item->id} = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude});
+    let myCenter{$this->item->id} = new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude});
     
     marker[{$this->item->id}] = new google.maps.Marker({
         position:myCenter{$this->item->id},
@@ -117,7 +117,7 @@ $script .= <<<JSCRIPT
     
     marker[{$this->item->id}].setMap(map);
     marker[{$this->item->id}].status = 1;    
-    var boxText{$this->item->id} = '{$boxText}';
+    let boxText{$this->item->id} = '{$boxText}';
     
     infoBox[{$this->item->id}] = new InfoBox({
         content         : boxText{$this->item->id},
@@ -141,7 +141,7 @@ if ($this->item->params->get('getdirections')) {
     jQuery('#fp_searchAddressBtn').on('click', function(evt) {
         evt.preventDefault();
 
-        var \$address = jQuery('#fp_searchAddress'),
+        let \$address = jQuery('#fp_searchAddress'),
             searchText = \$address.val();
 
         if (!searchText) {
@@ -149,22 +149,22 @@ if ($this->item->params->get('getdirections')) {
             return;
         }
 
-        var geocoder = new google.maps.Geocoder();
+        let geocoder = new google.maps.Geocoder();
     
         geocoder.geocode( { address: searchText+searchAssist }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 jQuery('#fp_googleMap_directions').html('');
     
                 if (status == google.maps.GeocoderStatus.OK) {
-                    var startLocation =	results[0].geometry.location;
+                    let startLocation =	results[0].geometry.location;
                 }
-                var directionsService = new google.maps.DirectionsService(),
+                let directionsService = new google.maps.DirectionsService(),
                     directionsDisplay = new google.maps.DirectionsRenderer();
     
                 directionsDisplay.setMap(map);
                 directionsDisplay.setPanel(document.getElementById('fp_googleMap_directions'));
     
-                var request = {
+                let request = {
                     origin     : startLocation,
                     destination: myCenter{$this->item->id},
                 travelMode : google.maps.DirectionsTravelMode.DRIVING
