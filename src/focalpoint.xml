@@ -2,7 +2,7 @@
 <extension type="component" version="3.0.0" method="upgrade">
     <name>COM_FOCALPOINT</name>
     <creationDate>September 10 2020</creationDate>
-    <copyright>Copyright (C) 2018. All rights reserved.</copyright>
+    <copyright>Copyright 2018-2020 Joomlashack.com, all rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <author>Joomlashack</author>
     <authorEmail>help@joomlashack.com</authorEmail>
