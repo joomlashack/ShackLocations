@@ -2,8 +2,9 @@
 /**
  * @package   ShackLocations
  * @contact   www.joomlashack.com, help@joomlashack.com
- * @copyright 2018 Open Source Training, LLC. All rights reserved
- * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
+ * @copyright 2013-2017 John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
+ * @copyright 2018-2020 Joomlashack.com. All rights reserved
+ * @license   https://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of ShackLocations.
  *
@@ -18,7 +19,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
+ * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 use Joomla\CMS\Layout\FileLayout;

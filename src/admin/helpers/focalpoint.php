@@ -2,9 +2,9 @@
 /**
  * @package   ShackLocations
  * @contact   www.joomlashack.com, help@joomlashack.com
- * @license   GNU General Public License version 2 or later; see LICENSE.txt
  * @copyright 2013-2017 John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @copyright 2018 Joomlashack <https://www.joomlashack.com
+ * @copyright 2018-2020 Joomlashack.com. All rights reserved
+ * @license   https://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of ShackLocations.
  *
@@ -19,7 +19,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ShackLocations.  If not, see <http://www.gnu.org/licenses/>.
+ * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 use Alledia\Framework\Joomla\Extension\Licensed;
