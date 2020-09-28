@@ -73,6 +73,8 @@ $draggable         = $this->item->params->get('draggable');
 $mapTypeId         = 'google.maps.MapTypeId.' . $this->item->params->get('mapTypeId');
 $mapStyle          = $this->item->params->get('mapstyle', '[]');
 $fitbounds         = (int)(bool)$this->item->params->get('fitbounds');
+$fullscreen        = (int)(bool)$this->item->params->get('fullscreen');
+$fullScreenOptions = $this->item->params->get('fullscreenOptions', 'null');
 $markerclusters    = (int)(bool)$this->item->params->get('markerclusters');
 $listtabfirst      = (int)(bool)$this->item->params->get('showlistfirst');
 $showMarkers       = $this->item->params->get('showmarkers');
@@ -138,18 +140,20 @@ function updateActiveCount(marker) {
     }
 }
 function initialize() {
-    var mapProperties = {
-        center           : mapCenter,
-        zoom             : {$zoom},
-        maxZoom          : {$maxZoom},
-        mapTypeControl   : {$mapTypeControl},
-        zoomControl      : {$zoomControl},
-        scrollwheel      : {$scrollWheel},
-        streetViewControl: {$streetViewControl},
-        panControl       : {$panControl},
-        draggable        : {$draggable},
-        mapTypeId        : {$mapTypeId},
-        styles           : {$mapStyle}
+    let mapProperties = {
+        center                  : mapCenter,
+        zoom                    : {$zoom},
+        maxZoom                 : {$maxZoom},
+        mapTypeControl          : {$mapTypeControl},
+        fullscreenControl       : {$fullscreen},
+        fullscreenControlOptions: {$fullScreenOptions},
+        zoomControl             : {$zoomControl},
+        scrollwheel             : {$scrollWheel},
+        streetViewControl       : {$streetViewControl},
+        panControl              : {$panControl},
+        draggable               : {$draggable},
+        mapTypeId               : {$mapTypeId},
+        styles                  : {$mapStyle}
     };
     
     map = new google.maps.Map(document.getElementById('fp_googleMap'), mapProperties);

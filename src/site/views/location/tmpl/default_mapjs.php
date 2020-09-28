@@ -71,6 +71,7 @@ function initialize() {
             panControl       : {$params->panControl},
             draggable        : {$params->draggable},
             mapTypeId        : {$params->mapTypeId},
+            fullscreenControl: false,
             styles           : {$params->mapstyle}
         },
         map          = new google.maps.Map(document.getElementById('fp_googleMap'), mapProp),
