@@ -562,7 +562,7 @@ $script .= <<<JSCRIPT
                     },500);
 
                 } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
+                    alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
                 }
             });
         });

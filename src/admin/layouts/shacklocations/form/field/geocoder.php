@@ -34,6 +34,8 @@ defined('_JEXEC') or die();
  * @var string     $path
  */
 
+Text::script('COM_FOCALPOINT_ERROR_GEOCODE');
+
 // @TODO: refactor this into a proper jQuery plugin
 ?>
 <!-- Button to trigger modal -->
@@ -165,7 +167,7 @@ defined('_JEXEC') or die();
                     map.setZoom(15);
                     updateMarkerPosition(marker.getPosition());
                 } else {
-                    alert("Geocode was not successful for the following reason: " + status);
+                    alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
                 }
             });
         });
