@@ -36,7 +36,10 @@ defined('_JEXEC') or die();
 
 Text::script('COM_FOCALPOINT_ERROR_GEOCODE');
 
-// @TODO: refactor this into a proper jQuery plugin
+$noAPI = sprintf(
+    '<span class="alert alert-error">%s</span>',
+    Text::_('COM_FOCALPOINT_ERROR_MAPS_API_MISSING')
+);
 ?>
 <!-- Button to trigger modal -->
 <a id="openGeocoder"
@@ -99,91 +102,98 @@ Text::script('COM_FOCALPOINT_ERROR_GEOCODE');
 
 <script>
     ;(function($) {
-        let latLng;
+        let mapCanvas = document.getElementById('mapCanvas');
 
-        function initialise() {
-            let geocoder      = new google.maps.Geocoder(),
-                map           = null,
-                marker        = null,
-                zoom          = 15,
-                $latitude     = $('#jform_latitude'),
-                $longitude    = $('#jform_longitude'),
-                $searchButton = $('#fp_searchAddressBtn'),
-                startLat      = $latitude.val(),
-                startLng      = $longitude.val();
+        if (google.maps) {
+            google.maps.event.addDomListener(window, 'load', function() {
+                let geocoder      = new google.maps.Geocoder(),
+                    $latitude     = $('#jform_latitude'),
+                    $longitude    = $('#jform_longitude'),
+                    $searchButton = $('#fp_searchAddressBtn'),
+                    startLat      = $latitude.val(),
+                    startLng      = $longitude.val();
 
-            zoom     = (startLat && startLng) ? 15 : 2;
-            startLat = startLat || 27.6648274;
-            startLng = startLng || -81.5157535;
+                let zoom = (startLat && startLng) ? 15 : 2;
 
-            latLng = new google.maps.LatLng(startLat, startLng);
-            map    = new google.maps.Map(document.getElementById('mapCanvas'), {
-                zoom     : zoom,
-                center   : latLng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
-            marker = new google.maps.Marker({
-                position : latLng,
-                title    : 'Point A',
-                map      : map,
-                draggable: true
-            });
+                startLat   = startLat || 27.6648274;
+                startLng   = startLng || -81.5157535;
+                let latLng = new google.maps.LatLng(startLat, startLng);
 
-            // Update current position info.
-            updateMarkerPosition(latLng);
-
-            google.maps.event.addListener(marker, 'drag', function() {
-                updateMarkerPosition(marker.getPosition());
-            });
-
-            $('#geoaddress')
-                .on('blur', function() {
-                    if (this.value === '') {
-                        $searchButton.attr('disabled', true);
+                let map = new google.maps.Map(
+                    mapCanvas,
+                    {
+                        zoom     : zoom,
+                        center   : latLng,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
                     }
-                })
-                .on('focus', function() {
-                    $searchButton.attr('disabled', false);
+                );
+
+                let marker = new google.maps.Marker({
+                    position : latLng,
+                    title    : 'Point A',
+                    map      : map,
+                    draggable: true
                 });
 
-            $searchButton
-                .on('click', function(evt) {
-                    evt.preventDefault();
+                let updateMarkerPosition = function(latLng) {
+                    document.getElementById('info').innerHTML = [
+                        latLng.lat(),
+                        latLng.lng()
+                    ].join(', ');
+                }
 
-                    let geoaddress = document.getElementById('geoaddress').value;
-                    geocoder.geocode({'address': geoaddress}, function(results, status) {
-                        if (status === google.maps.GeocoderStatus.OK) {
-                            map.setCenter(results[0].geometry.location);
-                            marker.setPosition(results[0].geometry.location);
-                            map.setZoom(15);
-                            updateMarkerPosition(marker.getPosition());
-                        } else {
-                            alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
+                updateMarkerPosition(latLng);
+
+                google.maps.event.addListener(marker, 'drag', function() {
+                    updateMarkerPosition(marker.getPosition());
+                });
+
+                $('#geoaddress')
+                    .on('blur', function() {
+                        if (this.value === '') {
+                            $searchButton.attr('disabled', true);
                         }
+                    })
+                    .on('focus', function() {
+                        $searchButton.attr('disabled', false);
                     });
+
+                $searchButton
+                    .on('click', function(evt) {
+                        evt.preventDefault();
+
+                        let geoaddress = document.getElementById('geoaddress').value;
+                        geocoder.geocode({'address': geoaddress}, function(results, status) {
+                            if (status === google.maps.GeocoderStatus.OK) {
+                                map.setCenter(results[0].geometry.location);
+                                marker.setPosition(results[0].geometry.location);
+                                map.setZoom(15);
+                                updateMarkerPosition(marker.getPosition());
+
+                            } else {
+                                alert(
+                                    Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE', '*ERROR: %s')
+                                        .replace('%s', status)
+                                );
+                            }
+                        });
+                    });
+
+                $('#openGeocoder').on('click', function() {
+                    setTimeout(function() {
+                        google.maps.event.trigger(map, 'resize');
+                        map.panTo(marker.getPosition());
+                    }, 800);
                 });
 
-            $('#openGeocoder').on('click', function() {
-                setTimeout(function() {
-                    google.maps.event.trigger(map, 'resize');
-                    map.panTo(marker.getPosition());
-                }, 800);
+                $('#saveLatLng').on('click', function() {
+                    $latitude.val(marker.getPosition().lat());
+                    $longitude.val(marker.getPosition().lng());
+                });
             });
 
-            $('#saveLatLng').click(function() {
-                $latitude.val(marker.getPosition().lat());
-                $longitude.val(marker.getPosition().lng());
-            });
+        } else {
+            $(mapCanvas).html('<?php echo $noAPI; ?>');
         }
-
-        function updateMarkerPosition(latLng) {
-            document.getElementById('info').innerHTML = [
-                latLng.lat(),
-                latLng.lng()
-            ].join(', ');
-        }
-
-        // Onload handler to fire off the app.
-        google.maps.event.addDomListener(window, 'load', initialise);
     })(jQuery);
 </script>
