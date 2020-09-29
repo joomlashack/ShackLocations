@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
 
 defined('_JEXEC') or die();
@@ -42,7 +43,7 @@ defined('_JEXEC') or die();
    class="btn btn-mini btn-primary"
    data-toggle="modal">
     <span class="icon-out-2 small"></span>
-    <?php echo JText::_('COM_FOCALPOINT_OPEN_GEOCODER'); ?>
+    <?php echo Text::_('COM_FOCALPOINT_OPEN_GEOCODER'); ?>
 </a>
 
 <!-- Modal -->
@@ -96,11 +97,11 @@ defined('_JEXEC') or die();
 
 <script>
     //Google Maps API V3 functions for Geocoding Map Centre point.
-    var geocoder;
-    var map;
-    var marker;
-    var latLng;
-    var zoom = 15;
+    let geocoder,
+        map,
+        marker,
+        latLng,
+        zoom = 15;
 
     function updateMarkerPosition(latLng) {
         document.getElementById('info').innerHTML = [
@@ -110,19 +111,19 @@ defined('_JEXEC') or die();
     }
 
     function initialise() {
-        geocoder = new google.maps.Geocoder();
-        var startLat = jQuery("#jform_latitude").val();
-        var startLng = jQuery("#jform_longitude").val();
-        if (startLat === "") {
+        geocoder     = new google.maps.Geocoder();
+        let startLat = jQuery('#jform_latitude').val(),
+            startLng = jQuery('#jform_longitude').val();
+        if (startLat === '') {
             startLat = -31.9530044;
-            zoom = 2
+            zoom     = 2
         }
-        if (startLng === "") {
+        if (startLng === '') {
             startLng = 115.8574693;
-            zoom = 2
+            zoom     = 2
         }
         latLng = new google.maps.LatLng(startLat, startLng);
-        map = new google.maps.Map(document.getElementById('mapCanvas'), {
+        map    = new google.maps.Map(document.getElementById('mapCanvas'), {
             zoom     : zoom,
             center   : latLng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -143,12 +144,12 @@ defined('_JEXEC') or die();
     }
 
     jQuery('#geoaddress')
-        .on('blur', function(evt) {
+        .on('blur', function() {
             if (this.value === '') {
                 jQuery('#fp_searchAddressBtn').attr('disabled', true);
             }
         })
-        .on('focus', function(evt) {
+        .on('focus', function() {
             jQuery('#fp_searchAddressBtn').attr('disabled', false);
         });
 
@@ -156,7 +157,7 @@ defined('_JEXEC') or die();
         .on('click', function(evt) {
             evt.preventDefault();
 
-            var geoaddress = document.getElementById("geoaddress").value;
+            let geoaddress = document.getElementById('geoaddress').value;
             geocoder.geocode({'address': geoaddress}, function(results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     map.setCenter(results[0].geometry.location);
@@ -169,16 +170,16 @@ defined('_JEXEC') or die();
             });
         });
 
-    jQuery("#openGeocoder").click(function() {
+    jQuery('#openGeocoder').on('click', function() {
         setTimeout(function() {
             google.maps.event.trigger(map, 'resize');
             map.panTo(marker.getPosition());
         }, 800);
     });
 
-    jQuery("#saveLatLng").click(function() {
-        jQuery("#jform_latitude").val(marker.getPosition().lat());
-        jQuery("#jform_longitude").val(marker.getPosition().lng());
+    jQuery('#saveLatLng').click(function() {
+        jQuery('#jform_latitude').val(marker.getPosition().lat());
+        jQuery('#jform_longitude').val(marker.getPosition().lng());
     });
 
     // Onload handler to fire off the app.
