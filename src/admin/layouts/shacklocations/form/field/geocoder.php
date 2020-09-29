@@ -98,92 +98,92 @@ Text::script('COM_FOCALPOINT_ERROR_GEOCODE');
 </div>
 
 <script>
-    //Google Maps API V3 functions for Geocoding Map Centre point.
-    let geocoder,
-        map,
-        marker,
-        latLng,
-        zoom = 15;
+    ;(function($) {
+        let latLng;
 
-    function updateMarkerPosition(latLng) {
-        document.getElementById('info').innerHTML = [
-            latLng.lat(),
-            latLng.lng()
-        ].join(', ');
-    }
+        function initialise() {
+            let geocoder      = new google.maps.Geocoder(),
+                map           = null,
+                marker        = null,
+                zoom          = 15,
+                $latitude     = $('#jform_latitude'),
+                $longitude    = $('#jform_longitude'),
+                $searchButton = $('#fp_searchAddressBtn'),
+                startLat      = $latitude.val(),
+                startLng      = $longitude.val();
 
-    function initialise() {
-        geocoder     = new google.maps.Geocoder();
-        let startLat = jQuery('#jform_latitude').val(),
-            startLng = jQuery('#jform_longitude').val();
-        if (startLat === '') {
-            startLat = -31.9530044;
-            zoom     = 2
-        }
-        if (startLng === '') {
-            startLng = 115.8574693;
-            zoom     = 2
-        }
-        latLng = new google.maps.LatLng(startLat, startLng);
-        map    = new google.maps.Map(document.getElementById('mapCanvas'), {
-            zoom     : zoom,
-            center   : latLng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-        marker = new google.maps.Marker({
-            position : latLng,
-            title    : 'Point A',
-            map      : map,
-            draggable: true
-        });
+            zoom     = (startLat && startLng) ? 15 : 2;
+            startLat = startLat || 27.6648274;
+            startLng = startLng || -81.5157535;
 
-        // Update current position info.
-        updateMarkerPosition(latLng);
-
-        google.maps.event.addListener(marker, 'drag', function() {
-            updateMarkerPosition(marker.getPosition());
-        });
-    }
-
-    jQuery('#geoaddress')
-        .on('blur', function() {
-            if (this.value === '') {
-                jQuery('#fp_searchAddressBtn').attr('disabled', true);
-            }
-        })
-        .on('focus', function() {
-            jQuery('#fp_searchAddressBtn').attr('disabled', false);
-        });
-
-    jQuery('#fp_searchAddressBtn')
-        .on('click', function(evt) {
-            evt.preventDefault();
-
-            let geoaddress = document.getElementById('geoaddress').value;
-            geocoder.geocode({'address': geoaddress}, function(results, status) {
-                if (status === google.maps.GeocoderStatus.OK) {
-                    map.setCenter(results[0].geometry.location);
-                    marker.setPosition(results[0].geometry.location);
-                    map.setZoom(15);
-                    updateMarkerPosition(marker.getPosition());
-                } else {
-                    alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
-                }
+            latLng = new google.maps.LatLng(startLat, startLng);
+            map    = new google.maps.Map(document.getElementById('mapCanvas'), {
+                zoom     : zoom,
+                center   : latLng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
             });
-        });
+            marker = new google.maps.Marker({
+                position : latLng,
+                title    : 'Point A',
+                map      : map,
+                draggable: true
+            });
 
-    jQuery('#openGeocoder').on('click', function() {
-        setTimeout(function() {
-            google.maps.event.trigger(map, 'resize');
-            map.panTo(marker.getPosition());
-        }, 800);
-    });
+            // Update current position info.
+            updateMarkerPosition(latLng);
 
-    jQuery('#saveLatLng').click(function() {
-        jQuery('#jform_latitude').val(marker.getPosition().lat());
-        jQuery('#jform_longitude').val(marker.getPosition().lng());
-    });
+            google.maps.event.addListener(marker, 'drag', function() {
+                updateMarkerPosition(marker.getPosition());
+            });
 
-    // Onload handler to fire off the app.
-    google.maps.event.addDomListener(window, 'load', initialise);
+            $('#geoaddress')
+                .on('blur', function() {
+                    if (this.value === '') {
+                        $searchButton.attr('disabled', true);
+                    }
+                })
+                .on('focus', function() {
+                    $searchButton.attr('disabled', false);
+                });
+
+            $searchButton
+                .on('click', function(evt) {
+                    evt.preventDefault();
+
+                    let geoaddress = document.getElementById('geoaddress').value;
+                    geocoder.geocode({'address': geoaddress}, function(results, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            map.setCenter(results[0].geometry.location);
+                            marker.setPosition(results[0].geometry.location);
+                            map.setZoom(15);
+                            updateMarkerPosition(marker.getPosition());
+                        } else {
+                            alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
+                        }
+                    });
+                });
+
+            $('#openGeocoder').on('click', function() {
+                setTimeout(function() {
+                    google.maps.event.trigger(map, 'resize');
+                    map.panTo(marker.getPosition());
+                }, 800);
+            });
+
+            $('#saveLatLng').click(function() {
+                $latitude.val(marker.getPosition().lat());
+                $longitude.val(marker.getPosition().lng());
+            });
+        }
+
+        function updateMarkerPosition(latLng) {
+            document.getElementById('info').innerHTML = [
+                latLng.lat(),
+                latLng.lng()
+            ].join(', ');
+        }
+
+        // Onload handler to fire off the app.
+        google.maps.event.addDomListener(window, 'load', initialise);
+    })(jQuery);
 </script>
