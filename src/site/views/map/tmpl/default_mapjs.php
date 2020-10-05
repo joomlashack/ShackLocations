@@ -48,6 +48,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
 
@@ -78,16 +79,16 @@ $fullScreenOptions = $this->item->params->get('fullscreenOptions', 'null');
 $markerclusters    = (int)(bool)$this->item->params->get('markerclusters');
 $listtabfirst      = (int)(bool)$this->item->params->get('showlistfirst');
 $showMarkers       = $this->item->params->get('showmarkers');
-$text              = (object)array(
-    'within'     => JText::_('COM_FOCALPOINT_WITHIN', true),
-    'distance'   => JText::_('COM_FOCALPOINT_DISTANCE', true),
-    'locations'  => JText::_('COM_FOCALPOINT_LOCATIONS', true),
-    'location'   => JText::_('COM_FOCALPOINT_LOCATION', true),
-    'showing'    => JText::_('COM_FOCALPOINT_SHOWING', true),
-    'notypes'    => JText::_('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED', true),
-    'hideButton' => JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL', true),
-    'showButton' => JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL', true)
-);
+$text              = (object)[
+    'within'     => Text::_('COM_FOCALPOINT_WITHIN', true),
+    'distance'   => Text::_('COM_FOCALPOINT_DISTANCE', true),
+    'locations'  => Text::_('COM_FOCALPOINT_LOCATIONS', true),
+    'location'   => Text::_('COM_FOCALPOINT_LOCATION', true),
+    'showing'    => Text::_('COM_FOCALPOINT_SHOWING', true),
+    'notypes'    => Text::_('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED', true),
+    'hideButton' => Text::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL', true),
+    'showButton' => Text::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL', true)
+];
 
 $script = <<<JSCRIPT
 let map             = null,
@@ -168,13 +169,13 @@ foreach ($this->item->markerdata as $marker) {
     //Assemble the infobox.
     $infoDescription = '';
     if ($marker->params->get('infoshowaddress') && $marker->address != '') {
-        $infoDescription .= '<p>' . JText::_($marker->address) . '</p>';
+        $infoDescription .= '<p>' . Text::_($marker->address) . '</p>';
     }
     if ($marker->params->get('infoshowphone') && $marker->phone != '') {
-        $infoDescription .= '<p>' . JText::_($marker->phone) . '</p>';
+        $infoDescription .= '<p>' . Text::_($marker->phone) . '</p>';
     }
     if ($marker->params->get('infoshowintro') && $marker->description != '') {
-        $infoDescription .= '<p>' . JText::_($marker->description) . '</p>';
+        $infoDescription .= '<p>' . Text::_($marker->description) . '</p>';
     }
 
     // Example. If a custom fields was defined called 'yourcustomfield' the following line would render
@@ -203,7 +204,7 @@ foreach ($this->item->markerdata as $marker) {
             HTMLHelper::_(
                 'link',
                 $marker->link,
-                JText::_('COM_FOCALPOINT_FIND_OUT_MORE'),
+                Text::_('COM_FOCALPOINT_FIND_OUT_MORE'),
                 ['title' => $marker->title]
             )
         );
