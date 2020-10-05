@@ -92,6 +92,7 @@ $text              = (object)[
 ];
 
 $script = <<<JSCRIPT
+<!-- MAPJS START -->
 let map             = null,
     markerCluster   = null,
     clusterMarkers  = [],
@@ -215,6 +216,8 @@ foreach ($this->item->markerdata as $marker) {
     $boxText = addslashes(str_replace(["\n", "\t", "\r"], '', $boxText));
 
     $script .= <<<JSCRIPT
+
+    <!-- MARKER START -->
     if (jQuery.inArray({$marker->id} ,mappedMarkers) == -1) {
         let myCenter{$marker->id} = new google.maps.LatLng({$marker->latitude}, {$marker->longitude});
         marker[{$marker->id}] = new google.maps.Marker({
@@ -279,6 +282,8 @@ foreach ($this->item->markerdata as $marker) {
     
     mappedMarkers.push({$marker->id});
     markerSets[{$marker->locationtype_id}].push({$marker->id});
+    <!-- MARKER END -->
+
 JSCRIPT;
 }
 
@@ -592,6 +597,7 @@ $script .= <<<JSCRIPT
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+<!-- MAPJS END -->
 JSCRIPT;
 
 Factory::getDocument()->addScriptDeclaration($script);
