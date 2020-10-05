@@ -276,9 +276,6 @@ class FocalpointModelMap extends JModelForm
             if (!$result->link && $linkQuery) {
                 $result->link = 'index.php?' . http_build_query($linkQuery);
             }
-            if ($result->link && !preg_match('#https?://#', $result->link)) {
-                $result->link = JRoute::_($result->link);
-            }
 
             // check format of address field
             $result->address = str_replace("||", " <br>", $result->address);

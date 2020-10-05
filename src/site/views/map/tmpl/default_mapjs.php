@@ -49,6 +49,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die();
 
@@ -203,7 +204,7 @@ foreach ($this->item->markerdata as $marker) {
             '<p class="infoboxlink">%s</p>',
             HTMLHelper::_(
                 'link',
-                $marker->link,
+                Route::_($marker->link),
                 Text::_('COM_FOCALPOINT_FIND_OUT_MORE'),
                 ['title' => $marker->title]
             )
