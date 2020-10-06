@@ -56,13 +56,16 @@ foreach ($this->item->markerdata as $marker) {
     $boxText = addslashes(str_replace(["\n", "\t", "\r"], '', $boxText));
 
     $markers[] = [
-        'id'        => (int)$marker->id,
-        'infoBox'   => [
+        'id'       => (int)$marker->id,
+        'typeId'   => (int)$marker->locationtype_id,
+        'infoBox'  => [
             'content' => $boxText,
         ],
-        'latitude'  => $marker->latitude,
-        'longitude' => $marker->longitude,
-        'marker'    => $marker->marker,
+        'marker'   => $marker->marker,
+        'position' => [
+            'lat' => $marker->latitude,
+            'lng' => $marker->longitude
+        ]
     ];
 }
 
@@ -77,7 +80,6 @@ $mapsearchzoom   = $this->item->params->get('mapsearchzoom');
 $mapsearchrange  = $this->item->params->get('resultradius');
 $mapsearchprompt = $this->item->params->get('mapsearchprompt');
 $searchassist    = ', ' . $this->item->params->get('searchassist');
-$fitbounds       = (int)(bool)$this->item->params->get('fitbounds');
 $listtabfirst    = (int)(bool)$this->item->params->get('showlistfirst');
 $showMarkers     = $this->item->params->get('showmarkers');
 $text            = (object)[
@@ -92,10 +94,12 @@ $text            = (object)[
 ];
 
 $options = json_encode([
+    'fitBounds' => (bool)$this->item->params->get('fitbounds'),
+
     'mapProperties' => [
         'center'                   => [
-            'latitude'  => $this->item->latitude,
-            'longitude' => $this->item->longitude
+            'lat' => $this->item->latitude,
+            'lng' => $this->item->longitude
         ],
         'draggable'                => (int)(bool)$this->item->params->get('draggable'),
         'fullscreenControl'        => (int)(bool)$this->item->params->get('fullscreen'),

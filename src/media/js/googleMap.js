@@ -27,10 +27,11 @@ jQuery.sloc = {map: {foo: 'foo'}};
     $.sloc.map.google = function() {
         let defaults       = {
                 canvasId     : 'fp_googleMap',
+                fitBounds    : false,
                 mapProperties: {
                     center                  : {
-                        latitude : null,
-                        longitude: null
+                        lat: null,
+                        lng: null
                     },
                     zoom                    : null,
                     maxZoom                 : null,
@@ -45,6 +46,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     mapTypeId               : null,
                     styles                  : null
                 },
+                markerData   : [],
                 infoBox      : {
                     alignBottom   : true,
                     closeBoxMargin: '7px 5px 1px 1px',
@@ -63,6 +65,16 @@ jQuery.sloc = {map: {foo: 'foo'}};
             canvas         = null,
             clusterMarkers = [],
             map            = null,
+            markerBase     = {
+                id     : null,
+                typeId : null,
+                infoBox: {
+                    content: null
+                },
+                lat    : null,
+                lng    : null,
+                marker : null,
+            },
             markers        = [],
             markerSets     = [],
             markerInfoBox  = [],
@@ -73,7 +85,6 @@ jQuery.sloc = {map: {foo: 'foo'}};
         // Temporary hardocdes
         let
             allowScrollTo   = false,
-            fitbounds       = 0,
             listtabfirst    = 0,
             mapsearchprompt = 'Suburb or Postal code',
             mapsearchrange  = 15,
@@ -85,7 +96,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
         // End Temp hardocdes
 
         init = function(params) {
-            options = $.extend(true, defaults, params);
+            options = $.extend(true, {}, defaults, params);
             canvas  = document.getElementById(options.canvasId);
 
             options.clusters.show = options.clusters.show && typeof clusterOptions !== 'undefined';
@@ -103,8 +114,8 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 mapCenter     = mapProperties.center;
 
             mapProperties.mapTypeId = google.maps.MapTypeId[mapProperties.mapTypeId] || null;
-            if (mapCenter.latitude && mapCenter.longitude) {
-                mapProperties.center = new google.maps.LatLng(mapCenter.latitude, mapCenter.longitude);
+            if (mapCenter.lat && mapCenter.lng) {
+                mapProperties.center = new google.maps.LatLng(mapCenter.lat, mapCenter.lng);
 
             } else {
                 mapProperties.center = null;
@@ -116,23 +127,24 @@ jQuery.sloc = {map: {foo: 'foo'}};
         setMarkers = function() {
             $(options.markerData).each(function(index, data) {
                 let $listDisplay = null,
-                    markerId     = data.id;
+                    marker       = $.extend(true, {}, markerBase, data);
 
-                if ($.inArray(markerId, mappedMarkers) === -1) {
-                    let myCenter      = new google.maps.LatLng(data.latitude, data.longitude);
-                    markers[markerId] = new google.maps.Marker({
-                        position: myCenter,
-                        icon    : data.marker
+                if ($.inArray(marker.id, mappedMarkers) === -1) {
+                    let position = new google.maps.LatLng(marker.position.lat, marker.position.lng);
+
+                    markers[marker.id] = new google.maps.Marker({
+                        position: position,
+                        icon    : marker.marker
                     });
 
                     let infoBoxData = $.extend({}, defaults.infoBox, {
-                        content         : data.infoBox.content,
+                        content         : marker.infoBox.content,
                         infoBoxClearance: new google.maps.Size(20, 30),
                         pixelOffset     : new google.maps.Size(-160, -55),
-                        position        : new google.maps.LatLng(data.latitude, data.longitude)
+                        position        : position
                     });
 
-                    markerInfoBox[markerId] = new InfoBox(infoBoxData);
+                    markerInfoBox[marker.id] = new InfoBox(infoBoxData);
 
                     google.maps.event.addListener(map, 'click', function(e) {
                         // wtf is this? And why doesn't it throw an error?
@@ -140,14 +152,14 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     });
 
                     if (options.clusters.show) {
-                        clusterMarkers.push(markers[markerId]);
+                        clusterMarkers.push(markers[marker.id]);
 
                     } else {
-                        markers[markerId].setMap(map);
+                        markers[marker.id].setMap(map);
                     }
 
-                    google.maps.event.addListener(markers[markerId], 'click', function() {
-                        if (mapinfobox === markerInfoBox[markerId] && mapinfobox.getVisible()) {
+                    google.maps.event.addListener(markers[marker.id], 'click', function() {
+                        if (mapinfobox === markerInfoBox[marker.id] && mapinfobox.getVisible()) {
                             mapinfobox.close();
 
                         } else {
@@ -155,34 +167,33 @@ jQuery.sloc = {map: {foo: 'foo'}};
                                 mapinfobox.close()
                             }
 
-                            mapinfobox = markerInfoBox[markerId];
-                            mapinfobox.open(map, markers[markerId]);
+                            mapinfobox = markerInfoBox[marker.id];
+                            mapinfobox.open(map, markers[marker.id]);
                         }
                     });
 
                     if (options.list.showTab) {
-                        $listDisplay = $('<div class="fp_listitem">' + data.infoBox.content + '</div>');
-                        $listDisplay.addClass('fp_list_marker' + markerId)
+                        $listDisplay = $('<div class="fp_listitem">' + marker.infoBox.content + '</div>');
+                        $listDisplay.addClass('fp_list_marker' + marker.id)
                         $('#fp_locationlist .fp_ll_holder').append();
                         $listDisplay.status = 0;
                     }
 
-                    markers[markerId].status = 0;
-                    markers[markerId].lat    = 45.521642;
-                    markers[markerId].lng    = -122.642595;
+                    markers[marker.id].status = 0;
                 }
-                markers[markerId].status += 1;
+
+                markers[marker.id].status += 1;
 
                 if ($listDisplay) {
                     $listDisplay.status += 1;
                 }
 
-                if (typeof markerSets[markerId] === 'undefined') {
-                    markerSets[markerId] = [];
+                if (typeof markerSets[marker.typeId] === 'undefined') {
+                    markerSets[marker.typeId] = [];
                 }
 
-                mappedMarkers.push(markerId);
-                markerSets[markerId].push(markerId);
+                mappedMarkers.push(marker.id);
+                markerSets[marker.typeId].push(marker.id);
             });
         };
 
@@ -224,15 +235,16 @@ jQuery.sloc = {map: {foo: 'foo'}};
         toggleMarker = function(evt) {
             evt.preventDefault();
 
+            let $this  = $(this),
+                typeId = $this.attr('data-marker-type');
+
             markers.forEach(function(marker, index) {
                 markerInfoBox[index].close();
             });
 
-            let $this     = $(this),
-                markerId  = $this.attr('data-marker-type');
-
-            $(markers[markerSets[markerId]]).each(function(i, marker) {
-                let $listMarker = $('.fp_list_marker' + markerSets[markerId][i]);
+            $(markerSets[typeId]).each(function(i, markerId) {
+                let marker      = markers[markerId],
+                    $listMarker = $('.fp_list_marker' + markerId);
 
                 if ($this.hasClass('active')) {
                     marker.status -= 1;
@@ -241,15 +253,13 @@ jQuery.sloc = {map: {foo: 'foo'}};
                             marker.setMap();
                         }
 
-                        markerInfoBox[markerSets[markerId][i]].close();
+                        markerInfoBox[markerId].close();
                         $listMarker.fadeOut(100, function() {
                             $this
                                 .addClass('fp_listitem_hidden')
                                 .appendTo('#fp_locationlist .fp_ll_holder');
                         });
                     }
-
-                    $this.removeClass('active');
 
                 } else {
                     marker.status += 1;
@@ -265,28 +275,34 @@ jQuery.sloc = {map: {foo: 'foo'}};
                                 $this.removeClass('fp_listitem_hidden');
                             });
                     }
-
-                    $this.addClass('active');
                 }
             });
+            if ($this.hasClass('active')) {
+                $this.removeClass('active');
+            } else {
+                $this.addClass('active');
+            }
 
-            if (fitbounds) {
-                let bounds    = new google.maps.LatLngBounds();
-                let newbounds = false;
-                markers.map(function(m) {
-                    if (m.status > 0) {
-                        newbounds      = true;
-                        let thisbounds = new google.maps.LatLng(m.lat, m.lng);
-                        bounds.extend(thisbounds);
+            if (options.fitBounds) {
+                let bounds = null
+
+                markers.forEach(function(marker) {
+                    if (marker.status > 0) {
+                        if (bounds === null) {
+                            bounds = new google.maps.LatLngBounds();
+                        }
+                        bounds.extend(marker.getPosition());
                     }
                 });
 
-                if (newbounds) {
+                if (bounds !== null) {
                     map.fitBounds(bounds);
 
                 } else {
-                    map.panTo(new google.maps.LatLng(37.090240, -95.712891));
-                    map.setZoom(4);
+                    if (options.mapProperties.center) {
+                        map.panTo(options.mapProperties.center);
+                    }
+                    map.setZoom(options.mapProperties.zoom);
                 }
             }
 
