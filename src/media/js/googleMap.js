@@ -92,6 +92,10 @@ jQuery.sloc = {map: {foo: 'foo'}};
 
             initMap();
             setMarkers();
+
+            updateActiveCount();
+
+            $('.markertoggles').on('click', toggleMarker);
         };
 
         initMap = function() {
@@ -181,7 +185,131 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 markerSets[markerId].push(markerId);
             });
         };
+
+        updateActiveCount = function() {
+            let locationTxt = '',
+                status      = '',
+                activeCount = 0;
+
+            $.each(markers, function(index, marker) {
+                if (typeof marker !== 'undefined') {
+                    if (marker.status > 0) {
+                        activeCount += 1;
+                        status = status + ' ' + marker.status;
+                    }
+                }
             });
+
+            if (searchTxt !== '') {
+                locationTxt = ' (within ' + mapsearchrange + 'Km of ' + searchTxt + ')';
+            }
+
+            let locationPlural = 'locations';
+            if (activeCount === 1) {
+                locationPlural = 'location';
+            }
+
+            $('#activecount').html('Showing ' + activeCount + ' ' + locationPlural + locationTxt + '.');
+
+            if (activeCount === 0) {
+                if ($('.nolocations').length === 0) {
+                    $('#fp_locationlist .fp_ll_holder').append('<div class="nolocations">No location types selected.</div>');
+                }
+
+            } else {
+                $('.nolocations').remove();
+            }
+        };
+
+        toggleMarker = function(evt) {
+            evt.preventDefault();
+
+            markers.forEach(function(marker, index) {
+                markerInfoBox[index].close();
+            });
+
+            let $this     = $(this),
+                markerId  = $this.attr('data-marker-type');
+
+            $(markers[markerSets[markerId]]).each(function(i, marker) {
+                let $listMarker = $('.fp_list_marker' + markerSets[markerId][i]);
+
+                if ($this.hasClass('active')) {
+                    marker.status -= 1;
+                    if (marker.status === 0) {
+                        if (!options.clusters.show) {
+                            marker.setMap();
+                        }
+
+                        markerInfoBox[markerSets[markerId][i]].close();
+                        $listMarker.fadeOut(100, function() {
+                            $this
+                                .addClass('fp_listitem_hidden')
+                                .appendTo('#fp_locationlist .fp_ll_holder');
+                        });
+                    }
+
+                    $this.removeClass('active');
+
+                } else {
+                    marker.status += 1;
+
+                    if (marker.status === 1) {
+                        if (!options.clusters.show) {
+                            marker.setMap(map);
+                        }
+
+                        $listMarker
+                            .prependTo('#fp_locationlist .fp_ll_holder')
+                            .fadeIn(100, function() {
+                                $this.removeClass('fp_listitem_hidden');
+                            });
+                    }
+
+                    $this.addClass('active');
+                }
+            });
+
+            if (fitbounds) {
+                let bounds    = new google.maps.LatLngBounds();
+                let newbounds = false;
+                markers.map(function(m) {
+                    if (m.status > 0) {
+                        newbounds      = true;
+                        let thisbounds = new google.maps.LatLng(m.lat, m.lng);
+                        bounds.extend(thisbounds);
+                    }
+                });
+
+                if (newbounds) {
+                    map.fitBounds(bounds);
+
+                } else {
+                    map.panTo(new google.maps.LatLng(37.090240, -95.712891));
+                    map.setZoom(4);
+                }
+            }
+
+            if (options.clusters.show) {
+                clusterMarkers = [];
+                markers.forEach(function(m, i) {
+                    if (markers[i].status > 0) {
+                        clusterMarkers.push(markers[i]);
+                    }
+                });
+
+                markerCluster.clearMarkers();
+                markerCluster = new MarkerClusterer(map, clusterMarkers, clusterOptions);
+            }
+
+            setTimeout(function() {
+                let locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
+                jQuery('#fp_locationlist').css('height', locationListHeight);
+            }, 150);
+
+            updateActiveCount(searchTxt);
+
+            return false;
         };
 
         return {
