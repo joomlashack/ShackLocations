@@ -290,6 +290,11 @@ JSCRIPT;
 // Close the initialize() function. Use JQuery for the click events on the sidebar links (a.markertoggles)
 // and setup the load event.
 $script .= <<<JSCRIPT
+    console.log('MARKERS', marker);
+    console.log('MAPPED', mappedMarkers);
+    console.log('SETS', markerSets);
+    console.log('INFO', markerInfoBox);
+
     if (showlisttab) {
         jQuery('#locationlisttab').on ('click', function(e) {
             e.preventDefault();
