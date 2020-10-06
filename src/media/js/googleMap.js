@@ -63,7 +63,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
             canvas         = null,
             clusterMarkers = [],
             map            = null,
-            marker         = [],
+            markers        = [],
             markerSets     = [],
             markerInfoBox  = [],
             mappedMarkers  = [],
@@ -111,11 +111,12 @@ jQuery.sloc = {map: {foo: 'foo'}};
 
         setMarkers = function() {
             $(options.markerData).each(function(index, data) {
-                let $listDisplay = null;
+                let $listDisplay = null,
+                    markerId     = data.id;
 
-                if ($.inArray(index, mappedMarkers) === -1) {
-                    let myCenter  = new google.maps.LatLng(data.latitude, data.longitude);
-                    marker[index] = new google.maps.Marker({
+                if ($.inArray(markerId, mappedMarkers) === -1) {
+                    let myCenter      = new google.maps.LatLng(data.latitude, data.longitude);
+                    markers[markerId] = new google.maps.Marker({
                         position: myCenter,
                         icon    : data.marker
                     });
@@ -127,7 +128,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                         position        : new google.maps.LatLng(data.latitude, data.longitude)
                     });
 
-                    markerInfoBox[index] = new InfoBox(infoBoxData);
+                    markerInfoBox[markerId] = new InfoBox(infoBoxData);
 
                     google.maps.event.addListener(map, 'click', function(e) {
                         // wtf is this? And why doesn't it throw an error?
@@ -135,14 +136,14 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     });
 
                     if (options.clusters.show) {
-                        clusterMarkers.push(marker[index]);
+                        clusterMarkers.push(markers[markerId]);
 
                     } else {
-                        marker[index].setMap(map);
+                        markers[markerId].setMap(map);
                     }
 
-                    google.maps.event.addListener(marker[index], 'click', function() {
-                        if (mapinfobox === markerInfoBox[index] && mapinfobox.getVisible()) {
+                    google.maps.event.addListener(markers[markerId], 'click', function() {
+                        if (mapinfobox === markerInfoBox[markerId] && mapinfobox.getVisible()) {
                             mapinfobox.close();
 
                         } else {
@@ -150,34 +151,36 @@ jQuery.sloc = {map: {foo: 'foo'}};
                                 mapinfobox.close()
                             }
 
-                            mapinfobox = markerInfoBox[index];
-                            mapinfobox.open(map, marker[index]);
+                            mapinfobox = markerInfoBox[markerId];
+                            mapinfobox.open(map, markers[markerId]);
                         }
                     });
 
                     if (options.list.showTab) {
                         $listDisplay = $('<div class="fp_listitem">' + data.infoBox.content + '</div>');
-                        $listDisplay.addClass('fp_list_marker' + index)
+                        $listDisplay.addClass('fp_list_marker' + markerId)
                         $('#fp_locationlist .fp_ll_holder').append();
                         $listDisplay.status = 0;
                     }
 
-                    marker[index].status = 0;
-                    marker[index].lat    = 45.521642;
-                    marker[index].lng    = -122.642595;
+                    markers[markerId].status = 0;
+                    markers[markerId].lat    = 45.521642;
+                    markers[markerId].lng    = -122.642595;
                 }
-                marker[index].status += 1;
+                markers[markerId].status += 1;
 
                 if ($listDisplay) {
                     $listDisplay.status += 1;
                 }
 
-                if (typeof markerSets[index] === 'undefined') {
-                    markerSets[index] = [];
+                if (typeof markerSets[markerId] === 'undefined') {
+                    markerSets[markerId] = [];
                 }
 
-                mappedMarkers.push(index);
-                markerSets[index].push(index);
+                mappedMarkers.push(markerId);
+                markerSets[markerId].push(markerId);
+            });
+        };
             });
         };
 
