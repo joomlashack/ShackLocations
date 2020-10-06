@@ -57,7 +57,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     showTab: true
                 },
                 clusters     : {
-                    show: typeof clusterOptions !== 'undefined'
+                    show: false
                 }
             },
             canvas         = null,
@@ -87,6 +87,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
             options = $.extend(true, defaults, options);
 
             canvas = document.getElementById(options.canvasId);
+            options.clusters.show = options.clusters.show && typeof clusterOptions !== 'undefined';
 
             initMap(options);
             setMarkers(options)

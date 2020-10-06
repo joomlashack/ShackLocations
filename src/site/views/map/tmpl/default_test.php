@@ -58,7 +58,7 @@ foreach ($this->item->markerdata as $marker) {
     $markers[] = [
         'id'        => (int)$marker->id,
         'infoBox'   => [
-            'content'        => $boxText,
+            'content' => $boxText,
         ],
         'latitude'  => $marker->latitude,
         'longitude' => $marker->longitude,
@@ -72,14 +72,12 @@ HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->
 HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
 
 $params          = JComponentHelper::getParams('com_focalpoint');
-$showlisttab     = $this->item->params->get('locationlist');
 $showmapsearch   = $this->item->params->get('mapsearchenabled');
 $mapsearchzoom   = $this->item->params->get('mapsearchzoom');
 $mapsearchrange  = $this->item->params->get('resultradius');
 $mapsearchprompt = $this->item->params->get('mapsearchprompt');
 $searchassist    = ', ' . $this->item->params->get('searchassist');
 $fitbounds       = (int)(bool)$this->item->params->get('fitbounds');
-$markerclusters  = (int)(bool)$this->item->params->get('markerclusters');
 $listtabfirst    = (int)(bool)$this->item->params->get('showlistfirst');
 $showMarkers     = $this->item->params->get('showmarkers');
 $text            = (object)[
@@ -112,11 +110,18 @@ $options = json_encode([
         'zoom'                     => (int)$this->item->params->get('zoom'),
         'zoomControl'              => (int)(bool)$this->item->params->get('zoomControl'),
     ],
-    'markerData'    => $markers
+    'markerData'    => $markers,
+    'list'          => [
+        'showTab' => (bool)$this->item->params->get('locationlist')
+    ],
+    'clusters'      => [
+        'show' => (bool)$this->item->params->get('markerclusters')
+    ]
 ]);
 
 HTMLHelper::_('jquery.framework');
 HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
+
 $init = <<<JSINIT
 jQuery(document).ready(function ($) {
     (new $.sloc.map.google).init({$options});
