@@ -67,7 +67,8 @@ jQuery.sloc = {map: {foo: 'foo'}};
             markerSets     = [],
             markerInfoBox  = [],
             mappedMarkers  = [],
-            mapinfobox     = false;
+            mapinfobox     = false,
+            options        = {};
 
         // Temporary hardocdes
         let
@@ -83,17 +84,17 @@ jQuery.sloc = {map: {foo: 'foo'}};
             markerCluster   = null;
         // End Temp hardocdes
 
-        init = function(options) {
-            options = $.extend(true, defaults, options);
+        init = function(params) {
+            options = $.extend(true, defaults, params);
+            canvas  = document.getElementById(options.canvasId);
 
-            canvas = document.getElementById(options.canvasId);
             options.clusters.show = options.clusters.show && typeof clusterOptions !== 'undefined';
 
-            initMap(options);
-            setMarkers(options)
+            initMap();
+            setMarkers();
         };
 
-        initMap = function(options) {
+        initMap = function() {
             let mapProperties = options.mapProperties,
                 mapCenter     = mapProperties.center;
 
@@ -108,7 +109,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
             map = new google.maps.Map(canvas, mapProperties);
         };
 
-        setMarkers = function(options) {
+        setMarkers = function() {
             $(options.markerData).each(function(index, data) {
                 let $listDisplay = null;
 
