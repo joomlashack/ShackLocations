@@ -26,9 +26,10 @@ jQuery.sloc = {map: {foo: 'foo'}};
 
     $.sloc.map.google = function() {
         let defaults       = {
-                canvasId     : 'fp_googleMap',
-                fitBounds    : false,
-                mapProperties: {
+                canvasId      : 'fp_googleMap',
+                clusterOptions: null,
+                fitBounds     : false,
+                mapProperties : {
                     center                  : {
                         lat: null,
                         lng: null
@@ -46,8 +47,8 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     mapTypeId               : null,
                     styles                  : null
                 },
-                markerData   : [],
-                infoBox      : {
+                markerData    : [],
+                infoBox       : {
                     alignBottom   : true,
                     closeBoxMargin: '7px 5px 1px 1px',
                     closeBoxURL   : 'https://www.google.com/intl/en_us/mapfiles/close.gif',
@@ -55,12 +56,10 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     maxWidth      : 320,
                     zIndex        : null
                 },
-                list         : {
-                    showTab: true
-                },
-                clusters     : {
-                    options: null,
-                    show   : false
+                show          : {
+                    clusters: false,
+                    listTab : true,
+                    markers : true
                 }
             },
             canvas         = null,
@@ -103,9 +102,9 @@ jQuery.sloc = {map: {foo: 'foo'}};
             initMap();
             setMarkers();
 
+            $('.markertoggles').on('click', toggleTypes);
             updateActiveCount();
 
-            $('.markertoggles').on('click', toggleMarker);
         };
 
         initMap = function() {
@@ -150,7 +149,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                         contextMenu:true
                     });
 
-                    if (options.clusters.show) {
+                    if (options.show.clusters) {
                         clusterMarkers.push(markers[marker.id]);
 
                     } else {
@@ -171,7 +170,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                         }
                     });
 
-                    if (options.list.showTab) {
+                    if (options.show.listTab) {
                         $listDisplay = $('<div class="fp_listitem">' + marker.infoBox.content + '</div>');
                         $listDisplay.addClass('fp_list_marker' + marker.id)
                         $('#fp_locationlist .fp_ll_holder').append();
@@ -195,8 +194,8 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 markerSets[marker.typeId].push(marker.id);
             });
 
-            if (options.clusters.show) {
-                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusters.options);
+            if (options.show.clusters) {
+                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
             }
         };
 
@@ -235,7 +234,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
             }
         };
 
-        toggleMarker = function(evt) {
+        toggleTypes = function(evt) {
             evt.preventDefault();
 
             let $this  = $(this),
@@ -252,7 +251,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 if ($this.hasClass('active')) {
                     marker.status -= 1;
                     if (marker.status === 0) {
-                        if (!options.clusters.show) {
+                        if (!options.show.clusters) {
                             marker.setMap();
                         }
 
@@ -268,7 +267,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     marker.status += 1;
 
                     if (marker.status === 1) {
-                        if (!options.clusters.show) {
+                        if (!options.show.clusters) {
                             marker.setMap(map);
                         }
 
@@ -309,7 +308,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 }
             }
 
-            if (options.clusters.show) {
+            if (options.show.clusters) {
                 clusterMarkers = [];
                 markers.forEach(function(marker) {
                     if (marker.status > 0) {
@@ -318,7 +317,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 });
 
                 clusterManager.clearMarkers();
-                clusterManager = new MarkerClusterer(map, clusterMarkers, clusterOptions);
+                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
             }
 
             setTimeout(function() {

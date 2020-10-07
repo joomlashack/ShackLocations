@@ -69,7 +69,6 @@ foreach ($this->item->markerdata as $marker) {
     ];
 }
 
-
 // Load the Google API and initialise the map.
 HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
 HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
@@ -81,7 +80,6 @@ $mapsearchrange  = $this->item->params->get('resultradius');
 $mapsearchprompt = $this->item->params->get('mapsearchprompt');
 $searchassist    = ', ' . $this->item->params->get('searchassist');
 $listtabfirst    = (int)(bool)$this->item->params->get('showlistfirst');
-$showMarkers     = $this->item->params->get('showmarkers');
 $text            = (object)[
     'within'     => JText::_('COM_FOCALPOINT_WITHIN', true),
     'distance'   => JText::_('COM_FOCALPOINT_DISTANCE', true),
@@ -94,9 +92,9 @@ $text            = (object)[
 ];
 
 $options = json_encode([
-    'fitBounds' => (bool)$this->item->params->get('fitbounds'),
-
-    'mapProperties' => [
+    'clusterOptions' => $this->item->params->get('clusterOptions', null),
+    'fitBounds'      => (bool)$this->item->params->get('fitbounds'),
+    'mapProperties'  => [
         'center'                   => [
             'lat' => $this->item->latitude,
             'lng' => $this->item->longitude
@@ -114,13 +112,11 @@ $options = json_encode([
         'zoom'                     => (int)$this->item->params->get('zoom'),
         'zoomControl'              => (int)(bool)$this->item->params->get('zoomControl'),
     ],
-    'markerData'    => $markers,
-    'list'          => [
-        'showTab' => (bool)$this->item->params->get('locationlist')
-    ],
-    'clusters'      => [
-        'show'    => (bool)$this->item->params->get('markerclusters'),
-        'options' => $this->item->params->get('clusterOptions', null)
+    'markerData'     => $markers,
+    'show'           => [
+        'clusters' => (bool)$this->item->params->get('markerclusters'),
+        'listTab'  => (bool)$this->item->params->get('locationlist'),
+        'markers'  => $this->item->params->get('showmarkers') == 'on'
     ]
 ]);
 
