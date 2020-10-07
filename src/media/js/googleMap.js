@@ -75,11 +75,11 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 lng    : null,
                 marker : null,
             },
+            mapinfobox     = false,
+            mappedMarkers  = [],
+            markerInfoBox  = [],
             markers        = [],
             markerSets     = [],
-            markerInfoBox  = [],
-            mappedMarkers  = [],
-            mapinfobox     = false,
             options        = {};
 
         // Temporary hardocdes
