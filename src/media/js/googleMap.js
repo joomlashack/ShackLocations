@@ -62,6 +62,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     markers : true
                 }
             },
+            allowScrollTo  = true,
             canvas         = null,
             clusterMarkers = [],
             clusterManager = null,
@@ -85,7 +86,6 @@ jQuery.sloc = {map: {foo: 'foo'}};
 
         // Temporary hardocdes
         let
-            allowScrollTo   = false,
             listtabfirst    = 0,
             mapsearchprompt = 'Suburb or Postal code',
             mapsearchrange  = 15,
@@ -103,8 +103,10 @@ jQuery.sloc = {map: {foo: 'foo'}};
             setMarkers();
 
             $('.markertoggles').on('click', toggleTypes);
-            updateActiveCount();
+            $('#fp_reset').on('click', resetMap);
+            $('#fp_toggle').on('click', toggleMarkers).trigger('click');
 
+            updateActiveCount();
         };
 
         initMap = function() {
@@ -328,6 +330,86 @@ jQuery.sloc = {map: {foo: 'foo'}};
             updateActiveCount(searchTxt);
 
             return false;
+        };
+
+        resetMap = function(evt) {
+            allowScrollTo = false;
+            $('#fp_searchAddress').val(mapsearchprompt);
+            $('#fp_searchAddressBtn').attr('disabled', true);
+
+            searchTxt = '';
+            markers.forEach(function(marker) {
+                let $this = $(this);
+
+                if (marker.status < -999) {
+                    marker.status += 5000;
+                    marker.setMap(map);
+                    $('.fp_list_marker' + marker.id).fadeIn(100, function() {
+                        $this.removeClass('fp_listitem_hidden')
+                            .prependTo('#fp_locationlist .fp_ll_holder');
+                    });
+                }
+            });
+
+            $('#fp_toggle').each(function() {
+                if (options.show.markers) {
+                    $(this).data('togglestate', 'off')
+                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+
+                    $('.markertoggles').each(function() {
+                        let $this = $(this);
+
+                        if ($this.hasClass('active')) {
+                            $this.trigger('click');
+                        }
+                        $this.trigger('click');
+                    });
+
+                } else {
+                    $(this).data('togglestate', 'on')
+                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
+
+                    $('.markertoggles').each(function() {
+                        let $this = $(this);
+                        if ($this.hasClass('active')) {
+                            $this.trigger('click');
+                        }
+                    });
+                }
+            });
+
+            allowScrollTo = true;
+            map.panTo(options.mapProperties.center);
+            map.setZoom(options.mapProperties.zoom);
+        };
+
+        toggleMarkers = function(evt) {
+            allowScrollTo = false;
+            let $this     = $(this),
+                $toggles = $('.markertoggles');
+
+            if ($this.data('togglestate') === 'on') {
+                $this.data('togglestate', 'off')
+                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+
+                $toggles.each(function() {
+                    if (!$(this).hasClass('active')) {
+                        $(this).trigger('click');
+                    }
+                });
+
+            } else {
+                $this.data('togglestate', 'on')
+                .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
+
+                $toggles.each(function() {
+                    if ($(this).hasClass('active')) {
+                        $(this).trigger('click');
+                    }
+                });
+            }
+
+            allowScrollTo = true;
         };
 
         return {

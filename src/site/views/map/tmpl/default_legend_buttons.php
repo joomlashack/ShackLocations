@@ -22,16 +22,14 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die('Restricted access');
 
 $showMapSearch = $this->item->params->get('mapsearchenabled');
 $searchPrompt  = $this->item->params->get('mapsearchprompt');
 $sidebar       = $this->item->params->get('legendposition') == 'left'
     || $this->item->params->get('legendposition') == 'right';
-
-$js = <<<JSCRIPT
-
-JSCRIPT;
 
 ?>
 <div class="row-fluid ">
@@ -50,9 +48,11 @@ JSCRIPT;
             <?php endif; ?>
             <div id="fp_map_buttons" class="input-append">
                 <button class="btn btn-mini"
-                        id="fp_reset"
-                        onclick="return false;"><?php echo JText::_('COM_FOCALPOINT_BUTTON_RESET_MAP'); ?></button>
-                <button class="btn btn-mini" id="fp_toggle" data-togglestate="on" onclick="return false;"></button>
+                        id="fp_reset"><?php echo Text::_('COM_FOCALPOINT_BUTTON_RESET_MAP'); ?></button>
+
+                <button class="btn btn-mini"
+                        id="fp_toggle"
+                        data-togglestate="on"></button>
             </div>
         </form>
     </div>
