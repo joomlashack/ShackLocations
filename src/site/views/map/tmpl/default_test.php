@@ -6,6 +6,20 @@ use Joomla\CMS\Language\Text;
 
 echo '<h3>' . basename(__FILE__) . '</h3>';
 
+$texts = [
+    'COM_FOCALPOINT_WITHIN',
+    'COM_FOCALPOINT_DISTANCE',
+    'COM_FOCALPOINT_LOCATIONS',
+    'COM_FOCALPOINT_LOCATION',
+    'COM_FOCALPOINT_SHOWING',
+    'COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED',
+    'COM_FOCALPOINT_BUTTTON_HIDE_ALL',
+    'COM_FOCALPOINT_BUTTTON_SHOW_ALL'
+];
+foreach ($texts as $text) {
+    Text::script($text);
+}
+
 $markers = [];
 foreach ($this->item->markerdata as $marker) {
     //Assemble the infobox.
@@ -80,16 +94,6 @@ $mapsearchrange  = $this->item->params->get('resultradius');
 $mapsearchprompt = $this->item->params->get('mapsearchprompt');
 $searchassist    = ', ' . $this->item->params->get('searchassist');
 $listtabfirst    = (int)(bool)$this->item->params->get('showlistfirst');
-$text            = (object)[
-    'within'     => JText::_('COM_FOCALPOINT_WITHIN', true),
-    'distance'   => JText::_('COM_FOCALPOINT_DISTANCE', true),
-    'locations'  => JText::_('COM_FOCALPOINT_LOCATIONS', true),
-    'location'   => JText::_('COM_FOCALPOINT_LOCATION', true),
-    'showing'    => JText::_('COM_FOCALPOINT_SHOWING', true),
-    'notypes'    => JText::_('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED', true),
-    'hideButton' => JText::_('COM_FOCALPOINT_BUTTTON_HIDE_ALL', true),
-    'showButton' => JText::_('COM_FOCALPOINT_BUTTTON_SHOW_ALL', true)
-];
 
 $options = json_encode([
     'clusterOptions' => $this->item->params->get('clusterOptions', null),
