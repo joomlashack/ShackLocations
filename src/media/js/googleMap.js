@@ -59,11 +59,13 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     showTab: true
                 },
                 clusters     : {
-                    show: false
+                    options: null,
+                    show   : false
                 }
             },
             canvas         = null,
             clusterMarkers = [],
+            clusterManager = null,
             map            = null,
             markerBase     = {
                 id     : null,
@@ -91,15 +93,12 @@ jQuery.sloc = {map: {foo: 'foo'}};
             mapsearchzoom   = 12,
             searchassist    = ', ',
             searchTxt       = '',
-            showmapsearch   = 1,
-            markerCluster   = null;
+            showmapsearch   = 1
         // End Temp hardocdes
 
         init = function(params) {
             options = $.extend(true, {}, defaults, params);
             canvas  = document.getElementById(options.canvasId);
-
-            options.clusters.show = options.clusters.show && typeof clusterOptions !== 'undefined';
 
             initMap();
             setMarkers();
@@ -195,6 +194,10 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 mappedMarkers.push(marker.id);
                 markerSets[marker.typeId].push(marker.id);
             });
+
+            if (options.clusters.show) {
+                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusters.options);
+            }
         };
 
         updateActiveCount = function() {
@@ -308,14 +311,14 @@ jQuery.sloc = {map: {foo: 'foo'}};
 
             if (options.clusters.show) {
                 clusterMarkers = [];
-                markers.forEach(function(m, i) {
-                    if (markers[i].status > 0) {
-                        clusterMarkers.push(markers[i]);
+                markers.forEach(function(marker) {
+                    if (marker.status > 0) {
+                        clusterMarkers.push(marker);
                     }
                 });
 
-                markerCluster.clearMarkers();
-                markerCluster = new MarkerClusterer(map, clusterMarkers, clusterOptions);
+                clusterManager.clearMarkers();
+                clusterManager = new MarkerClusterer(map, clusterMarkers, clusterOptions);
             }
 
             setTimeout(function() {

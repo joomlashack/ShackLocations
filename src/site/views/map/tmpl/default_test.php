@@ -119,7 +119,8 @@ $options = json_encode([
         'showTab' => (bool)$this->item->params->get('locationlist')
     ],
     'clusters'      => [
-        'show' => (bool)$this->item->params->get('markerclusters')
+        'show'    => (bool)$this->item->params->get('markerclusters'),
+        'options' => $this->item->params->get('clusterOptions', null)
     ]
 ]);
 
