@@ -206,12 +206,10 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 status      = '',
                 activeCount = 0;
 
-            $.each(markers, function(index, marker) {
-                if (typeof marker !== 'undefined') {
-                    if (marker.status > 0) {
-                        activeCount += 1;
-                        status = status + ' ' + marker.status;
-                    }
+            markers.forEach(function(marker, id) {
+                if (marker.status > 0) {
+                    activeCount += 1;
+                    status += marker.status;
                 }
             });
 
@@ -242,8 +240,8 @@ jQuery.sloc = {map: {foo: 'foo'}};
             let $this  = $(this),
                 typeId = $this.attr('data-marker-type');
 
-            markers.forEach(function(marker, index) {
-                markerInfoBox[index].close();
+            markers.forEach(function(marker, id) {
+                markerInfoBox[id].close();
             });
 
             $(markerSets[typeId]).each(function(i, markerId) {
@@ -327,24 +325,24 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 jQuery('#fp_locationlist').css('height', locationListHeight);
             }, 150);
 
-            updateActiveCount(searchTxt);
+            updateActiveCount();
 
             return false;
         };
 
         resetMap = function(evt) {
             allowScrollTo = false;
-            $('#fp_searchAddress').val(mapsearchprompt);
-            $('#fp_searchAddressBtn').attr('disabled', true);
 
-            searchTxt = '';
-            markers.forEach(function(marker) {
+            search.text = '';
+            $('#fp_searchAddress').val(search.text);
+
+            markers.forEach(function(marker, id) {
                 let $this = $(this);
 
                 if (marker.status < -999) {
                     marker.status += 5000;
                     marker.setMap(map);
-                    $('.fp_list_marker' + marker.id).fadeIn(100, function() {
+                    $('.fp_list_marker' + id).fadeIn(100, function() {
                         $this.removeClass('fp_listitem_hidden')
                             .prependTo('#fp_locationlist .fp_ll_holder');
                     });
@@ -386,7 +384,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
         toggleMarkers = function(evt) {
             allowScrollTo = false;
             let $this     = $(this),
-                $toggles = $('.markertoggles');
+                $toggles  = $('.markertoggles');
 
             if ($this.data('togglestate') === 'on') {
                 $this.data('togglestate', 'off')
@@ -400,7 +398,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
 
             } else {
                 $this.data('togglestate', 'on')
-                .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
+                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
 
                 $toggles.each(function() {
                     if ($(this).hasClass('active')) {
