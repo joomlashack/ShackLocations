@@ -126,6 +126,12 @@
 
             setSearch();
             updateActiveCount();
+
+            if (!options.show.markers) {
+                setTimeout(function(){
+                    $('#fp_toggle').trigger('click');
+                },100);
+            }
         };
 
         initMap = function() {
