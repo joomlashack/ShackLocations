@@ -154,8 +154,8 @@
 
         setMarkers = function() {
             $(options.markerData).each(function(index, data) {
-                let $listDisplay = null,
-                    marker       = $.extend(true, {}, markerBase, data);
+                let $listItem = null,
+                    marker    = $.extend(true, {}, markerBase, data);
 
                 if ($.inArray(marker.id, mappedMarkers) === -1) {
                     let position = new google.maps.LatLng(marker.position.lat, marker.position.lng);
@@ -201,10 +201,10 @@
                     });
 
                     if (options.show.listTab) {
-                        $listDisplay = $('<div class="fp_listitem">' + marker.infoBox.content + '</div>');
-                        $listDisplay.addClass('fp_list_marker' + marker.id)
-                        $listHolder.append();
-                        $listDisplay.status = 0;
+                        $listItem = $('<div class="fp_listitem">' + marker.infoBox.content + '</div>');
+                        $listItem.addClass('fp_list_marker' + marker.id)
+                        $listHolder.append($listItem);
+                        $listItem.status = 0;
                     }
 
                     markers[marker.id].status = 0;
@@ -212,8 +212,8 @@
 
                 markers[marker.id].status += 1;
 
-                if ($listDisplay) {
-                    $listDisplay.status += 1;
+                if ($listItem) {
+                    $listItem.status += 1;
                 }
 
                 if (typeof markerSets[marker.typeId] === 'undefined') {
@@ -245,9 +245,9 @@
 
             if (activeCount === 0) {
                 if ($noLocations.length === 0) {
-                    $listHolder
-                        .append('<div class="nolocations"/>')
+                    $noLocations = $('<div class="nolocations"/>')
                         .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'));
+                    $listHolder.append($noLocations);
                 }
 
             } else {
@@ -257,6 +257,7 @@
             if (search.text !== '') {
                 displayText      = 'COM_FOCALPOINT_SEARCH_WITHIN';
                 displayArguments = [activeCount, options.search.radius, search.text];
+
             } else {
                 displayText      = 'COM_FOCALPOINT_SEARCH_SHOWING';
                 displayArguments = [activeCount]
@@ -280,8 +281,8 @@
             });
 
             $(markerSets[typeId]).each(function(i, markerId) {
-                let marker      = markers[markerId],
-                    $listMarker = $('.fp_list_marker' + markerId);
+                let marker    = markers[markerId],
+                    $listItem = $('.fp_list_marker' + markerId);
 
                 if ($this.hasClass('active')) {
                     marker.status -= 1;
@@ -291,11 +292,8 @@
                         }
 
                         markerInfoBox[markerId].close();
-                        $listMarker.fadeOut(100, function() {
-                            $this
-                                .addClass('fp_listitem_hidden')
-                                .appendTo('#fp_locationlist .fp_ll_holder');
-                        });
+
+                        $listItem.fadeOut();
                     }
 
                 } else {
@@ -306,11 +304,9 @@
                             marker.setMap(map);
                         }
 
-                        $listMarker
+                        $listItem
                             .prependTo('#fp_locationlist .fp_ll_holder')
-                            .fadeIn(100, function() {
-                                $this.removeClass('fp_listitem_hidden');
-                            });
+                            .fadeIn();
                     }
                 }
             });
