@@ -27,9 +27,9 @@ use Joomla\CMS\Language\Text;
 defined('_JEXEC') or die('Restricted access');
 
 $showMapSearch = $this->item->params->get('mapsearchenabled');
-$searchPrompt  = $this->item->params->get('mapsearchprompt');
-$sidebar       = $this->item->params->get('legendposition') == 'left'
-    || $this->item->params->get('legendposition') == 'right';
+$searchPrompt  = $this->item->params->get('mapsearchprompt')
+    ?: Text::_('COM_FOCALPOINT_SEARCH_PROMPT_DEFAULT');
+$sidebar       = in_array($this->item->params->get('legendposition'), ['left', 'right']);
 
 ?>
 <div class="row-fluid ">
@@ -39,11 +39,12 @@ $sidebar       = $this->item->params->get('legendposition') == 'left'
             <?php if ($showMapSearch) : ?>
                 <div class="fp_mapsearch input-append">
                     <label for="fp_searchAddress"><?php echo $searchPrompt; ?></label>
-                    <input class=""
-                           id="fp_searchAddress"
+                    <input id="fp_searchAddress"
                            type="text"
                            placeholder="<?php echo $searchPrompt; ?>">
-                    <button class="btn " id="fp_searchAddressBtn" type="button">Go!</button>
+                    <button id="fp_searchAddressBtn"
+                            class="btn"
+                            type="button"><?php echo Text::_('COM_FOCALPOINT_SEARCH_BUTTON_TEXT'); ?></button>
                 </div>
             <?php endif; ?>
             <div id="fp_map_buttons" class="input-append">

@@ -22,7 +22,23 @@
 jQuery.sloc = {map: {foo: 'foo'}};
 
 ;(function($) {
-    $.sloc = $.extend({map: null}, $.sloc);
+    $.sloc = $.extend(true, {map: {}}, $.sloc);
+
+    $.sloc.sprintf = function(string, replacements) {
+        let result = string.toString();
+
+        for (let i = 0; i < replacements.length; i++) {
+            let ordered = '%' + (i + 1) + '$s';
+
+            if (result.indexOf(ordered) === -1) {
+                result = result.replace('%s', replacements[i]);
+            } else {
+                result = result.replace(ordered, replacements[i]);
+            }
+        }
+
+        return result;
+    };
 
     $.sloc.map.google = function() {
         let defaults       = {
@@ -56,10 +72,16 @@ jQuery.sloc = {map: {foo: 'foo'}};
                     maxWidth      : 320,
                     zIndex        : null
                 },
+                search        : {
+                    assist: '',
+                    radius: 15,
+                    zoom  : 12
+                },
                 show          : {
                     clusters: false,
                     listTab : true,
-                    markers : true
+                    markers : true,
+                    search  : false,
                 }
             },
             allowScrollTo  = true,
@@ -82,17 +104,14 @@ jQuery.sloc = {map: {foo: 'foo'}};
             markerInfoBox  = [],
             markers        = [],
             markerSets     = [],
-            options        = {};
+            options        = {},
+            search         = {
+                text: ''
+            };
 
         // Temporary hardocdes
         let
-            listtabfirst    = 0,
-            mapsearchprompt = 'Suburb or Postal code',
-            mapsearchrange  = 15,
-            mapsearchzoom   = 12,
-            searchassist    = ', ',
-            searchTxt       = '',
-            showmapsearch   = 1
+            listtabfirst = 0
         // End Temp hardocdes
 
         init = function(params) {
@@ -106,6 +125,7 @@ jQuery.sloc = {map: {foo: 'foo'}};
             $('#fp_reset').on('click', resetMap);
             $('#fp_toggle').on('click', toggleMarkers).trigger('click');
 
+            setSearch();
             updateActiveCount();
         };
 
@@ -202,9 +222,11 @@ jQuery.sloc = {map: {foo: 'foo'}};
         };
 
         updateActiveCount = function() {
-            let locationTxt = '',
-                status      = '',
-                activeCount = 0;
+            let displayText      = '',
+                displayArguments = [],
+                status           = '',
+                activeCount      = 0,
+                $noLocations     = $('.nolocations');
 
             markers.forEach(function(marker, id) {
                 if (marker.status > 0) {
@@ -213,25 +235,30 @@ jQuery.sloc = {map: {foo: 'foo'}};
                 }
             });
 
-            if (searchTxt !== '') {
-                locationTxt = ' (within ' + mapsearchrange + 'Km of ' + searchTxt + ')';
-            }
-
-            let locationPlural = 'locations';
-            if (activeCount === 1) {
-                locationPlural = 'location';
-            }
-
-            $('#activecount').html('Showing ' + activeCount + ' ' + locationPlural + locationTxt + '.');
-
             if (activeCount === 0) {
-                if ($('.nolocations').length === 0) {
-                    $('#fp_locationlist .fp_ll_holder').append('<div class="nolocations">No location types selected.</div>');
+                if ($noLocations.length === 0) {
+                    $('#fp_locationlist .fp_ll_holder')
+                        .append('<div class="nolocations"/>')
+                        .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'));
                 }
 
             } else {
-                $('.nolocations').remove();
+                $noLocations.remove();
             }
+
+            if (search.text !== '') {
+                displayText      = 'COM_FOCALPOINT_SEARCH_WITHIN';
+                displayArguments = [activeCount, options.search.radius, search.text];
+            } else {
+                displayText      = 'COM_FOCALPOINT_SEARCH_SHOWING';
+                displayArguments = [activeCount]
+            }
+
+            if (activeCount === 1) {
+                displayText += '_1';
+            }
+
+            $('#activecount').html($.sloc.sprintf(Joomla.Text._(displayText), displayArguments));
         };
 
         toggleTypes = function(evt) {
@@ -409,6 +436,125 @@ jQuery.sloc = {map: {foo: 'foo'}};
 
             allowScrollTo = true;
         };
+
+        setSearch = function() {
+            if (options.show.search) {
+                let $searchField  = $('#fp_searchAddress'),
+                    $searchButton = $('#fp_searchAddressBtn');
+
+                $searchField.on('keypress', function(evt) {
+                    if (this.value && evt.which === 13) {
+                        $searchButton.trigger('click');
+                        return false;
+                    }
+                });
+
+                $searchButton.on('click', function(evt) {
+                    evt.preventDefault();
+
+                    search.text = $searchField.val();
+                    if (search.text) {
+                        let geocoder = new google.maps.Geocoder(),
+                            address  = search.text,
+                            location = null;
+
+                        if (options.search.assist) {
+                            address += ', ' + options.search.assist;
+                        }
+
+                        geocoder.geocode(
+                            {address: address},
+                            function(results, status) {
+                                if (status === google.maps.GeocoderStatus.OK) {
+                                    location = results[0].geometry.location;
+
+                                    allowScrollTo = false;
+                                    markers.forEach(function(marker, id) {
+                                        if (marker.status < -999) {
+                                            marker.status += 5000;
+                                            if (!options.show.clusters) {
+                                                marker.setMap(map);
+                                            }
+
+                                            $('.fp_list_marker' + id).fadeIn(100, function() {
+                                                $(this).removeClass('fp_listitem_hidden')
+                                                    .prependTo('#fp_locationlist .fp_ll_holder');
+                                            });
+                                        }
+                                    });
+
+                                    $('#fp_toggle').each(function() {
+                                        let $toggle = $(this);
+
+                                        $toggle.data('togglestate', 'off')
+                                            .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+
+                                        $('.markertoggles').each(function() {
+                                            let $typeToggle = $(this);
+
+                                            if ($typeToggle.hasClass('active')) {
+                                                $typeToggle.trigger('click');
+                                            }
+
+                                            $typeToggle.trigger('click');
+                                        });
+                                    });
+
+                                    markers.forEach(function(marker, id) {
+                                        let position = marker.getPosition(),
+                                            deltaLat = location.lat() - position.lat(),
+                                            deltaLng = location.lng() - position.lng(),
+                                            distance = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng) * 111.32;
+
+                                        if (distance > options.search.radius) {
+                                            marker.status -= 5000;
+                                            if (marker.status < 1) {
+                                                markerInfoBox[id].close();
+                                                if (!options.show.clusters) {
+                                                    marker.setMap();
+                                                }
+
+                                                $('.fp_list_marker' + id).fadeOut(100, function() {
+                                                    $(this).addClass('fp_listitem_hidden')
+                                                        .appendTo('#fp_locationlist .fp_ll_holder');
+                                                });
+                                            }
+                                        }
+
+                                        updateActiveCount();
+                                        allowScrollTo = true;
+                                    });
+
+                                    if (options.show.clusters) {
+                                        clusterMarkers = [];
+                                        markers.forEach(function(marker) {
+                                            if (marker.status > 0) {
+                                                clusterMarkers.push(marker);
+                                            }
+                                        });
+
+                                        clusterManager.clearMarkers();
+                                        clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
+                                    }
+
+                                    map.setCenter(location);
+                                    map.setZoom(options.search.zoom);
+                                    setTimeout(function() {
+                                        let locationListHeight = $('#fp_locationlist .fp_ll_holder').outerHeight();
+                                        $('#fp_locationlist').css('height', locationListHeight);
+                                    }, 500);
+
+                                } else {
+                                    alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
+                                }
+                            }
+                        );
+                    } else {
+                        alert(Joomla.Text._('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED'));
+                    }
+                });
+            }
+        }
 
         return {
             init: init

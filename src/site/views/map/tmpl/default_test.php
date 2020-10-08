@@ -7,14 +7,16 @@ use Joomla\CMS\Language\Text;
 echo '<h3>' . basename(__FILE__) . '</h3>';
 
 $texts = [
-    'COM_FOCALPOINT_WITHIN',
-    'COM_FOCALPOINT_DISTANCE',
-    'COM_FOCALPOINT_LOCATIONS',
-    'COM_FOCALPOINT_LOCATION',
-    'COM_FOCALPOINT_SHOWING',
-    'COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED',
     'COM_FOCALPOINT_BUTTTON_HIDE_ALL',
-    'COM_FOCALPOINT_BUTTTON_SHOW_ALL'
+    'COM_FOCALPOINT_BUTTTON_SHOW_ALL',
+    'COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED',
+    'COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED',
+    'COM_FOCALPOINT_SEARCH_BUTTON_TEXT',
+    'COM_FOCALPOINT_SEARCH_PROMPT_DEFAULT',
+    'COM_FOCALPOINT_SEARCH_SHOWING',
+    'COM_FOCALPOINT_SEARCH_SHOWING_1',
+    'COM_FOCALPOINT_SEARCH_WITHIN',
+    'COM_FOCALPOINT_SEARCH_WITHIN_1'
 ];
 foreach ($texts as $text) {
     Text::script($text);
@@ -88,11 +90,7 @@ HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->
 HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
 
 $params          = JComponentHelper::getParams('com_focalpoint');
-$showmapsearch   = $this->item->params->get('mapsearchenabled');
-$mapsearchzoom   = $this->item->params->get('mapsearchzoom');
-$mapsearchrange  = $this->item->params->get('resultradius');
 $mapsearchprompt = $this->item->params->get('mapsearchprompt');
-$searchassist    = ', ' . $this->item->params->get('searchassist');
 $listtabfirst    = (int)(bool)$this->item->params->get('showlistfirst');
 
 $options = json_encode([
@@ -117,10 +115,16 @@ $options = json_encode([
         'zoomControl'              => (int)(bool)$this->item->params->get('zoomControl'),
     ],
     'markerData'     => $markers,
+    'search'         => [
+        'assist' => (string)$this->item->params->get('searchassist', ''),
+        'radius' => (float)$this->item->params->get('resultradius', 15),
+        'zoom'   => (int)$this->item->params->get('mapsearchzoom', 12)
+    ],
     'show'           => [
         'clusters' => (bool)$this->item->params->get('markerclusters'),
         'listTab'  => (bool)$this->item->params->get('locationlist'),
-        'markers'  => $this->item->params->get('showmarkers') == 'on'
+        'markers'  => $this->item->params->get('showmarkers') == 'on',
+        'search'   => (bool)$this->item->params->get('mapsearchenabled')
     ]
 ]);
 

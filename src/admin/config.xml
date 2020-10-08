@@ -313,10 +313,8 @@
 
         <field name="mapsearchprompt"
                type="text"
-               default="Suburb or Postal code"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_PROMPT_LBL"
-               description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_PROMPT_DESC"
-               size="40"/>
+               description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_PROMPT_DESC"/>
 
         <field name="mapsearchzoom"
                type="list"
