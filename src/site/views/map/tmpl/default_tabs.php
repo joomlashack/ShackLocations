@@ -105,9 +105,16 @@ if ($this->params->get('locationlist')) {
     $listTab = [
         'locationlisttab' => (object)[
             'name'    => Text::_('COM_FOCALPOINT_LIST'),
-            'content' => 'Here will be the list'
+            'content' => sprintf(
+                '<div id="fp_locationlist_container">'
+                . '<div id="fp_locationlist" style="%s">'
+                . '<div class="fp_ll_holder">'
+                . '</div></div></div>',
+                join(' ', $mapStyle)
+            )
         ]
     ];
+
     if ($this->params->get('showlistfirst')) {
         $tabs = array_merge($listTab, $tabs);
     } else {

@@ -87,6 +87,7 @@
             canvas         = null,
             clusterMarkers = [],
             clusterManager = null,
+            $listHolder    = null,
             map            = null,
             markerBase     = {
                 id     : null,
@@ -115,7 +116,9 @@
 
         init = function(params) {
             options = $.extend(true, {}, defaults, params);
-            canvas  = document.getElementById(options.canvasId);
+
+            canvas      = document.getElementById(options.canvasId);
+            $listHolder = $('#fp_locationlist .fp_ll_holder');
 
             initMap();
             setMarkers();
@@ -200,7 +203,7 @@
                     if (options.show.listTab) {
                         $listDisplay = $('<div class="fp_listitem">' + marker.infoBox.content + '</div>');
                         $listDisplay.addClass('fp_list_marker' + marker.id)
-                        $('#fp_locationlist .fp_ll_holder').append();
+                        $listHolder.append();
                         $listDisplay.status = 0;
                     }
 
@@ -242,7 +245,7 @@
 
             if (activeCount === 0) {
                 if ($noLocations.length === 0) {
-                    $('#fp_locationlist .fp_ll_holder')
+                    $listHolder
                         .append('<div class="nolocations"/>')
                         .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'));
                 }
@@ -544,8 +547,9 @@
 
                                     map.setCenter(location);
                                     map.setZoom(options.search.zoom);
+
                                     setTimeout(function() {
-                                        let locationListHeight = $('#fp_locationlist .fp_ll_holder').outerHeight();
+                                        let locationListHeight = $listHolder.outerHeight();
                                         $('#fp_locationlist').css('height', locationListHeight);
                                     }, 500);
 
