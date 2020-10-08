@@ -66,7 +66,7 @@ if ($this->params->get('mapsizecontrol') == 1) {
 
 $containerStyle = [
     "width: {$containerWidth};",
-    "min-height: {$containerHeight};"
+    "height: {$containerHeight};"
 ];
 
 // Build the map content
