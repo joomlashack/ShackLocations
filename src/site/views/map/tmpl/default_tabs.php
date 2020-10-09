@@ -21,6 +21,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
@@ -69,23 +70,11 @@ $containerStyle = [
     "min-height: {$containerHeight};"
 ];
 
-// Build the map content
 $mapContent = sprintf(
     '<div id="fp_googleMap" style="%s"></div>',
     join(' ', $mapStyle)
 );
 
-$legend = sprintf(
-    '<div id="fp_googleMapSidebar" style="%s">%s</div>',
-    join(' ', $sidebarStyle),
-    $this->loadTemplate('legend_' . $legendPosition)
-);
-
-if (in_array($legendPosition, ['above', 'left'])) :
-    $mapContent = $legend . $mapContent;
-else :
-    $mapContent .= $legend;
-endif;
 $mapContent = sprintf(
     '<div id="fp_googleMapContainer" class="%s" style="%s">%s</div>',
     join(' ', $sidebarClass),
@@ -94,16 +83,18 @@ $mapContent = sprintf(
 );
 
 // Build the tabs in specified order
-$tabs = [
-    'tabs1-map' => (object)[
+$mapTabId = 'map';
+$tabs     = [
+    $mapTabId => (object)[
         'name'    => Text::_('COM_FOCALPOINT_MAP'),
         'content' => $mapContent
     ]
 ];
 
+$listTabId = 'locationlisttab';
 if ($this->params->get('locationlist')) {
     $listTab = [
-        'locationlisttab' => (object)[
+        $listTabId => (object)[
             'name'    => Text::_('COM_FOCALPOINT_LIST'),
             'content' => sprintf(
                 '<div id="fp_locationlist_container">'
@@ -121,33 +112,77 @@ if ($this->params->get('locationlist')) {
         $tabs = array_merge($tabs, $listTab);
     }
 }
-if ($customTabs = $this->item->tabsdata->tabs) {
-    $tabs = array_merge($tabs, $customTabs);
-}
+$tabs = array_merge($tabs, $this->item->tabsdata->tabs);
+
+$legendId    = 'fp_googleMapSidebar';
+$legend      = sprintf(
+    '<div id="%s" style="%s">%s</div>',
+    $legendId,
+    join(' ', $sidebarStyle),
+    $this->loadTemplate('legend_' . $legendPosition)
+);
+$legendFirst = in_array($legendPosition, ['above', 'left']);
 
 ?>
-<div class="tab-content">
-    <div id="fp_main" class="clearfix">
-        <?php
-        if (count($tabs) == 1) :
-            echo $tabs['tabs1-map']->content;
+    <div class="tab-content">
+        <div id="fp_main" class="clearfix">
+            <?php
+            if (count($tabs) > 1) :
+                echo HTMLHelper::_('bootstrap.startTabSet', 'map', ['active' => $mapTabId]);
 
-        else :
-            echo HTMLHelper::_('bootstrap.startTabSet', 'mapTab', ['active' => 'tabs1-map']);
-            foreach ($tabs as $id => $tab) {
-                echo HTMLHelper::_('bootstrap.addTab', 'mapTab', $id, $tab->name);
-                echo $tab->content;
-                echo HTMLHelper::_('bootstrap.endTab');
-            }
-            echo HTMLHelper::_('bootstrap.endTabSet');
+                if ($legendFirst) :
+                    echo $legend;
+                endif;
 
-            if ($this->app->input->getBool("debug")) :
-                echo sprintf(
-                    '<textarea style="width:100%;height:500px;"><pre>%s</pre></textarea>',
-                    print_r($this->item, 1)
-                );
+                foreach ($tabs as $id => $tab) {
+                    echo HTMLHelper::_('bootstrap.addTab', 'map', $id, $tab->name);
+                    echo $tab->content;
+                    echo HTMLHelper::_('bootstrap.endTab');
+                }
+
+                if (!$legendFirst) :
+                    echo $legend;
+                endif;
+
+                echo HTMLHelper::_('bootstrap.endTabSet');
+
+                if ($this->app->input->getBool("debug")) :
+                    echo sprintf(
+                        '<textarea style="width:100%;height:500px;"><pre>%s</pre></textarea>',
+                        print_r($this->item, 1)
+                    );
+                endif;
+
+            elseif ($legendFirst) :
+                echo $legend;
+                echo $tabs[$mapTabId]->content;
+
+            else :
+                echo $tabs[$mapTabId]->content;
+                echo $legend;
+
             endif;
-        endif;
-        ?>
+            ?>
+        </div>
     </div>
-</div>
+<?php
+
+if (count($tabs) > 1) :
+    // This must be the last thing in this template
+    $js = <<<JSCRIPT
+;jQuery(function($) {
+    $('#mapTabs a').on('click', function(evt) {
+        let href       =  $(this).attr('href').replace('#',''),
+            hideLegend = ['{$mapTabId}','{$listTabId}'].indexOf(href) < 0;
+
+        if (hideLegend) {
+            $('#{$legendId}').hide();
+        } else {
+            $('#{$legendId}').show();
+        }
+    });
+});
+JSCRIPT;
+
+    Factory::getDocument()->addScriptDeclaration($js);
+endif;
