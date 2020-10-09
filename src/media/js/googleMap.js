@@ -293,7 +293,7 @@
 
                         markerInfoBox[markerId].close();
 
-                        $listItem.fadeOut();
+                        $listItem.fadeOut(100);
                     }
 
                 } else {
@@ -306,7 +306,7 @@
 
                         $listItem
                             .prependTo('#fp_locationlist .fp_ll_holder')
-                            .fadeIn();
+                            .fadeIn(100);
                     }
                 }
             });
@@ -352,8 +352,8 @@
             }
 
             setTimeout(function() {
-                let locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
-                jQuery('#fp_locationlist').css('height', locationListHeight);
+                let locationListHeight = $('#fp_locationlist .fp_ll_holder').outerHeight();
+                $('#fp_locationlist').css('height', locationListHeight);
             }, 150);
 
             updateActiveCount();
@@ -544,10 +544,12 @@
                                     map.setCenter(location);
                                     map.setZoom(options.search.zoom);
 
+                                    /*
                                     setTimeout(function() {
                                         let locationListHeight = $listHolder.outerHeight();
                                         $('#fp_locationlist').css('height', locationListHeight);
                                     }, 500);
+                                     */
 
                                 } else {
                                     alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));

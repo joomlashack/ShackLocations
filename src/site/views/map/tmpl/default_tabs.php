@@ -55,7 +55,7 @@ if ($this->params->get('mapsizecontrol') == 1) {
             ]
         );
 
-        $mapStyle[]     = "height: {$containerHeight};";
+        $mapStyle[]     = "min-height: {$containerHeight};";
         $mapStyle[]     = "width: {$mapWidth}{$mapWidthType};";
         $sidebarClass[] = 'fp_side fp_' . $legendPosition;
 
@@ -66,7 +66,7 @@ if ($this->params->get('mapsizecontrol') == 1) {
 
 $containerStyle = [
     "width: {$containerWidth};",
-    "height: {$containerHeight};"
+    "min-height: {$containerHeight};"
 ];
 
 // Build the map content
