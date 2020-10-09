@@ -35,6 +35,11 @@
     padding: 20px;
 }
 
+.legend_left #fp_googleMapSidebar,
+.legend_right #fp_googleMapSidebar {
+    height: 450px;
+}
+
 .legend_below #fp_googleMapSidebar {
     clear: left;
 }
