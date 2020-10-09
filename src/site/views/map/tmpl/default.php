@@ -66,4 +66,3 @@ $legacy = false;
 <?php
 
 echo $this->loadTemplate($legacy ? 'mapjs' : 'test');
-//echo $this->loadTemplate('test2');
