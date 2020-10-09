@@ -21,168 +21,122 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
-
 defined('_JEXEC') or die();
 
+$showListTab   = $this->params->get('locationlist');
+$showListFirst = $this->params->get('showlistfirst');
+$customTabs    = $this->item->tabsdata->tabs;
+
 $legendPosition = $this->params->get('legendposition');
+$sidebarClass   = "fp_vert fp_" . $legendPosition;
 
-// Calculate attributes
-$mapStyle     = [];
-$sidebarStyle = [];
-$sidebarClass = [];
-
-$containerWidth  = '100%';
-$containerHeight = 'auto';
+$containerStyle = "";
+$mapStyle       = "";
+$sidebarStyle   = "";
+$mapsizexouter  = "auto";
+$mapsizey       = "0";
 if ($this->params->get('mapsizecontrol') == 1) {
-    $containerWidth  = $this->params->get('mapsizex');
-    $containerHeight = $this->params->get('mapsizey');
+    $mapsizexouter    = $this->params->get('mapsizex');
+    $mapsizey         = $this->params->get('mapsizey');
+    $mapsizexouterfmt = str_replace(str_split(' 0123456789'), '', $mapsizexouter);
+    $mapsizexouteramt = str_replace(str_split(' px%'), '', $mapsizexouter);
+    $mapsizex         = "auto";
+    $mapStyle         .= "min-height: " . $mapsizey . "; ";
 
-    if (in_array($legendPosition, ['left', 'right'])) {
-        $mapWidthType = str_replace(str_split(' 0123456789.'), '', $containerWidth);
-        $mapWidthAmt  = str_replace(str_split(' px%'), '', $containerWidth);
-
-        $sidebarPercent = str_replace(str_split(' px%'), '', $this->params->get('sidebarx'));
-        $mapWidth       = $mapWidthAmt * (1 - ($sidebarPercent / 100));
-
-        $sidebarStyle = array_merge(
-            $sidebarStyle,
-            [
-                "width: {$sidebarPercent}%;",
-                "height: {$containerHeight};",
-                'float: left;'
-            ]
-        );
-
-        $mapStyle[]     = "min-height: {$containerHeight};";
-        $mapStyle[]     = "width: {$mapWidth}{$mapWidthType};";
-        $sidebarClass[] = 'fp_side fp_' . $legendPosition;
-
-    } else {
-        $sidebarClass = ['fp_vert fp_' . $legendPosition];
+    if ($legendPosition == "left" || $legendPosition == "right") {
+        $sidebarx     = str_replace(str_split(' px%'), '', $this->params->get('sidebarx'));
+        $mapsizex     = $mapsizexouteramt * (1 - ($sidebarx / 100)) . $mapsizexouterfmt;
+        $mapStyle     .= "width: " . $mapsizex . "; ";
+        $sidebarStyle .= "width: " . $sidebarx . "%; ";
+        $sidebarStyle .= "min-height: " . $mapsizey . "; ";
+        $sidebarStyle .= "float: left; ";
+        $sidebarClass = "fp_side fp_" . $legendPosition;
     }
 }
 
-$containerStyle = [
-    "width: {$containerWidth};",
-    "min-height: {$containerHeight};"
-];
-
-$mapContent = sprintf(
-    '<div id="fp_googleMap" style="%s"></div>',
-    join(' ', $mapStyle)
-);
-
-$mapContent = sprintf(
-    '<div id="fp_googleMapContainer" class="%s" style="%s">%s</div>',
-    join(' ', $sidebarClass),
-    join(' ', $containerStyle),
-    $mapContent
-);
-
-// Build the tabs in specified order
-$mapTabId = 'map';
-$tabs     = [
-    $mapTabId => (object)[
-        'name'    => Text::_('COM_FOCALPOINT_MAP'),
-        'content' => $mapContent
-    ]
-];
-
-$listTabId = 'locationlisttab';
-if ($this->params->get('locationlist')) {
-    $listTab = [
-        $listTabId => (object)[
-            'name'    => Text::_('COM_FOCALPOINT_LIST'),
-            'content' => sprintf(
-                '<div id="fp_locationlist_container">'
-                . '<div id="fp_locationlist" style="%s">'
-                . '<div class="fp_ll_holder">'
-                . '</div></div></div>',
-                join(' ', $mapStyle)
-            )
-        ]
-    ];
-
-    if ($this->params->get('showlistfirst')) {
-        $tabs = array_merge($listTab, $tabs);
-    } else {
-        $tabs = array_merge($tabs, $listTab);
-    }
+if (!empty($mapsizex)) {
+    $containerStyle .= "width:" . $mapsizexouter . "; ";
 }
-$tabs = array_merge($tabs, $this->item->tabsdata->tabs);
 
-$legendId    = 'fp_googleMapSidebar';
-$legend      = sprintf(
-    '<div id="%s" style="%s">%s</div>',
-    $legendId,
-    join(' ', $sidebarStyle),
-    $this->loadTemplate('legend_' . $legendPosition)
-);
-$legendFirst = in_array($legendPosition, ['above', 'left']);
+if (!empty($mapsizey)) {
+    $containerStyle .= "min-height:" . $mapsizey . "; ";
+}
 
 ?>
+<?php if ($customTabs || $showListTab) : ?>
+<div id="tab-container" class="tab-container">
+    <ul class='nav nav-tabs'>
+        <?php if ($showListTab && $showListFirst) : ?>
+            <li class=''>
+                <a id="locationlisttab" href="#"><?php echo JText::_('COM_FOCALPOINT_LIST') ?></a>
+            </li>
+        <?php endif; ?>
+
+        <li class='active'>
+            <a href="#tabs1-map" data-toggle="tab"><?php echo JText::_('COM_FOCALPOINT_MAP') ?></a>
+        </li>
+
+        <?php if ($showListTab && !$showListFirst) : ?>
+            <li>
+                <a id="locationlisttab" href="#"><?php echo JText::_('COM_FOCALPOINT_LIST') ?></a>
+            </li>
+        <?php endif;
+
+        if ($customTabs) :
+            foreach ($customTabs as $key => $tab) :
+                ?>
+                <li><a href="#tabs1-<?php echo $key; ?>" data-toggle="tab"><?php echo $tab->name; ?></a>
+                </li>
+            <?php endforeach;
+        endif;
+        ?>
+    </ul>
+    <?php endif; ?>
     <div class="tab-content">
-        <div id="fp_main" class="clearfix">
-            <?php
-            if (count($tabs) > 1) :
-                echo HTMLHelper::_('bootstrap.startTabSet', 'map', ['active' => $mapTabId]);
+        <?php
+        if ($customTabs || $showListTab) :
+            echo '<div id="tabs1-map" class="tab-pane active">';
+        endif;
+        ?>
+        <div id="fp_googleMapContainer" class="<?php echo $sidebarClass; ?>"
+             style="<?php echo $containerStyle; ?>">
+            <?php if ($legendPosition == "above" || $legendPosition == "left") : ?>
+                <div id="fp_googleMapSidebar" style="<?php echo $sidebarStyle; ?>">
+                    <?php echo $this->loadTemplate('legend_' . $legendPosition); ?>
+                </div>
+            <?php endif; ?>
 
-                if ($legendFirst) :
-                    echo $legend;
-                endif;
+            <div id="fp_googleMap" style="<?php echo $mapStyle; ?>"></div>
 
-                foreach ($tabs as $id => $tab) {
-                    echo HTMLHelper::_('bootstrap.addTab', 'map', $id, $tab->name);
-                    echo $tab->content;
-                    echo HTMLHelper::_('bootstrap.endTab');
-                }
+            <?php if ($showListTab) : ?>
+                <div id="fp_locationlist_container">
+                    <div id="fp_locationlist" class="" style="<?php echo $mapStyle; ?>">
+                        <div class="fp_ll_holder"></div>
+                    </div>
+                </div>
+            <?php endif;
 
-                if (!$legendFirst) :
-                    echo $legend;
-                endif;
-
-                echo HTMLHelper::_('bootstrap.endTabSet');
-
-                if ($this->app->input->getBool("debug")) :
-                    echo sprintf(
-                        '<textarea style="width:100%;height:500px;"><pre>%s</pre></textarea>',
-                        print_r($this->item, 1)
-                    );
-                endif;
-
-            elseif ($legendFirst) :
-                echo $legend;
-                echo $tabs[$mapTabId]->content;
-
-            else :
-                echo $tabs[$mapTabId]->content;
-                echo $legend;
-
-            endif;
-            ?>
+            if ($legendPosition == "below" || $legendPosition == "right") : ?>
+                <div id="fp_googleMapSidebar" style="<?php echo $sidebarStyle; ?>">
+                    <?php echo $this->loadTemplate('legend_' . $legendPosition); ?>
+                </div>
+            <?php endif; ?>
         </div>
+
+        <?php
+        if ($customTabs || $showListTab) :
+            echo '</div>';
+
+            if ($customTabs) :
+                foreach ($customTabs as $key => $tab) :
+                    ?>
+                    <div id="tabs1-<?php echo $key; ?>" class="fp-custom-tab tab-pane">
+                        <?php echo $tab->content; ?>
+                    </div>
+                <?php endforeach;
+            endif;
+        endif;
+        ?>
     </div>
-<?php
+</div>
 
-if (count($tabs) > 1) :
-    // This must be the last thing in this template
-    $js = <<<JSCRIPT
-;jQuery(function($) {
-    $('#mapTabs a').on('click', function(evt) {
-        let href       =  $(this).attr('href').replace('#',''),
-            hideLegend = ['{$mapTabId}','{$listTabId}'].indexOf(href) < 0;
-
-        if (hideLegend) {
-            $('#{$legendId}').hide();
-        } else {
-            $('#{$legendId}').show();
-        }
-    });
-});
-JSCRIPT;
-
-    Factory::getDocument()->addScriptDeclaration($js);
-endif;

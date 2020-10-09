@@ -52,7 +52,7 @@ $legacy = false;
 
         <div id="fp_main" class="clearfix">
             <?php
-            echo $this->loadTemplate($legacy ? 'tabs_legacy' : 'tabs');
+            echo $this->loadTemplate('tabs');
 
             if ($this->app->input->getBool("debug")) :
                 echo sprintf(
