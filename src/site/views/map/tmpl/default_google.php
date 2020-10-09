@@ -84,14 +84,10 @@ foreach ($this->item->markerdata as $marker) {
     ];
 }
 
-HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
-HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
-HTMLHelper::_('jquery.framework');
-HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
-
-$params          = ComponentHelper::getParams('com_focalpoint');
-$mapsearchprompt = $this->item->params->get('mapsearchprompt');
-$listtabfirst    = (int)(bool)$this->item->params->get('showlistfirst');
+//HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
+//HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
+//HTMLHelper::_('jquery.framework');
+//HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
 
 $options = json_encode([
     'clusterOptions' => $this->item->params->get('clusterOptions', null),
@@ -133,4 +129,4 @@ jQuery(document).ready(function ($) {
     (new $.sloc.map.google).init({$options});
 });
 JSINIT;
-Factory::getDocument()->addScriptDeclaration($init);
+//Factory::getDocument()->addScriptDeclaration($init);
