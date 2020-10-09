@@ -1,5 +1,6 @@
 <?php
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
@@ -60,7 +61,7 @@ foreach ($this->item->markerdata as $marker) {
             HTMLHelper::_(
                 'link',
                 $marker->link,
-                JText::_('COM_FOCALPOINT_FIND_OUT_MORE'),
+                Text::_('COM_FOCALPOINT_FIND_OUT_MORE'),
                 ['title' => $marker->title]
             )
         );
@@ -83,11 +84,12 @@ foreach ($this->item->markerdata as $marker) {
     ];
 }
 
-// Load the Google API and initialise the map.
 HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
 HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
+HTMLHelper::_('jquery.framework');
+HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
 
-$params          = JComponentHelper::getParams('com_focalpoint');
+$params          = ComponentHelper::getParams('com_focalpoint');
 $mapsearchprompt = $this->item->params->get('mapsearchprompt');
 $listtabfirst    = (int)(bool)$this->item->params->get('showlistfirst');
 
@@ -125,9 +127,6 @@ $options = json_encode([
         'search'   => (bool)$this->item->params->get('mapsearchenabled')
     ]
 ]);
-
-HTMLHelper::_('jquery.framework');
-HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
 
 $init = <<<JSINIT
 jQuery(document).ready(function ($) {
