@@ -109,11 +109,6 @@
                 text: ''
             };
 
-        // Temporary hardocdes
-        let
-            listtabfirst = 0
-        // End Temp hardocdes
-
         init = function(params) {
             options = $.extend(true, {}, defaults, params);
 
