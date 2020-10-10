@@ -21,14 +21,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
-
-$showListTab   = $this->params->get('locationlist');
-$showListFirst = $this->params->get('showlistfirst');
-$customTabs    = $this->item->tabsdata->tabs;
 
 $legendPosition = $this->params->get('legendposition');
 $sidebarClass   = "fp_vert fp_" . $legendPosition;
@@ -65,24 +62,38 @@ if (!empty($mapsizey)) {
     $containerStyle .= "min-height:" . $mapsizey . "; ";
 }
 
-$listTab = HTMLHelper::_(
+$mapTabId = 'tabs1-map';
+$mapTab   = HTMLHelper::_(
     'link',
-    null,
-    Text::_('COM_FOCALPOINT_LIST'),
-    ['id' => 'locationlisttab']
-);
-$mapTab  = HTMLHelper::_(
-    'link',
-    '#tabs1-map',
+    '#' . $mapTabId,
     Text::_('COM_FOCALPOINT_MAP'),
-    ['data-toggle' => 'tab']
+    [
+        'data-toggle' => 'tab',
+        'data-show'   => '#fp_googleMap'
+    ]
 );
 
-if ($customTabs || $showListTab) :
+$listTabId = 'tabs1-list';
+$listTab   = HTMLHelper::_(
+    'link',
+    '#' . $mapTabId,
+    Text::_('COM_FOCALPOINT_LIST'),
+    [
+        'data-toggle' => 'tab',
+        'data-show'   => '#fp_locationlist_container'
+    ]
+);
+
+$showListTab   = $this->params->get('locationlist');
+$showListFirst = $this->params->get('showlistfirst');
+$customTabs    = $this->item->tabsdata->tabs;
+$createTabs    = $showListTab || $customTabs;
+
+if ($createTabs) :
     // Begin tabs
-    echo '<div id="xtab-container" class="xtab-container">';
+    echo '<div id="tab-container" class="tab-container">';
     ?>
-    <ul class='xnav xnav-tabs'>
+    <ul id="mapTabs" class='nav nav-tabs'>
         <?php if ($showListTab && $showListFirst) : ?>
             <li><?php echo $listTab; ?></li>
         <?php endif; ?>
@@ -93,23 +104,21 @@ if ($customTabs || $showListTab) :
             <li><?php echo $listTab; ?></li>
         <?php endif;
 
-        if ($customTabs) :
-            foreach ($customTabs as $key => $tab) :
-                $customTab = HTMLHelper::_('link', '#tabs1-' . $key, $tab->name, ['data-toggle' => 'tab']);
-                ?>
-                <li><?php echo $customTab; ?></li>
-            <?php endforeach;
-        endif;
+        foreach ($customTabs as $key => $tab) :
+            $customTab = HTMLHelper::_('link', '#tabs1-' . $key, $tab->name, ['data-toggle' => 'tab']);
+            ?>
+            <li><?php echo $customTab; ?></li>
+        <?php endforeach;
         ?>
     </ul>
 <?php endif; ?>
     <div class="tab-content">
         <?php
-        if ($customTabs || $showListTab) :
-            echo '<div id="tabs1-map" class="tab-pane active">';
+        if ($createTabs) :
+            echo sprintf('<div id="%s" class="tab-pane active">', $mapTabId);
         endif;
         ?>
-        <div id="xfp_googleMapContainer"
+        <div id="fp_googleMapContainer"
              class="<?php echo $sidebarClass; ?>"
              style="<?php echo $containerStyle; ?>">
             <?php if (in_array($legendPosition, ['above', 'left'])) : ?>
@@ -121,7 +130,7 @@ if ($customTabs || $showListTab) :
             <div id="fp_googleMap" style="<?php echo $mapStyle; ?>"></div>
 
             <?php if ($showListTab) : ?>
-                <div id="fp_locationlist_container">
+                <div id="fp_locationlist_container" style="display: none;">
                     <div id="fp_locationlist" style="<?php echo $mapStyle; ?>">
                         <div class="fp_ll_holder"></div>
                     </div>
@@ -136,54 +145,49 @@ if ($customTabs || $showListTab) :
         </div>
 
         <?php
-        if ($customTabs || $showListTab) :
+        if ($createTabs) :
             echo '</div>';
 
-            if ($customTabs) :
-                foreach ($customTabs as $key => $tab) :
-                    ?>
-                    <div id="tabs1-<?php echo $key; ?>" class="fp-custom-tab tab-pane">
-                        <?php echo $tab->content; ?>
-                    </div>
-                <?php endforeach;
-            endif;
+            foreach ($customTabs as $key => $tab) :
+                ?>
+                <div id="tabs1-<?php echo $key; ?>" class="fp-custom-tab tab-pane">
+                    <?php echo $tab->content; ?>
+                </div>
+            <?php endforeach;
         endif;
 
         echo '</div>';
         ?>
     </div>
 <?php
-if ($showListTab) :
-    $jScript = <<<JSCRIPT
-jQuery(function($) {
-    $('#locationlisttab').on ('click', function(evt) {
-        evt.preventDefault();
-        jQuery('a[href="#tabs1-map"]').tab('show');
-        jQuery('#fp_googleMap').css('display','none');
-        jQuery('.fp-map-view .nav-tabs li.active').removeClass('active');
-        jQuery('#fp_locationlist_container').css('display', 'block');
-        jQuery('#locationlisttab').parent().addClass('active');
-        let locationListHeight = jQuery('#fp_locationlist .fp_ll_holder').outerHeight();
-        jQuery('#fp_locationlist').css('height', locationListHeight);
-    });
 
-    jQuery('a[href="#tabs1-map"]').on('click', function() {
-        jQuery('#fp_googleMap').css('display', 'block');
-        jQuery('.fp-map-view .nav-tabs li.active').addClass('active');
-        jQuery('#fp_locationlist_container').css('display', 'none');
-        jQuery('#locationlisttab').parent().removeClass('active');
+if ($createTabs) :
+    $jScript = <<<JSCRIPT
+;jQuery(function($) {
+    let \$mapTabs = $('#mapTabs li').find('a'),
+        showAreas = [];
+
+    \$mapTabs.each(function () {
+        let show = this.getAttribute('data-show');
+        if (show) {
+            showAreas.push($(this).data('show'));
+        }
     });
-}(;
+    
+    \$mapTabs.on('click', function(evt) {
+        evt.preventDefault();
+        
+        let show = this.getAttribute('data-show');
+        showAreas.forEach(function(area) {
+            if (area === show) {
+                $(area).show();
+            } else {
+                $(area).hide();
+            }
+        });
+    });
+});
 JSCRIPT;
 
+    Factory::getDocument()->addScriptDeclaration($jScript);
 endif;
-
-/*
-    jQuery('ul.nav-tabs > li >a').click(function() {
-        setTimeout(function() {
-            google.maps.event.trigger(map, 'resize');
-            map.panTo(new google.maps.LatLng({$this->item->latitude}, {$this->item->longitude}));
-            map.setZoom({$zoom});
-        },500);
-
- */
