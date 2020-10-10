@@ -5,8 +5,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
-echo '<h3>' . basename(__FILE__) . '</h3>';
-
 $texts = [
     'COM_FOCALPOINT_BUTTTON_HIDE_ALL',
     'COM_FOCALPOINT_BUTTTON_SHOW_ALL',
@@ -84,10 +82,10 @@ foreach ($this->item->markerdata as $marker) {
     ];
 }
 
-//HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
-//HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
-//HTMLHelper::_('jquery.framework');
-//HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
+HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
+HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
+HTMLHelper::_('jquery.framework');
+HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
 
 $options = json_encode([
     'clusterOptions' => $this->item->params->get('clusterOptions', null),
@@ -129,4 +127,4 @@ jQuery(document).ready(function ($) {
     (new $.sloc.map.google).init({$options});
 });
 JSINIT;
-//Factory::getDocument()->addScriptDeclaration($init);
+Factory::getDocument()->addScriptDeclaration($init);
