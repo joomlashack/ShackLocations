@@ -250,6 +250,10 @@
     max-width: none !important;
 }
 
+#fp_locationlist_container {
+    display: none;
+}
+
 #fp_locationlist {
     width: 100%;
     height: 0;
