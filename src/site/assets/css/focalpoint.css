@@ -381,7 +381,7 @@
 
 #focalpoint .nolocations {
     text-align: center;
-    margin-top: 20%;
+    padding: 10px;
 }
 
 /**    Responsive parameters    ***/
