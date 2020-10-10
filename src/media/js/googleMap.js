@@ -373,10 +373,7 @@
                 if (marker.status < -999) {
                     marker.status += 5000;
                     marker.setMap(map);
-                    $('.fp_list_marker' + id).fadeIn(100, function() {
-                        $this.removeClass('fp_listitem_hidden')
-                            .prependTo('#fp_locationlist .fp_ll_holder');
-                    });
+                    $('.fp_list_marker' + id).fadeIn(100);
                 }
             });
 
@@ -480,10 +477,7 @@
                                                 marker.setMap(map);
                                             }
 
-                                            $('.fp_list_marker' + id).fadeIn(100, function() {
-                                                $(this).removeClass('fp_listitem_hidden')
-                                                    .prependTo('#fp_locationlist .fp_ll_holder');
-                                            });
+                                            $('.fp_list_marker' + id).fadeIn(100);
                                         }
                                     });
 
@@ -518,10 +512,7 @@
                                                     marker.setMap();
                                                 }
 
-                                                $('.fp_list_marker' + id).fadeOut(100, function() {
-                                                    $(this).addClass('fp_listitem_hidden')
-                                                        .appendTo('#fp_locationlist .fp_ll_holder');
-                                                });
+                                                $('.fp_list_marker' + id).fadeOut(100);
                                             }
                                         }
 
