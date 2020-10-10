@@ -162,6 +162,8 @@ if ($createTabs) :
 <?php
 
 if ($createTabs) :
+    $mapUpdate = sprintf('window.slocMap.map%s.update();', $this->item->id);
+
     $jScript = <<<JSCRIPT
 ;jQuery(function($) {
     let \$mapTabs = $('#mapTabs li').find('a'),
@@ -185,6 +187,8 @@ if ($createTabs) :
                 $(area).hide();
             }
         });
+        
+        {$mapUpdate}
     });
 });
 JSCRIPT;

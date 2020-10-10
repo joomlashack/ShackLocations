@@ -118,7 +118,13 @@ $options = json_encode([
 
 $init = <<<JSINIT
 jQuery(document).ready(function ($) {
-    (new $.sloc.map.google).init({$options});
+    window.slocMap  = window.slocMap || {};
+    
+    window.slocMap.map%1\$s = new $.sloc.map.google;
+    window.slocMap.map%1\$s.init({$options});
 });
 JSINIT;
+
+$init = sprintf($init, $this->item->id);
+
 Factory::getDocument()->addScriptDeclaration($init);

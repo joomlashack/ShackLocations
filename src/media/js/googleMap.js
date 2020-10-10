@@ -132,6 +132,10 @@
             }
         };
 
+        updateDisplay = function(delay) {
+            updateList(delay);
+        };
+
         initMap = function() {
             let mapProperties = options.mapProperties,
                 mapCenter     = mapProperties.center;
@@ -345,6 +349,7 @@
             }
 
             updateActiveCount();
+            updateList(150);
 
             return false;
         };
@@ -523,6 +528,8 @@
                                     map.setCenter(location);
                                     map.setZoom(options.search.zoom);
 
+                                    updateList(500);
+
                                 } else {
                                     alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
                                 }
@@ -535,8 +542,28 @@
             }
         }
 
+        updateList = function(delay) {
+            let update = function() {
+                let locationListHeight = $listHolder.outerHeight();
+
+                if (locationListHeight > 0) {
+                    $listHolder.parent().css('min-height', locationListHeight);
+                }
+            };
+
+            if (delay) {
+                setTimeout(function() {
+                    update();
+                }, delay);
+
+            } else {
+                update();
+            }
+        };
+
         return {
-            init: init
+            init  : init,
+            update: updateDisplay
         }
     };
 })(jQuery);
