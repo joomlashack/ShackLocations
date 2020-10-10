@@ -304,9 +304,7 @@
                             marker.setMap(map);
                         }
 
-                        $listItem
-                            .prependTo('#fp_locationlist .fp_ll_holder')
-                            .fadeIn(100);
+                        $listItem.fadeIn(100);
                     }
                 }
             });
@@ -350,11 +348,6 @@
                 clusterManager.clearMarkers();
                 clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
             }
-
-            setTimeout(function() {
-                let locationListHeight = $('#fp_locationlist .fp_ll_holder').outerHeight();
-                $('#fp_locationlist').css('height', locationListHeight);
-            }, 150);
 
             updateActiveCount();
 
@@ -534,13 +527,6 @@
 
                                     map.setCenter(location);
                                     map.setZoom(options.search.zoom);
-
-                                    /*
-                                    setTimeout(function() {
-                                        let locationListHeight = $listHolder.outerHeight();
-                                        $('#fp_locationlist').css('height', locationListHeight);
-                                    }, 500);
-                                     */
 
                                 } else {
                                     alert(Joomla.Text._('COM_FOCALPOINT_ERROR_GEOCODE').replace('%s', status));
