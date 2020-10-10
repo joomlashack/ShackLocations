@@ -33,12 +33,6 @@ foreach ($this->item->markerdata as $marker) {
         $infoDescription[] = '<p>' . Text::_($marker->description) . '</p>';
     }
 
-    // Example. If a custom fields was defined called 'yourcustomfield' the following line would render
-    // that field in the infobox and location list
-    if (!empty($marker->customfields->yourcustomfield->data)) {
-        $infoDescription[] = $this->renderField($marker->customfields->yourcustomfield, true, true);
-    }
-
     $boxText = sprintf(
         '<h4>%s</h4><div class="infoboxcontent">%s',
         $marker->title,
