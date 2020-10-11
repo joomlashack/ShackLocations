@@ -35,8 +35,6 @@ $legendPosition = $this->params->get('legendposition');
 $pageHeading    = $this->getPageHeading($this->item->title);
 $pageClass      = $this->getPageClass('fp-map-view legend_' . $legendPosition);
 
-$mapEngine = 'mapjs';
-
 ?>
     <div id="focalpoint" class="<?php echo $pageClass; ?>">
         <?php if ($pageHeading) : ?>
@@ -52,7 +50,7 @@ $mapEngine = 'mapjs';
 
         <div id="fp_main" class="clearfix">
             <?php
-            echo $this->loadTemplate($mapEngine . '_tabs');
+            echo $this->loadTemplate('google_tabs');
 
             if ($this->app->input->getBool("debug")) :
                 echo sprintf(
@@ -65,4 +63,4 @@ $mapEngine = 'mapjs';
     </div>
 <?php
 
-echo $this->loadTemplate($mapEngine);
+echo $this->loadTemplate('google');
