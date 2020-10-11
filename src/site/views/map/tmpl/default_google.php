@@ -120,11 +120,11 @@ $init = <<<JSINIT
 jQuery(document).ready(function ($) {
     window.slocMap  = window.slocMap || {};
     
-    window.slocMap.map%1\$s = new $.sloc.map.google;
-    window.slocMap.map%1\$s.init({$options});
+    let map = new $.sloc.map.google;
+    map.init({$options});
+    
+    window.slocMap[{$this->item->id}] = map;
 });
 JSINIT;
-
-$init = sprintf($init, $this->item->id);
 
 Factory::getDocument()->addScriptDeclaration($init);

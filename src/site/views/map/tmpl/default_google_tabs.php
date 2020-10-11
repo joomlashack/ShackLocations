@@ -179,7 +179,7 @@ if ($createTabs) :
 <?php
 
 if ($createTabs) :
-    $mapUpdate = sprintf('window.slocMap.map%s.update();', $this->item->id);
+    $mapUpdate = "window.slocMap[{$this->item->id}].update();";
 
     $jScript = <<<JSCRIPT
 ;jQuery(function($) {
