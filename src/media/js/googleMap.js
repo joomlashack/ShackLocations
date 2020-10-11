@@ -177,6 +177,10 @@
             map = new google.maps.Map(canvas, mapProperties);
         };
 
+        let getMap = function() {
+            return map;
+        };
+
         let setMarkers = function() {
             $(options.markerData).each(function(index, data) {
                 let $listItem = null,
@@ -592,7 +596,8 @@
 
         return {
             init  : init,
-            update: updateDisplay
+            update: updateDisplay,
+            getMap: getMap
         }
     };
 });
