@@ -199,13 +199,6 @@
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_HEIGHT_DESC"
                showon="mapsizecontrol:1"/>
 
-        <field name="sidebarx"
-               type="text"
-               default="25%"
-               label="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_LBL"
-               description="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_DESC"
-               showon="mapsizecontrol:1"/>
-
         <field name="legendposition"
                type="list"
                default="below"
@@ -216,6 +209,13 @@
             <option value="right">COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_OPT_RIGHT</option>
             <option value="left">COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_OPT_LEFT</option>
         </field>
+
+        <field name="sidebarx"
+               type="text"
+               default="25"
+               label="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_LBL"
+               description="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_DESC"
+               showon="mapsizecontrol:1[AND]legendposition:left[OR]legendposition:right"/>
 
         <field name="locationlist"
                type="radio"
