@@ -271,9 +271,11 @@
 
             if (activeCount === 0) {
                 if ($noLocations.length === 0) {
-                    $noLocations = $('<div class="nolocations"/>')
-                        .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'));
-                    $listHolder.append($noLocations);
+                    setTimeout(function() {
+                        $noLocations = $('<div class="nolocations"/>')
+                            .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'))
+                            .appendTo($listHolder);
+                    }, 100);
                 }
 
             } else {
