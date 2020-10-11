@@ -26,8 +26,7 @@
         <field name="image"
                type="media"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_IMAGE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_IMAGE"
-               directory=""/>
+               description="COM_FOCALPOINT_FORM_DESC_LOCATION_IMAGE"/>
 
         <field name="description" type="editor"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_DESCRIPTION"
@@ -102,7 +101,7 @@
                type="media"
                label="COM_FOCALPOINT_FORM_LBL_LOCATION_MARKER"
                description="COM_FOCALPOINT_FORM_DESC_LOCATION_MARKER"
-               directory="/images/markers/"/>
+               directory="markers"/>
 
         <field name="created_by"
                type="user"

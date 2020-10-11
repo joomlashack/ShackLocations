@@ -379,8 +379,8 @@
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MARKER_LBL"
                default="images/markers/pins/style4/red.png"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MARKER_DESC"
-               filter="raw"
-               directory="/markers"/>
+               required="true"
+               directory="markers"/>
 
         <field name="showmarkers"
                type="list"
