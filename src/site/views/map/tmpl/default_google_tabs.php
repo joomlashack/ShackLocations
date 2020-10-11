@@ -28,39 +28,56 @@ use Joomla\CMS\Language\Text;
 defined('_JEXEC') or die();
 
 $legendPosition = $this->params->get('legendposition');
-$sidebarClass   = "fp_vert fp_" . $legendPosition;
+$legendSidebar  = in_array($legendPosition, ['left', 'right']);
+$legendClass    = sprintf(
+    'fp_%s fp_%s',
+    $legendSidebar ? 'side' : 'vert',
+    $legendPosition
+);
 
-$containerStyle = "";
-$mapStyle       = "";
-$sidebarStyle   = "";
-$mapsizexouter  = "auto";
-$mapsizey       = "0";
-if ($this->params->get('mapsizecontrol') == 1) {
-    $mapsizexouter    = $this->params->get('mapsizex');
-    $mapsizey         = $this->params->get('mapsizey');
-    $mapsizexouterfmt = str_replace(str_split(' 0123456789'), '', $mapsizexouter);
-    $mapsizexouteramt = str_replace(str_split(' px%'), '', $mapsizexouter);
-    $mapsizex         = "auto";
-    $mapStyle         .= "min-height: " . $mapsizey . "; ";
+$containerStyle = [];
+$mapStyle       = [];
+$legendStyle    = [];
 
-    if ($legendPosition == "left" || $legendPosition == "right") {
-        $sidebarx     = str_replace(str_split(' px%'), '', $this->params->get('sidebarx'));
-        $mapsizex     = $mapsizexouteramt * (1 - ($sidebarx / 100)) . $mapsizexouterfmt;
-        $mapStyle     .= "width: " . $mapsizex . "; ";
-        $sidebarStyle .= "width: " . $sidebarx . "%; ";
-        $sidebarStyle .= "min-height: " . $mapsizey . "; ";
-        $sidebarStyle .= "float: left; ";
-        $sidebarClass = "fp_side fp_" . $legendPosition;
+$mapWidthOuter = 'auto';
+$mapHeight     = 0;
+if ($this->params->get('mapsizecontrol')) {
+    $mapWidth      = 'auto';
+    $mapWidthOuter = $this->params->get('mapsizex');
+
+    $mapHeight  = $this->params->get('mapsizey');
+    $mapStyle[] = "min-height: {$mapHeight};";
+
+    if ($legendSidebar) {
+        $mapWidthOuterType = str_replace(str_split(' 0123456789'), '', $mapWidthOuter);
+        $mapWidthOuter     = str_replace(str_split(' px%'), '', $mapWidthOuter);
+
+        $legendWidth = str_replace(str_split(' px%'), '', $this->params->get('sidebarx'));
+        $mapWidth    = $mapWidthOuter * (1 - ($legendWidth / 100)) . $mapWidthOuterType;
+        $mapStyle[]  = "width: {$mapWidth};";
+        $legendStyle = array_merge(
+            $legendStyle,
+            [
+                "width: {$legendWidth}%;",
+                "min-height: {$mapHeight};",
+                "float: left;"
+            ]
+        );
     }
 }
 
-if (!empty($mapsizex)) {
-    $containerStyle .= "width:" . $mapsizexouter . "; ";
+if (!empty($mapWidth)) {
+    $containerStyle[] = "width: {$mapWidthOuter};";
 }
 
-if (!empty($mapsizey)) {
-    $containerStyle .= "min-height:" . $mapsizey . "; ";
+if (!empty($mapHeight)) {
+    $containerStyle[] = "min-height: {$mapHeight};";
 }
+
+$containerStyle = join(' ', $containerStyle);
+$mapStyle       = join(' ', $mapStyle);
+$legendStyle    = join(' ', $legendStyle);
+
 
 $mapTabId = 'tabs1-map';
 $mapTab   = HTMLHelper::_(
@@ -119,10 +136,10 @@ if ($createTabs) :
         endif;
         ?>
         <div id="fp_googleMapContainer"
-             class="<?php echo $sidebarClass; ?>"
+             class="<?php echo $legendClass; ?>"
              style="<?php echo $containerStyle; ?>">
             <?php if (in_array($legendPosition, ['above', 'left'])) : ?>
-                <div id="fp_googleMapSidebar" style="<?php echo $sidebarStyle; ?>">
+                <div id="fp_googleMapSidebar" style="<?php echo $legendStyle; ?>">
                     <?php echo $this->loadTemplate('legend_' . $legendPosition); ?>
                 </div>
             <?php endif; ?>
@@ -138,7 +155,7 @@ if ($createTabs) :
             <?php endif;
 
             if (in_array($legendPosition, ['below', 'right'])) : ?>
-                <div id="fp_googleMapSidebar" style="<?php echo $sidebarStyle; ?>">
+                <div id="fp_googleMapSidebar" style="<?php echo $legendStyle; ?>">
                     <?php echo $this->loadTemplate('legend_' . $legendPosition); ?>
                 </div>
             <?php endif; ?>
