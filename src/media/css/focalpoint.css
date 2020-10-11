@@ -88,7 +88,6 @@
 
 #fp_googleMapSidebar ul.sidebar li a:before {
   background: url(../images/tick.png) 0 0 no-repeat;
-  /*background: url(../images/search.png) 0 0 no-repeat;*/
   width: 16px;
   height: 16px;
   position: absolute;
