@@ -60,7 +60,7 @@ foreach ($this->item->markerdata as $marker) {
     }
     $boxText .= '<div class="infopointer"></div></div>';
 
-    $boxText = addslashes(str_replace(["\n", "\t", "\r"], '', $boxText));
+    $boxText = str_replace(["\t", "\n", "\r",], [' ', ''], $boxText);
 
     $markers[] = [
         'id'       => (int)$marker->id,
