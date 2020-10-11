@@ -27,24 +27,24 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
 
-if (!defined('SHACKLOC_LOADED')) {
-    define('SHACKLOC_LOADED', true);
-    define('SHACKLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
-    define('SHACKLOC_SITE', JPATH_SITE . '/components/com_focalpoint');
-    define('SHACKLOC_LIBRARY', SHACKLOC_ADMIN . '/library');
+if (!defined('SLOC_LOADED')) {
+    define('SLOC_LOADED', true);
+    define('SLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
+    define('SLOC_SITE', JPATH_SITE . '/components/com_focalpoint');
+    define('SLOC_LIBRARY', SLOC_ADMIN . '/library');
 
     // Setup autoload libraries
-    require_once SHACKLOC_LIBRARY . '/AutoLoader.php';
-    AutoLoader::registerCamelBase('Focalpoint', SHACKLOC_LIBRARY . '/joomla');
+    require_once SLOC_LIBRARY . '/AutoLoader.php';
+    AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
 
     // Application specific loads
     switch (Factory::getApplication()->getName()) {
         case 'site':
-            HTMLHelper::_('stylesheet', 'components/com_focalpoint/assets/css/focalpoint.css');
+            HTMLHelper::_('stylesheet', 'com_focalpoint/focalpoint.css', ['relative' => true]);
             break;
 
         case 'administrator':
-            HTMLHelper::_('stylesheet', 'administrator/components/com_focalpoint/assets/css/focalpoint.css');
+            HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
             JLoader::register('FocalpointHelper', __DIR__ . '/helpers/focalpoint.php');
             JLoader::register('mapsAPI', __DIR__ . '/helpers/maps.php');
 
