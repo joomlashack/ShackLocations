@@ -55,10 +55,6 @@ class com_focalpointInstallerScript extends AbstractScript
                 }
 
                 return true;
-
-            } else {
-                $app->enqueueMessage("It's the parent!");
-
             }
 
         } catch (Exception $e) {
