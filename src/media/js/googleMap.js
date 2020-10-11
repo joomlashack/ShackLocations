@@ -40,6 +40,23 @@
     };
 
     $.sloc.map.google = function() {
+        const FULLSCREEN = {
+            position: {
+                BOTTOM_CENTER: google.maps.ControlPosition.BOTTOM_CENTER,
+                BOTTOM_LEFT  : google.maps.ControlPosition.BOTTOM_LEFT,
+                BOTTOM_RIGHT : google.maps.ControlPosition.BOTTOM_RIGHT,
+                LEFT_BOTTOM  : google.maps.ControlPosition.LEFT_BOTTOM,
+                LEFT_CENTER  : google.maps.ControlPosition.LEFT_CENTER,
+                LEFT_TOP     : google.maps.ControlPosition.LEFT_TOP,
+                RIGHT_BOTTOM : google.maps.ControlPosition.RIGHT_BOTTOM,
+                RIGHT_CENTER : google.maps.ControlPosition.RIGHT_CENTER,
+                RIGHT_TOP    : google.maps.ControlPosition.RIGHT_TOP,
+                TOP_CENTER   : google.maps.ControlPosition.TOP_CENTER,
+                TOP_LEFT     : google.maps.ControlPosition.TOP_LEFT,
+                TOP_RIGHT    : google.maps.ControlPosition.TOP_RIGHT
+            }
+        };
+
         let defaults       = {
                 canvasId      : 'fp_googleMap',
                 clusterOptions: null,
@@ -53,7 +70,7 @@
                     maxZoom                 : null,
                     mapTypeControl          : null,
                     fullscreenControl       : null,
-                    fullscreenControlOptions: null,
+                    fullscreenControlOptions: {},
                     zoomControl             : null,
                     scrollwheel             : null,
                     streetViewControl       : null,
@@ -146,6 +163,15 @@
 
             } else {
                 mapProperties.center = null;
+            }
+
+            for (let fsOption in mapProperties.fullscreenControlOptions) {
+                let tag      = mapProperties.fullscreenControlOptions[fsOption] || null,
+                    fsValues = FULLSCREEN[fsOption] || null;
+
+                if (fsValues) {
+                    mapProperties.fullscreenControlOptions[fsOption] = fsValues[tag] || null;
+                }
             }
 
             map = new google.maps.Map(canvas, mapProperties);

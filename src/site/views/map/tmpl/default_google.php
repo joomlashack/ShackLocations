@@ -91,7 +91,7 @@ $options = json_encode([
         ],
         'draggable'                => (int)(bool)$this->item->params->get('draggable'),
         'fullscreenControl'        => (int)(bool)$this->item->params->get('fullscreen'),
-        'fullscreenControlOptions' => $this->item->params->get('fullscreenOptions', null),
+        'fullscreenControlOptions' => $this->item->params->get('fullscreenOptions', (object)[]),
         'mapTypeControl'           => (int)$this->item->params->get('mapTypeControl'),
         'mapTypeId'                => $this->item->params->get('mapTypeId'),
         'maxZoom'                  => $this->item->params->get('maxzoom', null),
