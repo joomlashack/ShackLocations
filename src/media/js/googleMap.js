@@ -20,7 +20,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-;(function($) {
+;jQuery(function($) {
     $.sloc = $.extend(true, {map: {}}, $.sloc);
 
     $.sloc.sprintf = function(string, replacements) {
@@ -126,7 +126,7 @@
                 text: ''
             };
 
-        init = function(params) {
+        let init = function(params) {
             options = $.extend(true, {}, defaults, params);
 
             canvas      = document.getElementById(options.canvasId);
@@ -149,11 +149,11 @@
             }
         };
 
-        updateDisplay = function(delay) {
+        let updateDisplay = function(delay) {
             updateList(delay);
         };
 
-        initMap = function() {
+        let initMap = function() {
             let mapProperties = options.mapProperties,
                 mapCenter     = mapProperties.center;
 
@@ -177,7 +177,7 @@
             map = new google.maps.Map(canvas, mapProperties);
         };
 
-        setMarkers = function() {
+        let setMarkers = function() {
             $(options.markerData).each(function(index, data) {
                 let $listItem = null,
                     marker    = $.extend(true, {}, markerBase, data);
@@ -255,7 +255,7 @@
             }
         };
 
-        updateActiveCount = function() {
+        let updateActiveCount = function() {
             let displayText      = '',
                 displayArguments = [],
                 status           = '',
@@ -298,7 +298,7 @@
             $('#activecount').html($.sloc.sprintf(Joomla.Text._(displayText), displayArguments));
         };
 
-        toggleTypes = function(evt) {
+        let toggleTypes = function(evt) {
             evt.preventDefault();
 
             let $this  = $(this),
@@ -383,7 +383,7 @@
             return false;
         };
 
-        resetMap = function(evt) {
+        let resetMap = function(evt) {
             allowScrollTo = false;
 
             search.text = '';
@@ -431,7 +431,7 @@
             map.setZoom(options.mapProperties.zoom);
         };
 
-        toggleMarkers = function(evt) {
+        let toggleMarkers = function(evt) {
             allowScrollTo = false;
             let $this     = $(this),
                 $toggles  = $('.markertoggles');
@@ -460,7 +460,7 @@
             allowScrollTo = true;
         };
 
-        setSearch = function() {
+        let setSearch = function() {
             if (options.show.search) {
                 let $searchField  = $('#fp_searchAddress'),
                     $searchButton = $('#fp_searchAddressBtn');
@@ -571,7 +571,7 @@
             }
         }
 
-        updateList = function(delay) {
+        let updateList = function(delay) {
             let update = function() {
                 let locationListHeight = $listHolder.outerHeight();
 
@@ -595,4 +595,4 @@
             update: updateDisplay
         }
     };
-})(jQuery);
+});
