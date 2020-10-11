@@ -32,7 +32,6 @@
     <scriptfile>install.focalpoint.php</scriptfile>
 
     <files folder="site">
-        <folder>assets</folder>
         <folder>controllers</folder>
         <folder>language</folder>
         <folder>layouts</folder>
@@ -64,7 +63,6 @@
         </submenu>
 
         <files folder="admin">
-            <folder>assets</folder>
             <folder>controllers</folder>
             <folder>form</folder>
             <folder>helpers</folder>

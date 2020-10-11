@@ -27,7 +27,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 defined('_JEXEC') or die();
 
 if ($this->params->get('loadBootstrap')) {
-    HTMLHelper::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
+    HTMLHelper::_('stylesheet', 'com_focalpoint/bootstrap.css', ['relative' => true]);
     HTMLHelper::_('bootstrap.framework');
 }
 

@@ -40,7 +40,7 @@ defined('_JEXEC') or die('Restricted access');
 // Load the Google API and initialise the map.
 
 HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->item->params->get('apikey'));
-HTMLHelper::_('script', 'components/com_focalpoint/assets/js/infobox.js');
+HTMLHelper::_('script', 'com_focalpoint/infobox.js', ['relative' => true]);
 
 $params = (object)[
     'searchAssist'      => ', ' . $this->item->params->get('searchAssist'),
