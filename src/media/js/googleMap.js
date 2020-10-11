@@ -200,8 +200,9 @@
                     markerInfoBox[marker.id] = new InfoBox(infoBoxData);
 
                     google.maps.event.addListener(map, 'click', function(e) {
-                        // wtf is this? And why doesn't it throw an error?
-                        contextMenu:true
+                        markers.forEach(function(marker, id) {
+                            markerInfoBox[id].close();
+                        });
                     });
 
                     if (options.show.clusters) {
