@@ -125,8 +125,8 @@
                    class="chzn-single chzn-color-state"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_DESC">
-                <option value="on">JSHOW</option>
-                <option value="off">JHIDE</option>
+                <option value="1">JSHOW</option>
+                <option value="0">JHIDE</option>
             </field>
 
             <field name="mapTypeId"
@@ -184,7 +184,7 @@
                    class="chzn-single"
                    label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_LBL"
                    description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_DESC">
-                <option value="null">COM_FOCALPOINT_FORM_LBL_CONFIG_AUTO</option>
+                <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_AUTO</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>

@@ -114,7 +114,7 @@ $options = json_encode([
     'show'           => [
         'clusters' => (bool)$this->item->params->get('markerclusters'),
         'listTab'  => (bool)$this->item->params->get('locationlist'),
-        'markers'  => $this->item->params->get('showmarkers') == 'on',
+        'markers'  => (bool)$this->item->params->get('showmarkers'),
         'search'   => (bool)$this->item->params->get('mapsearchenabled')
     ]
 ]);
