@@ -181,6 +181,61 @@
             return map;
         };
 
+        let getOptions = function() {
+            return options;
+        };
+
+        let getDirections = function(searchAddress, destination) {
+            if (options.search.assist) {
+                searchAddress += ', ' + options.search.assist;
+            }
+
+            let geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode(
+                {address: searchAddress},
+                function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        let startLocation     = results[0].geometry.location,
+                            directionsService = new google.maps.DirectionsService(),
+                            directionsDisplay = new google.maps.DirectionsRenderer();
+
+                        $('#fp_googleMap_directions').html('');
+
+                        directionsDisplay.setMap(map);
+                        directionsDisplay.setPanel(document.getElementById('fp_googleMap_directions'));
+
+                        let request = {
+                            origin     : startLocation,
+                            destination: new google.maps.LatLng(destination.lat, destination.lng),
+                            travelMode : google.maps.DirectionsTravelMode.DRIVING
+                        };
+
+                        directionsService.route(request, function(response, status) {
+                            if (status === google.maps.DirectionsStatus.OK) {
+                                directionsDisplay.setDirections(response);
+
+                            } else {
+                                alert(
+                                    Joomla.Text._(
+                                        'COM_FOCALPOINT_ERROR_GEOCODE',
+                                        '*ERROR: %s').replace('%s', status
+                                    )
+                                );
+                            }
+                        });
+
+                    } else {
+                        alert(
+                            Joomla.Text._(
+                                'COM_FOCALPOINT_ERROR_GEOCODE',
+                                '*ERROR: %s').replace('%s', status
+                            )
+                        );
+                    }
+                });
+        };
+
         let setMarkers = function() {
             $(options.markerData).each(function(index, data) {
                 let $listItem = null,
@@ -595,9 +650,11 @@
         };
 
         return {
-            init  : init,
-            update: updateDisplay,
-            getMap: getMap
+            init         : init,
+            update       : updateDisplay,
+            getDirections: getDirections,
+            getMap       : getMap,
+            getOptions   : getOptions
         }
     };
 });

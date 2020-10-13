@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
@@ -38,7 +39,7 @@ else :
     $backLink = HTMLHelper::_(
         'link',
         $this->item->backlink,
-        JText::_('COM_FOCALPOINT_BACK_TO_MAP'),
+        Text::_('COM_FOCALPOINT_BACK_TO_MAP'),
         'class="backtomap"'
     );
 endif;
@@ -66,27 +67,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
         <div class="fp_left_column span8">
             <div id="fp_googleMap"></div>
             <?php
-            if ($this->item->params->get('getdirections')) :
-                ?>
-                <div id="fp_googleMap_directions"></div>
-                <div id="fp_map_actions" class="input-append">
-                    <form onsubmit="return false;">
-                        <label for="fp_searchAddress">
-                            <?php echo JText::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>
-                        </label>
-                        <input id="fp_searchAddress"
-                               type="text"
-                               placeholder="<?php echo JText::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>"
-                               value=""/>
-                        <button class="btn"
-                                id="fp_searchAddressBtn"
-                                type="button">
-                            <?php echo JText::_('COM_FOCALPOINT_GET_DIRECTIONS'); ?>
-                        </button>
-                    </form>
-                </div>
-
-            <?php endif;
+            echo $this->loadTemplate('google_directions');
 
             if (!$this->item->params->get('hideintrotext')) :
                 echo $this->item->description;
@@ -111,7 +92,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
                 <div class="row-fluid fp_address">
                     <?php if ($this->item->address) : ?>
                         <div class="span12">
-                            <h3><?php echo JText::_('COM_FOCALPOINT_ADDRESS'); ?>:</h3>
+                            <h3><?php echo Text::_('COM_FOCALPOINT_ADDRESS'); ?>:</h3>
                             <p><?php echo $this->item->address; ?></p>
                         </div>
                     <?php endif;
@@ -119,7 +100,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
                     if ($this->item->phone) :
                         ?>
                         <div class="span12">
-                            <h3><?php echo JText::_('COM_FOCALPOINT_PHONE'); ?>:</h3>
+                            <h3><?php echo Text::_('COM_FOCALPOINT_PHONE'); ?>:</h3>
                             <p><?php echo $this->item->phone; ?></p>
                         </div>
                     <?php endif; ?>
