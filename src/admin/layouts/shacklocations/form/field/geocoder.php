@@ -40,6 +40,11 @@ $noAPI = sprintf(
     '<span class="alert alert-error">%s</span>',
     Text::_('COM_FOCALPOINT_ERROR_MAPS_API_MISSING')
 );
+
+$defaultCenter = json_encode([
+    'lat' => FocalpointHelper::HOME_LAT,
+    'lng' => FocalpointHelper::HOME_LNG
+]);
 ?>
 <!-- Button to trigger modal -->
 <a id="openGeocoder"
@@ -102,7 +107,8 @@ $noAPI = sprintf(
 
 <script>
     ;(function($) {
-        let mapCanvas = document.getElementById('mapCanvas');
+        let defaultCenter = <?php echo $defaultCenter;  ?>,
+            mapCanvas     = document.getElementById('mapCanvas');
 
         if (google.maps) {
             google.maps.event.addDomListener(window, 'load', function() {
@@ -115,8 +121,8 @@ $noAPI = sprintf(
 
                 let zoom = (startLat && startLng) ? 15 : 2;
 
-                startLat   = startLat || 27.6648274;
-                startLng   = startLng || -81.5157535;
+                startLat   = startLat || defaultCenter.lat;
+                startLng   = startLng || defaultCenter.lng;
                 let latLng = new google.maps.LatLng(startLat, startLng);
 
                 let map = new google.maps.Map(
