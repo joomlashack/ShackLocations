@@ -150,7 +150,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
     </div>
 
     <?php
-    echo $this->loadTemplate('mapjs');
+    echo $this->loadTemplate('google');
 
     echo $this->renderModule('shacklocations-below-map');
 
