@@ -23,16 +23,25 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\FileLayout;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-$destination = json_encode([
-    'lat' => $this->item->latitude,
-    'lng' => $this->item->longitude
-]);
+/**
+ * @var FileLayout $this
+ * @var array      $displayData
+ * @var string     $layoutOutput
+ * @var string     $path
+ */
 
-if ($this->item->params->get('getdirections')) :
-    ?>
+extract($displayData);
+/**
+ * @var string   $mapId
+ * @var Registry $params
+ * @var array    $destination
+ */
+?>
     <div id="fp_googleMap_directions"></div>
     <div id="fp_map_actions" class="input-append">
         <form>
@@ -49,16 +58,11 @@ if ($this->item->params->get('getdirections')) :
             </button>
         </form>
     </div>
-    <?php
+<?php
 
-    $mapId = 'L' . $this->item->id;
+$destination = json_encode($destination);
 
-    $destination = json_encode([
-        'lat' => $this->item->latitude,
-        'lng' => $this->item->longitude
-    ]);
-
-    $jScript = <<<JSCRIPT
+$jScript = <<<JSCRIPT
 ;jQuery(function($) {
     let mapId      = '{$mapId}',
         \$address   = $('#fp_searchAddress'),
@@ -66,7 +70,7 @@ if ($this->item->params->get('getdirections')) :
 
     $('#fp_searchAddressBtn').on('click', function(evt) {
         evt.preventDefault();
-        
+
         searchText = \$address.val();
         if (!searchText) {
             alert(Joomla.Text._('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED'));
@@ -76,17 +80,16 @@ if ($this->item->params->get('getdirections')) :
         try {
             console.log(window.slocMap);
             map = window.slocMap['{$mapId}'];
-                
+
         } catch (error) {
             alert('Unable to find basemap');
-            
+
             return;
         }
-        
+
         map.getDirections(searchText, {$destination});
     });
 });
 JSCRIPT;
 
-    Factory::getDocument()->addScriptDeclaration($jScript);
-endif;
+Factory::getDocument()->addScriptDeclaration($jScript);

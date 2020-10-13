@@ -24,6 +24,7 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die;
 
@@ -67,7 +68,17 @@ $pageClass   = $this->getPageClass('fp-location-view');
         <div class="fp_left_column span8">
             <div id="fp_googleMap"></div>
             <?php
-            echo $this->loadTemplate('google_directions');
+            if ($this->item->params->get('getdirections')) :
+                $displayData = [
+                    'mapId'       => 'L' . $this->item->id,
+                    'params'      => $this->item->params,
+                    'destination' => [
+                        'lat' => $this->item->latitude,
+                        'lng' => $this->item->longitude
+                    ]
+                ];
+                echo LayoutHelper::render('google.directions', $displayData);
+            endif;
 
             if (!$this->item->params->get('hideintrotext')) :
                 echo $this->item->description;

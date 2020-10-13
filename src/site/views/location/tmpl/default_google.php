@@ -26,11 +26,14 @@ use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
 
-$center = [
+$center       = [
     'lat' => $this->item->latitude,
     'lng' => $this->item->longitude
 ];
-$params = $this->item->params->toObject();
+$params       = $this->item->params->toObject();
 $params->zoom = $this->item->params->get('zoomin');
 
-HTMLHelper::_('slocgoogle.map', 'L' . $this->item->id, $params, $center, [$this->item]);
+$mapId = 'L' . $this->item->id;
+
+HTMLHelper::_('slocgoogle.map', $mapId, $params, $center, [$this->item]);
+
