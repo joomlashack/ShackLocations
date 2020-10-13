@@ -23,8 +23,10 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
@@ -32,10 +34,10 @@ use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
 
-class FocalpointModelLocation extends JModelForm
+class FocalpointModelLocation extends FormModel
 {
     /**
-     * @var JObject
+     * @var CMSObject
      */
     protected $item = null;
 
@@ -55,7 +57,7 @@ class FocalpointModelLocation extends JModelForm
     /**
      * @param int $id
      *
-     * @return JObject
+     * @return CMSObject
      * @throws Exception
      */
     public function getData($id = null)
@@ -82,7 +84,7 @@ class FocalpointModelLocation extends JModelForm
                 $this->item->backlink     = $this->getBackLink($this->item->map_id);
                 $this->item->metadata     = new Registry($this->item->metadata);
 
-                $params = JComponentHelper::getParams('com_focalpoint');
+                $params = ComponentHelper::getParams('com_focalpoint');
                 $params->merge(new Registry($this->item->params));
                 $this->item->params = $params;
 
@@ -118,7 +120,7 @@ class FocalpointModelLocation extends JModelForm
 
         $menus = $db->setQuery($query)->loadObjectList();
         foreach ($menus as $menu) {
-            $menuParams = new JRegistry($menu->params);
+            $menuParams = new Registry($menu->params);
             if ($menuParams->get('item_id') == $mapId) {
                 return $menu->id;
             }
@@ -142,7 +144,7 @@ class FocalpointModelLocation extends JModelForm
     }
 
     /**
-     * @param JObject $location
+     * @param CMSObject $location
      *
      * @return object
      */
