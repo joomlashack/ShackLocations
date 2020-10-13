@@ -60,7 +60,7 @@ $noAPI = sprintf(
      aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Drag the marker or enter a location</h3>
+        <h3 id="myModalLabel"><?php echo Text::_('COM_FOCALPOINT_GEOCODER_DRAG'); ?></h3>
     </div>
 
     <div class="modal-body">
@@ -81,7 +81,7 @@ $noAPI = sprintf(
             </div>
         </div>
         <div class="row-fluid">
-            <b>Current position:</b>
+            <b><?php echo Text::_('COM_FOCALPOINT_GEOCODER_CURRENT'); ?></b>
             <div id="info"></div>
         </div>
 
