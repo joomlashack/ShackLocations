@@ -36,6 +36,7 @@ if (!defined('SLOC_LOADED')) {
     // Setup autoload libraries
     require_once SLOC_LIBRARY . '/AutoLoader.php';
     AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
+    HTMLHelper::addIncludePath(SLOC_LIBRARY . '/html');
 
     // Application specific loads
     switch (Factory::getApplication()->getName()) {
