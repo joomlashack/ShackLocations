@@ -85,7 +85,7 @@ class FocalpointModelmap extends JModelAdmin
     public function save($data)
     {
         PluginHelper::importPlugin('focalpoint');
-        Factory::getApplication()->triggerEvent('onBeforeMapSave', [&$data]);
+        Factory::getApplication()->triggerEvent('onSlocmapBeforeSave', [&$data]);
 
         return parent::save($data);
     }

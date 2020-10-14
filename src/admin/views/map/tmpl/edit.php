@@ -101,7 +101,7 @@ $formFieldsets = $this->form->getFieldsets();
 
     // Allow pluginsto add form tabs
     PluginHelper::importPlugin('focalpoint');
-    Factory::getApplication()->triggerEvent('onLoadMapTabs', [$this->form]);
+    Factory::getApplication()->triggerEvent('onSlocmapTabs', [$this->form]);
 
     echo HTMLHelper::_('bootstrap.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
     ?>

@@ -40,6 +40,6 @@ class FocalpointControllerMap extends FormController
         parent::postSaveHook($model, $validData);
 
         PluginHelper::importPlugin('focalpoint');
-        Factory::getApplication()->triggerEvent('onAfterMapSave', $validData);
+        Factory::getApplication()->triggerEvent('onSlocmapAfterSave', $validData);
     }
 }

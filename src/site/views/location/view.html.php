@@ -72,7 +72,7 @@ class FocalpointViewLocation extends FocalpointViewSite
         }
 
         PluginHelper::importPlugin('focalpoint');
-        Factory::getApplication()->triggerEvent('onBeforeMapPrepareRender', [&$this->item]);
+        Factory::getApplication()->triggerEvent('onSlocmapPrepareRender', [&$this->item]);
 
         $this->params->merge($this->item->params);
 
