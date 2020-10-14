@@ -78,7 +78,6 @@ $jScript = <<<JSCRIPT
         }
 
         try {
-            console.log(window.slocMap);
             map = window.slocMap['{$mapId}'];
 
         } catch (error) {
