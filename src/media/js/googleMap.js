@@ -358,48 +358,50 @@
          * @return void
          */
         let updateActiveCount = function() {
-            let displayText      = '',
-                displayArguments = [],
-                status           = '',
-                activeCount      = 0,
-                $noLocations     = $('.nolocations');
+            if (options.show.legend) {
+                let displayText      = '',
+                    displayArguments = [],
+                    status           = '',
+                    activeCount      = 0,
+                    $noLocations     = $('.nolocations');
 
-            markers.forEach(function(marker, id) {
-                if (marker.status > 0) {
-                    activeCount += 1;
-                    status += marker.status;
-                }
-            });
-
-            if (options.show.listTab) {
-                if (activeCount === 0) {
-                    if ($noLocations.length === 0) {
-                        setTimeout(function() {
-                            $noLocations = $('<div class="nolocations"/>')
-                                .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'))
-                                .appendTo($listHolder);
-                        }, 100);
+                markers.forEach(function(marker, id) {
+                    if (marker.status > 0) {
+                        activeCount += 1;
+                        status += marker.status;
                     }
+                });
+
+                if (options.show.listTab) {
+                    if (activeCount === 0) {
+                        if ($noLocations.length === 0) {
+                            setTimeout(function() {
+                                $noLocations = $('<div class="nolocations"/>')
+                                    .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'))
+                                    .appendTo($listHolder);
+                            }, 100);
+                        }
+
+                    } else {
+                        $noLocations.remove();
+                    }
+                }
+
+                if (search.text !== '') {
+                    displayText      = 'COM_FOCALPOINT_SEARCH_WITHIN';
+                    displayArguments = [activeCount, options.search.radius, search.text];
 
                 } else {
-                    $noLocations.remove();
+                    displayText      = 'COM_FOCALPOINT_SEARCH_SHOWING';
+                    displayArguments = [activeCount]
                 }
+
+                if (activeCount === 1) {
+                    displayText += '_1';
+                }
+
+                $('#activecount').html($.sloc.sprintf(Joomla.Text._(displayText), displayArguments));
             }
-
-            if (search.text !== '') {
-                displayText      = 'COM_FOCALPOINT_SEARCH_WITHIN';
-                displayArguments = [activeCount, options.search.radius, search.text];
-
-            } else {
-                displayText      = 'COM_FOCALPOINT_SEARCH_SHOWING';
-                displayArguments = [activeCount]
-            }
-
-            if (activeCount === 1) {
-                displayText += '_1';
-            }
-
-            $('#activecount').html($.sloc.sprintf(Joomla.Text._(displayText), displayArguments));
         };
 
         /**
@@ -488,8 +490,6 @@
 
             updateActiveCount();
             updateList(150);
-
-            return false;
         };
 
         /**
