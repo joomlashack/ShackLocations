@@ -95,7 +95,8 @@
                 },
                 show          : {
                     clusters: false,
-                    listTab : true,
+                    legend  : false,
+                    listTab : false,
                     markers : true,
                     search  : false,
                 }
@@ -129,15 +130,20 @@
         let init = function(params) {
             options = $.extend(true, {}, defaults, params);
 
-            canvas      = document.getElementById(options.canvasId);
-            $listHolder = $('#fp_locationlist .fp_ll_holder');
+            canvas = document.getElementById(options.canvasId);
+
+            if (options.show.listTab) {
+                $listHolder = $('#fp_locationlist .fp_ll_holder');
+            }
 
             initMap();
             setMarkers();
 
-            $('.markertoggles').on('click', toggleTypes);
-            $('#fp_reset').on('click', resetMap);
-            $('#fp_toggle').on('click', toggleMarkers).trigger('click');
+            if (options.show.legend) {
+                $('#fp_reset').on('click', resetMap);
+                $('.markertoggles').on('click', toggleTypes);
+                $('#fp_toggle').on('click', toggleMarkers).trigger('click');
+            }
 
             setSearch();
             updateActiveCount();
@@ -328,17 +334,19 @@
                 }
             });
 
-            if (activeCount === 0) {
-                if ($noLocations.length === 0) {
-                    setTimeout(function() {
-                        $noLocations = $('<div class="nolocations"/>')
-                            .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'))
-                            .appendTo($listHolder);
-                    }, 100);
-                }
+            if (options.show.listTab) {
+                if (activeCount === 0) {
+                    if ($noLocations.length === 0) {
+                        setTimeout(function() {
+                            $noLocations = $('<div class="nolocations"/>')
+                                .html(Joomla.Text._('COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED'))
+                                .appendTo($listHolder);
+                        }, 100);
+                    }
 
-            } else {
-                $noLocations.remove();
+                } else {
+                    $noLocations.remove();
+                }
             }
 
             if (search.text !== '') {
@@ -631,21 +639,23 @@
         }
 
         let updateList = function(delay) {
-            let update = function() {
-                let locationListHeight = $listHolder.outerHeight();
+            if (options.show.listTab) {
+                let update = function() {
+                    let locationListHeight = $listHolder.outerHeight();
 
-                if (locationListHeight > 0) {
-                    $listHolder.parent().css('min-height', locationListHeight);
-                }
-            };
+                    if (locationListHeight > 0) {
+                        $listHolder.parent().css('min-height', locationListHeight);
+                    }
+                };
 
-            if (delay) {
-                setTimeout(function() {
+                if (delay) {
+                    setTimeout(function() {
+                        update();
+                    }, delay);
+
+                } else {
                     update();
-                }, delay);
-
-            } else {
-                update();
+                }
             }
         };
 

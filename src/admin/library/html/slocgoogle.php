@@ -77,6 +77,7 @@ abstract class JhtmlSlocGoogle
         }
 
         $options = json_encode([
+            'canvasId'       => $params->get('canvasId', 'fp_googleMap'),
             'clusterOptions' => $params->get('clusterOptions', null),
             'fitBounds'      => (bool)$params->get('fitbounds'),
             'mapProperties'  => [
@@ -105,6 +106,7 @@ abstract class JhtmlSlocGoogle
             ],
             'show'           => [
                 'clusters' => (bool)$params->get('markerclusters'),
+                'legend'   => (bool)$params->get('showlegend'),
                 'listTab'  => (bool)$params->get('locationlist'),
                 'markers'  => (bool)$params->get('showmarkers'),
                 'search'   => (bool)$params->get('mapsearchenabled')

@@ -7,5 +7,8 @@ $center = [
     'lng' => $this->item->longitude
 ];
 
-HTMLHelper::_('slocgoogle.map', $this->item->id, $this->item->params, $center, $this->item->markerdata);
+$params = clone $this->item->params;
+$params->set('showlegend', true);
+
+HTMLHelper::_('slocgoogle.map', $this->item->id, $params, $center, $this->item->markerdata);
 
