@@ -121,6 +121,7 @@
             <file>components/com_focalpoint/views/map/tmpl/default_mapjs-no-mc.php</file>
             <file>components/com_focalpoint/views/map/tmpl/default_mapjs.php</file>
             <file>components/com_focalpoint/views/map/tmpl/default_mapjs_uncommented.php</file>
+            <file>modules/mod_focalpointlocationmap/tmpl/mapjs.php</file>
             <file>plugins/focalpoint/mapstyles/assets/styles.json</file>
             <file>plugins/focalpoint/mapstyles/fields/snazzyselect.php</file>
         </obsolete>
