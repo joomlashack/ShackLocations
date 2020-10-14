@@ -31,6 +31,15 @@ defined('_JEXEC') or die();
 
 abstract class JhtmlSlocGoogle
 {
+    /**
+     * @param int            $id
+     * @param Registry|mixed $params
+     * @param object|array   $center
+     * @param object[]       $markerData
+     *
+     * @return void
+     * @throws Exception
+     */
     public static function map($id, $params, $center = null, $markerData = [])
     {
         if (!$params instanceof Registry) {
@@ -127,6 +136,11 @@ JSINIT;
         Factory::getDocument()->addScriptDeclaration($init);
     }
 
+    /**
+     * @param object $marker
+     *
+     * @return string
+     */
     public static function infoboxContent($marker)
     {
         //Assemble the infobox.
@@ -171,6 +185,11 @@ JSINIT;
         return str_replace(["\t", "\n", "\r",], [' ', ''], $boxText);
     }
 
+    /**
+     * @param object[] $markerData
+     *
+     * @return object[]
+     */
     public static function createMarkers(array $markerData)
     {
         $markers = [];

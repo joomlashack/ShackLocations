@@ -23,6 +23,12 @@
 ;jQuery(function($) {
     $.sloc = $.extend(true, {map: {}}, $.sloc);
 
+    /**
+     * @param {string} string
+     * @param {array}  replacements
+     *
+     * @return {string}
+     */
     $.sloc.sprintf = function(string, replacements) {
         let result = string.toString();
 
@@ -127,6 +133,11 @@
                 text: ''
             };
 
+        /**
+         * @param {object} params
+         *
+         * @return void
+         */
         let init = function(params) {
             options = $.extend(true, {}, defaults, params);
 
@@ -155,10 +166,18 @@
             }
         };
 
+        /**
+         * @param {int} delay
+         *
+         * @return void
+         */
         let updateDisplay = function(delay) {
             updateList(delay);
         };
 
+        /**
+         * @return void
+         */
         let initMap = function() {
             let mapProperties = options.mapProperties,
                 mapCenter     = mapProperties.center;
@@ -183,14 +202,26 @@
             map = new google.maps.Map(canvas, mapProperties);
         };
 
+        /**
+         * @return google.maps.Map
+         */
         let getMap = function() {
             return map;
         };
 
+        /**
+         * @return {object}
+         */
         let getOptions = function() {
             return options;
         };
 
+        /**
+         * @param {string} searchAddress
+         * @param {object} destination
+         *
+         * @return void
+         */
         let getDirections = function(searchAddress, destination) {
             if (options.search.assist) {
                 searchAddress += ', ' + options.search.assist;
@@ -242,6 +273,9 @@
                 });
         };
 
+        /**
+         * @return void
+         */
         let setMarkers = function() {
             $(options.markerData).each(function(index, data) {
                 let $listItem = null,
@@ -320,6 +354,9 @@
             }
         };
 
+        /**
+         * @return void
+         */
         let updateActiveCount = function() {
             let displayText      = '',
                 displayArguments = [],
@@ -365,6 +402,11 @@
             $('#activecount').html($.sloc.sprintf(Joomla.Text._(displayText), displayArguments));
         };
 
+        /**
+         * @param {jQuery.Event} evt
+         *
+         * @return void
+         */
         let toggleTypes = function(evt) {
             evt.preventDefault();
 
@@ -450,6 +492,11 @@
             return false;
         };
 
+        /**
+         * @param {jQuery.Event} evt
+         *
+         * @return void
+         */
         let resetMap = function(evt) {
             allowScrollTo = false;
 
@@ -498,6 +545,11 @@
             map.setZoom(options.mapProperties.zoom);
         };
 
+        /**
+         * @param {jQuery.Event} evt
+         *
+         * @return
+         */
         let toggleMarkers = function(evt) {
             allowScrollTo = false;
             let $this     = $(this),
@@ -527,6 +579,9 @@
             allowScrollTo = true;
         };
 
+        /**
+         * @return void
+         */
         let setSearch = function() {
             if (options.show.search) {
                 let $searchField  = $('#fp_searchAddress'),
@@ -638,6 +693,11 @@
             }
         }
 
+        /**
+         * @param {int}  delay
+         *
+         * @return void
+         */
         let updateList = function(delay) {
             if (options.show.listTab) {
                 let update = function() {
