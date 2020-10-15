@@ -24,17 +24,14 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
-
-/**
- * View to edit
- */
-class FocalpointViewLocationtype extends JViewLegacy
+class FocalpointViewLocationtype extends HtmlView
 {
     /**
      * @var CMSObject
@@ -89,7 +86,8 @@ class FocalpointViewLocationtype extends JViewLegacy
         $user  = Factory::getUser();
         $isNew = empty($this->item->id);
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPE'), 'location');
+        $title = 'COM_FOCALPOINT_TITLE_LOCATIONTYPE_' . ($isNew ? 'ADD' : 'EDIT');
+        ToolbarHelper::title(Text::_($title), 'location');
 
         if ($user->authorise('core.edit', 'com_focalpoint')
             || $user->authorise('core.create', 'com_focalpoint')
