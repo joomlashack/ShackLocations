@@ -24,13 +24,15 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
-class FocalpointViewMap extends JViewLegacy
+class FocalpointViewMap extends HtmlView
 {
     /**
      * @var CMSObject
@@ -98,7 +100,8 @@ class FocalpointViewMap extends JViewLegacy
 
         $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAP'), 'compass');
+        $title = 'COM_FOCALPOINT_TITLE_MAP_' . ($isNew ? 'ADD' : 'EDIT');
+        ToolbarHelper::title(Text::_($title), 'compass');
 
         if (!$checkedOut) {
             if ($user->authorise('core.edit', 'com_focalpoint')
