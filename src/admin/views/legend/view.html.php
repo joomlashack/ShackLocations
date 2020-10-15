@@ -24,12 +24,14 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLegend extends JViewLegacy
+class FocalpointViewLegend extends HtmlView
 {
     /**
      * @var CMSObject
@@ -85,7 +87,8 @@ class FocalpointViewLegend extends JViewLegacy
 
         $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGEND'), 'list-2');
+        $title = 'COM_FOCALPOINT_TITLE_LEGEND_' . ($isNew ? 'ADD' : 'EDIT');
+        ToolbarHelper::title(Text::_($title), 'list-2');
 
         if (!$checkedOut) {
             if ($user->authorise('core.edit', 'com_focalpoint')
