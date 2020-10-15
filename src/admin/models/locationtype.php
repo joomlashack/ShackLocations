@@ -35,11 +35,7 @@ class FocalpointModellocationtype extends JModelAdmin
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
-     * @param string $type
-     * @param string $prefix
-     * @param array  $config
-     *
-     * @return Table
+     * @inheritDoc
      */
     public function getTable($type = 'Locationtype', $prefix = 'FocalpointTable', $config = [])
     {
@@ -47,11 +43,7 @@ class FocalpointModellocationtype extends JModelAdmin
     }
 
     /**
-     * @param array $data
-     * @param bool  $loadData
-     *
-     * @return Form
-     * @throws Exception
+     * @inheritDoc
      */
     public function getForm($data = [], $loadData = true)
     {
@@ -68,8 +60,7 @@ class FocalpointModellocationtype extends JModelAdmin
     }
 
     /**
-     * @return array
-     * @throws Exception
+     * @inheritDoc
      */
     protected function loadFormData()
     {
@@ -84,9 +75,7 @@ class FocalpointModellocationtype extends JModelAdmin
     }
 
     /**
-     * @param int $pk
-     *
-     * @return CMSObject
+     * @inheritDoc
      */
     public function getItem($pk = null)
     {

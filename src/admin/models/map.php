@@ -32,11 +32,17 @@ class FocalpointModelmap extends JModelAdmin
 {
     protected $text_prefix = 'COM_FOCALPOINT';
 
+    /**
+     * @inheritDoc
+     */
     public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = [])
     {
         return JTable::getInstance($type, $prefix, $config);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm('com_focalpoint.map', 'map', ['control' => 'jform', 'load_data' => $loadData]);
@@ -47,6 +53,9 @@ class FocalpointModelmap extends JModelAdmin
         return $form;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         try {
@@ -61,8 +70,7 @@ class FocalpointModelmap extends JModelAdmin
     }
 
     /**
-     * @return CMSObject
-     * @throws Exception
+     * @inheritDoc
      */
     protected function loadFormData()
     {
@@ -90,6 +98,9 @@ class FocalpointModelmap extends JModelAdmin
         return parent::save($data);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {

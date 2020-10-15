@@ -31,11 +31,17 @@ class FocalpointModellegend extends JModelAdmin
 {
     protected $text_prefix = 'COM_FOCALPOINT';
 
+    /**
+     * @inheritDoc
+     */
     public function getTable($type = 'Legend', $prefix = 'FocalpointTable', $config = [])
     {
         return Table::getInstance($type, $prefix, $config);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm(
