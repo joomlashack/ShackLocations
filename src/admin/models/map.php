@@ -23,13 +23,16 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
 
+require_once __DIR__ . '/traits.php';
+
 class FocalpointModelmap extends JModelAdmin
 {
+    use FocalpointModelTraits;
+
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
@@ -94,6 +97,8 @@ class FocalpointModelmap extends JModelAdmin
     {
         PluginHelper::importPlugin('focalpoint');
         Factory::getApplication()->triggerEvent('onBeforeMapSave', [&$data]);
+
+        $this->checkSave2copy($data);
 
         return parent::save($data);
     }

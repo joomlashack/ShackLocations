@@ -30,8 +30,12 @@ use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
+require_once __DIR__ . '/traits.php';
+
 class FocalpointModellocation extends JModelAdmin
 {
+    use FocalpointModelTraits;
+
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
@@ -121,31 +125,11 @@ class FocalpointModellocation extends JModelAdmin
      */
     public function save($data)
     {
-        $app = Factory::getApplication();
-
         if (empty($data['othertypes'])) {
             $data['othertypes'] = [];
         }
 
-        if ($app->input->getCmd('task') == 'save2copy') {
-            $original = clone $this->getTable();
-            $original->load($app->input->getInt('id'));
-
-            if ($data['title'] == $original->title) {
-                list($title, $alias) = $this->generateNewTitle($data['type'], $data['alias'], $data['title']);
-
-                $data['title'] = $title;
-                $data['alias'] = $alias;
-
-            } else {
-                if ($data['alias'] == $original->alias) {
-                    $data['alias'] = '';
-                }
-            }
-
-            $data['state'] = 0;
-
-        }
+        $this->checkSave2copy($data);
 
         if (parent::save($data)) {
             $id = $data['id'] ?: $this->getDbo()->insertid();

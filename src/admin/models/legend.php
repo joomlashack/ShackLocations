@@ -27,8 +27,12 @@ use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
+require_once __DIR__ . '/traits.php';
+
 class FocalpointModellegend extends JModelAdmin
 {
+    use FocalpointModelTraits;
+
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
@@ -97,5 +101,15 @@ class FocalpointModellegend extends JModelAdmin
         if (!$table->id) {
             $table->ordering = $table->getNextOrder();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function save($data)
+    {
+        $this->checkSave2copy($data);
+
+        return parent::save($data);
     }
 }

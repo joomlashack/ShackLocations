@@ -23,15 +23,15 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
+require_once __DIR__ . '/traits.php';
 
 class FocalpointModellocationtype extends JModelAdmin
 {
+    use FocalpointModelTraits;
+
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
@@ -90,5 +90,15 @@ class FocalpointModellocationtype extends JModelAdmin
         }
 
         return $item;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function save($data)
+    {
+        $this->checkSave2copy($data);
+
+        return parent::save($data);
     }
 }
