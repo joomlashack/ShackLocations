@@ -24,12 +24,14 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLocation extends JViewLegacy
+class FocalpointViewLocation extends HtmlView
 {
     /**
      * @var FocalpointModelLocation
@@ -103,7 +105,8 @@ class FocalpointViewLocation extends JViewLegacy
         }
         $canDo = FocalpointHelper::getActions();
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATION'), 'location.png');
+        $title = 'COM_FOCALPOINT_TITLE_LOCATION_' . ($isNew ? 'ADD' : 'EDIT');
+        ToolbarHelper::title(Text::_($title), 'location.png');
 
         if (!$checkedOut) {
             if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
