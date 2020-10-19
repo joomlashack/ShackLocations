@@ -30,6 +30,10 @@ defined('_JEXEC') or die;
 
 abstract class FocalpointHelper extends ContentHelper
 {
+    // Bradenton, FL
+    const HOME_LAT = '27.6648274';
+    const HOME_LNG = '-81.5157535';
+
     /**
      * @inheritDoc
      */

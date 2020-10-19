@@ -23,11 +23,13 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die;
 
 if ($this->item->params->get('loadBootstrap')) :
-    HTMLHelper::_('stylesheet', 'components/com_focalpoint/assets/css/bootstrap.css');
+    HTMLHelper::_('stylesheet', 'com_focalpoint/bootstrap.css', ['relative' => true]);
     HTMLHelper::_('bootstrap.framework');
 endif;
 
@@ -38,7 +40,7 @@ else :
     $backLink = HTMLHelper::_(
         'link',
         $this->item->backlink,
-        JText::_('COM_FOCALPOINT_BACK_TO_MAP'),
+        Text::_('COM_FOCALPOINT_BACK_TO_MAP'),
         'class="backtomap"'
     );
 endif;
@@ -67,26 +69,16 @@ $pageClass   = $this->getPageClass('fp-location-view');
             <div id="fp_googleMap"></div>
             <?php
             if ($this->item->params->get('getdirections')) :
-                ?>
-                <div id="fp_googleMap_directions"></div>
-                <div id="fp_map_actions" class="input-append">
-                    <form onsubmit="return false;">
-                        <label for="fp_searchAddress">
-                            <?php echo JText::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>
-                        </label>
-                        <input id="fp_searchAddress"
-                               type="text"
-                               placeholder="<?php echo JText::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>"
-                               value=""/>
-                        <button class="btn"
-                                id="fp_searchAddressBtn"
-                                type="button">
-                            <?php echo JText::_('COM_FOCALPOINT_GET_DIRECTIONS'); ?>
-                        </button>
-                    </form>
-                </div>
-
-            <?php endif;
+                $displayData = [
+                    'mapId'       => 'L' . $this->item->id,
+                    'params'      => $this->item->params,
+                    'destination' => [
+                        'lat' => $this->item->latitude,
+                        'lng' => $this->item->longitude
+                    ]
+                ];
+                echo LayoutHelper::render('google.directions', $displayData);
+            endif;
 
             if (!$this->item->params->get('hideintrotext')) :
                 echo $this->item->description;
@@ -111,7 +103,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
                 <div class="row-fluid fp_address">
                     <?php if ($this->item->address) : ?>
                         <div class="span12">
-                            <h3><?php echo JText::_('COM_FOCALPOINT_ADDRESS'); ?>:</h3>
+                            <h3><?php echo Text::_('COM_FOCALPOINT_ADDRESS'); ?>:</h3>
                             <p><?php echo $this->item->address; ?></p>
                         </div>
                     <?php endif;
@@ -119,7 +111,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
                     if ($this->item->phone) :
                         ?>
                         <div class="span12">
-                            <h3><?php echo JText::_('COM_FOCALPOINT_PHONE'); ?>:</h3>
+                            <h3><?php echo Text::_('COM_FOCALPOINT_PHONE'); ?>:</h3>
                             <p><?php echo $this->item->phone; ?></p>
                         </div>
                     <?php endif; ?>
@@ -150,7 +142,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
     </div>
 
     <?php
-    echo $this->loadTemplate('mapjs');
+    echo $this->loadTemplate('google');
 
     echo $this->renderModule('shacklocations-below-map');
 

@@ -74,7 +74,7 @@ class FocalpointViewMap extends HtmlView
             $this->addToolbar();
 
             PluginHelper::importPlugin('focalpoint');
-            $app->triggerEvent('onBeforeMapLoad', [&$this->item]);
+            $app->triggerEvent('onSlocmapBeforeLoad', [&$this->item]);
 
             parent::display($tpl);
 

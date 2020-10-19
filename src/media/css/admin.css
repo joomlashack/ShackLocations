@@ -167,7 +167,7 @@ div fieldset.ui-sortable-placeholder {
 
 .fp_legend .hero-unit,
 .fp_legends_view .hero-unit {
-    background-image: url(../images/getstartedlogends.png);
+    background-image: url(../images/getstartedlegends.png);
     background-position: 100% 50%;
     background-repeat: no-repeat;
     padding-right: 520px;
@@ -242,7 +242,7 @@ div fieldset.ui-sortable-placeholder {
 
     .fp_legend .hero-unit,
     .fp_legends_view .hero-unit {
-        background-image: url(../images/getstartedlogends-sm.png);
+        background-image: url(../images/getstartedlegends-sm.png);
         padding-right: 300px;
     }
 }

@@ -46,7 +46,7 @@
                type="media"
                label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_MARKER"
                description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_MARKER"
-               directory="/images/markers/"/>
+               directory="markers"/>
 
         <field name="created_by"
                type="user"

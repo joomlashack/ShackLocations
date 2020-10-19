@@ -55,10 +55,6 @@ class com_focalpointInstallerScript extends AbstractScript
                 }
 
                 return true;
-
-            } else {
-                $app->enqueueMessage("It's the parent!");
-
             }
 
         } catch (Exception $e) {
@@ -118,14 +114,17 @@ class com_focalpointInstallerScript extends AbstractScript
         $maps = $db->setQuery($query)->loadObjectList();
         foreach ($maps as $map) {
             $params = json_decode($map->params, true);
-            if (array_intersect($params, ['true', 'false'])) {
+            if (array_intersect($params, ['true', 'false', 'null', 'on', 'off'])) {
                 foreach ($params as $name => $value) {
                     switch ($value) {
                         case 'true':
+                        case 'on':
                             $params[$name] = '1';
                             break;
 
                         case 'false':
+                        case 'off':
+                        case 'null':
                             $params[$name] = '0';
                             break;
                     }
@@ -140,10 +139,23 @@ class com_focalpointInstallerScript extends AbstractScript
         $table = Table::getInstance('Extension');
         $table->load(['element' => 'com_focalpoint', 'type' => 'component']);
 
-        $params = json_decode($table->params);
+        $params      = json_decode($table->params);
+        $paramsCheck = md5(json_encode($params));
+
         if (isset($params->mapTypeControl) && in_array($params->mapTypeControl, ['true', 'false'])) {
             $params->mapTypeControl = $params->mapTypeControl == 'true' ? '1' : '0';
+        }
+        if (isset($params->maxzoom) && $params->maxzoom == 'null') {
+            $params->maxzoom = '0';
+        }
+        if (isset($params->mapsearchprompt) && $params->mapsearchprompt == 'Suburb or Postal code') {
+            $params->mapsearchprompt = '';
+        }
+        if (isset($params->showmarkers) && in_array($params->showmarkers, ['on', 'off'])) {
+            $params->showmarkers = $params->showmarkers == 'on' ? '1' : '0';
+        }
 
+        if ($paramsCheck != md5(json_encode($params))) {
             $table->params = json_encode($params);
             $table->store();
         }

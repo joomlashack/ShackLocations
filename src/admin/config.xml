@@ -51,7 +51,6 @@
 
         <field name="zoom"
                type="list"
-               default="null"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_DESC">
             <option value="1">1</option>
@@ -76,9 +75,9 @@
 
         <field name="maxzoom"
                type="list"
-               default="null"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_DESC">
+            <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_AUTO</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -99,7 +98,6 @@
             <option value="18">18</option>
             <option value="19">19</option>
             <option value="20">20</option>
-            <option value="null">COM_FOCALPOINT_FORM_LBL_CONFIG_AUTO</option>
         </field>
 
         <field name="zoomin"
@@ -192,14 +190,14 @@
                default="100%"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_WIDTH_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_WIDTH_DESC"
-               size="5"/>
+               showon="mapsizecontrol:1"/>
 
         <field name="mapsizey"
                type="text"
                default="400px"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_HEIGHT_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_HEIGHT_DESC"
-               size="5"/>
+               showon="mapsizecontrol:1"/>
 
         <field name="legendposition"
                type="list"
@@ -214,10 +212,10 @@
 
         <field name="sidebarx"
                type="text"
-               default="25%"
+               default="25"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_DESC"
-               size="5"/>
+               showon="mapsizecontrol:1[AND]legendposition:left[OR]legendposition:right"/>
 
         <field name="locationlist"
                type="radio"
@@ -315,10 +313,8 @@
 
         <field name="mapsearchprompt"
                type="text"
-               default="Suburb or Postal code"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_PROMPT_LBL"
-               description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_PROMPT_DESC"
-               size="40"/>
+               description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SEARCH_PROMPT_DESC"/>
 
         <field name="mapsearchzoom"
                type="list"
@@ -383,16 +379,17 @@
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_MARKER_LBL"
                default="images/markers/pins/style4/red.png"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_MARKER_DESC"
-               filter="raw"
-               directory="/markers"/>
+               required="true"
+               directory="markers"/>
 
         <field name="showmarkers"
-               type="list"
-               default="0"
+               type="radio"
+               default="1"
+               class="btn-group btn-group-yesno"
                label="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_LBL"
                description="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_DESC">
-            <option value="on">Show</option>
-            <option value="off">Hide</option>
+            <option value="1">JSHOW</option>
+            <option value="0">JHIDE</option>
         </field>
 
         <field name="getdirections"

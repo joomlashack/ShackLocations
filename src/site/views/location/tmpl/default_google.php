@@ -2,8 +2,7 @@
 /**
  * @package   ShackLocations
  * @contact   www.joomlashack.com, help@joomlashack.com
- * @copyright 2013-2017 John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @copyright 2018-2020 Joomlashack.com. All rights reserved
+ * @copyright 2020 Joomlashack.com. All rights reserved
  * @license   https://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of ShackLocations.
@@ -22,24 +21,19 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Controller\FormController;
-use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-class FocalpointControllerMap extends FormController
-{
-    protected $view_list = 'maps';
+$center       = [
+    'lat' => $this->item->latitude,
+    'lng' => $this->item->longitude
+];
+$params       = $this->item->params->toObject();
+$params->zoom = $this->item->params->get('zoomin');
 
-    /**
-     * @inheritDoc
-     */
-    protected function postSaveHook(JModelLegacy $model, $validData = [])
-    {
-        parent::postSaveHook($model, $validData);
+$mapId = 'L' . $this->item->id;
 
-        PluginHelper::importPlugin('focalpoint');
-        Factory::getApplication()->triggerEvent('onSlocmapAfterSave', $validData);
-    }
-}
+HTMLHelper::_('slocgoogle.map', $mapId, $params, $center, [$this->item]);
+

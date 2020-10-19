@@ -40,6 +40,11 @@ $noAPI = sprintf(
     '<span class="alert alert-error">%s</span>',
     Text::_('COM_FOCALPOINT_ERROR_MAPS_API_MISSING')
 );
+
+$defaultCenter = json_encode([
+    'lat' => FocalpointHelper::HOME_LAT,
+    'lng' => FocalpointHelper::HOME_LNG
+]);
 ?>
 <!-- Button to trigger modal -->
 <a id="openGeocoder"
@@ -60,7 +65,7 @@ $noAPI = sprintf(
      aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Drag the marker or enter a location</h3>
+        <h3 id="myModalLabel"><?php echo Text::_('COM_FOCALPOINT_GEOCODER_DRAG'); ?></h3>
     </div>
 
     <div class="modal-body">
@@ -81,7 +86,7 @@ $noAPI = sprintf(
             </div>
         </div>
         <div class="row-fluid">
-            <b>Current position:</b>
+            <b><?php echo Text::_('COM_FOCALPOINT_GEOCODER_CURRENT'); ?></b>
             <div id="info"></div>
         </div>
 
@@ -102,7 +107,8 @@ $noAPI = sprintf(
 
 <script>
     ;(function($) {
-        let mapCanvas = document.getElementById('mapCanvas');
+        let defaultCenter = <?php echo $defaultCenter;  ?>,
+            mapCanvas     = document.getElementById('mapCanvas');
 
         if (google.maps) {
             google.maps.event.addDomListener(window, 'load', function() {
@@ -115,8 +121,8 @@ $noAPI = sprintf(
 
                 let zoom = (startLat && startLng) ? 15 : 2;
 
-                startLat   = startLat || 27.6648274;
-                startLng   = startLng || -81.5157535;
+                startLat   = startLat || defaultCenter.lat;
+                startLng   = startLng || defaultCenter.lng;
                 let latLng = new google.maps.LatLng(startLat, startLng);
 
                 let map = new google.maps.Map(
