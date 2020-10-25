@@ -99,7 +99,7 @@ abstract class JhtmlSlocGoogle
                 'fullscreenControlOptions' => $params->get('fullscreenOptions', (object)[]),
                 'mapTypeControl'           => (int)$params->get('mapTypeControl'),
                 'mapTypeId'                => $params->get('mapTypeId'),
-                'maxZoom'                  => $params->get('maxzoom') ?: null,
+                'maxZoom'                  => (int)$params->get('maxzoom') ?: null,
                 'panControl'               => (int)(bool)$params->get('panControl'),
                 'scrollwheel'              => (int)(bool)$params->get('scrollwheel'),
                 'streetViewControl'        => (int)(bool)$params->get('streetViewControl'),
