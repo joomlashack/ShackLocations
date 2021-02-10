@@ -133,6 +133,21 @@
                 text: ''
             };
 
+        let addOverlay = function(map) {
+            let kml = options.overlay || null;
+
+            if (kml.url) {
+                kml.map      = map;
+                let kmlLayer = new google.maps.KmlLayer(kml);
+
+                kmlLayer.addListener('status_changed', function() {
+                    if (kmlLayer.getStatus() !== 'OK') {
+                        alert(Joomla.Text._('COM_FOCALPOINT_ERROR_OVERLAY').replace('%s', kmlLayer.getStatus()));
+                    }
+                });
+            }
+        };
+
         /**
          * @param {object} params
          *
@@ -200,6 +215,8 @@
             }
 
             map = new google.maps.Map(canvas, mapProperties);
+
+            addOverlay(map);
         };
 
         /**

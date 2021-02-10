@@ -74,6 +74,7 @@ abstract class JhtmlSlocGoogle
             'COM_FOCALPOINT_BUTTTON_HIDE_ALL',
             'COM_FOCALPOINT_BUTTTON_SHOW_ALL',
             'COM_FOCALPOINT_ERROR_GEOCODE',
+            'COM_FOCALPOINT_ERROR_OVERLAY',
             'COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED',
             'COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED',
             'COM_FOCALPOINT_SEARCH_SHOWING',
@@ -107,6 +108,7 @@ abstract class JhtmlSlocGoogle
                 'zoom'                     => (int)$params->get('zoom'),
                 'zoomControl'              => (int)(bool)$params->get('zoomControl'),
             ],
+            'overlay'        => (array)$params->get('overlay'),
             'markerData'     => static::createMarkers($markerData),
             'search'         => [
                 'assist' => (string)$params->get('searchassist', ''),
