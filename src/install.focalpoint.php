@@ -23,6 +23,7 @@
  */
 
 use Alledia\Installer\AbstractScript;
+use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -42,12 +43,25 @@ if (file_exists(__DIR__ . '/admin/library/Installer/AbstractScript.php')) {
 class com_focalpointInstallerScript extends AbstractScript
 {
     /**
+     * @var CMSApplication
+     */
+    protected $app = null;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct($parent)
+    {
+        parent::__construct($parent);
+
+        $this->app = Factory::getApplication();
+    }
+
+    /**
      * @inheritDoc
      */
     public function update($parent)
     {
-        $app = Factory::getApplication();
-
         try {
             if (parent::update($parent)) {
                 if (version_compare($this->previousManifest->version, '1.2', 'lt')) {
@@ -58,10 +72,10 @@ class com_focalpointInstallerScript extends AbstractScript
             }
 
         } catch (Exception $e) {
-            $app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
+            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
 
         } catch (Throwable $e) {
-            $app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
+            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
         }
 
         return false;
@@ -72,8 +86,6 @@ class com_focalpointInstallerScript extends AbstractScript
      */
     public function postflight($type, $parent)
     {
-        $app = Factory::getApplication();
-
         try {
             switch ($type) {
                 case 'install':
@@ -87,16 +99,17 @@ class com_focalpointInstallerScript extends AbstractScript
                     $this->updateCustomFields();
                     $this->updateCustomFieldsData();
                     $this->removeObsoleteFiles();
+                    $this->checkParameters();
                     break;
             }
 
             parent::postFlight($type, $parent);
 
         } catch (Exception $e) {
-            $app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
+            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
 
         } catch (Throwable $e) {
-            $app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
+            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
         }
     }
 
@@ -309,6 +322,39 @@ class com_focalpointInstallerScript extends AbstractScript
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Should only be called on updates
+     */
+    protected function checkParameters()
+    {
+        $db = Factory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select([
+                'extension_id',
+                'params'
+            ])
+            ->from('#__extensions')
+            ->where([
+                'type = ' . $db->quote('component'),
+                'element = ' . $db->quote('com_focalpoint')
+            ]);
+
+        $focalpoint = $db->setQuery($query)->loadObject();
+
+        $params = json_decode($focalpoint->params);
+        $update = clone $params;
+
+        if (!property_exists($update, 'infopopupevent')) {
+            $update->infopopupevent = 'click';
+        }
+
+        if ($update != $params) {
+            $focalpoint->params = json_encode($update);
+            $db->updateObject('#__extensions', $focalpoint, 'extension_id');
         }
     }
 }

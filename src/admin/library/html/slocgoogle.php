@@ -171,7 +171,7 @@ JSINIT;
             $boxText = str_replace($images[0], $fixed, $boxText);
         }
 
-        if (isset($marker->link)) {
+        if (isset($marker->link) && $marker->params->get('infopopupevent') === 'click') {
             $boxText .= sprintf(
                 '<p class="infoboxlink">%s</p>',
                 HTMLHelper::_(
@@ -200,6 +200,7 @@ JSINIT;
                 'id'       => (int)$marker->id,
                 'typeId'   => isset($marker->locationtype_id) ? (int)$marker->locationtype_id : null,
                 'infoBox'  => [
+                    'event'   => $marker->params->get('infopopupevent'),
                     'content' => static::infoboxContent($marker),
                 ],
                 'marker'   => $marker->marker,

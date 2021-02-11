@@ -268,35 +268,38 @@
         </field>
     </fieldset>
 
-    <fieldset name="infobox" label="COM_FOCALPOINT_FORM_LBL_CONFIG_FIELDSET_INFOBOX_CONTENT">
+    <fieldset name="infobox"
+              label="COM_FOCALPOINT_FORM_LBL_CONFIG_FIELDSET_INFOBOX_CONTENT"
+              description="COM_FOCALPOINT_FORM_LBL_CONFIG_FIELDSET_INFOBOX_CONTENT_DESC">
+        <field name="infopopupevent"
+               type="hidden"
+               default="click"/>
+
         <field name="infoshowaddress"
                type="radio"
                class="btn-group btn-group-yesno"
                default="1"
-               label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_CONTENT_LBL"
-               description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_CONTENT_DESC">
-            <option value="1">JYES</option>
-            <option value="0">JNO</option>
+               label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_CONTENT_LBL">
+            <option value="1">JSHOW</option>
+            <option value="0">JHIDE</option>
         </field>
 
         <field name="infoshowphone"
                type="radio"
                class="btn-group btn-group-yesno"
                default="1"
-               label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_PHONE_LBL"
-               description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_PHONE_DESC">
-            <option value="1">JYES</option>
-            <option value="0">JNO</option>
+               label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_PHONE_LBL">
+            <option value="1">JSHOW</option>
+            <option value="0">JHIDE</option>
         </field>
 
         <field name="infoshowintro"
                type="radio"
                class="btn-group btn-group-yesno"
                default="1"
-               label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_INTRO_LBL"
-               description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_INTRO_DESC">
-            <option value="1">JYES</option>
-            <option value="0">JNO</option>
+               label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_INTRO_LBL">
+            <option value="1">JSHOW</option>
+            <option value="0">JHIDE</option>
         </field>
     </fieldset>
 
