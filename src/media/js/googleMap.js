@@ -294,9 +294,9 @@
          * @return void
          */
         let setMarkers = function() {
-            $(options.markerData).each(function(index, data) {
+            $(options.markerData).each(function() {
                 let $listItem = null,
-                    marker    = $.extend(true, {}, markerBase, data);
+                    marker    = $.extend(true, {}, markerBase, this);
 
                 if ($.inArray(marker.id, mappedMarkers) === -1) {
                     let position = new google.maps.LatLng(marker.position.lat, marker.position.lng);
