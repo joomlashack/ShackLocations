@@ -345,6 +345,19 @@
                         };
 
                         switch (marker.infoBox.event) {
+                            case 'always':
+                                markerInfoBox[marker.id].open(map, markers[marker.id]);
+                                google.maps.event.addListener(markers[marker.id], 'click', function() {
+                                    let thisBox = markerInfoBox[marker.id];
+                                    if (thisBox.getVisible()) {
+                                        thisBox.close();
+
+                                    } else {
+                                        thisBox.open(map, thisBox);
+                                    }
+                                });
+                                break;
+
                             case 'click':
                                 google.maps.event.addListener(markers[marker.id], 'click', infoOpen);
                                 break;
