@@ -136,7 +136,7 @@
         let addOverlay = function(map) {
             let kml = options.overlay || null;
 
-            if (kml.url) {
+            if (kml && kml.url) {
                 kml.map      = map;
                 let kmlLayer = new google.maps.KmlLayer(kml);
 
