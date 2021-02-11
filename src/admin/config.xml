@@ -271,6 +271,10 @@
     <fieldset name="infobox"
               label="COM_FOCALPOINT_FORM_LBL_CONFIG_FIELDSET_INFOBOX_CONTENT"
               description="COM_FOCALPOINT_FORM_LBL_CONFIG_FIELDSET_INFOBOX_CONTENT_DESC">
+        <field name="infopopupevent"
+               type="hidden"
+               default="click"/>
+
         <field name="infoshowaddress"
                type="radio"
                class="btn-group btn-group-yesno"

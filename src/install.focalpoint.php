@@ -99,6 +99,7 @@ class com_focalpointInstallerScript extends AbstractScript
                     $this->updateCustomFields();
                     $this->updateCustomFieldsData();
                     $this->removeObsoleteFiles();
+                    $this->checkParameters();
                     break;
             }
 
@@ -321,6 +322,39 @@ class com_focalpointInstallerScript extends AbstractScript
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Should only be called on updates
+     */
+    protected function checkParameters()
+    {
+        $db = Factory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->select([
+                'extension_id',
+                'params'
+            ])
+            ->from('#__extensions')
+            ->where([
+                'type = ' . $db->quote('component'),
+                'element = ' . $db->quote('com_focalpoint')
+            ]);
+
+        $focalpoint = $db->setQuery($query)->loadObject();
+
+        $params = json_decode($focalpoint->params);
+        $update = clone $params;
+
+        if (!property_exists($update, 'infopopupevent')) {
+            $update->infopopupevent = 'click';
+        }
+
+        if ($update != $params) {
+            $focalpoint->params = json_encode($update);
+            $db->updateObject('#__extensions', $focalpoint, 'extension_id');
         }
     }
 }

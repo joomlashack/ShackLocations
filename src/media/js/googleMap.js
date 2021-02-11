@@ -117,6 +117,7 @@
                 id     : null,
                 typeId : null,
                 infoBox: {
+                    event  : null,
                     content: null
                 },
                 lat    : null,
@@ -328,19 +329,36 @@
                         markers[marker.id].setMap(map);
                     }
 
-                    google.maps.event.addListener(markers[marker.id], 'click', function() {
-                        if (mapinfobox === markerInfoBox[marker.id] && mapinfobox.getVisible()) {
-                            mapinfobox.close();
+                    if (marker.infoBox.event) {
+                        let infoOpen = function(evt) {
+                            if (mapinfobox === markerInfoBox[marker.id] && mapinfobox.getVisible()) {
+                                mapinfobox.close();
 
-                        } else {
-                            if (mapinfobox) {
-                                mapinfobox.close()
+                            } else {
+                                if (mapinfobox) {
+                                    mapinfobox.close()
+                                }
+
+                                mapinfobox = markerInfoBox[marker.id];
+                                mapinfobox.open(map, markers[marker.id]);
                             }
+                        };
 
-                            mapinfobox = markerInfoBox[marker.id];
-                            mapinfobox.open(map, markers[marker.id]);
+                        switch (marker.infoBox.event) {
+                            case 'click':
+                                google.maps.event.addListener(markers[marker.id], 'click', infoOpen);
+                                break;
+
+                            case'hover':
+                                google.maps.event.addListener(markers[marker.id], 'mouseover', infoOpen);
+                                google.maps.event.addListener(markers[marker.id], 'mouseout', function() {
+                                    if (mapinfobox) {
+                                        mapinfobox.close();
+                                    }
+                                });
+                                break;
                         }
-                    });
+                    }
 
                     if (options.show.listTab) {
                         $listItem = $('<div class="fp_listitem">' + marker.infoBox.content + '</div>');
