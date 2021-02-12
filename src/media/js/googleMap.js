@@ -592,6 +592,13 @@
             allowScrollTo = true;
             map.panTo(options.mapProperties.center);
             map.setZoom(options.mapProperties.zoom);
+
+            // Open all the infoboxes if requested
+            options.markerData.forEach(function(marker, id) {
+                if (marker.infoBox.event === 'always' && markers[marker.id].getVisible()) {
+                    markerInfoBox[marker.id].open(map, markers[marker.id]);
+                }
+            });
         };
 
         /**
