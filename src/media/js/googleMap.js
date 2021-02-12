@@ -552,8 +552,6 @@
             $('#fp_searchAddress').val(search.text);
 
             markers.forEach(function(marker, id) {
-                let $this = $(this);
-
                 if (marker.status < -999) {
                     marker.status += 5000;
                     marker.setMap(map);
@@ -562,27 +560,30 @@
             });
 
             $('#fp_toggle').each(function() {
+                let $toggle        = $(this),
+                    $markerToggles = $('.markertoggles');
+
                 if (options.show.markers) {
-                    $(this).data('togglestate', 'off')
+                    $toggle.data('togglestate', 'off')
                         .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
 
-                    $('.markertoggles').each(function() {
-                        let $this = $(this);
+                    $markerToggles.each(function() {
+                        let $markerToggle = $(this);
 
-                        if ($this.hasClass('active')) {
-                            $this.trigger('click');
+                        if ($markerToggle.hasClass('active')) {
+                            $markerToggle.trigger('click');
                         }
-                        $this.trigger('click');
+                        $markerToggle.trigger('click');
                     });
 
                 } else {
-                    $(this).data('togglestate', 'on')
+                    $toggle.data('togglestate', 'on')
                         .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
 
-                    $('.markertoggles').each(function() {
-                        let $this = $(this);
-                        if ($this.hasClass('active')) {
-                            $this.trigger('click');
+                    $markerToggles.each(function() {
+                        let $markerToggle = $(this);
+                        if ($markerToggle.hasClass('active')) {
+                            $markerToggle.trigger('click');
                         }
                     });
                 }
