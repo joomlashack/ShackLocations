@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-    <layout title="Single Location" option="View">
-    </layout>
+    <layout title="Single Location" option="View"/>
+
     <fields name="params">
         <fieldset
             name="basic"
