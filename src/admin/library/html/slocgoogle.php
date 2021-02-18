@@ -143,7 +143,7 @@ JSINIT;
      *
      * @return string
      */
-    public static function infoboxContent($marker)
+    protected static function infoboxContent($marker)
     {
         //Assemble the infobox.
         $infoDescription = [];
@@ -171,8 +171,23 @@ JSINIT;
             $boxText = str_replace($images[0], $fixed, $boxText);
         }
 
-        if (isset($marker->link) && $marker->params->get('infopopupevent') === 'click') {
-            $boxText .= sprintf(
+        if ($marker->params->get('infopopupevent') !== 'hover') {
+            $boxText .= static::infoboxLink($marker);
+        }
+        $boxText .= '<div class="infopointer"></div></div>';
+
+        return str_replace(["\t", "\n", "\r",], [' ', ''], $boxText);
+    }
+
+    /**
+     * @param object $marker
+     *
+     * @return string
+     */
+    protected static function infoboxLink($marker)
+    {
+        if ($marker->link) {
+            return sprintf(
                 '<p class="infoboxlink">%s</p>',
                 HTMLHelper::_(
                     'link',
@@ -182,9 +197,8 @@ JSINIT;
                 )
             );
         }
-        $boxText .= '<div class="infopointer"></div></div>';
 
-        return str_replace(["\t", "\n", "\r",], [' ', ''], $boxText);
+        return '';
     }
 
     /**
@@ -192,16 +206,19 @@ JSINIT;
      *
      * @return object[]
      */
-    public static function createMarkers(array $markerData)
+    protected static function createMarkers(array $markerData)
     {
         $markers = [];
         foreach ($markerData as $marker) {
+            $popupEvent = $marker->params->get('infopopupevent');
+
             $markers[] = [
                 'id'       => (int)$marker->id,
                 'typeId'   => isset($marker->locationtype_id) ? (int)$marker->locationtype_id : null,
                 'infoBox'  => [
-                    'event'   => $marker->params->get('infopopupevent'),
+                    'event'   => $popupEvent,
                     'content' => static::infoboxContent($marker),
+                    'link'    => $popupEvent == 'hover' ? static::infoboxLink($marker) : ''
                 ],
                 'marker'   => $marker->marker,
                 'position' => [

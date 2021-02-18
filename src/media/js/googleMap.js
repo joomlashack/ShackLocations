@@ -118,7 +118,8 @@
                 typeId : null,
                 infoBox: {
                     event  : null,
-                    content: null
+                    content: null,
+                    link   : null
                 },
                 lat    : null,
                 lng    : null,
@@ -374,7 +375,10 @@
                     }
 
                     if (options.show.listTab) {
-                        $listItem = $('<div class="fp_listitem">' + marker.infoBox.content + '</div>');
+                        $listItem = $('<div class="fp_listitem">'
+                            + marker.infoBox.content + marker.infoBox.link
+                            + '</div>'
+                        );
                         $listItem.addClass('fp_list_marker' + marker.id)
                         $listHolder.append($listItem);
                         $listItem.status = 0;
