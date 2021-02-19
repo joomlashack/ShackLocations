@@ -107,6 +107,7 @@
                     search  : false,
                 }
             },
+            isDesktop      = true,
             allowScrollTo  = true,
             canvas         = null,
             clusterMarkers = [],
@@ -158,7 +159,8 @@
         let init = function(params) {
             options = $.extend(true, {}, defaults, params);
 
-            canvas = document.getElementById(options.canvasId);
+            canvas    = document.getElementById(options.canvasId);
+            isDesktop = window.screen.availWidth > 979;
 
             if (options.show.listTab) {
                 $listHolder = $('#fp_locationlist .fp_ll_holder');
@@ -345,6 +347,12 @@
                             }
                         };
 
+                        let infoClose = function() {
+                            if (mapinfobox) {
+                                mapinfobox.close();
+                            }
+                        };
+
                         switch (marker.infoBox.event) {
                             case 'always':
                                 markerInfoBox[marker.id].open(map, markers[marker.id]);
@@ -364,12 +372,14 @@
                                 break;
 
                             case'hover':
-                                google.maps.event.addListener(markers[marker.id], 'mouseover', infoOpen);
-                                google.maps.event.addListener(markers[marker.id], 'mouseout', function() {
-                                    if (mapinfobox) {
-                                        mapinfobox.close();
-                                    }
-                                });
+                                if (isDesktop) {
+                                    google.maps.event.addListener(markers[marker.id], 'mouseover', infoOpen);
+                                    google.maps.event.addListener(markers[marker.id], 'mouseout', infoClose);
+
+                                } else {
+                                    google.maps.event.addListener(markers[marker.id], 'click', infoOpen);
+                                }
+
                                 break;
                         }
                     }
