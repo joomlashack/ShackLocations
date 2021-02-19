@@ -23,13 +23,18 @@
  */
 
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\FormModel;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-class FocalpointModelMap extends JModelForm
+class FocalpointModelMap extends FormModel
 {
     /**
      * @var object
@@ -38,6 +43,7 @@ class FocalpointModelMap extends JModelForm
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function populateState()
     {
@@ -69,7 +75,7 @@ class FocalpointModelMap extends JModelForm
                     // Check published state.
                     $published = $this->getState('filter.published');
                     if (!$published || ($published == $table->state)) {
-                        $this->item = new JObject($table->getProperties());
+                        $this->item = new CMSObject($table->getProperties());
 
                         $this->item->tabsdata = json_decode($this->item->tabsdata) ?: new stdClass();
                         $this->item->metadata = new Registry($this->item->metadata);
@@ -82,7 +88,7 @@ class FocalpointModelMap extends JModelForm
                         $this->item->tabsdata->tabs = $mapTabs;
 
                         // Load the item params merged from component config
-                        $params = JComponentHelper::getParams('com_focalpoint');
+                        $params = ComponentHelper::getParams('com_focalpoint');
                         $params->merge(new Registry($this->item->params));
                         $this->item->params = $params;
 
@@ -94,7 +100,7 @@ class FocalpointModelMap extends JModelForm
                 }
 
             } else {
-                $this->setError(JText::_('JGLOBAL_RESOURCE_NOT_FOUND'));
+                $this->setError(Text::_('JGLOBAL_RESOURCE_NOT_FOUND'));
             }
         }
 
@@ -104,17 +110,17 @@ class FocalpointModelMap extends JModelForm
     /**
      * @inheritDoc
      */
-    public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = [])
+    public function getTable($name = 'Map', $prefix = 'FocalpointTable', $options = [])
     {
-        $this->addTablePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
+        static::addTablePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
 
-        return Table::getInstance($type, $prefix, $config);
+        return Table::getInstance($name, $prefix, $options);
     }
 
     /**
      * @inheritDoc
      */
-    public function getForm($customFieldsData = [], $loadData = true)
+    public function getForm($data = [], $loadData = true)
     {
         // We aren't using forms in this model
         return null;
@@ -214,7 +220,7 @@ class FocalpointModelMap extends JModelForm
             } else {
                 $result->marker = $params->get('marker');
             }
-            $result->marker = JUri::base() . $result->marker;
+            $result->marker = Uri::base() . $result->marker;
             unset($result->marker_location, $result->marker_type);
 
             /*
@@ -268,8 +274,6 @@ class FocalpointModelMap extends JModelForm
                         }
                     }
                     break;
-
-
             }
             unset($result->altlink, $result->maplink);
 
@@ -278,7 +282,7 @@ class FocalpointModelMap extends JModelForm
             }
 
             // check format of address field
-            $result->address = str_replace("||", " <br>", $result->address);
+            $result->address = str_replace('||', '<br>', $result->address);
 
             // Decode the custom field data
             if (!empty($result->customfieldsdata)) {
@@ -300,14 +304,16 @@ class FocalpointModelMap extends JModelForm
 
                 $result->customfields = new stdClass();
                 foreach ($customFieldsData as $field => $value) {
-                    $segments = explode(".", $field);
+                    $segments = explode('.', $field);
 
                     $dataType = $segments[0];
                     $fieldKey = join('.', $segments);
 
-                    // Before adding the custom field data to the results we first need to check field settings matches
-                    // the data. This is required in case the admin changes or deletes a custom field
-                    // from the location type but the data still exists in the location items record.
+                    /*
+                     * Before adding the custom field data to the results we first need to check field settings matches
+                     * the data. This is required in case the admin changes or deletes a custom field
+                     * from the location type but the data still exists in the location items record.
+                     */
                     if (!empty($fieldSettings->{$fieldKey})) {
                         $field = $fieldSettings->{$fieldKey};
 
