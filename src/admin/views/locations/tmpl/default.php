@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
@@ -56,13 +57,11 @@ if ($saveOrder) {
         <div id="j-sidebar-container" class="span2">
             <?php echo $this->sidebar; ?>
         </div>
-    <?php
-    endif;
-    ?>
+    <?php endif; ?>
     <div id="j-main-container" class="<?php echo $mainClass; ?>">
         <?php
         if ($task != "congratulations") :
-            echo JLayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
@@ -71,14 +70,11 @@ if ($saveOrder) {
                 <div class="hero-unit" style="text-align:left;">
                     <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_LOCATIONS_NEW'); ?>
                 </div>
-            <?php
-            else :
-                ?>
+            <?php else : ?>
                 <div class="alert alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-            <?php
-            endif;
+            <?php endif;
 
         else :
             ?>
@@ -206,9 +202,7 @@ if ($saveOrder) {
                                        name="order[]"
                                        size="5"
                                        value="<?php echo $item->ordering; ?>"/>
-                            <?php
-                            endif;
-                            ?>
+                            <?php endif; ?>
                         </td>
 
                         <td class="center hidden-phone">
@@ -275,9 +269,7 @@ if ($saveOrder) {
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                <?php
-                endforeach;
-                ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
             <?php

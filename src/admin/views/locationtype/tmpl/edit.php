@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die;
 
@@ -47,7 +48,7 @@ HTMLHelper::_('jquery.ui', ['core', 'sortable']);
       id="adminForm"
       class="form-validate">
     <?php
-    echo JLayoutHelper::render('joomla.edit.title_alias', $this);
+    echo LayoutHelper::render('joomla.edit.title_alias', $this);
 
     echo $this->form->renderFieldset('hidden');
 

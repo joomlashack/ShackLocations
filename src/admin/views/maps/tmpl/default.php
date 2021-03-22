@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
@@ -43,7 +44,6 @@ if ($saveOrder) {
     HTMLHelper::_('sortablelist.sortable', 'mapsList', 'adminForm', strtolower($listDir), $saveOrderingUrl);
 }
 ?>
-
 <form action="<?php echo Route::_('index.php?option=com_focalpoint&view=maps'); ?>"
       method="post"
       name="adminForm"
@@ -56,7 +56,7 @@ if ($saveOrder) {
     <div id="j-main-container" class="span10">
         <?php
         if ($task != "showhelp") :
-            echo JLayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
@@ -68,16 +68,12 @@ if ($saveOrder) {
                         <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_MAPS_NEW'); ?>
                     </div>
                 </div>
-            <?php
-            else :
-                ?>
+            <?php else : ?>
                 <div class="alert alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-            <?php
-            endif;
-        else :
-            ?>
+            <?php endif;
+        else : ?>
             <table class="table table-striped" id="mapsList">
                 <thead>
                 <tr>
@@ -130,7 +126,14 @@ if ($saveOrder) {
                     </th>
 
                     <th width="1%" class="nowrap hidden-phone">
-                        <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDir, $listOrder); ?>
+                        <?php
+                        echo HTMLHelper::_(
+                            'searchtools.sort',
+                            'JGRID_HEADING_ID',
+                            'a.id',
+                            $listDir,
+                            $listOrder
+                        ); ?>
                     </th>
                 </tr>
                 </thead>
@@ -166,9 +169,7 @@ if ($saveOrder) {
                                        name="order[]"
                                        size="5"
                                        value="<?php echo $item->ordering; ?>"/>
-                            <?php
-                            endif;
-                            ?>
+                            <?php endif; ?>
                         </td>
 
                         <td class="center hidden-phone">
@@ -177,7 +178,15 @@ if ($saveOrder) {
 
                         <td class="center">
                             <div class="btn-group">
-                                <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, 'maps.', $canChange, 'cb'); ?>
+                                <?php
+                                echo HTMLHelper::_(
+                                    'jgrid.published',
+                                    $item->state,
+                                    $i,
+                                    'maps.',
+                                    $canChange,
+                                    'cb'
+                                ); ?>
                             </div>
                         </td>
 
@@ -216,9 +225,7 @@ if ($saveOrder) {
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                <?php
-                endforeach;
-                ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
             <?php
@@ -231,4 +238,3 @@ if ($saveOrder) {
         <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
-

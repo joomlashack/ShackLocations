@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die;
 
@@ -45,7 +46,7 @@ HTMLHelper::_('formbehavior.chosen', 'select');
       enctype="multipart/form-data"
       class="form-validate">
     <?php
-    echo JLayoutHelper::render('joomla.edit.title_alias', $this);
+    echo LayoutHelper::render('joomla.edit.title_alias', $this);
     ?>
     <div class="row-fluid">
         <div class="form-horizontal">
