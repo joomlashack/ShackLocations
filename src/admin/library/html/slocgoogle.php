@@ -24,7 +24,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
@@ -88,7 +88,7 @@ abstract class JhtmlSlocGoogle
 
         $options = json_encode([
             'canvasId'       => $params->get('canvasId', 'fp_googleMap'),
-            'clusterOptions' => $params->get('clusterOptions', null),
+            'clusterOptions' => $params->get('clusterOptions'),
             'fitBounds'      => (bool)$params->get('fitbounds'),
             'mapProperties'  => [
                 'center'                   => [
@@ -145,38 +145,29 @@ JSINIT;
      */
     protected static function infoboxContent($marker)
     {
-        //Assemble the infobox.
-        $infoDescription = [];
-        if ($marker->params->get('infoshowaddress') && $marker->address != '') {
-            $infoDescription[] = '<p>' . Text::_($marker->address) . '</p>';
-        }
-        if ($marker->params->get('infoshowphone') && $marker->phone != '') {
-            $infoDescription[] = '<p>' . Text::_($marker->phone) . '</p>';
-        }
-        if ($marker->params->get('infoshowintro') && $marker->description != '') {
-            $infoDescription[] = '<p>' . Text::_($marker->description) . '</p>';
-        }
+        $link = ($marker->params->get('infopopupevent') !== 'hover')
+            ? static::infoboxLink($marker)
+            : '';
 
-        $boxText = sprintf(
-            '<h4>%s</h4><div class="infoboxcontent">%s',
-            $marker->title,
-            join('', $infoDescription)
+        $content = LayoutHelper::render(
+            'marker.infobox.content',
+            [
+                'marker' => $marker,
+                'params' => $marker->params,
+                'link'   => $link
+            ]
         );
-        if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $boxText, $images)) {
+
+        if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $content, $images)) {
             $fixed = [];
             foreach ($images[0] as $idx => $source) {
                 $imageUri    = HTMLHelper::_('image', $images[1][$idx], null, null, false, 1);
                 $fixed[$idx] = str_replace($images[1][$idx], $imageUri, $source);
             }
-            $boxText = str_replace($images[0], $fixed, $boxText);
+            $content = str_replace($images[0], $fixed, $content);
         }
 
-        if ($marker->params->get('infopopupevent') !== 'hover') {
-            $boxText .= static::infoboxLink($marker);
-        }
-        $boxText .= '<div class="infopointer"></div></div>';
-
-        return str_replace(["\t", "\n", "\r",], [' ', ''], $boxText);
+        return str_replace(["\t", "\n", "\r",], [' ', ''], $content);
     }
 
     /**
@@ -187,14 +178,12 @@ JSINIT;
     protected static function infoboxLink($marker)
     {
         if ($marker->link) {
-            return sprintf(
-                '<p class="infoboxlink">%s</p>',
-                HTMLHelper::_(
-                    'link',
-                    Route::_($marker->link),
-                    Text::_('COM_FOCALPOINT_FIND_OUT_MORE'),
-                    ['title' => $marker->title]
-                )
+            return LayoutHelper::render(
+                'marker.infobox.link',
+                [
+                    'marker' => $marker,
+                    'params' => $marker->params
+                ]
             );
         }
 
