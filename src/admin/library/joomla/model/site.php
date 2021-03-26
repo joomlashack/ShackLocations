@@ -28,48 +28,8 @@ defined('_JEXEC') or die();
 abstract class FocalpointModelSite extends FormModel
 {
     /**
-     * @param string|object $customFieldsData
-     * @param int           $locationType
+     * @param object $location
      *
-     * @return object
-     */
-    protected function xprocessCustomFields($customFieldsData, $locationType)
-    {
-        $customFields     = null;
-        $customFieldsData = is_string($customFieldsData) ? json_decode($customFieldsData) : $customFieldsData;
-
-        if ($customFieldsData && is_object($customFieldsData)) {
-            /*
-             * Grab the location type record so we can match up the label. We don't save the labels with the data.
-             * This is so we can change individual labels at any time without having to update every record.
-             */
-            $db = $this->getDbo();
-
-            $query = $db->getQuery(true)
-                ->select('customfields')
-                ->from('#__focalpoint_locationtypes')
-                ->where('id = ' . $locationType);
-
-            $fieldSettings = (json_decode($db->setQuery($query)->loadResult()));
-
-            $customFields = (object)[];
-            foreach ($customFieldsData as $fieldName => $value) {
-                $field = empty($fieldSettings->{$fieldName}) ? null : $fieldSettings->{$fieldName};
-                if (is_object($field)) {
-                    $customFields->{$field->name} = (object)[
-                        'datatype' => $field->type,
-                        'label'    => $field->label,
-                        'data'     => $value
-                    ];
-                }
-            }
-        }
-
-        return $customFields;
-    }
-
-    /**
-     * @return object
      */
     protected function formatCustomFields($location)
     {
