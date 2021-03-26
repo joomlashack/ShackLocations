@@ -77,7 +77,7 @@ class FocalpointModelLocation extends FocalpointModelSite
                 $properties = $table->getProperties(1);
                 $this->item = ArrayHelper::toObject($properties, 'JObject');
 
-                $this->item->customfields = $this->formatCustomFields($this->item);
+                $this->formatCustomFields($this->item);
                 $this->item->marker       = $this->getMarker($this->item);
                 $this->item->address      = str_replace('||', ' <br>', $this->item->address);
                 $this->item->backlink     = $this->getBackLink($this->item->map_id);

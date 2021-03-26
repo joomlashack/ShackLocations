@@ -40,6 +40,7 @@ abstract class FocalpointModelSite extends FormModel
 
         if ($customFieldsData && $type) {
             $customFieldsData = json_decode($customFieldsData, true);
+            unset($location->customfieldsdata);
 
             $db = $this->getDbo();
 
@@ -68,9 +69,7 @@ abstract class FocalpointModelSite extends FormModel
                 }
             }
 
-            $customFields = (object)$customFields;
+            $location->customfields = (object)$customFields;
         }
-
-        return $customFields;
     }
 }
