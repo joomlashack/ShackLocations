@@ -177,7 +177,7 @@ JSINIT;
      */
     protected static function infoboxLink($marker)
     {
-        if ($marker->link) {
+        if (!empty($marker->link)) {
             return LayoutHelper::render(
                 'marker.infobox.link',
                 [
