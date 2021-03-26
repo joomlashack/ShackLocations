@@ -30,10 +30,11 @@ abstract class FocalpointModelSite extends FormModel
     /**
      * @param object $location
      *
+     * @return void
      */
     protected function formatCustomFields($location)
     {
-        $customFields = null;
+        $location->customfields = null;
 
         $customFieldsData = empty($location->customfieldsdata) ? null : $location->customfieldsdata;
         $type             = empty($location->type) ? null : $location->type;
