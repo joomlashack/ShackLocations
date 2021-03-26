@@ -117,30 +117,11 @@ class FocalpointViewMap extends FocalpointViewSite
         $this->setDocumentMetadata($this->item->metadata);
 
         // Scan for custom field tags in the description and replace accordingly.
-        foreach ($this->item->markerdata as &$markerdata) {
-            $regex = '/{(.*?)}/i';
-            preg_match_all($regex, $markerdata->description, $matches, PREG_SET_ORDER);
-
-            if (!empty($matches) && !empty($markerdata->customfields)) {
-                foreach ($matches as $match) {
-                    foreach ($markerdata->customfields as $name => $customfield) {
-                        if ($name == $match[1]) {
-                            $this->outputfield = (object)[
-                                'hidelabel' => true,
-                                'data'      => $customfield->data
-                            ];
-
-                            ob_start();
-                            echo $this->loadTemplate('customfield_' . $customfield->datatype);
-                            $output = ob_get_contents();
-                            ob_end_clean();
-
-                            $markerdata->description = str_replace($match[0], $output, $markerdata->description);
-                        }
-
-                    }
-                }
-            }
+        foreach ($this->item->markerdata as $markerdata) {
+            $markerdata->description = $this->replaceFieldTokens(
+                $markerdata->description,
+                $markerdata->customfields
+            );
         }
 
         // Load FocalPoint Plugins. Trigger onSlocmapBeforeRender

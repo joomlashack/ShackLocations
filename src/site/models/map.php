@@ -26,7 +26,6 @@ use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
@@ -34,7 +33,7 @@ use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-class FocalpointModelMap extends FormModel
+class FocalpointModelMap extends FocalpointModelSite
 {
     /**
      * @var object
@@ -284,48 +283,7 @@ class FocalpointModelMap extends FormModel
             // check format of address field
             $result->address = str_replace('||', '<br>', $result->address);
 
-            // Decode the custom field data
-            if (!empty($result->customfieldsdata)) {
-                $customFieldsData = json_decode($result->customfieldsdata);
-
-                /*
-                 * Grab the location type record so we can match up the label. We don't save the labels with the data.
-                 * This is so we can change individaul labels at any time without having to update every record.
-                 *
-                 */
-                $db = $this->getDbo();
-
-                $query = $db->getQuery(true)
-                    ->select('customfields')
-                    ->from('#__focalpoint_locationtypes')
-                    ->where('id = ' . $result->type);
-
-                $fieldSettings = (json_decode($db->setQuery($query)->loadResult()));
-
-                $result->customfields = new stdClass();
-                foreach ($customFieldsData as $field => $value) {
-                    $segments = explode('.', $field);
-
-                    $dataType = $segments[0];
-                    $fieldKey = join('.', $segments);
-
-                    /*
-                     * Before adding the custom field data to the results we first need to check field settings matches
-                     * the data. This is required in case the admin changes or deletes a custom field
-                     * from the location type but the data still exists in the location items record.
-                     */
-                    if (!empty($fieldSettings->{$fieldKey})) {
-                        $field = $fieldSettings->{$fieldKey};
-
-                        $result->customfields->{$field->name} = (object)[
-                            'datatype' => $dataType,
-                            'label'    => $field->label,
-                            'data'     => $value
-                        ];
-                    }
-                }
-            }
-            unset($result->customfieldsdata);
+            $this->formatCustomFields($result);
         }
 
         return $results;
