@@ -75,7 +75,7 @@ class FocalpointModelLocation extends FocalpointModelSite
                 }
 
                 $properties = $table->getProperties(1);
-                $this->item = ArrayHelper::toObject($properties, 'JObject');
+                $this->item = ArrayHelper::toObject($properties, '\\Joomla\\CMS\\Object\\CMSObject');
 
                 $this->formatCustomFields($this->item);
                 $this->item->marker       = $this->getMarker($this->item);
