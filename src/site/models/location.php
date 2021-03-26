@@ -26,7 +26,6 @@ use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
@@ -34,7 +33,7 @@ use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
 
-class FocalpointModelLocation extends FormModel
+class FocalpointModelLocation extends FocalpointModelSite
 {
     /**
      * @var CMSObject
@@ -141,50 +140,6 @@ class FocalpointModelLocation extends FormModel
         }
 
         return null;
-    }
-
-    /**
-     * @param CMSObject $location
-     *
-     * @return object
-     */
-    protected function formatCustomFields(JObject $location)
-    {
-        $customFieldsData = json_decode($location->get('customfieldsdata'), true);
-
-        $type = (int)$location->get('type');
-
-        if (!$customFieldsData || !$type) {
-            return null;
-        }
-
-        $db = $this->getDbo();
-
-        $query = $db->getQuery(true)
-            ->select('customfields')
-            ->from('#__focalpoint_locationtypes')
-            ->where('id = ' . $type);
-
-        $customFields  = [];
-        $fieldSettings = json_decode($db->setQuery($query)->loadResult());
-        if ($fieldSettings) {
-            foreach ($fieldSettings as $hash => $customField) {
-                if (!empty($customFieldsData[$hash])) {
-                    $fieldName = $customField->name;
-                    $fieldData = $customFieldsData[$hash];
-
-                    if (isset($fieldData[$fieldName])) {
-                        $customFields[$fieldName] = (object)[
-                            'datatype' => $customField->type,
-                            'label'    => $customField->label,
-                            'data'     => $fieldData[$fieldName]
-                        ];
-                    }
-                }
-            }
-        }
-
-        return (object)$customFields;
     }
 
     /**

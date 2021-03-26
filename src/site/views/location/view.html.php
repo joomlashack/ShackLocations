@@ -102,87 +102,18 @@ class FocalpointViewLocation extends FocalpointViewSite
         $this->item->fulldescription = $this->item->text;
         unset($this->item->text);
 
-        $this->item->description     = $this->replaceCustomFieldTags($this->item->description);
-        $this->item->fulldescription = $this->replaceCustomFieldTags($this->item->fulldescription);
+        $this->item->description     = $this->replaceFieldTokens(
+            $this->item->description,
+            $this->item->customfields
+        );
+        $this->item->fulldescription = $this->replaceFieldTokens(
+            $this->item->fulldescription,
+            $this->item->customfields
+        );
 
         $this->setDocumentTitle($this->item->title);
         $this->setDocumentMetadata($this->item->metadata);
 
         parent::display($tpl);
-    }
-
-    /**
-     * Replaces all custom field tags in the text.
-     *
-     * @param string $text
-     *
-     * @return string
-     * @throws Exception
-     */
-    protected function replaceCustomFieldTags($text)
-    {
-        $regex = '/{(.*?)}/i';
-        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-
-        if (!empty($matches)) {
-            foreach ($matches as $match) {
-                foreach ($this->item->customfields as $name => $customfield) {
-                    if ($name == $match[1]) {
-                        $this->outputfield = (object)array(
-                            'hidelabel' => true,
-                            'data'      => $customfield->data
-                        );
-
-                        ob_start();
-                        echo $this->loadTemplate('customfield_' . $customfield->datatype);
-                        $output = ob_get_contents();
-                        ob_end_clean();
-
-                        $text = str_replace($match[0], $output, $text);
-                    }
-                }
-            }
-        }
-
-        return $text;
-    }
-
-    /**
-     * Renders a custom field using the relevant template.
-     *
-     * @param object $field
-     * @param bool   $hidelabel
-     *
-     * @return string
-     * @throws Exception
-     *
-     */
-    protected function renderField($field, $hidelabel = false)
-    {
-        if (!empty($field->datatype)) {
-            $data = array_merge(
-                get_object_vars($field),
-                [
-                    'showlabel' => !$hidelabel
-                ]
-            );
-
-            return LayoutHelper::render('custom.field.' . $field->datatype, $data);
-        }
-
-        return '';
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     *
-     * @deprecated v1.4.0
-     */
-    protected function renderCustomField()
-    {
-        Factory::getApplication()->enqueueMessage(
-            'The template override is using an obsolete method and requires updating'
-        );
     }
 }
