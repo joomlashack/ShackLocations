@@ -23,6 +23,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die();
 
@@ -56,5 +57,77 @@ class FocalpointViewSite extends FocalpointView
         ob_end_clean();
 
         return $content;
+    }
+
+    /**
+     * Renders a custom field using the relevant template.
+     *
+     * @param object $field
+     * @param bool   $hidelabel
+     *
+     * @return string
+     * @throws Exception
+     *
+     */
+    protected function renderField($field, $hidelabel = false)
+    {
+        if (!empty($field->datatype)) {
+            $data = array_merge(
+                get_object_vars($field),
+                [
+                    'showlabel' => !$hidelabel
+                ]
+            );
+
+            return LayoutHelper::render('custom.field.' . $field->datatype, $data);
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $string
+     * @param object $customFields
+     *
+     * @return string
+     */
+    protected function replaceFieldTokens($string, $customFields)
+    {
+        if (!empty($customFields)) {
+            preg_match_all('/{(.*?)}/i', $string, $matches, PREG_SET_ORDER);
+
+            if ($matches) {
+                foreach ($matches as $match) {
+                    foreach ($customFields as $name => $customField) {
+                        if ($name == $match[1]) {
+                            $output = LayoutHelper::render(
+                                'custom.field.' . $customField->datatype,
+                                [
+                                    'label' => $customField->label,
+                                    'data'  => $customField->data
+                                ]
+                            );
+
+                            $string = str_replace($match[0], $output, $string);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $string;
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     *
+     * @deprecated v1.4.0
+     */
+    protected function renderCustomField()
+    {
+        Factory::getApplication()->enqueueMessage(
+            'The template override is using an obsolete method and requires updating'
+        );
     }
 }
