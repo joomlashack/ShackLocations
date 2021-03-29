@@ -7,7 +7,7 @@
     <author>Joomlashack</author>
     <authorEmail>help@joomlashack.com</authorEmail>
     <authorUrl>https://www.joomlashack.com</authorUrl>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <description>COM_FOCALPOINT_DESCRIPTION</description>
     <variant>FREE</variant>
 
@@ -75,7 +75,6 @@
             <filename>controller.php</filename>
             <filename>focalpoint.php</filename>
             <filename>include.php</filename>
-            <filename>README.md</filename>
         </files>
     </administration>
 
