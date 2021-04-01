@@ -49,12 +49,12 @@ if (!defined('SLOC_LOADED')) {
             JLoader::register('FocalpointHelper', __DIR__ . '/helpers/focalpoint.php');
             JLoader::register('mapsAPI', __DIR__ . '/helpers/maps.php');
 
-            // Alledia Framework
             if (!defined('ALLEDIA_FRAMEWORK_LOADED')) {
                 $allediaFrameworkPath = JPATH_SITE . '/libraries/allediaframework/include.php';
 
                 if (file_exists($allediaFrameworkPath)) {
                     require_once $allediaFrameworkPath;
+
                 } else {
                     Factory::getApplication()
                         ->enqueueMessage(JText::_('COM_FOCALPOINT_ERROR_FRAMEWORK_NOT_FOUND'), 'error');
