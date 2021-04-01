@@ -24,6 +24,8 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
@@ -42,6 +44,9 @@ if (!defined('SLOC_LOADED')) {
     switch (Factory::getApplication()->getName()) {
         case 'site':
             HTMLHelper::_('stylesheet', 'com_focalpoint/focalpoint.css', ['relative' => true]);
+
+            Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
+            BaseDatabaseModel::addIncludePath(SLOC_SITE . '/models');
             break;
 
         case 'administrator':
