@@ -33,6 +33,13 @@ use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
+if (!defined('SLOC_LOADED')) {
+    $include = JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
+    if (is_file($include)) {
+        require_once $include;
+    }
+}
+
 class FocalpointModelMap extends FocalpointModelSite
 {
     /**
@@ -111,8 +118,6 @@ class FocalpointModelMap extends FocalpointModelSite
      */
     public function getTable($name = 'Map', $prefix = 'FocalpointTable', $options = [])
     {
-        static::addTablePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
-
         return Table::getInstance($name, $prefix, $options);
     }
 
