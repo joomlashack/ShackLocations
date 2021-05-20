@@ -32,10 +32,10 @@ defined('_JEXEC') or die();
 abstract class JhtmlSlocGoogle
 {
     /**
-     * @param int            $id
-     * @param Registry|mixed $params
-     * @param object|array   $center
-     * @param object[]       $markerData
+     * @param int             $id
+     * @param mixed           $params
+     * @param object|array    $center
+     * @param object|object[] $markerData
      *
      * @return void
      * @throws Exception

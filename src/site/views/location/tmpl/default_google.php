@@ -22,7 +22,6 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die();
 
@@ -35,5 +34,4 @@ $params->zoom = $this->item->params->get('zoomin');
 
 $mapId = 'L' . $this->item->id;
 
-HTMLHelper::_('slocgoogle.map', $mapId, $params, $center, [$this->item]);
-
+HTMLHelper::_('slocgoogle.map', $mapId, $params, $center, $this->item);
