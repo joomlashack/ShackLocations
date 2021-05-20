@@ -155,7 +155,9 @@ JSINIT;
                 'marker' => $marker,
                 'params' => $marker->params,
                 'link'   => $link
-            ]
+            ],
+            null,
+            ['component' => 'com_focalpoint']
         );
 
         if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $content, $images)) {
