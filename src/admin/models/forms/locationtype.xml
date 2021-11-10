@@ -9,16 +9,16 @@
     <fieldset name="heading">
         <field name="title"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_TITLE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_TITLE"
+               label="COM_FOCALPOINT_FORM_LOCATIONTYPE_TITLE_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATIONTYPE_TITLE_DESC"
                required="true"
                filter="string"
                maxlength="150"/>
 
         <field name="alias"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_ALIAS"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_ALIAS"
+               label="COM_FOCALPOINT_FORM_LOCATIONTYPE_ALIAS_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATIONTYPE_ALIAS_DESC"
                required="false"
                filter="safehtml"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
@@ -38,20 +38,20 @@
 
         <field name="legend"
                type="shacklocations.legend"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_LEGEND"
+               label="COM_FOCALPOINT_FORM_LOCATIONTYPE_LEGEND_LBL"
                required="true"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_LEGEND"/>
+               description="COM_FOCALPOINT_FORM_LOCATIONTYPE_LEGEND_DESC"/>
 
         <field name="marker"
                type="media"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_MARKER"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_MARKER"
+               label="COM_FOCALPOINT_FORM_LOCATIONTYPE_MARKER_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATIONTYPE_MARKER_DESC"
                directory="markers"/>
 
         <field name="created_by"
                type="user"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATIONTYPE_CREATED_BY"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATIONTYPE_CREATED_BY"/>
+               label="COM_FOCALPOINT_FORM_LOCATIONTYPE_CREATED_BY_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATIONTYPE_CREATED_BY_DESC"/>
     </fieldset>
 
     <fieldset name="customfields">

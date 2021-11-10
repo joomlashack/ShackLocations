@@ -10,15 +10,15 @@
         <field name="title"
                type="text"
                class="inputbox input-xxlarge input-large-text"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_TITLE"
-               description="COM_FOCALPOINT_FORM_DESC_LEGEND_TITLE"
+               label="COM_FOCALPOINT_FORM_LEGEND_TITLE_LBL"
+               description="COM_FOCALPOINT_FORM_LEGEND_TITLE_DESC"
                required="true"
                maxlength="150"/>
 
         <field name="alias"
                type="text"
                class="inputbox"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_ALIAS"
+               label="COM_FOCALPOINT_FORM_LEGEND_ALIAS_LBL"
                required="false"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
@@ -37,15 +37,15 @@
 
         <field name="subtitle"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_SUBTITLE"
-               description="COM_FOCALPOINT_FORM_DESC_LEGEND_SUBTITLE"
+               label="COM_FOCALPOINT_FORM_LEGEND_SUBTITLE_LBL"
+               description="COM_FOCALPOINT_FORM_LEGEND_SUBTITLE_DESC"
                size="30"
                maxlength="300"/>
 
         <field name="created_by"
                type="user"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_CREATED_BY"
-               description="COM_FOCALPOINT_FORM_DESC_LEGEND_CREATED_BY"/>
+               label="COM_FOCALPOINT_FORM_LEGEND_CREATED_BY_LBL"
+               description="COM_FOCALPOINT_FORM_LEGEND_CREATED_BY_DESC"/>
     </fieldset>
 
 </form>

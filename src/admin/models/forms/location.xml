@@ -4,15 +4,15 @@
     <fieldset>
         <field name="title"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_TITLE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_TITLE"
+               label="COM_FOCALPOINT_FORM_LOCATION_TITLE_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_TITLE_DESC"
                required="true"
                filter="string"
                maxlength="150"/>
 
         <field name="alias"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ALIAS"
+               label="COM_FOCALPOINT_FORM_LOCATION_ALIAS_LBL"
                filter="safehtml"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
@@ -25,12 +25,12 @@
               label="COM_FOCALPOINT_LOCATION_BASIC">
         <field name="image"
                type="media"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_IMAGE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_IMAGE"/>
+               label="COM_FOCALPOINT_FORM_LOCATION_IMAGE_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_IMAGE_DESC"/>
 
         <field name="description" type="editor"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_DESCRIPTION"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_DESCRIPTION"
+               label="COM_FOCALPOINT_FORM_LOCATION_DESCRIPTION_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_DESCRIPTION_DESC"
                height="250"
                filter="JComponentHelper::filterText"
                buttons="true"/>
@@ -50,16 +50,16 @@
 
         <field name="map_id"
                type="shacklocations.map"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MAP_ID"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MAP_ID"
+               label="COM_FOCALPOINT_FORM_LOCATION_MAP_ID_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_MAP_ID_DESC"
                required="true"
                extension="com_focalpoint"/>
 
         <field name="type"
                type="shacklocations.locationtype"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_TYPE_ALT"
+               label="COM_FOCALPOINT_FORM_LOCATION_TYPE_ALT_LBL"
                required="true"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_TYPE"/>
+               description="COM_FOCALPOINT_FORM_LOCATION_TYPE_DESC"/>
 
         <field name="othertypes"
                type="shacklocations.locationtype"
@@ -71,42 +71,42 @@
 
         <field name="address"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ADDRESS"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_ADDRESS"
+               label="COM_FOCALPOINT_FORM_LOCATION_ADDRESS_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_ADDRESS_DESC"
                maxlength="300"/>
 
         <field name="phone"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_PHONE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_PHONE"
+               label="COM_FOCALPOINT_FORM_LOCATION_PHONE_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_PHONE_DESC"
                maxlength="300"/>
 
         <field name="geocoder" type="shacklocations.geocoder"/>
 
         <field name="latitude"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_LATITUDE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_LATITUDE"
+               label="COM_FOCALPOINT_FORM_LOCATION_LATITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_LATITUDE_DESC"
                required="true"
                maxlength="30"/>
 
         <field name="longitude"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_LONGITUDE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_LONGITUDE"
+               label="COM_FOCALPOINT_FORM_LOCATION_LONGITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_LONGITUDE_DESC"
                required="true"
                maxlength="30"/>
 
         <field name="marker"
                type="media"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MARKER"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MARKER"
+               label="COM_FOCALPOINT_FORM_LOCATION_MARKER_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_MARKER_DESC"
                directory="markers"/>
 
         <field name="created_by"
                type="user"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_CREATED_BY"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_CREATED_BY"/>
+               label="COM_FOCALPOINT_FORM_LOCATION_CREATED_BY_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_CREATED_BY_DESC"/>
     </fieldset>
 
     <fieldset name="customfieldsdata"
@@ -119,8 +119,8 @@
               label="COM_FOCALPOINT_LEGEND_LINK_OPTIONS">
         <field name="linktype"
                type="list"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_LINKTYPE"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_LINKTYPE"
+               label="COM_FOCALPOINT_FORM_LOCATION_LINKTYPE_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_LINKTYPE_DESC"
                size="1"
                default="0">
             <option value="0">COM_FOCALPOINT_FORM_LINK_OPT_SELF</option>
@@ -132,15 +132,15 @@
 
         <field name="altlink"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_ALTLINK"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_ALTLINK"
+               label="COM_FOCALPOINT_FORM_LOCATION_ALTLINK_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_ALTLINK_DESC"
                maxlength="300"
                showon="linktype:1"/>
 
         <field name="maplinkid"
                type="sql"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MAPLINK_ID"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MAPLINK_ID"
+               label="COM_FOCALPOINT_FORM_LOCATION_MAPLINK_ID_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_MAPLINK_ID_DESC"
                query="SELECT `id`, `title` FROM `#__focalpoint_maps`"
                key_field="id"
                value_field="title"
@@ -150,8 +150,8 @@
 
         <field name="menulink"
                type="menuitem"
-               label="COM_FOCALPOINT_FORM_LBL_LOCATION_MENUITEM"
-               description="COM_FOCALPOINT_FORM_DESC_LOCATION_MENUITEM"
+               label="COM_FOCALPOINT_FORM_LOCATION_MENUITEM_LBL"
+               description="COM_FOCALPOINT_FORM_LOCATION_MENUITEM_DESC"
                showon="linktype:4">
             <option value="">COM_FOCALPOINT_OPTION_SELECT</option>
         </field>
@@ -200,8 +200,8 @@
         <fields name="params">
             <field name="mapTypeId"
                    type="list"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="ROADMAP">ROADMAP</option>
                 <option value="SATELLITE">SATELLITE</option>
@@ -211,8 +211,8 @@
 
             <field name="mapTypeControl"
                    type="list"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
@@ -220,8 +220,8 @@
 
             <field name="zoomin"
                    type="list"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -246,8 +246,8 @@
             <field name="zoomControl"
                    type="list"
                    class="chzn-color chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_CONTROLS_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_CONTROLS_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
@@ -255,8 +255,8 @@
 
             <field name="scrollwheel"
                    type="list"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MOUSE_ZOOM_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MOUSE_ZOOM_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
@@ -264,8 +264,8 @@
 
             <field name="draggable"
                    type="list"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_DRAGABLE_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_DRAGABLE_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
@@ -273,8 +273,8 @@
 
             <field name="panControl"
                    type="list"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_PAN_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_PAN_CONTROL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
@@ -282,8 +282,8 @@
 
             <field name="streetViewControl"
                    type="list"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_STREETVIEW_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_STREETVIEW_CONTROL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
@@ -292,8 +292,8 @@
             <field name="infoshowaddress"
                    type="list"
                    class="chzn-color chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_CONTENT_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_CONTENT_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_CONTENT_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_CONTENT_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
@@ -302,8 +302,8 @@
             <field name="infoshowphone"
                    type="list"
                    class="chzn-color chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_PHONE_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_PHONE_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
@@ -312,8 +312,8 @@
             <field name="infoshowintro"
                    type="list"
                    class="chzn-color chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_INTRO_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_INFOBOX_SHOW_INTRO_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
@@ -322,8 +322,8 @@
             <field name="getdirections"
                    type="list"
                    class="chzn-color chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_GET_DIRECTIONS_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_GET_DIRECTIONS_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>

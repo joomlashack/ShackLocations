@@ -11,15 +11,15 @@
     <fieldset>
         <field name="title"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_MAP_TITLE"
-               description="COM_FOCALPOINT_FORM_DESC_MAP_TITLE"
+               label="COM_FOCALPOINT_FORM_MAP_TITLE_LBL"
+               description="COM_FOCALPOINT_FORM_MAP_TITLE_DESC"
                required="true"
                filter="string"
                maxlength="150"/>
 
         <field name="alias"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_MAP_ALIAS"
+               label="COM_FOCALPOINT_FORM_MAP_ALIAS_LBL"
                description="JFIELD_ALIAS_DESC"
                filter="safehtml"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
@@ -28,8 +28,8 @@
     <fieldset name="basic" label="Basic Settings">
         <field name="text"
                type="editor"
-               label="COM_FOCALPOINT_FORM_LBL_MAP_DESCRIPTION"
-               description="COM_FOCALPOINT_FORM_DESC_MAP_DESCRIPTION"
+               label="COM_FOCALPOINT_FORM_MAP_DESCRIPTION_LBL"
+               description="COM_FOCALPOINT_FORM_MAP_DESCRIPTION_DESC"
                height="250"
                filter="safehtml"/>
     </fieldset>
@@ -51,24 +51,24 @@
 
         <field name="latitude"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_MAP_LATITUDE"
-               description="COM_FOCALPOINT_FORM_DESC_MAP_LATITUDE"
+               label="COM_FOCALPOINT_FORM_MAP_LATITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_MAP_LATITUDE_DESC"
                required="true"
                filter="raw"
                maxlength="30"/>
 
         <field name="longitude"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_MAP_LONGITUDE"
-               description="COM_FOCALPOINT_FORM_DESC_MAP_LONGITUDE"
+               label="COM_FOCALPOINT_FORM_MAP_LONGITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_MAP_LONGITUDE_DESC"
                required="true"
                filter="raw"
                maxlength="30"/>
 
         <field name="created_by"
                type="user"
-               label="COM_FOCALPOINT_FORM_LBL_MAP_CREATED_BY"
-               description="COM_FOCALPOINT_FORM_DESC_MAP_CREATED_BY"/>
+               label="COM_FOCALPOINT_FORM_MAP_CREATED_BY_LBL"
+               description="COM_FOCALPOINT_FORM_MAP_CREATED_BY_DESC"/>
     </fieldset>
 
     <fields name="tabsdata">
@@ -123,8 +123,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_SHOW_MARKERS_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_SHOW_MARKERS_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_SHOW_MARKERS_DESC">
                 <option value="1">JSHOW</option>
                 <option value="0">JHIDE</option>
             </field>
@@ -132,8 +132,8 @@
             <field name="mapTypeId"
                    type="list"
                    useglobal="true"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_DESC">
                 <option value="ROADMAP">ROADMAP</option>
                 <option value="SATELLITE">SATELLITE</option>
                 <option value="HYBRID">HYBRID</option>
@@ -144,8 +144,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_TYPE_CONTROL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_DESC">
                 <option value="1">JENABLED</option>
                 <option value="0">JDISABLED</option>
             </field>
@@ -156,8 +156,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_LVL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_DESC">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -182,9 +182,9 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAXZOOM_LVL_DESC">
-                <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_AUTO</option>
+                   label="COM_FOCALPOINT_FORM_CONFIG_MAXZOOM_LVL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MAXZOOM_LVL_DESC">
+                <option value="0">COM_FOCALPOINT_FORM_CONFIG_AUTO_LBL</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -210,8 +210,8 @@
             <field name="zoomin"
                    type="list"
                    useglobal="true"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_ZOOM_LVL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_ZOOM_LVL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ZOOM_LVL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ZOOM_LVL_DESC">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -236,8 +236,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_CONTROLS_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_ZOOM_CONTROLS_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_DESC">
                 <option value="1">JENABLED</option>
                 <option value="0">JDISABLED</option>
             </field>
@@ -246,8 +246,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MOUSE_ZOOM_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MOUSE_ZOOM_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_DESC">
                 <option value="1">JENABLED</option>
                 <option value="0">JDISABLED</option>
             </field>
@@ -256,8 +256,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_DRAGABLE_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_DRAGABLE_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_DESC">
                 <option value="1">JENABLED</option>
                 <option value="0">JDISABLED</option>
             </field>
@@ -266,8 +266,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_PAN_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_PAN_CONTROL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_DESC">
                 <option value="1">JENABLED</option>
                 <option value="0">JDISABLED</option>
             </field>
@@ -276,8 +276,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_STREETVIEW_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_STREETVIEW_CONTROL_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_DESC">
                 <option value="1">JENABLED</option>
                 <option value="0">JDISABLED</option>
             </field>
@@ -286,48 +286,48 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_DESC">
-                <option value="1">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_CONFIG</option>
-                <option value="0">COM_FOCALPOINT_FORM_LBL_CONFIG_MAP_SIZE_CONTROL_OPT_TEMPLATE</option>
+                   label="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_DESC">
+                <option value="1">COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_OPT_CONFIG_LBL</option>
+                <option value="0">COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_OPT_TEMPLATE_LBL</option>
             </field>
 
             <field name="mapsizex"
                    type="text"
                    useglobal="true"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_WIDTH_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_WIDTH_DESC"/>
+                   label="COM_FOCALPOINT_FORM_CONFIG_DEFAULT_WIDTH_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_DEFAULT_WIDTH_DESC"/>
 
             <field name="mapsizey"
                    type="text"
                    useglobal="true"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_HEIGHT_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_DEFAULT_HEIGHT_DESC"/>
+                   label="COM_FOCALPOINT_FORM_CONFIG_DEFAULT_HEIGHT_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_DEFAULT_HEIGHT_DESC"/>
 
             <field name="legendposition"
                    type="list"
                    useglobal="true"
                    class="chzn-single"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_DESC">
-                <option value="above">COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_OPT_ABOVE</option>
-                <option value="below">COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_OPT_BELOW</option>
-                <option value="right">COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_OPT_RIGHT</option>
-                <option value="left">COM_FOCALPOINT_FORM_LBL_CONFIG_LEGEND_POSITION_OPT_LEFT</option>
+                   label="COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_DESC">
+                <option value="above">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_ABOVE_LBL</option>
+                <option value="below">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_BELOW_LBL</option>
+                <option value="right">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_RIGHT_LBL</option>
+                <option value="left">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_LEFT_LBL</option>
             </field>
 
             <field name="sidebarx"
                    type="text"
                    useglobal="true"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_SIDEBAR_WIDTH_DESC"/>
+                   label="COM_FOCALPOINT_FORM_CONFIG_SIDEBAR_WIDTH_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_SIDEBAR_WIDTH_DESC"/>
 
             <field name="locationlist"
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_DESC">
                 <option value="1">JYES</option>
                 <option value="0">JNO</option>
             </field>
@@ -335,8 +335,8 @@
             <field name="locationorder"
                    type="list"
                    useglobal="true"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_ORDER_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_ORDER_DESC"
+                   label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ORDER_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ORDER_DESC"
                    showon="locationlist!:0">
                 <option value="ordering">COM_FOCALPOINT_OPTION_ORDERING</option>
                 <option value="title">COM_FOCALPOINT_OPTION_TITLE</option>
@@ -345,7 +345,7 @@
             <field name="locationorderdir"
                    type="list"
                    useglobal="true"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_ORDER_DIR_LBL"
+                   label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ORDER_DIR_LBL"
                    showon="locationlist:!0">
                 <option value="asc">COM_FOCALPOINT_OPTION_ASC</option>
                 <option value="desc">COM_FOCALPOINT_OPTION_DESC</option>
@@ -355,8 +355,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_GROUP_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_GROUP_DESC"
+                   label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_GROUP_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_GROUP_DESC"
                    showon="locationlist!:0">
                 <option value="1">JYES</option>
                 <option value="0">JNO</option>
@@ -366,8 +366,8 @@
                    type="list"
                    useglobal="true"
                    class="chzn-single chzn-color-state"
-                   label="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_LBL"
-                   description="COM_FOCALPOINT_FORM_LBL_CONFIG_LOCATION_LIST_TAB_FIRST_DESC"
+                   label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_TAB_FIRST_LBL"
+                   description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_TAB_FIRST_DESC"
                    showon="locationlist!:0">
                 <option value="1">JYES</option>
                 <option value="0">JNO</option>
