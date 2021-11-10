@@ -25,6 +25,7 @@
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -118,32 +119,32 @@ class FocalpointViewLocations extends JViewLegacy
     {
         $user = Factory::getUser();
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONS'), 'location');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LOCATIONS'), 'location');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::addNew('location.add');
+            ToolbarHelper::addNew('location.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolBarHelper::editList('location.edit');
+            ToolbarHelper::editList('location.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::publishList('locations.publish');
-            ToolBarHelper::unpublishList('locations.unpublish');
-            ToolBarHelper::checkin('locations.checkin');
+            ToolbarHelper::publishList('locations.publish');
+            ToolbarHelper::unpublishList('locations.unpublish');
+            ToolbarHelper::checkin('locations.checkin');
         }
 
 
         if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            ToolBarHelper::deleteList('', 'locations.delete');
+            ToolbarHelper::deleteList('', 'locations.delete');
 
         } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::trash('locations.trash');
+            ToolbarHelper::trash('locations.trash');
         }
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolBarHelper::preferences('com_focalpoint');
+            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

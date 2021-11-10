@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Utilities\ArrayHelper;
 
@@ -70,14 +71,14 @@ endif;
                 ?>
                 <div class="fp_legends_view">
                     <div class="hero-unit" style="text-align:left;">
-                        <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_LEGENDS'); ?>
+                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LEGENDS'); ?>
                     </div>
                 </div>
             <?php
             else :
                 ?>
                 <div class="alert alert-no-items">
-                    <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                    <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
             <?php
             endif;
@@ -219,7 +220,7 @@ endif;
                                         'link',
                                         JRoute::_('index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id),
                                         $this->escape($item->title),
-                                        sprintf('title="%s"', JText::_('JACTION_EDIT'))
+                                        sprintf('title="%s"', Text::_('JACTION_EDIT'))
                                     );
 
                                 else :

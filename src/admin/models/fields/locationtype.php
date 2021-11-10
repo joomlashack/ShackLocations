@@ -26,7 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
 FormHelper::loadFieldType('GroupedList');
 
@@ -54,7 +54,7 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
 
             $primaryName = (string)$this->element['primary'];
             if ($primary = $this->form->getField($primaryName)) {
-                JHtml::_('jquery.framework');
+                HTMLHelper::_('jquery.framework');
                 $js = <<<JSCODE
 (function($) {
     $(document).ready(function() {

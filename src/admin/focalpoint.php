@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 defined('_JEXEC') or die;
@@ -31,7 +32,7 @@ HTMLHelper::_('behavior.tabstate');
 
 // Access check.
 if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
-    throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+    throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
 }
 
 require_once __DIR__ . '/include.php';

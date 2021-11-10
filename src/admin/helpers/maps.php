@@ -22,6 +22,8 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die();
 
 class mapsAPI
@@ -55,7 +57,7 @@ class mapsAPI
 
             } else {
                 //Status isn't "OK". Usually the address is mistyped and Google cant geocode it.
-                throw new Exception(JText::_('COM_FOCALPOINT_GOOGLE_GEOLOCATION_ERROR') . $geocode->status);
+                throw new Exception(Text::_('COM_FOCALPOINT_GOOGLE_GEOLOCATION_ERROR') . $geocode->status);
             }
 
         } else {

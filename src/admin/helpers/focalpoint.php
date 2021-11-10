@@ -25,6 +25,7 @@
 use Alledia\Framework\Joomla\Extension\Licensed;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
+use Joomla\CMS\Language\Text;
 
 defined('_JEXEC') or die;
 
@@ -40,23 +41,23 @@ abstract class FocalpointHelper extends ContentHelper
     public static function addSubmenu($vName)
     {
         JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_MAPS'),
+            Text::_('COM_FOCALPOINT_TITLE_MAPS'),
             'index.php?option=com_focalpoint&view=maps',
             $vName == 'maps'
         );
         JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_LEGENDS'),
+            Text::_('COM_FOCALPOINT_TITLE_LEGENDS'),
             'index.php?option=com_focalpoint&view=legends',
             $vName == 'legends'
         );
         JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'),
+            Text::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'),
             'index.php?option=com_focalpoint&view=locationtypes',
             $vName == 'locationtypes'
         );
 
         JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_LOCATIONS'),
+            Text::_('COM_FOCALPOINT_TITLE_LOCATIONS'),
             'index.php?option=com_focalpoint&view=locations',
             $vName == 'locations'
         );

@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die;
@@ -82,7 +83,7 @@ class FocalpointTablelocationtype extends Table
                     $this->customfields = json_encode($customfields);
 
                 } else {
-                    $this->setError(JText::_('COM_FOCALPOINT_ERROR_CUSTOMFIELDS_INVALID'));
+                    $this->setError(Text::_('COM_FOCALPOINT_ERROR_CUSTOMFIELDS_INVALID'));
                 }
             }
             return true;

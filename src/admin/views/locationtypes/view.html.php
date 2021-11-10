@@ -25,6 +25,7 @@
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -123,31 +124,31 @@ class FocalpointViewLocationtypes extends JViewLegacy
     {
         $user = Factory::getUser();
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'), 'location');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'), 'location');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::addNew('locationtype.add');
+            ToolbarHelper::addNew('locationtype.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolBarHelper::editList('locationtype.edit');
+            ToolbarHelper::editList('locationtype.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::publishList('locationtypes.publish');
-            ToolBarHelper::unpublishList('locationtypes.unpublish');
-            ToolBarHelper::checkin('locationtypes.checkin');
+            ToolbarHelper::publishList('locationtypes.publish');
+            ToolbarHelper::unpublishList('locationtypes.unpublish');
+            ToolbarHelper::checkin('locationtypes.checkin');
         }
 
         if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            ToolBarHelper::deleteList('', 'locationtypes.delete');
+            ToolbarHelper::deleteList('', 'locationtypes.delete');
 
         } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::trash('locationtypes.trash');
+            ToolbarHelper::trash('locationtypes.trash');
         }
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolBarHelper::preferences('com_focalpoint');
+            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

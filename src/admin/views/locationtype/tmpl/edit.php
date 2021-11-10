@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die;
@@ -53,7 +54,7 @@ HTMLHelper::_('jquery.ui', ['core', 'sortable']);
     echo $this->form->renderFieldset('hidden');
 
     echo HTMLHelper::_('bootstrap.startTabSet', 'locationtype', ['active' => 'general']);
-    echo HTMLHelper::_('bootstrap.addTab', 'locationtype', 'general', JText::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
+    echo HTMLHelper::_('bootstrap.addTab', 'locationtype', 'general', Text::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
     ?>
     <div class="row-fluid">
         <div class="form-horizontal">
@@ -67,7 +68,7 @@ HTMLHelper::_('jquery.ui', ['core', 'sortable']);
         'bootstrap.addTab',
         'locationtype',
         'customfields',
-        JText::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_LABEL')
+        Text::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_LABEL')
     );
     ?>
     <div class="row-fluid">

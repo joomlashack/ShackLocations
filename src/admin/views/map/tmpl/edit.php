@@ -62,7 +62,7 @@ $formFieldsets = $this->form->getFieldsets();
 
     echo HTMLHelper::_('bootstrap.startTabSet', 'map', ['active' => 'basic']);
 
-    echo HTMLHelper::_('bootstrap.addTab', 'map', 'basic', JText::_($formFieldsets['basic']->label));
+    echo HTMLHelper::_('bootstrap.addTab', 'map', 'basic', Text::_($formFieldsets['basic']->label));
     ?>
     <div class="row-fluid">
         <div class="form-vertical">
@@ -78,7 +78,7 @@ $formFieldsets = $this->form->getFieldsets();
     echo HTMLHelper::_('bootstrap.endTab');
 
     $tabFieldset = $formFieldsets['tabs'];
-    echo HTMLHelper::_('bootstrap.addTab', 'map', 'tabs', JText::_($tabFieldset->label));
+    echo HTMLHelper::_('bootstrap.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
     ?>
     <div class="row-fluid">
         <div class="form-vertical">

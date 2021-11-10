@@ -25,6 +25,7 @@
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -125,32 +126,32 @@ class FocalpointViewMaps extends JViewLegacy
     {
         $user = Factory::getUser();
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_MAPS'), 'compass');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_MAPS'), 'compass');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::addNew('map.add');
+            ToolbarHelper::addNew('map.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolBarHelper::editList('map.edit');
+            ToolbarHelper::editList('map.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::publishList('maps.publish');
-            ToolBarHelper::unpublishList('maps.unpublish');
-            ToolBarHelper::checkin('maps.checkin');
+            ToolbarHelper::publishList('maps.publish');
+            ToolbarHelper::unpublishList('maps.unpublish');
+            ToolbarHelper::checkin('maps.checkin');
         }
 
         if ($user->authorise('core.delete', 'com_focalpoint')) {
             if ($this->state->get('filter.state') == -2) {
-                ToolBarHelper::deleteList('', 'maps.delete');
+                ToolbarHelper::deleteList('', 'maps.delete');
 
             } else {
-                ToolBarHelper::trash('maps.trash');
+                ToolbarHelper::trash('maps.trash');
             }
 
             if ($user->authorise('core.admin', 'com_focalpoint')) {
-                ToolBarHelper::preferences('com_focalpoint');
+                ToolbarHelper::preferences('com_focalpoint');
             }
         }
     }

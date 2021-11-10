@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
@@ -65,12 +66,12 @@ if ($saveOrder) {
                 <div class="fp_maps_view">
                     <div id="fp_pointer"></div>
                     <div class="hero-unit" style="text-align:left;">
-                        <?php echo JText::_('COM_FOCALPOINT_GETSTARTED_MAPS_NEW'); ?>
+                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_MAPS_NEW'); ?>
                     </div>
                 </div>
             <?php else : ?>
                 <div class="alert alert-no-items">
-                    <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                    <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
             <?php endif;
         else : ?>
@@ -209,7 +210,7 @@ if ($saveOrder) {
                                         'link',
                                         Route::_('index.php?option=com_focalpoint&task=map.edit&id=' . $item->id),
                                         $this->escape($item->title),
-                                        ['title' => JText::_('JACTION_EDIT')]
+                                        ['title' => Text::_('JACTION_EDIT')]
                                     );
                                 else :
                                     echo $this->escape($item->title);

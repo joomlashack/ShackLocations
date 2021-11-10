@@ -25,6 +25,7 @@
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\ToolbarHelper;
@@ -124,31 +125,31 @@ class FocalpointViewLegends extends JViewLegacy
     {
         $user = Factory::getUser();
 
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::addNew('legend.add');
+            ToolbarHelper::addNew('legend.add');
         }
 
         if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolBarHelper::editList('legend.edit');
+            ToolbarHelper::editList('legend.edit');
         }
 
         if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::publishList('legends.publish');
-            ToolBarHelper::unpublishList('legends.unpublish');
-            ToolBarHelper::checkin('legends.checkin');
+            ToolbarHelper::publishList('legends.publish');
+            ToolbarHelper::unpublishList('legends.unpublish');
+            ToolbarHelper::checkin('legends.checkin');
         }
 
         if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            ToolBarHelper::deleteList('', 'legends.delete');
+            ToolbarHelper::deleteList('', 'legends.delete');
 
         } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::trash('legends.trash');
+            ToolbarHelper::trash('legends.trash');
         }
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolBarHelper::preferences('com_focalpoint');
+            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

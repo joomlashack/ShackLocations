@@ -25,6 +25,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -102,10 +103,10 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 )
                     ->loadResult();
 
-                $message = JText::sprintf('COM_FOCALPOINT_CUSTOMFIELDSDATA_NONE', $locationType);
+                $message = Text::sprintf('COM_FOCALPOINT_CUSTOMFIELDSDATA_NONE', $locationType);
 
             } else {
-                $message = JText::_('COM_FOCALPOINT_CUSTOMFIELDSDATA_SAVE');
+                $message = Text::_('COM_FOCALPOINT_CUSTOMFIELDSDATA_SAVE');
             }
 
 
@@ -147,10 +148,10 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 return $subField;
             }
 
-            $error = JText::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_UNKNOWN', $fieldType);
+            $error = Text::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_UNKNOWN', $fieldType);
 
         } else {
-            $error = JText::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_CONFIGURATION', $fieldType, $fieldName);
+            $error = Text::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_CONFIGURATION', $fieldType, $fieldName);
         }
 
         Factory::getApplication()->enqueueMessage('Custom field configuration issue', 'Warning');
@@ -262,7 +263,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
     protected function safeTranslate($constant)
     {
         if (Factory::getLanguage()->hasKey($constant)) {
-            return JText::_($constant);
+            return Text::_($constant);
         }
 
         return '';
@@ -373,8 +374,8 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                     'options'    => HTMLHelper::_(
                         'select.options',
                         [
-                            HTMLHelper::_('select.option', 1, JText::_('JYES')),
-                            HTMLHelper::_('select.option', 0, JText::_('JNO'))
+                            HTMLHelper::_('select.option', 1, Text::_('JYES')),
+                            HTMLHelper::_('select.option', 0, Text::_('JNO'))
                         ],
                         [
                             'option.key.toHtml'  => false,

@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
 
@@ -62,7 +63,7 @@ if (!defined('SLOC_LOADED')) {
 
                 } else {
                     Factory::getApplication()
-                        ->enqueueMessage(JText::_('COM_FOCALPOINT_ERROR_FRAMEWORK_NOT_FOUND'), 'error');
+                        ->enqueueMessage(Text::_('COM_FOCALPOINT_ERROR_FRAMEWORK_NOT_FOUND'), 'error');
                 }
             }
             break;

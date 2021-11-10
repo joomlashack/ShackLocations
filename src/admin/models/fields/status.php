@@ -24,7 +24,7 @@
 
 use Joomla\CMS\Form\FormHelper;
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die;
 
 FormHelper::loadFieldClass('predefinedlist');
 
