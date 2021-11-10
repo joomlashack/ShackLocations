@@ -22,50 +22,57 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\AutoLoader;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
-if (!defined('SLOC_LOADED')) {
-    define('SLOC_LOADED', true);
-    define('SLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
-    define('SLOC_SITE', JPATH_SITE . '/components/com_focalpoint');
-    define('SLOC_LIBRARY', SLOC_ADMIN . '/library');
+try {
+    $frameworkPath = JPATH_SITE . '/libraries/allediaframework/include.php';
+    if (is_file($frameworkPath) == false || (include $frameworkPath) == false) {
+        $app = Factory::getApplication();
 
-    // Setup autoload libraries
-    require_once SLOC_LIBRARY . '/AutoLoader.php';
-    AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
-    HTMLHelper::addIncludePath(SLOC_LIBRARY . '/html');
-
-    // Application specific loads
-    switch (Factory::getApplication()->getName()) {
-        case 'site':
-            HTMLHelper::_('stylesheet', 'com_focalpoint/focalpoint.css', ['relative' => true]);
-
-            Table::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_focalpoint/tables');
-            BaseDatabaseModel::addIncludePath(SLOC_SITE . '/models');
-            break;
-
-        case 'administrator':
-            HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
-            JLoader::register('FocalpointHelper', __DIR__ . '/helpers/focalpoint.php');
-            JLoader::register('mapsAPI', __DIR__ . '/helpers/maps.php');
-
-            if (!defined('ALLEDIA_FRAMEWORK_LOADED')) {
-                $allediaFrameworkPath = JPATH_SITE . '/libraries/allediaframework/include.php';
-
-                if (file_exists($allediaFrameworkPath)) {
-                    require_once $allediaFrameworkPath;
-
-                } else {
-                    Factory::getApplication()
-                        ->enqueueMessage(Text::_('COM_FOCALPOINT_ERROR_FRAMEWORK_NOT_FOUND'), 'error');
-                }
-            }
-            break;
+        if ($app->isClient('administrator')) {
+            $app->enqueueMessage('[ShackLocations] Joomlashack framework not found', 'error');
+        }
+        return false;
     }
+
+    if (defined('ALLEDIA_FRAMEWORK_LOADED') && !defined('SLOC_LOADED')) {
+        define('SLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
+        define('SLOC_SITE', JPATH_SITE . '/components/com_com_focalpoint');
+        define('SLOC_LIBRARY', SLOC_ADMIN . '/library');
+
+        AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
+        HTMLHelper::addIncludePath(SLOC_LIBRARY . '/html');
+
+        // Application specific loads
+        switch (Factory::getApplication()->getName()) {
+            case 'site':
+                HTMLHelper::_('stylesheet', 'com_focalpoint/focalpoint.css', ['relative' => true]);
+
+                Table::addIncludePath(SLOC_ADMIN . '/tables');
+                BaseDatabaseModel::addIncludePath(SLOC_SITE . '/models');
+                break;
+
+            case 'administrator':
+                HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
+                JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
+                JLoader::register('mapsAPI', SLOC_ADMIN . '/helpers/maps.php');
+                break;
+        }
+
+        define('SLOC_LOADED', 1);
+    }
+
+} catch (Throwable $error) {
+    Factory::getApplication()
+        ->enqueueMessage('[ShackLocations] Unable to initialize: ' . $error->getMessage(), 'error');
+
+    return false;
 }
+
+return defined('ALLEDIA_FRAMEWORK_LOADED') && defined('SLOC_LOADED');
