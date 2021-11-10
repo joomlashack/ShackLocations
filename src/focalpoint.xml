@@ -104,6 +104,7 @@
         <obsolete>
             <folder>components/com_focalpoint/helpers</folder>
 
+            <file>administrator/components/com_focalpoint/helpers/maps.php</file>
             <file>administrator/components/com_focalpoint/library/AutoLoader.php</file>
             <file>administrator/components/com_focalpoint/models/fields/createdby.php</file>
             <file>administrator/components/com_focalpoint/models/fields/custom_field.php</file>

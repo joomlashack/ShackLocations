@@ -61,7 +61,6 @@ try {
             case 'administrator':
                 HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
                 JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
-                JLoader::register('mapsAPI', SLOC_ADMIN . '/helpers/maps.php');
                 break;
         }
 
