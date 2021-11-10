@@ -22,9 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\MVC\Controller\AdminController;
+
 defined('_JEXEC') or die;
 
-class FocalpointControllerLocationtypes extends JControllerAdmin
+class FocalpointControllerLocationtypes extends AdminController
 {
     /**
      * @inheritDoc

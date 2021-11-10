@@ -28,6 +28,9 @@ defined('_JEXEC') or die();
 
 class FocalpointControllerMaps extends AdminController
 {
+    /**
+     * @inheritDoc
+     */
     public function getModel($name = 'Map', $prefix = 'FocalpointModel', $config = [])
     {
         return parent::getModel($name, $prefix, $config);
