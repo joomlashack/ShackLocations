@@ -71,8 +71,8 @@ abstract class JhtmlSlocGoogle
         HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
 
         $texts = [
-            'COM_FOCALPOINT_BUTTTON_HIDE_ALL',
-            'COM_FOCALPOINT_BUTTTON_SHOW_ALL',
+            'COM_FOCALPOINT_BUTTON_HIDE_ALL',
+            'COM_FOCALPOINT_BUTTON_SHOW_ALL',
             'COM_FOCALPOINT_ERROR_GEOCODE',
             'COM_FOCALPOINT_ERROR_OVERLAY',
             'COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED',

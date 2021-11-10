@@ -579,7 +579,7 @@
 
                 if (options.show.markers) {
                     $toggle.data('togglestate', 'off')
-                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_HIDE_ALL'));
 
                     $markerToggles.each(function() {
                         let $markerToggle = $(this);
@@ -592,7 +592,7 @@
 
                 } else {
                     $toggle.data('togglestate', 'on')
-                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
+                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_SHOW_ALL'));
 
                     $markerToggles.each(function() {
                         let $markerToggle = $(this);
@@ -627,7 +627,7 @@
 
             if ($this.data('togglestate') === 'on') {
                 $this.data('togglestate', 'off')
-                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_HIDE_ALL'));
 
                 $toggles.each(function() {
                     if (!$(this).hasClass('active')) {
@@ -637,7 +637,7 @@
 
             } else {
                 $this.data('togglestate', 'on')
-                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
+                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_SHOW_ALL'));
 
                 $toggles.each(function() {
                     if ($(this).hasClass('active')) {
@@ -699,7 +699,7 @@
                                         let $toggle = $(this);
 
                                         $toggle.data('togglestate', 'off')
-                                            .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+                                            .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_HIDE_ALL'));
 
                                         $('.markertoggles').each(function() {
                                             let $typeToggle = $(this);
