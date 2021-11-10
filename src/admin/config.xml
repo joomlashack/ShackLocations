@@ -23,7 +23,7 @@
                class="btn-group btn-group-yesno"
                default="0"
                label="COM_FOCALPOINT_FORM_CONFIG_LOAD_BOOTSTRAP_LBL"
-               description="COM_FOCALPOINT_FORM_CONFIG_LOAD_BOOTSTRAPE_DESC">
+               description="COM_FOCALPOINT_FORM_CONFIG_LOAD_BOOTSTRAP_DESC">
             <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
         </field>
