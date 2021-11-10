@@ -184,7 +184,7 @@
                    class="chzn-single"
                    label="COM_FOCALPOINT_FORM_CONFIG_MAXZOOM_LVL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_MAXZOOM_LVL_DESC">
-                <option value="0">COM_FOCALPOINT_FORM_CONFIG_AUTO_LBL</option>
+                <option value="0">COM_FOCALPOINT_OPTION_AUTO</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -288,8 +288,8 @@
                    class="chzn-single"
                    label="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_DESC">
-                <option value="1">COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_OPT_CONFIG_LBL</option>
-                <option value="0">COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_OPT_TEMPLATE_LBL</option>
+                <option value="1">COM_FOCALPOINT_OPTION_CONFIGURATION</option>
+                <option value="0">COM_FOCALPOINT_OPTION_TEMPLATE</option>
             </field>
 
             <field name="mapsizex"
@@ -310,10 +310,10 @@
                    class="chzn-single"
                    label="COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_DESC">
-                <option value="above">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_ABOVE_LBL</option>
-                <option value="below">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_BELOW_LBL</option>
-                <option value="right">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_RIGHT_LBL</option>
-                <option value="left">COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_OPT_LEFT_LBL</option>
+                <option value="above">COM_FOCALPOINT_OPTION_POSITION_ABOVE</option>
+                <option value="below">COM_FOCALPOINT_OPTION_POSITION_BELOW</option>
+                <option value="right">COM_FOCALPOINT_OPTION_POSITION_RIGHT</option>
+                <option value="left">COM_FOCALPOINT_OPTION_POSITION_LEFT</option>
             </field>
 
             <field name="sidebarx"
