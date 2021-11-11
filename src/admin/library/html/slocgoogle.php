@@ -42,7 +42,7 @@ abstract class JhtmlSlocGoogle
      */
     public static function map($id, $params, $center = null, $markerData = [])
     {
-        if (!$params instanceof Registry) {
+        if ($params instanceof Registry == false) {
             $params = new Registry($params);
         }
 
@@ -56,12 +56,16 @@ abstract class JhtmlSlocGoogle
             $center = (object)$center;
 
         }
-        if (!is_object($center) || !isset($center->lat) || !isset($center->lng)) {
+        if (
+            is_object($center) == false
+            || isset($center->lat) == false
+            || isset($center->lng) == false) {
             Factory::getApplication()->enqueueMessage('Invalid Position', 'error');
+
             return;
         }
 
-        if (!is_array($markerData)) {
+        if (is_array($markerData) == false) {
             $markerData = [$markerData];
         }
 
