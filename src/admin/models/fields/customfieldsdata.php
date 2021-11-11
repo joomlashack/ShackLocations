@@ -510,9 +510,8 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 ->from('#__focalpoint_locationtypes')
                 ->where('id = ' . (int)$this->typeField->value);
 
-            if ($customFields = $db->setQuery($query)->loadResult()) {
-                $this->customFields = json_decode($customFields, true);
-            }
+            $customFields       = $db->setQuery($query)->loadResult();
+            $this->customFields = $customFields ? json_decode($customFields, true) : [];
         }
 
         return $this->customFields;
