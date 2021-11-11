@@ -26,6 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Version;
 
 defined('_JEXEC') or die;
 
@@ -36,7 +37,9 @@ if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
 
 require_once __DIR__ . '/include.php';
 
-HTMLHelper::_('behavior.tabstate');
+if (Version::MAJOR_VERSION < 4) {
+    HTMLHelper::_('behavior.tabstate');
+}
 
 $controller = BaseController::getInstance('Focalpoint');
 $controller->execute(Factory::getApplication()->input->getCmd('task'));
