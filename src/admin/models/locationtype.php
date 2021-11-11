@@ -51,6 +51,7 @@ class FocalpointModellocationtype extends JModelAdmin
             'com_focalpoint.locationtype',
             'locationtype',
             [
+                'control'   => 'jform',
                 'load_data' => $loadData
             ]
         );
