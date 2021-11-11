@@ -23,7 +23,6 @@
  */
 
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -101,7 +100,7 @@ $formFieldsets = $this->form->getFieldsets();
 
     // Allow pluginsto add form tabs
     PluginHelper::importPlugin('focalpoint');
-    Factory::getApplication()->triggerEvent('onSlocmapTabs', [$this->form]);
+    $this->app->triggerEvent('onSlocmapTabs', [$this->form]);
 
     echo HTMLHelper::_('bootstrap.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
     ?>

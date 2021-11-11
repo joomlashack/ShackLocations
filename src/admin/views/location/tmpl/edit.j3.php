@@ -22,10 +22,10 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
@@ -49,10 +49,10 @@ $formFieldsets = $this->form->getFieldsets();
 </script>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      class="tmpl_<?php echo Factory::getApplication()->getTemplate(); ?> form-validate">
+      class="tmpl_<?php echo $this->app->getTemplate(); ?> form-validate">
 
     <?php
     echo $this->form->renderFieldset('hidden');
@@ -102,19 +102,18 @@ $formFieldsets = $this->form->getFieldsets();
                     <span class="icon-info" aria-hidden="true"></span>
                     <?php echo Text::_($fieldset->description); ?>
                 </div>
-                <?php
+            <?php
             endif;
 
             echo $this->form->renderFieldset($fieldsetName);
             echo HTMLHelper::_('bootstrap.endTab');
             ?>
         </div>
-        <?php
+    <?php
     endforeach;
 
     echo HTMLHelper::_('bootstrap.endTabSet');
     ?>
     <input type="hidden" name="task" value=""/>
     <?php echo HTMLHelper::_('form.token'); ?>
-
 </form>

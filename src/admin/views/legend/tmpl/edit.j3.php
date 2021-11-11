@@ -23,8 +23,8 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
@@ -32,57 +32,29 @@ HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('jquery.ui', ['core', 'sortable']);
 ?>
 <script type="text/javascript">
     Joomla.submitbutton = function(task) {
-        if (task === 'locationtype.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
+        if (task === 'legend.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
             Joomla.submitform(task, document.getElementById('adminForm'));
         }
     }
 </script>
-
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+<form name="adminForm"
+      id="adminForm"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      name="adminForm"
-      id="adminForm"
       class="form-validate">
     <?php
     echo LayoutHelper::render('joomla.edit.title_alias', $this);
-
-    echo $this->form->renderFieldset('hidden');
-
-    echo HTMLHelper::_('bootstrap.startTabSet', 'locationtype', ['active' => 'general']);
-    echo HTMLHelper::_('bootstrap.addTab', 'locationtype', 'general', Text::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
     ?>
     <div class="row-fluid">
         <div class="form-horizontal">
             <?php echo $this->form->renderFieldset('general'); ?>
         </div>
     </div>
-    <?php
-    echo HTMLHelper::_('bootstrap.endTab');
 
-    echo HTMLHelper::_(
-        'bootstrap.addTab',
-        'locationtype',
-        'customfields',
-        Text::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_LABEL')
-    );
-    ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
-            <?php echo $this->form->renderFieldset('customfields'); ?>
-        </div>
-    </div>
-    <?php
-
-    echo HTMLHelper::_('bootstrap.endTab');
-
-    echo HTMLHelper::_('bootstrap.endTabSet');
-
-    ?>
     <input type="hidden" name="task" value=""/>
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>

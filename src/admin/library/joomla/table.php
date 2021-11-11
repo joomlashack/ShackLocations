@@ -2,8 +2,7 @@
 /**
  * @package   ShackLocations
  * @contact   www.joomlashack.com, help@joomlashack.com
- * @copyright 2013-2017 John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @copyright 2018-2021 Joomlashack.com. All rights reserved
+ * @copyright 2021 Joomlashack.com. All rights reserved
  * @license   https://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of ShackLocations.
@@ -22,14 +21,29 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Table\Table;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-class FocalpointModelGetstarted extends ListModel
+abstract class FocalpointTable extends Table
 {
-    public function getForm()
+    /**
+     * @inheritDoc
+     */
+    public function bind($src, $ignore = [])
     {
-        return null;
+        if (parent::bind($src, $ignore)) {
+            if (property_exists($this, 'alias') && property_exists($this, 'title')) {
+                if (empty($this->alias) && $this->title) {
+                    $this->alias = $this->title;
+                }
+                $this->alias = ApplicationHelper::stringURLSafe($this->alias);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }

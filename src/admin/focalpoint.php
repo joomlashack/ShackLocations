@@ -28,7 +28,6 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 defined('_JEXEC') or die;
-HTMLHelper::_('behavior.tabstate');
 
 // Access check.
 if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
@@ -36,6 +35,8 @@ if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
 }
 
 require_once __DIR__ . '/include.php';
+
+HTMLHelper::_('behavior.tabstate');
 
 $controller = BaseController::getInstance('Focalpoint');
 $controller->execute(Factory::getApplication()->input->getCmd('task'));

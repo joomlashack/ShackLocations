@@ -22,70 +22,32 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Application\AdministratorApplication;
+use Alledia\Framework\Joomla\View\Admin\AbstractList;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewMaps extends JViewLegacy
+class FocalpointViewMaps extends AbstractList
 {
     /**
-     * @var object[]
-     */
-    protected $items = null;
-
-    /**
-     * @var Pagination
-     */
-    protected $pagination;
-
-    /**
-     * @var Form
-     */
-    public $filterForm = null;
-
-    /**
-     * @var mixed[]
-     */
-    public $activeFilters = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        /** @var AdministratorApplication $app */
-        $app = Factory::getApplication();
-
         try {
-            /** @var FocalpointModelMaps $model */
-            $model = $this->getModel();
-
-            $this->state         = $model->getState();
-            $this->items         = $model->getItems();
-            $this->pagination    = $model->getPagination();
-            $this->filterForm    = $model->getFilterForm();
-            $this->activeFilters = $model->getActiveFilters();
-
-            if ($errors = $model->getErrors()) {
-                throw new Exception(implode('<br>', $errors));
-            }
+            /** @var FocalpointModelMaps $this- >model */
+            $this->model         = $this->getModel();
+            $this->state         = $this->model->getState();
+            $this->items         = $this->model->getItems();
+            $this->pagination    = $this->model->getPagination();
+            $this->filterForm    = $this->model->getFilterForm();
+            $this->activeFilters = $this->model->getActiveFilters();
 
             FocalpointHelper::addSubmenu('maps');
-            $this->sidebar = JHtmlSidebar::render();
+            $this->sidebar = Sidebar::render();
 
             $this->addToolbar();
 
@@ -102,25 +64,18 @@ class FocalpointViewMaps extends JViewLegacy
 
             $mapsExist = $db->setQuery($query)->loadResult();
             if (!$mapsExist) {
-                $app->input->set('task', 'showhelp');
+                $this->app->input->set('task', 'showhelp');
             }
 
             parent::display($tpl);
 
-            echo FocalpointHelper::renderAdminFooter();
-
-        } catch (Exception $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
-
-        } catch (Throwable $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
     }
 
     /**
-     * Add the page title and toolbar.
-     *
-     * @since    1.6
+     * @return void
      */
     protected function addToolbar()
     {

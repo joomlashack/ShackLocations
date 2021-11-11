@@ -124,9 +124,15 @@ class ShacklocationsFormFieldMaptabs extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfield($hash, $name, $type, $label, $options)
-    {
+    protected function renderSubfield(
+        string $hash,
+        string $name,
+        string $type,
+        string $label,
+        array $options
+    ): string {
         $baseGroup = $this->group . '.' . $this->tabGroup['name'];
         $groupName = $baseGroup . '.' . $hash;
 
@@ -149,7 +155,7 @@ class ShacklocationsFormFieldMaptabs extends FormField
      *
      * @return string
      */
-    protected function getFieldBlock($fields)
+    protected function getFieldBlock($fields): string
     {
         $blockHtml = [
             '<fieldset class="clearfix">',
@@ -170,7 +176,7 @@ class ShacklocationsFormFieldMaptabs extends FormField
     /**
      * @return string
      */
-    protected function getTrashButton()
+    protected function getTrashButton(): string
     {
         if (static::$trashButton === null) {
             static::$trashButton = sprintf(
@@ -188,7 +194,7 @@ class ShacklocationsFormFieldMaptabs extends FormField
     /**
      * @return string
      */
-    protected function getInsertButton()
+    protected function getInsertButton(): string
     {
         if (static::$insertButton === null) {
             static::$insertButton = sprintf(
@@ -209,8 +215,9 @@ class ShacklocationsFormFieldMaptabs extends FormField
      * @param array $options
      *
      * @return void
+     * @throws Exception
      */
-    protected function loadAssets($options)
+    protected function loadAssets(array $options)
     {
         if (!static::$assetsLoaded) {
             HTMLHelper::_('jquery.ui', ['core', 'sortable']);
@@ -240,22 +247,22 @@ class ShacklocationsFormFieldMaptabs extends FormField
             Factory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
 ;jQuery(document).ready(function($) {
-    var dummyId    = /{$dummyId}/g,
+    let dummyId    = /{$dummyId}/g,
         fieldBlank = '{$fieldBlock}';
     
-    var deleteTab = function(evt) {
+    let deleteTab = function(evt) {
             evt.preventDefault();
             
-            var fieldset = $(this).parents('fieldset').get(0);
+            let fieldset = $(this).parents('fieldset').get(0);
             if (fieldset) {
                 $(fieldset).remove();
             }
         };
         
-    var createTab = function(evt) {
+    let createTab = function(evt) {
             evt.preventDefault();
             
-            var fieldset = $(this).parents('fieldset').get(0)
+            let fieldset = $(this).parents('fieldset').get(0)
                 \$newFieldset = $(fieldBlank.replace(dummyId, createId())); 
             if (fieldset) {
                 \$newFieldset.insertBefore($(fieldset));
@@ -266,20 +273,19 @@ class ShacklocationsFormFieldMaptabs extends FormField
             init();
         };
     
-        var createId = function() {
-            var text = "";
-            var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+        let createId = function() {
+            let text = '',
+                possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
-            for (var i = 0; i < 10; i++) {
+            for (let i = 0; i < 10; i++) {
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
             }
 
             return text;
         };
        
-    var init = function() {
+    let init = function() {
         $('.sl-subfield-wrapper').sortable({handle : 'legend',axis:'y',opacity:'0.6', distance:'1'});
-
 
         $('.sl-subfield-delete')
             .off('click', deleteTab)

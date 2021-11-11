@@ -22,48 +22,45 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\View\Admin\AbstractBase;
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
-class FocalpointViewGetstarted extends JViewLegacy
+class FocalpointViewGetstarted extends AbstractBase
 {
     /**
-     * @var CMSObject
+     * @var string
      */
-    protected $state = null;
+    protected $sidebar = null;
 
     /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        /** @var FocalpointModelGetstarted $model */
-        $model = $this->getModel();
+        $this->model = $this->getModel();
 
-        $this->state = $model->getState();
-
-        // Check for errors.
-        if ($errors = $model->getErrors()) {
-            throw new Exception(implode("\n", $errors));
-        }
+        $this->state = $this->model->getState();
 
         $this->addToolbar();
 
         $view = Factory::getApplication()->input->getCmd('view');
         FocalpointHelper::addSubmenu($view);
 
-        $this->sidebar = JHtmlSidebar::render();
+        $this->sidebar = Sidebar::render();
 
         parent::display($tpl);
     }
 
+    /**
+     * @return void
+     */
     protected function addToolbar()
     {
         ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_GETSTARTED'), 'legends.png');
@@ -71,7 +68,7 @@ class FocalpointViewGetstarted extends JViewLegacy
         $user = Factory::getUser();
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolBarHelper::preferences('com_focalpoint');
+            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

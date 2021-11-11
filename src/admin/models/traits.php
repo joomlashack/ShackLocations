@@ -33,12 +33,6 @@ trait FocalpointModelTraits
      * We're overriding a parent method to (hopefully) avoid confusion
      *
      * @inheritDoc
-     *
-     * @param int    $categoryId
-     * @param string $alias
-     * @param string $title
-     *
-     * @return array
      * @throws Exception
      */
     protected function generateNewTitle($categoryId, $alias, $title)
@@ -52,7 +46,7 @@ trait FocalpointModelTraits
         $titleField = $table->getColumnAlias('title');
 
         while ($table->load([$aliasField => $alias])) {
-            if ($title === $table->$titleField) {
+            if ($title === $table->{$titleField}) {
                 $title = StringHelper::increment($title);
             }
 
@@ -67,12 +61,12 @@ trait FocalpointModelTraits
      * them to avoid title/alias clashes with previously saved items.
      *
      * @param array $data
-     * @param int   $categoryId
+     * @param ?int   $categoryId
      *
      * @return void
      * @throws Exception
      */
-    protected function checkSave2copy(&$data, $categoryId = null)
+    protected function checkSave2copy(array &$data, ?int $categoryId = null)
     {
         $app = Factory::getApplication();
         if ($app->input->getCmd('task') == 'save2copy') {

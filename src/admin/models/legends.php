@@ -54,6 +54,7 @@ class FocalpointModellegends extends ListModel
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)
     {
@@ -77,8 +78,8 @@ class FocalpointModellegends extends ListModel
      */
     protected function getStoreId($id = '')
     {
-        $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.state');
+        $id .= ':' . $this->getState('filter.search')
+            . ':' . $this->getState('filter.state');
 
         return parent::getStoreId($id);
     }

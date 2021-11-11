@@ -22,72 +22,34 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Application\AdministratorApplication;
+use Alledia\Framework\Joomla\View\Admin\AbstractList;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
-class FocalpointViewLocations extends JViewLegacy
+class FocalpointViewLocations extends AbstractList
 {
     /**
-     * @var object[]
-     */
-    protected $items = null;
-
-    /**
-     * @var Pagination
-     */
-    protected $pagination = null;
-
-    /**
-     * @var Form
-     */
-    public $filterForm = null;
-
-    /**
-     * @var mixed[]
-     */
-    public $activeFilters = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        /** @var AdministratorApplication $app */
-        $app = Factory::getApplication();
-
         try {
-            /** @var FocalpointModellocations $model */
-            $model = $this->getModel();
+            $this->model = $this->getModel();
 
-            $this->state         = $model->getState();
-            $this->items         = $model->getItems();
-            $this->pagination    = $model->getPagination();
-            $this->filterForm    = $model->getFilterForm();
-            $this->activeFilters = $model->getActiveFilters();
-
-            if ($errors = $model->getErrors()) {
-                throw new Exception(implode("\n", $errors));
-            }
+            $this->state         = $this->model->getState();
+            $this->items         = $this->model->getItems();
+            $this->pagination    = $this->model->getPagination();
+            $this->filterForm    = $this->model->getFilterForm();
+            $this->activeFilters = $this->model->getActiveFilters();
 
             $this->addToolbar();
 
             FocalpointHelper::addSubmenu('locations');
-            $this->sidebar = JHtmlSidebar::render();
+            $this->sidebar = Sidebar::render();
 
             /*
              * This is part of the getting started walk through. If we've gotten this far then the
@@ -100,21 +62,19 @@ class FocalpointViewLocations extends JViewLegacy
                 ->from('#__focalpoint_locations');
 
             if (!$db->setQuery($query)->loadResult()) {
-                Factory::getApplication()->input->set('task', 'congratulations');
+                $this->app->input->set('task', 'congratulations');
             }
 
             parent::display($tpl);
 
-            echo FocalpointHelper::renderAdminFooter();
-
-        } catch (Exception $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
-
         } catch (Throwable $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
+            $this->app->enqueueMessage($e->getMessage(), 'error');
         }
     }
 
+    /**
+     * @return void
+     */
     protected function addToolbar()
     {
         $user = Factory::getUser();

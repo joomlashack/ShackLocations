@@ -23,13 +23,14 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellegend extends JModelAdmin
+class FocalpointModellegend extends AdminModel
 {
     use FocalpointModelTraits;
 
@@ -38,9 +39,9 @@ class FocalpointModellegend extends JModelAdmin
     /**
      * @inheritDoc
      */
-    public function getTable($type = 'Legend', $prefix = 'FocalpointTable', $config = [])
+    public function getTable($name = 'Legend', $prefix = 'FocalpointTable', $options = [])
     {
-        return Table::getInstance($type, $prefix, $config);
+        return Table::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -62,6 +63,7 @@ class FocalpointModellegend extends JModelAdmin
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function loadFormData()
     {
@@ -69,7 +71,6 @@ class FocalpointModellegend extends JModelAdmin
 
         if (empty($data)) {
             $data = $this->getItem();
-
         }
 
         return $data;
@@ -105,6 +106,7 @@ class FocalpointModellegend extends JModelAdmin
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function save($data)
     {

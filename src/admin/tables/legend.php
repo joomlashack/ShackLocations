@@ -24,33 +24,17 @@
 
 defined('_JEXEC') or die;
 
-class FocalpointTablelegend extends JTable
+class FocalpointTablelegend extends FocalpointTable
 {
     protected $_jsonEncode = ['params'];
 
     protected $_columnAlias = ['published' => 'state'];
 
     /**
-     * Constructor
-     *
-     * @param JDatabase A database connector object
+     * @inheritDoc
      */
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_legends', 'id', $db);
-    }
-
-    public function bind($src, $ignore = [])
-    {
-        if (parent::bind($src, $ignore)) {
-            if (empty($this->alias) && !empty($this->title)) {
-                $this->alias = $this->title;
-            }
-            $this->alias = JApplicationHelper::stringURLSafe($this->alias);
-
-            return true;
-        }
-
-        return false;
     }
 }

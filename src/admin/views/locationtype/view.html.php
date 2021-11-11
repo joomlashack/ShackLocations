@@ -22,57 +22,34 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\View\Admin\AbstractList;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die;
 
-class FocalpointViewLocationtype extends HtmlView
+class FocalpointViewLocationtype extends AbstractList
 {
-    /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
     /**
      * @var CMSObject
      */
     protected $item;
 
     /**
-     * @var Form
-     */
-    protected $form;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        /** @var FocalpointModellocationtype $model */
-        $model = $this->getModel();
-
-        $this->state = $model->getState();
-        $this->item  = $model->getItem();
-        $this->form  = $model->getForm();
-
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
-        }
+        $this->model = $this->getModel();
+        $this->state = $this->model->getState();
+        $this->item  = $this->model->getItem();
+        $this->form  = $this->model->getForm();
 
         $this->addToolbar();
 
         parent::display($tpl);
-
-        echo FocalpointHelper::renderAdminFooter();
     }
 
     /**
@@ -89,26 +66,27 @@ class FocalpointViewLocationtype extends HtmlView
         $title = 'COM_FOCALPOINT_TITLE_LOCATIONTYPE_' . ($isNew ? 'ADD' : 'EDIT');
         ToolbarHelper::title(Text::_($title), 'location');
 
-        if ($user->authorise('core.edit', 'com_focalpoint')
+        if (
+            $user->authorise('core.edit', 'com_focalpoint')
             || $user->authorise('core.create', 'com_focalpoint')
         ) {
-            ToolBarHelper::apply('locationtype.apply');
-            ToolBarHelper::save('locationtype.save');
+            ToolbarHelper::apply('locationtype.apply');
+            ToolbarHelper::save('locationtype.save');
         }
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::save2new('locationtype.save2new');
+            ToolbarHelper::save2new('locationtype.save2new');
         }
 
         if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::save2copy('locationtype.save2copy');
+            ToolbarHelper::save2copy('locationtype.save2copy');
         }
 
-        if (!($this->item->get('id'))) {
-            ToolBarHelper::cancel('locationtype.cancel');
+        if (!$this->item->get('id')) {
+            ToolbarHelper::cancel('locationtype.cancel');
 
         } else {
-            ToolBarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CLOSE');
+            ToolbarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CLOSE');
         }
     }
 }

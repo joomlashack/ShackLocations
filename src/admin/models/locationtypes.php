@@ -24,10 +24,11 @@
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die;
 
-class FocalpointModellocationtypes extends JModelList
+class FocalpointModellocationtypes extends ListModel
 {
     public function __construct($config = [])
     {
@@ -75,14 +76,20 @@ class FocalpointModellocationtypes extends JModelList
         parent::populateState('a.title', 'asc');
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getStoreId($id = '')
     {
-        $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.state');
+        $id .= ':' . $this->getState('filter.search')
+            . ':' . $this->getState('filter.state');
 
         return parent::getStoreId($id);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getListQuery()
     {
         $db = $this->getDbo();
@@ -99,7 +106,6 @@ class FocalpointModellocationtypes extends JModelList
             ->leftJoin('#__focalpoint_legends AS b ON b.id = a.legend')
             ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
 
-        // Filter by published
         $published = $this->getState('filter.state');
         if ($published != '*') {
             if ($published == '') {
@@ -110,36 +116,29 @@ class FocalpointModellocationtypes extends JModelList
             }
         }
 
-        $search = $this->getState('filter.search');
-        if (!empty($search)) {
+        if ($search = $this->getState('filter.search')) {
             if (stripos($search, 'id:') === 0) {
                 $query->where('a.id = ' . (int)substr($search, 3));
 
             } else {
-                $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where(
-                    sprintf(
-                        '(%s)',
-                        join(
-                            ' OR ',
-                            [
-                                'a.title LIKE ' . $search,
-                                'a.description LIKE ' . $search
-                            ]
-                        )
-                    )
-                );
+                $search = $db->quote('%' . $search . '%');
+
+                $ors = [
+                    'a.title LIKE ' . $search,
+                    'a.description LIKE ' . $search
+                ];
+                $query->where(sprintf('(%s)', join(' OR ', $ors)));
             }
         }
 
-        if ($filterLegend = (int)$this->state->get("filter.legend")) {
+        if ($filterLegend = (int)$this->state->get('filter.legend')) {
             $query->where('a.legend = ' . $filterLegend);
         }
 
-        $odering   = $this->state->get('list.ordering');
+        $ordering   = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
-        if ($odering && $direction) {
-            $query->order($db->escape($odering . ' ' . $direction));
+        if ($ordering && $direction) {
+            $query->order($ordering . ' ' . $direction);
         }
 
         return $query;

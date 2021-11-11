@@ -37,9 +37,9 @@ class FocalpointModellocationtype extends JModelAdmin
     /**
      * @inheritDoc
      */
-    public function getTable($type = 'Locationtype', $prefix = 'FocalpointTable', $config = [])
+    public function getTable($name = 'Locationtype', $prefix = 'FocalpointTable', $options = [])
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return JTable::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -47,20 +47,18 @@ class FocalpointModellocationtype extends JModelAdmin
      */
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm(
+        return $this->loadForm(
             'com_focalpoint.locationtype',
             'locationtype',
             [
-                'control'   => 'jform',
                 'load_data' => $loadData
             ]
         );
-
-        return $form;
     }
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function loadFormData()
     {
@@ -94,6 +92,7 @@ class FocalpointModellocationtype extends JModelAdmin
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function save($data)
     {

@@ -38,9 +38,9 @@ class FocalpointModelmap extends JModelAdmin
     /**
      * @inheritDoc
      */
-    public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = [])
+    public function getTable($name = 'Map', $prefix = 'FocalpointTable', $options = [])
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return JTable::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -74,6 +74,7 @@ class FocalpointModelmap extends JModelAdmin
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function loadFormData()
     {
@@ -88,9 +89,7 @@ class FocalpointModelmap extends JModelAdmin
     }
 
     /**
-     * @param array $data
-     *
-     * @return bool
+     * @inheritDoc
      * @throws Exception
      */
     public function save($data)
@@ -121,9 +120,7 @@ class FocalpointModelmap extends JModelAdmin
     }
 
     /**
-     * @param JTable $table
-     *
-     * @return void
+     * @inheritDoc
      */
     protected function prepareTable($table)
     {

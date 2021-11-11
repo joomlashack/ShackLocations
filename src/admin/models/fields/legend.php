@@ -45,7 +45,7 @@ class ShacklocationsFormFieldLegend extends JFormFieldList
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    protected  function getOptions()
     {
         if (static::$options === null) {
             static::$options = [];

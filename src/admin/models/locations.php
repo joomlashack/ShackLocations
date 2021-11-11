@@ -54,9 +54,8 @@ class FocalpointModellocations extends JModelList
 
 
     /**
-     * Method to auto-populate the model state.
-     *
-     * Note. Calling getState in this method will result in recursion.
+     * @inheritDoc
+     * @throws Exception
      */
     protected function populateState($ordering = null, $direction = null)
     {
@@ -88,16 +87,7 @@ class FocalpointModellocations extends JModelList
     }
 
     /**
-     * Method to get a store id based on model configuration state.
-     *
-     * This is necessary because the model is used by the component and
-     * different modules that might need different sets of data or different
-     * ordering requirements.
-     *
-     * @param string $id A prefix for the store id.
-     *
-     * @return    string        A store id.
-     * @since    1.6
+     * @inheritDoc
      */
     protected function getStoreId($id = '')
     {
@@ -109,10 +99,7 @@ class FocalpointModellocations extends JModelList
     }
 
     /**
-     * Build an SQL query to load the list data.
-     *
-     * @return    JDatabaseQuery
-     * @since    1.6
+     * @inheritDoc
      */
     protected function getListQuery()
     {
@@ -156,42 +143,37 @@ class FocalpointModellocations extends JModelList
             }
         }
 
-        // Filter by search in title
-        $search = $this->getState('filter.search');
-        if (!empty($search)) {
+        if ($search = $this->getState('filter.search')) {
             if (stripos($search, 'id:') === 0) {
                 $query->where('a.id = ' . (int)substr($search, 3));
+
             } else {
-                $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                $query->where('( a.title LIKE ' . $search . '  OR  a.description LIKE ' . $search . '  OR  a.address LIKE ' . $search . ' )');
+                $search = $db->quote('%' . $search . '%');
+
+                $ors = [
+                    'a.title LIKE ' . $search,
+                    'a.description LIKE ' . $search,
+                    'a.address LIKE ' . $search
+                ];
+                $query->where(sprintf('(%s)', join(' OR ', $ors)));
             }
         }
 
-        //Filtering created_by
-        $filter_created_by = $this->state->get("filter.created_by");
-        if ($filter_created_by) {
-            $query->where("a.created_by = '" . $db->escape($filter_created_by) . "'");
+        if ($filter_created_by = $this->state->get('filter.created_by')) {
+            $query->where('a.created_by = ' . $db->quote($filter_created_by));
         }
 
-        //Filtering map_id
-        $filter_map_id = $this->state->get("filter.map_id");
-        if ($filter_map_id) {
-            $query->where("a.map_id = '" . $db->escape($filter_map_id) . "'");
+        if ($filter_map_id = (int)$this->state->get('filter.map_id')) {
+            $query->where('a.map_id = ' . $filter_map_id);
         }
 
-        //Filtering type
-        $filter_type = $this->state->get("filter.type");
-        if ($filter_type) {
-            $query->where("a.type = '" . $db->escape($filter_type) . "'");
+        if ($filter_type = (int)$this->state->get('filter.type')) {
+            $query->where('a.type = ' . $filter_type);
         }
 
-
-        // Add the list ordering clause.
-        $orderCol  = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
-        if ($orderCol && $orderDirn) {
-            $query->order($db->escape($orderCol . ' ' . $orderDirn));
-        }
+        $ordering  = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+        $query->order($ordering . ' ' . $direction);
 
         return $query;
     }

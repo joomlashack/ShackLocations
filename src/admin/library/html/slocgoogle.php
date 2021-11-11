@@ -40,7 +40,7 @@ abstract class JhtmlSlocGoogle
      * @return void
      * @throws Exception
      */
-    public static function map($id, $params, $center = null, $markerData = [])
+    public static function map(int $id, $params, $center = null, $markerData = [])
     {
         if (!$params instanceof Registry) {
             $params = new Registry($params);
@@ -143,7 +143,7 @@ JSINIT;
      *
      * @return string
      */
-    protected static function infoboxContent($marker)
+    protected static function infoboxContent(object $marker): string
     {
         $link = ($marker->params->get('infopopupevent') !== 'hover')
             ? static::infoboxLink($marker)
@@ -177,9 +177,9 @@ JSINIT;
      *
      * @return string
      */
-    protected static function infoboxLink($marker)
+    protected static function infoboxLink(object $marker): string
     {
-        if (!empty($marker->link)) {
+        if (empty($marker->link) == false) {
             return LayoutHelper::render(
                 'marker.infobox.link',
                 [
@@ -197,7 +197,7 @@ JSINIT;
      *
      * @return object[]
      */
-    protected static function createMarkers(array $markerData)
+    protected static function createMarkers(array $markerData): array
     {
         $markers = [];
         foreach ($markerData as $marker) {

@@ -24,23 +24,21 @@
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\BaseController;
 
 defined('_JEXEC') or die();
 
-class FocalpointController extends JControllerLegacy
+class FocalpointController extends BaseController
 {
     protected $default_view = 'maps';
 
     /**
-     * @param bool $cachable
-     * @param bool $urlparams
-     *
-     * @return JControllerLegacy
+     * @inheritDoc
      * @throws Exception
      */
     public function display($cachable = false, $urlparams = false)
     {
-        $app= Factory::getApplication();
+        $app = Factory::getApplication();
 
         /*
          * The first thing a user needs to do is configure options. This checks if component parameters exists
@@ -50,10 +48,10 @@ class FocalpointController extends JControllerLegacy
         $paramsdata = $params->jsonSerialize();
         if (!count((array)$paramsdata)) {
             $app->input->set('view', 'getstarted');
-            setcookie("ppr", 1, time() + 604800);
+            setcookie('ppr', 1, time() + 604800);
         }
 
-        $view = Factory::getApplication()->input->getCmd('view', $this->default_view);
+        $view = $app->input->getCmd('view', $this->default_view);
         $app->input->set('view', $view);
 
         $db = Factory::getDbo();
@@ -86,11 +84,11 @@ class FocalpointController extends JControllerLegacy
         $legendsExist = $db->setQuery($query)->loadResult();
 
         if (!$legendsExist
-            && ($view != "maps"
-                && $view != "map"
-                && $view != "legends"
-                && $view != "legend"
-                && $view != "getstarted")
+            && ($view != 'maps'
+                && $view != 'map'
+                && $view != 'legends'
+                && $view != 'legend'
+                && $view != 'getstarted')
         ) {
             $app->input->set('view', 'getstarted');
             $app->input->set('task', 'legend');
@@ -103,7 +101,7 @@ class FocalpointController extends JControllerLegacy
 
         $mapsExists = $db->setQuery($query)->loadResult();
 
-        if (!$mapsExists && ($view != "maps" && $view != "map" && $view != "getstarted")) {
+        if (!$mapsExists && ($view != 'maps' && $view != 'map' && $view != 'getstarted')) {
             $app->input->set('view', 'getstarted');
             $app->input->set('task', 'map');
         }

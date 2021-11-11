@@ -27,6 +27,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
 
@@ -35,57 +36,66 @@ HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 $user      = Factory::getUser();
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDir   = $this->escape($this->state->get('list.direction'));
-$saveOrder = $listOrder == 'a.ordering';
-$task      = Factory::getApplication()->input->getCmd('task');
+$ordering  = $this->escape($this->state->get('list.ordering'));
+$direction = $this->escape($this->state->get('list.direction'));
+$saveOrder = $ordering == 'a.ordering';
+$task      = $this->app->input->getCmd('task');
+$mainClass = empty($this->sidebar) ? 'span12' : 'span10';
 
-if ($saveOrder) {
-    $saveOrderingUrl = 'index.php?option=com_focalpoint&task=maps.saveOrderAjax&tmpl=component';
-    HTMLHelper::_('sortablelist.sortable', 'mapsList', 'adminForm', strtolower($listDir), $saveOrderingUrl);
-}
+if ($saveOrder) :
+    $saveOrderingUrl = 'index.php?option=com_focalpoint&task=legends.saveOrderAjax&tmpl=component';
+    HTMLHelper::_('sortablelist.sortable', 'legendsList', 'adminForm', strtolower($direction), $saveOrderingUrl);
+endif;
 ?>
-<form action="<?php echo Route::_('index.php?option=com_focalpoint&view=maps'); ?>"
+
+<form action="<?php echo Route::_('index.php?option=com_focalpoint&view=legends'); ?>"
       method="post"
       name="adminForm"
       id="adminForm">
-
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this->sidebar; ?>
-    </div>
-
-    <div id="j-main-container" class="span10">
+    <?php
+    if ($this->sidebar) :
+        ?>
+        <div id="j-sidebar-container" class="span2">
+            <?php echo $this->sidebar; ?>
+        </div>
+    <?php
+    endif;
+    ?>
+    <div id="j-main-container" class="<?php echo $mainClass; ?>">
         <?php
-        if ($task != "showhelp") :
+        if ($task != 'showhelp') :
             echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
-            if ($task == "showhelp") :
+            if ($task == 'showhelp') :
                 ?>
-                <div class="fp_maps_view">
-                    <div id="fp_pointer"></div>
+                <div class="fp_legends_view">
                     <div class="hero-unit" style="text-align:left;">
-                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_MAPS_NEW'); ?>
+                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LEGENDS'); ?>
                     </div>
                 </div>
-            <?php else : ?>
+            <?php
+            else :
+                ?>
                 <div class="alert alert-no-items">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-            <?php endif;
-        else : ?>
-            <table class="table table-striped" id="mapsList">
+            <?php
+            endif;
+        else :
+            ?>
+            <table class="table table-striped" id="legendsList">
                 <thead>
                 <tr>
-                    <th width="1%" class="nowrap center hidden-phone">
+                    <th style="width: 1%;" class="nowrap center hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             '',
                             'a.ordering',
-                            $listDir,
-                            $listOrder,
+                            $direction,
+                            $ordering,
                             null,
                             'asc',
                             'JGRID_HEADING_ORDERING',
@@ -93,48 +103,44 @@ if ($saveOrder) {
                         );
                         ?>
                     </th>
-
-                    <th width="1%" class="hidden-phone">
+                    <th style="width: 1%;" class="hidden-phone">
                         <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
-
-                    <th width="1%" style="min-width:55px" class="nowrap center">
-                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDir, $listOrder); ?>
+                    <th style="width: 1%;min-width:55px" class="nowrap center">
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $ordering); ?>
                     </th>
-
                     <th>
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
-                            'COM_FOCALPOINT_MAPS_TITLE',
+                            'COM_FOCALPOINT_LEGENDS_TITLE',
                             'a.title',
-                            $listDir,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
-
-                    <th width="10%" class="nowrap hidden-phone">
+                    <th style="width: 10%;" class="nowrap hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
-                            'COM_FOCALPOINT_MAPS_CREATED_BY',
+                            'COM_FOCALPOINT_LEGENDS_CREATED_BY',
                             'a.created_by',
-                            $listDir,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
-
-                    <th width="1%" class="nowrap hidden-phone">
+                    <th style="width: 1%;" class="nowrap hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'JGRID_HEADING_ID',
                             'a.id',
-                            $listDir,
-                            $listOrder
-                        ); ?>
+                            $direction,
+                            $ordering
+                        );
+                        ?>
                     </th>
                 </tr>
                 </thead>
@@ -142,35 +148,39 @@ if ($saveOrder) {
                 <tbody>
                 <?php
                 foreach ($this->items as $i => $item) :
-                    $ordering = ($listOrder == 'a.ordering');
+                    $ordering = ($ordering == 'a.ordering');
                     $canCreate = $user->authorise('core.create', 'com_focalpoint');
-                    $canEdit = $user->authorise('core.edit', 'com_focalpoint');
+                    $canEdit = $user->authorise('core.edit', 'com_focalpoint') || $item->checked_out == $user->id;
                     $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                     $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
                     ?>
-                    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="0">
+                    <tr class="<?php echo 'row' . ($i % 2); ?>" sortable-group-id="0">
                         <td class="order nowrap center hidden-phone">
                             <?php
-                            $iconClass = '';
-                            if (!$canChange) {
-                                $iconClass = ' inactive';
-                            } elseif (!$saveOrder) {
-                                $iconClass = ' inactive tip-top hasTooltip" title="'
-                                    . HTMLHelper::tooltipText('JORDERINGDISABLED');
-                            }
-                            ?>
-                            <span class="sortable-handler<?php echo $iconClass ?>">
-                                <i class="icon-menu"></i>
-                            </span>
-                            <?php
+                            $sortableAttribs = ['class' => 'sortable-handler'];
+
+                            if (!$canChange) :
+                                $sortableAttribs['class'] .= ' inactive';
+
+                            elseif (!$saveOrder) :
+                                $sortableAttribs['class'] .= ' inactive tip-top hasTooltip';
+                                $sortableAttribs['title'] = HTMLHelper::tooltipText('JORDERINGDISABLED');
+                            endif;
+
+                            echo sprintf(
+                                '<span %s> <i class="icon-menu"></i></span>',
+                                ArrayHelper::toString($sortableAttribs)
+                            );
+
                             if ($canChange && $saveOrder) :
                                 ?>
                                 <input type="text"
                                        style="display:none"
                                        name="order[]"
-                                       size="5"
                                        value="<?php echo $item->ordering; ?>"/>
-                            <?php endif; ?>
+                            <?php
+                            endif;
+                            ?>
                         </td>
 
                         <td class="center hidden-phone">
@@ -184,10 +194,11 @@ if ($saveOrder) {
                                     'jgrid.published',
                                     $item->state,
                                     $i,
-                                    'maps.',
+                                    'legends.',
                                     $canChange,
                                     'cb'
-                                ); ?>
+                                );
+                                ?>
                             </div>
                         </td>
 
@@ -200,7 +211,7 @@ if ($saveOrder) {
                                         $i,
                                         $item->editor,
                                         $item->checked_out_time,
-                                        'maps.',
+                                        'legends.',
                                         $canCheckin
                                     );
                                 endif;
@@ -208,34 +219,38 @@ if ($saveOrder) {
                                 if ($canEdit) :
                                     echo HTMLHelper::_(
                                         'link',
-                                        Route::_('index.php?option=com_focalpoint&task=map.edit&id=' . $item->id),
+                                        JRoute::_('index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id),
                                         $this->escape($item->title),
-                                        ['title' => Text::_('JACTION_EDIT')]
+                                        sprintf('title="%s"', Text::_('JACTION_EDIT'))
                                     );
+
                                 else :
                                     echo $this->escape($item->title);
                                 endif;
                                 ?>
                             </div>
                         </td>
-
                         <td class="small hidden-phone">
                             <?php echo $item->created_by; ?>
                         </td>
+
                         <td class="center hidden-phone">
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php
+                endforeach;
+                ?>
                 </tbody>
             </table>
             <?php
             echo $this->pagination->getListFooter();
         endif;
         ?>
-
-        <input type="hidden" name="task" value=""/>
-        <input type="hidden" name="boxchecked" value="0"/>
-        <?php echo HTMLHelper::_('form.token'); ?>
+        <div>
+            <input type="hidden" name="task" value=""/>
+            <input type="hidden" name="boxchecked" value="0"/>
+            <?php echo HTMLHelper::_('form.token'); ?>
+        </div>
     </div>
 </form>

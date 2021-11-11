@@ -22,70 +22,33 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\View\Admin\AbstractForm;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLocation extends HtmlView
+class FocalpointViewLocation extends AbstractForm
 {
-    /**
-     * @var FocalpointModelLocation
-     */
-    protected $model = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
     /**
      * @var object
      */
     protected $item = null;
 
     /**
-     * @var Form
-     */
-    protected $form;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        try {
-            $this->model = $this->getModel();
-            $this->state = $this->model->getState();
-            $this->item  = $this->model->getItem();
-            $this->form  = $this->model->getForm();
+        $this->model = $this->getModel();
+        $this->state = $this->model->getState();
+        $this->item  = $this->model->getItem();
+        $this->form  = $this->model->getForm();
 
-            // Check for errors.
-            if (count($errors = $this->get('Errors'))) {
-                throw new Exception(implode("\n", $errors));
-            }
+        $this->addToolbar();
 
-            $this->addToolbar();
-
-            parent::display($tpl);
-
-            echo FocalpointHelper::renderAdminFooter();
-
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            echo $e->getLine() . ': ' . $e->getCode();
-
-        } catch (Throwable $e) {
-            echo $e->getMessage();
-            echo $e->getLine() . ': ' . $e->getCode();
-        }
+        parent::display($tpl);
     }
 
     /**
@@ -110,19 +73,19 @@ class FocalpointViewLocation extends HtmlView
 
         if (!$checkedOut) {
             if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
-                ToolBarHelper::apply('location.apply');
-                ToolBarHelper::save('location.save');
+                ToolbarHelper::apply('location.apply');
+                ToolbarHelper::save('location.save');
             }
 
             if ($canDo->get('core.create')) {
-                ToolBarHelper::save2new('location.save2new');
+                ToolbarHelper::save2new('location.save2new');
             }
         }
 
         if (!$isNew && $canDo->get('core.create')) {
-            ToolBarHelper::save2copy('location.save2copy');
+            ToolbarHelper::save2copy('location.save2copy');
         }
 
-        ToolBarHelper::cancel('location.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
+        ToolbarHelper::cancel('location.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

@@ -35,19 +35,20 @@ HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 $user      = Factory::getUser();
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$saveOrder = $listOrder == 'a.ordering';
-$task      = Factory::getApplication()->input->getCmd('task');
+$userId    = $user->get('id');
+$ordering  = $this->escape($this->state->get('list.ordering'));
+$direction = $this->escape($this->state->get('list.direction'));
+$saveOrder = $ordering == 'a.ordering';
+$task      = $this->app->input->getCmd('task');
 $mainClass = empty($this->sidebar) ? 'span12' : 'span10';
 
-if ($saveOrder) :
-    $saveOrderingUrl = 'index.php?option=com_focalpoint&task=legends.saveOrderAjax&tmpl=component';
-    HTMLHelper::_('sortablelist.sortable', 'legendsList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
-endif;
+if ($saveOrder) {
+    $saveOrderingUrl = 'index.php?option=com_focalpoint&task=locations.saveOrderAjax&tmpl=component';
+    HTMLHelper::_('sortablelist.sortable', 'locationsList', 'adminForm', strtolower($direction), $saveOrderingUrl);
+}
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=legends'); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=locations'); ?>"
       method="post"
       name="adminForm"
       id="adminForm">
@@ -57,44 +58,38 @@ endif;
         <div id="j-sidebar-container" class="span2">
             <?php echo $this->sidebar; ?>
         </div>
-    <?php
-    endif;
-    ?>
+    <?php endif; ?>
     <div id="j-main-container" class="<?php echo $mainClass; ?>">
         <?php
-        if ($task != "showhelp") :
+        if ($task != 'congratulations') :
             echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
         endif;
 
         if (empty($this->items)) :
-            if ($task == "showhelp") :
+            if ($task == 'congratulations') :
                 ?>
-                <div class="fp_legends_view">
-                    <div class="hero-unit" style="text-align:left;">
-                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LEGENDS'); ?>
-                    </div>
+                <div class="hero-unit" style="text-align:left;">
+                    <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LOCATIONS_NEW'); ?>
                 </div>
-            <?php
-            else :
-                ?>
+            <?php else : ?>
                 <div class="alert alert-no-items">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-            <?php
-            endif;
+            <?php endif;
+
         else :
             ?>
-            <table class="table table-striped" id="legendsList">
+            <table class="table table-striped" id="locationsList">
                 <thead>
                 <tr>
-                    <th width="1%" class="nowrap center hidden-phone">
+                    <th style="width: 1%;" class="nowrap center hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             '',
                             'a.ordering',
-                            $listDirn,
-                            $listOrder,
+                            $direction,
+                            $ordering,
                             null,
                             'asc',
                             'JGRID_HEADING_ORDERING',
@@ -102,42 +97,71 @@ endif;
                         );
                         ?>
                     </th>
-                    <th width="1%" class="hidden-phone">
+
+                    <th style="width: 1%;" class="hidden-phone">
                         <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
-                    <th width="1%" style="min-width:55px" class="nowrap center">
-                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+
+                    <th style="width: 1%;min-width:55px" class="nowrap center">
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $ordering); ?>
                     </th>
+
                     <th>
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
-                            'COM_FOCALPOINT_LEGENDS_TITLE',
+                            'COM_FOCALPOINT_LOCATIONS_TITLE',
                             'a.title',
-                            $listDirn,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
-                    <th width="10%" class="nowrap hidden-phone">
+
+                    <th>
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
-                            'COM_FOCALPOINT_LEGENDS_CREATED_BY',
-                            'a.created_by',
-                            $listDirn,
-                            $listOrder
+                            'COM_FOCALPOINT_LOCATIONS_MAP_ID',
+                            'map_title',
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
-                    <th width="1%" class="nowrap hidden-phone">
+
+                    <th>
+                        <?php
+                        echo HTMLHelper::_(
+                            'searchtools.sort',
+                            'COM_FOCALPOINT_LOCATIONS_TYPE',
+                            'locationtype_title',
+                            $direction,
+                            $ordering
+                        );
+                        ?>
+                    </th>
+
+                    <th style="width: 10%;" class="nowrap hidden-phone">
+                        <?php
+                        echo HTMLHelper::_(
+                            'searchtools.sort',
+                            'COM_FOCALPOINT_LOCATIONS_CREATED_BY',
+                            'a.created_by',
+                            $direction,
+                            $ordering
+                        );
+                        ?>
+                    </th>
+
+                    <th style="width: 1%;" class="nowrap hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'JGRID_HEADING_ID',
                             'a.id',
-                            $listDirn,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
@@ -147,39 +171,39 @@ endif;
                 <tbody>
                 <?php
                 foreach ($this->items as $i => $item) :
-                    $ordering = ($listOrder == 'a.ordering');
+                    $ordering = ($ordering == 'a.ordering');
                     $canCreate = $user->authorise('core.create', 'com_focalpoint');
-                    $canEdit = $user->authorise('core.edit', 'com_focalpoint') || $item->checked_out == $user->id;
+                    $canEdit = $user->authorise('core.edit', 'com_focalpoint');
                     $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                     $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
                     ?>
-                    <tr class="row<?php echo $i % 2; ?>" sortable-group-id="0">
+                    <tr class="<?php echo 'row' . ($i % 2); ?>" sortable-group-id="<?php echo $item->map_id; ?>">
                         <td class="order nowrap center hidden-phone">
                             <?php
-                            $sortableAttribs = ['class' => 'sortable-handler'];
+                            $iconAttribs = [
+                                'class' => 'sortable-handler'
+                            ];
 
                             if (!$canChange) :
-                                $sortableAttribs['class'] .= ' inactive';
+                                $iconAttribs['class'] .= ' inactive';
 
                             elseif (!$saveOrder) :
-                                $sortableAttribs['class'] .= ' inactive tip-top hasTooltip';
-                                $sortableAttribs['title'] = HTMLHelper::tooltipText('JORDERINGDISABLED');
+                                $iconAttribs['class'] .= ' inactive tip-top hasTooltip';
+                                $iconAttribs['title'] = HTMLHelper::tooltipText('JORDERINGDISABLED');
                             endif;
 
                             echo sprintf(
                                 '<span %s> <i class="icon-menu"></i></span>',
-                                ArrayHelper::toString($sortableAttribs)
+                                ArrayHelper::toString($iconAttribs)
                             );
 
-                            if ($canChange && $saveOrder) :
-                                ?>
+                            if ($canChange && $saveOrder) : ?>
                                 <input type="text"
                                        style="display:none"
                                        name="order[]"
+                                       size="5"
                                        value="<?php echo $item->ordering; ?>"/>
-                                 <?php
-                            endif;
-                            ?>
+                            <?php endif; ?>
                         </td>
 
                         <td class="center hidden-phone">
@@ -193,7 +217,7 @@ endif;
                                     'jgrid.published',
                                     $item->state,
                                     $i,
-                                    'legends.',
+                                    'locations.',
                                     $canChange,
                                     'cb'
                                 );
@@ -210,7 +234,7 @@ endif;
                                         $i,
                                         $item->editor,
                                         $item->checked_out_time,
-                                        'legends.',
+                                        'locations.',
                                         $canCheckin
                                     );
                                 endif;
@@ -218,38 +242,43 @@ endif;
                                 if ($canEdit) :
                                     echo HTMLHelper::_(
                                         'link',
-                                        JRoute::_('index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id),
+                                        JRoute::_('index.php?option=com_focalpoint&task=location.edit&id=' . $item->id),
                                         $this->escape($item->title),
                                         sprintf('title="%s"', Text::_('JACTION_EDIT'))
                                     );
-
                                 else :
                                     echo $this->escape($item->title);
                                 endif;
                                 ?>
                             </div>
                         </td>
+
+                        <td class="">
+                            <?php echo $item->map_title; ?>
+                        </td>
+
+                        <td class="">
+                            <?php echo $item->locationtype_title; ?>
+                        </td>
+
                         <td class="small hidden-phone">
                             <?php echo $item->created_by; ?>
                         </td>
+
 
                         <td class="center hidden-phone">
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                <?php
-                endforeach;
-                ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
             <?php
             echo $this->pagination->getListFooter();
         endif;
         ?>
-        <div>
-            <input type="hidden" name="task" value=""/>
-            <input type="hidden" name="boxchecked" value="0"/>
-            <?php echo HTMLHelper::_('form.token'); ?>
-        </div>
+        <input type="hidden" name="task" value=""/>
+        <input type="hidden" name="boxchecked" value="0"/>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>

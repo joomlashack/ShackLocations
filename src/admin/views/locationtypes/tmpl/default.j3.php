@@ -37,14 +37,14 @@ HTMLHelper::_('formbehavior.chosen', 'select');
 
 $user      = Factory::getUser();
 $userId    = $user->get('id');
-$listOrder = $this->escape($this->state->get('list.ordering'));
-$listDirn  = $this->escape($this->state->get('list.direction'));
-$saveOrder = $listOrder == 'a.ordering';
-$task      = Factory::getApplication()->input->getCmd('task');
+$ordering  = $this->escape($this->state->get('list.ordering'));
+$direction = $this->escape($this->state->get('list.direction'));
+$saveOrder = $ordering == 'a.ordering';
+$task      = $this->app->input->getCmd('task');
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=locationtypes.saveOrderAjax&tmpl=component';
-    HTMLHelper::_('sortablelist.sortable', 'locationTypesList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    HTMLHelper::_('sortablelist.sortable', 'locationTypesList', 'adminForm', strtolower($direction), $saveOrderingUrl);
 endif;
 
 $mainContainer = [
@@ -90,14 +90,14 @@ if (!empty($this->sidebar)) {
             <table class="table table-striped" id="locationTypesList">
                 <thead>
                 <tr>
-                    <th width="1%" class="nowrap center hidden-phone">
+                    <th style="width: 1%;" class="nowrap center hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             '',
                             'a.ordering',
-                            $listDirn,
-                            $listOrder,
+                            $direction,
+                            $ordering,
                             null,
                             'asc',
                             'JGRID_HEADING_ORDERING',
@@ -106,12 +106,12 @@ if (!empty($this->sidebar)) {
                         ?>
                     </th>
 
-                    <th width="1%" class="hidden-phone">
+                    <th style="width: 1%;" class="hidden-phone">
                         <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
 
-                    <th width="1%" style="min-width:55px" class="nowrap center">
-                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                    <th style="width: 1%;min-width:55px" class="nowrap center">
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $ordering); ?>
                     </th>
 
                     <th>
@@ -120,8 +120,8 @@ if (!empty($this->sidebar)) {
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONTYPES_TITLE',
                             'a.title',
-                            $listDirn,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
@@ -132,32 +132,32 @@ if (!empty($this->sidebar)) {
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONTYPES_LEGEND',
                             'legend_title',
-                            $listDirn,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
 
-                    <th width="10%" class="nowrap hidden-phone">
+                    <th style="width: 10%;" class="nowrap hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONTYPES_CREATED_BY',
                             'created_by.name',
-                            $listDirn,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
 
-                    <th width="1%" class="nowrap hidden-phone">
+                    <th style="width: 1%;" class="nowrap hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'JGRID_HEADING_ID',
                             'a.id',
-                            $listDirn,
-                            $listOrder
+                            $direction,
+                            $ordering
                         );
                         ?>
                     </th>
@@ -166,7 +166,7 @@ if (!empty($this->sidebar)) {
 
                 <tbody>
                 <?php foreach ($this->items as $i => $item) :
-                    $ordering = ($listOrder == 'a.ordering');
+                    $ordering = ($ordering == 'a.ordering');
                     $canCreate = $user->authorise('core.create', 'com_focalpoint');
                     $canEdit = $user->authorise('core.edit', 'com_focalpoint');
                     $canEditOwn = $user->authorise('core.edit.own', 'com_focalpoint');

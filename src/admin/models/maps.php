@@ -24,11 +24,15 @@
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die;
 
-class FocalpointModelmaps extends JModelList
+class FocalpointModelmaps extends ListModel
 {
+    /**
+     * @inheritDoc
+     */
     public function __construct($config = [])
     {
         $config = array_merge_recursive(
@@ -71,14 +75,20 @@ class FocalpointModelmaps extends JModelList
         parent::populateState($ordering, $direction);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getStoreId($id = '')
     {
-        $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.state');
+        $id .= ':' . $this->getState('filter.search')
+            . ':' . $this->getState('filter.state');
 
         return parent::getStoreId($id);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getListQuery()
     {
         $db = $this->getDbo();

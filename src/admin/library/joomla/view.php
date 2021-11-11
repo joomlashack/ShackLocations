@@ -22,12 +22,14 @@
  */
 
 use Joomla\CMS\Application\CMSApplication;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-class FocalpointView extends JViewLegacy
+class FocalpointView extends HtmlView
 {
     /**
      * @var CMSApplication
@@ -52,33 +54,32 @@ class FocalpointView extends JViewLegacy
             $this->params = $this->app->getParams('com_focalpoint');
 
         } else {
-            $this->params = JComponentHelper::getParams('com_focalpoint');
+            $this->params = ComponentHelper::getParams('com_focalpoint');
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function setDocumentTitle($default = null)
+    public function setDocumentTitle($title = null)
     {
         if (method_exists(parent::class, 'setDocumentTitle')) {
-            $title = $this->params->get('page_title');
-
-            parent::setDocumentTitle($title ?: $default);
+            parent::setDocumentTitle($this->params->get('page_title') ?: $title);
         }
     }
 
     /**
-     * @param string $default
+     * @param ?string $default
      *
      * @return string
      */
-    protected function getPageHeading($default = null)
+    protected function getPageHeading(?string $default = ''): string
     {
-        $pageHeading = $this->params->get('page_heading') ?: $default;
-        $showHeading = $this->params->get('show_page_heading');
+        if ($this->params->get('show_page_heading')) {
+            return $this->params->get('page_heading') ?: $default;
+        }
 
-        return $showHeading ? $pageHeading : null;
+        return '';
     }
 
     /**
@@ -86,7 +87,7 @@ class FocalpointView extends JViewLegacy
      *
      * @return string
      */
-    protected function getPageClass($base = '')
+    protected function getPageClass(string $base = ''): string
     {
         $suffix = (string)$this->params->get('pageclass_sfx');
 
@@ -111,22 +112,22 @@ class FocalpointView extends JViewLegacy
 
         $keywords = $this->params->get('menu-meta_keywords') ?: $defaults->get('metakey');
         if ($keywords) {
-            $this->document->setMetadata('keywords', $keywords);
+            $this->document->setMetaData('keywords', $keywords);
         }
 
         $robots = $this->params->get('robots') ?: $defaults->get('robots');
         if ($robots) {
-            $this->document->setMetadata('robots', $robots);
+            $this->document->setMetaData('robots', $robots);
         }
 
         $rights = $defaults->get('rights');
         if ($rights) {
-            $this->document->setMetadata('rights', $rights);
+            $this->document->setMetaData('rights', $rights);
         }
 
         $author = $defaults->get('author');
         if ($author) {
-            $this->document->setMetadata('author', $author);
+            $this->document->setMetaData('author', $author);
         }
     }
 }

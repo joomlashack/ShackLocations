@@ -22,19 +22,13 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\Form\Field\ListField;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormField;
-use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('List');
-
-/**
- * Loads a select list of Shack Locations.
- */
-class ShacklocationsFormFieldLocation extends JFormFieldList
+class ShacklocationsFormFieldLocation extends ListField
 {
     /**
      * @inheritdoc
@@ -49,13 +43,13 @@ class ShacklocationsFormFieldLocation extends JFormFieldList
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    protected function getOptions()
     {
         if (static::$options === null) {
             static::$options = [];
 
-            $db = Factory::getDbo();
-            $query = $db->getQuery(true)
+            $db        = Factory::getDbo();
+            $query     = $db->getQuery(true)
                 ->select('id, title')
                 ->from('#__focalpoint_locations')
                 ->order('title');

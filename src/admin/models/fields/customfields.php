@@ -85,6 +85,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function renderField($options = [])
     {
@@ -110,7 +111,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
     /**
      * @return string
      */
-    protected function createNewButtons()
+    protected function createNewButtons(): string
     {
         $newButtons = ['<ul class="inline">'];
 
@@ -143,9 +144,16 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param bool   $required
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfield($hash, $name, $type, $label, $options, $required = false)
-    {
+    protected function renderSubfield(
+        string $hash,
+        string $name,
+        string $type,
+        string $label,
+        array $options,
+        bool $required = false
+    ): string {
         $baseGroup = $this->fieldGroup['name'];
         $groupName = $baseGroup . '.' . $hash;
 
@@ -189,8 +197,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array    $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function getFieldBlock($hash, $data, $options)
+    protected function getFieldBlock(string $hash, array $data, array $options): string
     {
         $type = empty($data['type']) ? null : $data['type'];
         if ($type) {
@@ -226,8 +235,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array    $options
      *
      * @return array
+     * @throws Exception
      */
-    protected function getSubfields($hash, $data, $options)
+    protected function getSubfields(string $hash, array $data, array $options): array
     {
         $type = empty($data['type']) ? null : $data['type'];
         if (!$type) {
@@ -260,8 +270,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldTextarea($hash, $options)
+    protected function renderSubfieldTextarea(string $hash, array $options): string
     {
         $fieldOptions = [
             'attributes' => [
@@ -281,15 +292,13 @@ class ShacklocationsFormFieldCustomfields extends FormField
             )
         ];
 
-        $renderedField = $this->renderSubfield(
+        return $this->renderSubfield(
             $hash,
             'loadeditor',
             'radio',
             Text::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'),
             array_merge($options, $fieldOptions)
         );
-
-        return $renderedField;
     }
 
     /**
@@ -297,18 +306,17 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldImage($hash, $options)
+    protected function renderSubfieldImage(string $hash, array $options): string
     {
-        $renderedField = $this->renderSubfield(
+        return $this->renderSubfield(
             $hash,
             'directory',
             'text',
             'COM_FOCALPOINT_CUSTOMFIELD_DEFAULT_DIRECTORY',
             $options
         );
-
-        return $renderedField;
     }
 
     /**
@@ -316,8 +324,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldSelectlist($hash, $options)
+    protected function renderSubfieldSelectlist(string $hash, array $options): string
     {
         $fieldOptions = [
             'attributes' => [
@@ -326,15 +335,13 @@ class ShacklocationsFormFieldCustomfields extends FormField
             ]
         ];
 
-        $renderedField = $this->renderSubfield(
+        return $this->renderSubfield(
             $hash,
             'options',
             'textarea',
             'COM_FOCALPOINT_CUSTOMFIELD_OPTIONS',
             array_merge($options, $fieldOptions)
         );
-
-        return $renderedField;
     }
 
     /**
@@ -342,8 +349,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldMultiselect($hash, $options)
+    protected function renderSubfieldMultiselect(string $hash, array $options): string
     {
         return $this->renderSubfieldSelectlist($hash, $options);
     }
@@ -351,7 +359,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
     /**
      * @return string
      */
-    protected function getTrashButton()
+    protected function getTrashButton(): string
     {
         if (static::$trashButton === null) {
             static::$trashButton = sprintf(
@@ -372,8 +380,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array $options
      *
      * @return void
+     * @throws Exception
      */
-    protected function loadAssets($options)
+    protected function loadAssets(array $options)
     {
         if (!static::$assetsLoaded) {
             $dummyId = 'BLANKFIELD';

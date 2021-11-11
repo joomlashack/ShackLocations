@@ -22,31 +22,20 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\View\Admin\AbstractForm;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLegend extends HtmlView
+class FocalpointViewLegend extends AbstractForm
 {
     /**
      * @var CMSObject
      */
-    protected $state = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $item;
-
-    /**
-     * @var Form
-     */
-    protected $form;
+    protected $item = null;
 
     /**
      * @param string $tpl
@@ -56,22 +45,14 @@ class FocalpointViewLegend extends HtmlView
      */
     public function display($tpl = null)
     {
-        /** @var FocalpointModellegend $model */
-        $model = $this->getModel();
-
-        $this->state = $model->getState();
-        $this->item  = $model->getItem();
-        $this->form  = $model->getForm();
-
-        if ($errors = $model->getErrors()) {
-            throw new Exception(implode("\n", $errors));
-        }
+        $this->model = $this->getModel();
+        $this->state = $this->model->getState();
+        $this->item  = $this->model->getItem();
+        $this->form  = $this->model->getForm();
 
         $this->addToolbar();
 
         parent::display($tpl);
-
-        echo FocalpointHelper::renderAdminFooter();
     }
 
     /**
@@ -94,19 +75,19 @@ class FocalpointViewLegend extends HtmlView
             if ($user->authorise('core.edit', 'com_focalpoint')
                 || ($user->authorise('core.create', 'com_focalpoint'))
             ) {
-                ToolBarHelper::apply('legend.apply');
-                ToolBarHelper::save('legend.save');
+                ToolbarHelper::apply('legend.apply');
+                ToolbarHelper::save('legend.save');
             }
 
             if ($user->authorise('core.create', 'com_focalpoint')) {
-                ToolBarHelper::save2new('legend.save2new');
+                ToolbarHelper::save2new('legend.save2new');
             }
         }
 
         if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::save2copy('legend.save2copy');
+            ToolbarHelper::save2copy('legend.save2copy');
         }
 
-        ToolBarHelper::cancel('legend.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
+        ToolbarHelper::cancel('legend.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }
