@@ -90,13 +90,14 @@
         <targetplatform>3.7</targetplatform>
         <phpminimum>7.2.5</phpminimum>
 
-        <relatedExtensions uninstall="true" publish="true" downgrade="true">
+        <relatedExtensions>
+            <extension type="library"
+                       element="allediaframework">ShackFramework</extension>
+
             <extension type="plugin"
                        group="system"
                        element="osmylicensesmanager"
-                       ordering="last"
-                       downgrade="false"
-                       uninstall="false">ShackExtensionSupport</extension>
+                       ordering="last">ShackExtensionSupport</extension>
         </relatedExtensions>
 
         <include>ShackDefaultFiles</include>
