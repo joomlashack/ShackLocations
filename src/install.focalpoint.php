@@ -23,93 +23,52 @@
  */
 
 use Alledia\Installer\AbstractScript;
-use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Extension;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die;
 
-// Adapt for install and uninstall environments
-if (file_exists(__DIR__ . '/admin/library/Installer/AbstractScript.php')) {
-    require_once __DIR__ . '/admin/library/Installer/AbstractScript.php';
-} else {
-    require_once __DIR__ . '/library/Installer/AbstractScript.php';
-}
+$installPath = __DIR__ . (is_dir(__DIR__ . '/admin') ? '/admin' : '');
+require_once $installPath . '/library/Installer/include.php';
 
 class com_focalpointInstallerScript extends AbstractScript
 {
     /**
-     * @var CMSApplication
-     */
-    protected $app = null;
-
-    /**
      * @inheritDoc
      */
-    public function __construct($parent)
+    protected function customUpdate(InstallerAdapter $parent): bool
     {
-        parent::__construct($parent);
-
-        $this->app = Factory::getApplication();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function update($parent)
-    {
-        try {
-            if (parent::update($parent)) {
-                if (version_compare($this->previousManifest->version, '1.2', 'lt')) {
-                    $this->setMessage(Text::_('COM_FOCALPOINT_INSTALL_V12_NOTICE'), 'notice', true);
-                }
-
-                return true;
-            }
-
-        } catch (Exception $e) {
-            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
-
-        } catch (Throwable $e) {
-            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
+        if (version_compare($this->previousManifest->version, '1.2', 'lt')) {
+            $this->sendMessage(Text::_('COM_FOCALPOINT_INSTALL_V12_NOTICE'), 'notice');
         }
 
-        return false;
+        return true;
     }
 
     /**
      * @inheritDoc
      */
-    public function postflight($type, $parent)
+    protected function customPostFlight($type, $parent)
     {
-        try {
-            switch ($type) {
-                case 'install':
-                case 'discover_install':
-                    $this->moveMarkers();
-                    break;
+        switch ($type) {
+            case 'install':
+            case 'discover_install':
+                $this->moveMarkers();
+                break;
 
-                case 'update':
-                    $this->fixMapParameters();
-                    $this->updateTabsdata();
-                    $this->updateCustomFields();
-                    $this->updateCustomFieldsData();
-                    $this->removeObsoleteFiles();
-                    $this->checkParameters();
-                    break;
-            }
-
-            parent::postFlight($type, $parent);
-
-        } catch (Exception $e) {
-            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
-
-        } catch (Throwable $e) {
-            $this->app->enqueueMessage(sprintf('%s:%s<br>%s', $e->getFile(), $e->getLine(), $e->getMessage()));
+            case 'update':
+                $this->fixMapParameters();
+                $this->updateTabsdata();
+                $this->updateCustomFields();
+                $this->updateCustomFieldsData();
+                $this->removeObsoleteFiles();
+                $this->checkParameters();
+                break;
         }
     }
 
@@ -183,10 +142,10 @@ class com_focalpointInstallerScript extends AbstractScript
         $destination = JPATH_SITE . '/images/markers';
 
         if (Folder::move($source, $destination)) {
-            $this->setMessage(Text::sprintf('COM_FOCALPOINT_INSTALL_MARKER_SUCCESS', $destination), 'notice');
+            $this->sendMessage(Text::sprintf('COM_FOCALPOINT_INSTALL_MARKER_SUCCESS', $destination), 'notice');
 
         } else {
-            $this->setMessage(Text::_('COM_FOCALPOINT_INSTALL_MARKER_FAIL'), 'notice');
+            $this->sendMessage(Text::_('COM_FOCALPOINT_INSTALL_MARKER_FAIL'), 'notice');
         }
     }
 
@@ -235,7 +194,7 @@ class com_focalpointInstallerScript extends AbstractScript
                 $newData = [];
                 if (!isset($tabsdata->tabs)) {
                     foreach ($tabsdata as $hash => $tab) {
-                        if (in_array($hash, ['mapstyle'])) {
+                        if ($hash =='mapstyle') {
                             $newData[$hash] = $tab;
                         } else {
                             $newData['tabs'][$hash] = $tab;
