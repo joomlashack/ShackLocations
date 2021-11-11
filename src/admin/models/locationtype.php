@@ -23,12 +23,13 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellocationtype extends JModelAdmin
+class FocalpointModellocationtype extends AdminModel
 {
     use FocalpointModelTraits;
 

@@ -23,10 +23,11 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die;
 
-class FocalpointModellocations extends JModelList
+class FocalpointModellocations extends ListModel
 {
     public function __construct($config = [])
     {

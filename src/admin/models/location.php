@@ -25,6 +25,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
@@ -32,7 +33,7 @@ defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellocation extends JModelAdmin
+class FocalpointModellocation extends AdminModel
 {
     use FocalpointModelTraits;
 

@@ -23,13 +23,14 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModelmap extends JModelAdmin
+class FocalpointModelmap extends AdminModel
 {
     use FocalpointModelTraits;
 
