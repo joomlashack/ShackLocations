@@ -32,7 +32,7 @@ defined('_JEXEC') or die();
 abstract class JhtmlSlocGoogle
 {
     /**
-     * @param int             $id
+     * @param int|string      $id
      * @param mixed           $params
      * @param object|array    $center
      * @param object|object[] $markerData
@@ -40,7 +40,7 @@ abstract class JhtmlSlocGoogle
      * @return void
      * @throws Exception
      */
-    public static function map(int $id, $params, $center = null, $markerData = [])
+    public static function map($id, $params, $center = null, $markerData = [])
     {
         if (!$params instanceof Registry) {
             $params = new Registry($params);
