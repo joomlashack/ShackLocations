@@ -91,14 +91,4 @@ abstract class FocalpointHelper extends ContentHelper
 
         return $result;
     }
-
-    /**
-     * @return string
-     */
-    public static function renderAdminFooter()
-    {
-        $extension = new Licensed('focalpoint', 'component');
-
-        return $extension->getFooterMarkup();
-    }
 }
