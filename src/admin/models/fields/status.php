@@ -22,13 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Form\FormHelper;
+use Alledia\Framework\Joomla\Form\Field\PredefinedListField;
 
 defined('_JEXEC') or die;
 
-FormHelper::loadFieldClass('predefinedlist');
-
-class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
+class ShacklocationsFormFieldStatus extends PredefinedListField
 {
     /**
      * @inheritdoc
