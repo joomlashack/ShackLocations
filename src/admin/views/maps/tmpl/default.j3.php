@@ -39,11 +39,12 @@ $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));
 $saveOrder = $ordering == 'a.ordering';
 $task      = $this->app->input->getCmd('task');
+$showHelp  = $this->app->input->getBool('showhelp');
 
-if ($saveOrder) {
+if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=maps.saveOrderAjax&tmpl=component';
     HTMLHelper::_('sortablelist.sortable', 'mapsList', 'adminForm', strtolower($direction), $saveOrderingUrl);
-}
+endif;
 ?>
 <form action="<?php echo Route::_('index.php?option=com_focalpoint&view=maps'); ?>"
       method="post"
@@ -56,25 +57,31 @@ if ($saveOrder) {
 
     <div id="j-main-container" class="span10">
         <?php
-        if ($task != 'showhelp') :
-            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
-        endif;
-
-        if (empty($this->items)) :
-            if ($task == 'showhelp') :
+        if (empty($this->items) == true) :
+            if ($this->activeFilters) :
                 ?>
-                <div class="fp_maps_view">
-                    <div id="fp_pointer"></div>
-                    <div class="hero-unit" style="text-align:left;">
-                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_MAPS_NEW'); ?>
-                    </div>
-                </div>
-            <?php else : ?>
                 <div class="alert alert-no-items">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+
                 </div>
-            <?php endif;
-        else : ?>
+            <?php else : ?>
+                <div class="alert alert-info span6">
+                    <?php
+                    echo Text::sprintf('COM_FOCALPOINT_MAPS_EMPTYSTATE_CONTENT', 'index.php?option=com_focalpoint&task=map.add');
+                    ?>
+                    <div class="btn-toolbar text-center">
+                        <button class="btn btn-success" onclick="Joomla.submitbutton('map.add');">
+                            <?php echo Text::_('COM_FOCALPOINT_MAPS_EMPTYSTATE_BUTTON_ADD'); ?>
+                        </button>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+
+        <?php else :
+            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+            ?>
+
             <table class="table table-striped" id="mapsList">
                 <thead>
                 <tr>

@@ -141,19 +141,8 @@ div fieldset.ui-sortable-placeholder {
   width: 69px;
   height: 112px;
   background: url(../images/pointer.png) 0 0 no-repeat;
-  display: none;
-}
-
-.tmpl_isis #fp_pointer {
   display: block;
-}
-
-.fp_map .hero-unit,
-.fp_maps_view .hero-unit {
-  background-image: url(../images/getstartedmaps.png);
-  background-position: 100% 50%;
-  background-repeat: no-repeat;
-  padding-right: 320px;
+  z-index: 10000;
 }
 
 .fp_locationtype .hero-unit,
@@ -178,25 +167,14 @@ div fieldset.ui-sortable-placeholder {
 }
 
 .fp_config #fp_pointer {
-  transform: rotate(210deg);
-  -ms-transform: rotate(210deg); /* IE 9 */
-  -webkit-transform: rotate(210deg);
+  transform: rotate(200deg);
+  -ms-transform: rotate(200deg); /* IE 9 */
+  -webkit-transform: rotate(200deg);
 
   animation: optionshere 1000ms ease infinite;
   -moz-animation: optionshere 1000ms ease infinite; /* Firefox */
   -webkit-animation: optionshere 1000ms ease infinite; /* Safari and Chrome */
   -o-animation: optionshere 1000ms ease infinite; /* Opera */
-}
-
-.fp_map #fp_pointer {
-  transform: rotate(90deg);
-  -ms-transform: rotate(90deg); /* IE 9 */
-  -webkit-transform: rotate(90deg);
-
-  animation: mapshere 1000ms ease infinite;
-  -moz-animation: mapshere 1000ms ease infinite; /* Firefox */
-  -webkit-animation: mapshere 1000ms ease infinite; /* Safari and Chrome */
-  -o-animation: mapshere 1000ms ease infinite; /* Opera */
 }
 
 .fp_legend #fp_pointer {
@@ -221,7 +199,6 @@ div fieldset.ui-sortable-placeholder {
   -o-animation: typeshere 1000ms ease infinite; /* Opera */
 }
 
-.fp_maps_view #fp_pointer,
 .fp_legends_view #fp_pointer,
 .fp_locationtypes_view #fp_pointer {
   transform: rotate(120deg);
@@ -254,11 +231,9 @@ div fieldset.ui-sortable-placeholder {
   .fp_locationtype .hero-unit,
   .fp_locationtypes_view .hero-unit,
   .fp_legend .hero-unit,
-  .fp_legends_view .hero-unit,
-  .fp_map .hero-unit,
-  .fp_maps_view .hero-unit {
+  .fp_legends_view .hero-unit {
     background-image: none;
-    padding-right: 60px;
+    padding-right: 30px;
   }
 }
 
