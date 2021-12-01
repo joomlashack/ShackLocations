@@ -25,6 +25,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
@@ -41,7 +42,7 @@ class FocalpointModelmap extends AdminModel
      */
     public function getTable($name = 'Map', $prefix = 'FocalpointTable', $options = [])
     {
-        return JTable::getInstance($name, $prefix, $options);
+        return Table::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -50,11 +51,8 @@ class FocalpointModelmap extends AdminModel
     public function getForm($data = [], $loadData = true)
     {
         $form = $this->loadForm('com_focalpoint.map', 'map', ['control' => 'jform', 'load_data' => $loadData]);
-        if (empty($form)) {
-            return false;
-        }
 
-        return $form;
+        return $form ?: false;
     }
 
     /**

@@ -28,6 +28,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die;
 
@@ -39,15 +40,21 @@ class FocalpointViewMap extends AbstractForm
     protected $item = null;
 
     /**
+     * @var Registry
+     */
+    protected $params = null;
+
+    /**
      * @inheritDoc
      */
     public function display($tpl = null)
     {
         try {
-            $this->model = $this->getModel();
-            $this->state = $this->model->getState();
-            $this->item  = $this->model->getItem();
-            $this->form  = $this->model->getForm();
+            $this->model  = $this->getModel();
+            $this->state  = $this->model->getState();
+            $this->item   = $this->model->getItem();
+            $this->form   = $this->model->getForm();
+            $this->params = $this->extension->params;
 
             $this->addToolbar();
 

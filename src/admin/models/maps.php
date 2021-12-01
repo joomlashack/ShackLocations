@@ -22,7 +22,6 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
@@ -61,16 +60,13 @@ class FocalpointModelmaps extends ListModel
      */
     protected function populateState($ordering = 'a.title', $direction = 'ASC')
     {
-        $app = Factory::getApplication('administrator');
+        $app = Factory::getApplication();
 
         $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
         $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
         $this->setState('filter.state', $published);
-
-        $params = ComponentHelper::getParams('com_focalpoint');
-        $this->setState('params', $params);
 
         parent::populateState($ordering, $direction);
     }

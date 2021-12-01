@@ -30,14 +30,12 @@ use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die;
 
-$params = ComponentHelper::getParams('com_focalpoint');
-
 HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::_('jquery.ui', ['core', 'sortable']);
-HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
+HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();
 ?>
