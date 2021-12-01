@@ -27,13 +27,12 @@ use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
-$task = $this->app->input->getCmd('task', 'config');
 ?>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo Route::_('index.php?option=com_focalpoint&view=legends'); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint'); ?>"
       method="post"
-      class="fp_<?php echo $task; ?> tmpl_<?php echo $this->app->getTemplate(); ?>">
+      class="fp_config">
     <?php
     $class = '';
     if ($this->sidebar) :
@@ -46,29 +45,7 @@ $task = $this->app->input->getCmd('task', 'config');
     <div id="j-main-container" class="<?php echo $class; ?>>">
         <div id="fp_pointer"></div>
         <div class="hero-unit" style="text-align:left;">
-            <?php
-            switch ($task) :
-                case 'config':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_CONFIG';
-                    break;
-
-                case 'map':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_MAPS';
-                    break;
-
-                case 'legend':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_LEGENDS';
-                    break;
-
-                case 'locationtype':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_LOCATIONTYPES';
-                    break;
-            endswitch;
-
-            if (empty($message) == false) :
-                echo Text::_($message);
-            endif;
-            ?>
+            <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_CONFIG'); ?>
         </div>
     </div>
 </form>

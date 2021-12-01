@@ -29,6 +29,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Version;
 
 defined('_JEXEC') or die;
 
@@ -53,7 +54,9 @@ class FocalpointViewGetstarted extends AbstractBase
         $view = Factory::getApplication()->input->getCmd('view');
         FocalpointHelper::addSubmenu($view);
 
-        $this->sidebar = Sidebar::render();
+        if (Version::MAJOR_VERSION < 4) {
+            $this->sidebar = Sidebar::render();
+        }
 
         parent::display($tpl);
     }

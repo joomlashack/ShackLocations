@@ -38,76 +38,41 @@ class FocalpointController extends BaseController
      */
     public function display($cachable = false, $urlparams = false)
     {
-        $app = Factory::getApplication();
-
-        /*
-         * The first thing a user needs to do is configure options. This checks if component parameters exists
-         * If not it redirects to the getting started view.
-         */
-        $params     = ComponentHelper::getParams('com_focalpoint');
-        $paramsdata = $params->jsonSerialize();
-        if (!count((array)$paramsdata)) {
-            $app->input->set('view', 'getstarted');
-            setcookie('ppr', 1, time() + 604800);
-        }
-
+        $app  = Factory::getApplication();
         $view = $app->input->getCmd('view', $this->default_view);
-        $app->input->set('view', $view);
 
-        $db = Factory::getDbo();
+        $params = ComponentHelper::getParams('com_focalpoint');
+        if (empty($params->get('apikey'))) {
+            if ($view != 'getstarted') {
+                $app->input->set('view', 'getstarted');
+            }
 
-        // Check we have at least one locationtype defined
-        $query = $db->getQuery(true)
-            ->select('id')
-            ->from('#__focalpoint_locationtypes');
+        } else {
+            $db    = Factory::getDbo();
+            $query = $db->getQuery(true)->select('COUNT(*)');
 
-        $typesExist = $db->setQuery($query)->loadResult();
+            $maps          = $db->setQuery((clone $query)->from('#__focalpoint_maps'))->loadResult();
+            $legends       = $db->setQuery((clone $query)->from('#__focalpoint_legends'))->loadResult();
+            $locationTypes = $db->setQuery((clone $query)->from('#__focalpoint_locationtypes'))->loadResult();
+            $locations     = $db->setQuery((clone $query)->from('#__focalpoint_locations'))->loadResult();
 
-        if (!$typesExist
-            && ($view != 'maps'
-                && $view != 'map'
-                && $view != 'legends'
-                && $view != 'legend'
-                && $view != 'locationtypes'
-                && $view != 'locationtype'
-                && $view != 'getstarted')
-        ) {
-            $app->input->set('view', 'getstarted');
-            $app->input->set('task', 'locationtype');
+            if (array_sum([$maps, $legends, $locationTypes, $locations]) == 0) {
+                if (in_array($view, ['maps', 'map']) == false) {
+                    $this->setRedirect('index.php?option=com_focalpoint&view=maps');
+                }
+
+            } elseif (array_sum([$legends, $locationTypes, $locations]) == 0) {
+                if (in_array($view, ['maps', 'map', 'legends', 'legend']) == false) {
+                    $this->setRedirect('index.php?option=com_focalpoint&view=legends');
+                }
+
+            } elseif (array_sum([$locationTypes, $locations]) == 0) {
+                if (in_array($view, ['maps','map','legends', 'legend', 'locationtypes', 'locationtype']) == false) {
+                    $this->setRedirect('index.php?option=com_focalpoint&view=locationtypes');
+                }
+            }
         }
 
-        // Check we have at least one legend defined
-        $query = $db->getQuery(true)
-            ->select('id')
-            ->from('#__focalpoint_legends');
-
-        $legendsExist = $db->setQuery($query)->loadResult();
-
-        if (!$legendsExist
-            && ($view != 'maps'
-                && $view != 'map'
-                && $view != 'legends'
-                && $view != 'legend'
-                && $view != 'getstarted')
-        ) {
-            $app->input->set('view', 'getstarted');
-            $app->input->set('task', 'legend');
-        }
-
-        // Check we have at least one map defined
-        $query = $db->getQuery(true)
-            ->select('id')
-            ->from('#__focalpoint_maps');
-
-        $mapsExists = $db->setQuery($query)->loadResult();
-
-        if (!$mapsExists && ($view != 'maps' && $view != 'map' && $view != 'getstarted')) {
-            $app->input->set('view', 'getstarted');
-            $app->input->set('task', 'map');
-        }
-
-        parent::display($cachable, $urlparams);
-
-        return $this;
+        return parent::display($cachable, $urlparams);
     }
 }
