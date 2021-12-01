@@ -24,7 +24,7 @@
 use Alledia\Framework\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 $displayData = [
     'textPrefix' => 'COM_FOCALPOINT_MAPS',

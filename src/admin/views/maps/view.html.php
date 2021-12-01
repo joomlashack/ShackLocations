@@ -38,7 +38,6 @@ class FocalpointViewMaps extends AbstractList
     public function display($tpl = null)
     {
         try {
-            /** @var FocalpointModelMaps $this- >model */
             $this->model         = $this->getModel();
             $this->state         = $this->model->getState();
             $this->items         = $this->model->getItems();

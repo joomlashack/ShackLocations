@@ -22,13 +22,15 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\Form\Field\GroupedListField;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
 
-class ShacklocationsFormFieldLocationtype extends GroupedListField
+FormHelper::loadFieldClass('GroupedList');
+
+class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
 {
     /**
      * @inheritdoc

@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Plugin\PluginHelper;
 
 defined('_JEXEC') or die;
@@ -35,7 +36,7 @@ class FocalpointControllerMap extends FormController
     /**
      * @inheritDoc
      */
-    protected function postSaveHook(JModelLegacy $model, $validData = [])
+    protected function postSaveHook(BaseDatabaseModel $model, $validData = [])
     {
         parent::postSaveHook($model, $validData);
 
