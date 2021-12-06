@@ -2,7 +2,6 @@
 <form>
     <fieldset name="hidden">
         <field name="id" type="hidden"/>
-        <field name="tabsdata" type="hidden" filter="raw"/>
         <field name="checked_out" type="hidden" filter="unset"/>
         <field name="checked_out_time" type="hidden" filter="unset"/>
     </fieldset>
@@ -71,12 +70,14 @@
                description="COM_FOCALPOINT_FORM_MAP_CREATED_BY_DESC"/>
     </fieldset>
 
-    <fields name="tabsdata">
-        <fieldset name="tabs"
-                  label="Tabs">
-            <field name="tabs" type="shacklocations.maptabs"/>
-        </fieldset>
-    </fields>
+    <fieldset name="tabs"
+              label="Tabs">
+        <field name="tabsdata"
+               type="subform"
+               label=""
+               multiple="true"
+               formsource="administrator/components/com_focalpoint/models/forms/maptabs.xml"/>
+    </fieldset>
 
     <fieldset name="metadata" label="Metadata">
         <fields name="metadata">
