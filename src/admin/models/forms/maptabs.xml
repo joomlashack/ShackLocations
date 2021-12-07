@@ -9,6 +9,7 @@
         <field name="content"
                type="editor"
                height="250"
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText"
                label="COM_FOCALPOINT_FORM_FIELD_MAPTABS_CONTENT"/>
     </fieldset>
 </form>
