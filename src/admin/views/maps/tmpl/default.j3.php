@@ -45,6 +45,7 @@ if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=maps.saveOrderAjax&tmpl=component';
     HTMLHelper::_('sortablelist.sortable', 'mapsList', 'adminForm', strtolower($direction), $saveOrderingUrl);
 endif;
+
 ?>
 <form action="<?php echo Route::_('index.php?option=com_focalpoint&view=maps'); ?>"
       method="post"
@@ -57,6 +58,8 @@ endif;
 
     <div id="j-main-container" class="span10">
         <?php
+        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
+
         if (empty($this->items) == true) :
             if ($this->activeFilters) :
                 ?>
@@ -79,7 +82,6 @@ endif;
             <?php endif; ?>
 
         <?php else :
-            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
             ?>
 
             <table class="table table-striped" id="mapsList">
