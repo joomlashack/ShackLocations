@@ -23,7 +23,6 @@
  */
 
 use Alledia\Installer\AbstractScript;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\InstallerAdapter;
@@ -31,7 +30,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Extension;
 use Joomla\CMS\Table\Table;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 $installPath = __DIR__ . (is_dir(__DIR__ . '/admin') ? '/admin' : '');
 require_once $installPath . '/library/Installer/include.php';
@@ -77,7 +76,7 @@ class com_focalpointInstallerScript extends AbstractScript
      */
     protected function fixMapParameters()
     {
-        $db    = Factory::getDbo();
+        $db    = $this->dbo;
         $query = $db->getQuery(true)
             ->select('id,params')
             ->from('#__focalpoint_maps');
@@ -171,13 +170,14 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * Reformats the tabsdata field for changes made in v1.4.0
+     * Reformats the tabsdata field
      *
      * @return void
+     * @since v1.4.0
      */
     protected function updateTabsdata()
     {
-        $db = Factory::getDbo();
+        $db = $this->dbo;
 
         $query = $db->getQuery(true)
             ->select([
@@ -210,13 +210,14 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * update the custom fields in location types made in v1.4.0
+     * update the custom fields in location types
      *
      * @return void
+     * @since v1.4.0
      */
     protected function updateCustomFields()
     {
-        $db = Factory::getDbo();
+        $db = $this->dbo;
 
         $locationTypes = $db->setQuery(
             $db->getQuery(true)
@@ -247,13 +248,14 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * update the cusstom fields date in locations made in v1.4.0
+     * update the custom fields date in locations
      *
      * @return void
+     * @since v1.4.0
      */
     protected function updateCustomFieldsData()
     {
-        $db = Factory::getDbo();
+        $db = $this->dbo;
 
         $query = $db->getQuery(true)
             ->select([
@@ -285,11 +287,11 @@ class com_focalpointInstallerScript extends AbstractScript
     }
 
     /**
-     * Should only be called on updates
+     * Updates for component parameters
      */
     protected function checkParameters()
     {
-        $db = Factory::getDbo();
+        $db = $this->dbo;
 
         $query = $db->getQuery(true)
             ->select([
@@ -307,6 +309,10 @@ class com_focalpointInstallerScript extends AbstractScript
         $params = json_decode($focalpoint->params);
         $update = clone $params;
 
+        /**
+         * Add Choosable info popup event
+         * @since v1.5.0
+         */
         if (!property_exists($update, 'infopopupevent')) {
             $update->infopopupevent = 'click';
         }
