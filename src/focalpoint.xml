@@ -63,7 +63,6 @@
             <folder>form</folder>
             <folder>helpers</folder>
             <folder>language</folder>
-            <folder>layouts</folder>
             <folder>library</folder>
             <folder>models</folder>
             <folder>sql</folder>
@@ -103,6 +102,7 @@
         <include>ShackDefaultFiles</include>
 
         <obsolete>
+            <folder>administrator/components/com_focalpoint/layouts</folder>
             <folder>components/com_focalpoint/helpers</folder>
 
             <file>administrator/components/com_focalpoint/helpers/maps.php</file>
