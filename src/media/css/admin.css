@@ -22,6 +22,11 @@
   display: inline-block;
 }
 
+.subform-repeatable-group {
+  overflow: hidden;
+  padding-bottom: 30px !important;
+}
+
 .sl-subfield-delete,
 .sl-subfield-insert {
   display: block;
