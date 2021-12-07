@@ -71,12 +71,14 @@
     </fieldset>
 
     <fieldset name="tabs"
-              label="Tabs">
-        <field name="tabsdata"
-               type="subform"
-               label=""
-               multiple="true"
-               formsource="administrator/components/com_focalpoint/models/forms/maptabs.xml"/>
+              label="COM_FOCALPOINT_FORM_MAP_TABS_LABEL">
+        <fields name="tabsdata">
+            <field name="tabs"
+                   type="subform"
+                   label=""
+                   multiple="true"
+                   formsource="administrator/components/com_focalpoint/models/forms/maptabs.xml"/>
+        </fields>
     </fieldset>
 
     <fieldset name="metadata" label="Metadata">
