@@ -27,6 +27,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die;
 
@@ -48,7 +49,7 @@ $formFieldsets = $this->form->getFieldsets();
 </script>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
       class="form-validate">
