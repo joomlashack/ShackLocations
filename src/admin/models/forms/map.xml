@@ -29,8 +29,7 @@
                type="editor"
                label="COM_FOCALPOINT_FORM_MAP_DESCRIPTION_LBL"
                description="COM_FOCALPOINT_FORM_MAP_DESCRIPTION_DESC"
-               height="250"
-               filter="safehtml"/>
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText"/>
     </fieldset>
 
     <fieldset name="settings">
