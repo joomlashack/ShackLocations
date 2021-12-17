@@ -41,6 +41,22 @@ class ShacklocationsFormFieldGeocoder extends FormField
     /**
      * @inheritDoc
      */
+    protected function getLayoutData()
+    {
+        $layoutData = array_merge(
+            parent::getLayoutData(),
+            [
+                'latitude'  => $this->form->getField('latitude'),
+                'longitude' => $this->form->getField('longitude')
+            ]
+        );
+
+        return $layoutData;
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function getlabel()
     {
         return '';

@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
 
@@ -34,6 +35,39 @@ defined('_JEXEC') or die();
  * @var string     $path
  */
 
+/**
+ * @var string                          $autocomplete
+ * @var bool                            $autofocus
+ * @var string                          $class
+ * @var string                          $description
+ * @var bool                            $disabled
+ * @var ShacklocationsFormFieldGeocoder $field
+ * @var string                          $group
+ * @var bool                            $hidden
+ * @var string                          $hint
+ * @var string                          $id
+ * @var string                          $label
+ * @var string                          $labelclass
+ * @var bool                            $multiple
+ * @var string                          $name
+ * @var string                          $onchange
+ * @var string                          $onclick
+ * @var string                          $pattern
+ * @var string                          $validationtext
+ * @var bool                            $readonly
+ * @var bool                            $repeat
+ * @var bool                            $required
+ * @var int                             $size
+ * @var bool                            $spellcheck
+ * @var string                          $validate
+ * @var string                          $value
+ * @var JFormFieldText                  $latitude
+ * @var JFormFieldText                  $longitude
+ */
+extract($displayData);
+
+HTMLHelper::_('jquery.framework');
+
 Text::script('COM_FOCALPOINT_ERROR_GEOCODE');
 
 $noAPI = sprintf(
@@ -45,79 +79,90 @@ $defaultCenter = json_encode([
     'lat' => FocalpointHelper::HOME_LAT,
     'lng' => FocalpointHelper::HOME_LNG
 ]);
+
+$modalId = $field->id . '_modal';
+$saveId  = $field->id . '_save';
+$linkId  = $field->id . '_link';
+
+$selector = (object)[
+    'link'      => '#' . $linkId,
+    'modal'     => '#' . $modalId,
+    'save'      => '#' . $saveId,
+    'latitude'  => $latitude ? '#' . $latitude->id : null,
+    'longitude' => $longitude ? '#' . $longitude->id : null,
+];
+
+echo HTMLHelper::_(
+    'link',
+    $selector->modal,
+    '<span class="icon-out-2"></span>' . Text::_('COM_FOCALPOINT_OPEN_GEOCODER'),
+    [
+        'id'          => $linkId,
+        'role'        => 'button',
+        'class'       => 'btn btn-primary uneditable-input',
+        'data-toggle' => 'modal',
+        'data-bs-toggle' => 'modal',
+        'data-bs-target' => $selector->modal,
+    ]
+);
+
+ob_start()
 ?>
-<!-- Button to trigger modal -->
-<a id="openGeocoder"
-   href="#myModal"
-   role="button"
-   class="btn btn-mini btn-primary"
-   data-toggle="modal">
-    <span class="icon-out-2 small"></span>
-    <?php echo Text::_('COM_FOCALPOINT_OPEN_GEOCODER'); ?>
-</a>
-
-<!-- Modal -->
-<div id="myModal"
-     class="modal hide fade"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel"><?php echo Text::_('COM_FOCALPOINT_GEOCODER_DRAG'); ?></h3>
-    </div>
-
-    <div class="modal-body">
-        <div class="row-fluid">
-            <div id="mapCanvas"></div>
-        </div>
-        <div class="row-fluid">
-            <div class="input-append span12">
-                <input class="span6"
-                       id="geoaddress"
-                       type="text"
-                       placeholder="Enter an address...">
-                <input type="button"
-                       id="fp_searchAddressBtn"
-                       value="GeoCode this!"
-                       disabled
-                       class="btn">
-            </div>
-        </div>
-        <div class="row-fluid">
-            <b><?php echo Text::_('COM_FOCALPOINT_GEOCODER_CURRENT'); ?></b>
-            <div id="info"></div>
-        </div>
-
-    </div>
-    <div class="modal-footer">
-        <button class="btn"
-                data-dismiss="modal"
-                aria-hidden="true">
-            Close
-        </button>
-        <button id="saveLatLng"
-                class="btn btn-primary"
-                data-dismiss="modal">
-            Save Lat/Lng
-        </button>
+<div class="row-fluid">
+    <div id="mapCanvas"></div>
+</div>
+<div class="row-fluid">
+    <div class="input-append span12">
+        <input class="span6"
+               id="fp_address"
+               type="text"
+               placeholder="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_ADDRESS_HINT'); ?>">
+        <input type="button"
+               id="fp_search"
+               value="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_SEARCH'); ?>"
+               disabled
+               class="btn">
     </div>
 </div>
+<div class="row-fluid">
+    <b><?php echo Text::_('COM_FOCALPOINT_GEOCODER_CURRENT'); ?></b>
+    <div id="current"></div>
+</div>
+<?php
+$modalBody = ob_get_contents();
+ob_end_clean();
 
+echo HTMLHelper::_(
+    'bootstrap.renderModal',
+    $modalId,
+    [
+        'title'  => '<h3>' . Text::_('COM_FOCALPOINT_GEOCODER_DRAG') . '</h3>',
+        'footer' => HTMLHelper::_(
+                'alledia.modal.footerSaveButton',
+                ['id' => $saveId],
+                Text::_('COM_FOCALPOINT_GEOCODER_SAVE')
+            )
+            . HTMLHelper::_('alledia.modal.footerCloseButton')
+    ],
+    $modalBody
+);
+
+?>
 <script>
-    ;(function($) {
+    ;jQuery(function($) {
         let defaultCenter = <?php echo $defaultCenter;  ?>,
-            mapCanvas     = document.getElementById('mapCanvas');
+            mapCanvas     = document.getElementById('mapCanvas'),
+            selector      = <?php echo json_encode($selector); ?>
 
         if (google.maps) {
             google.maps.event.addDomListener(window, 'load', function() {
                 let geocoder      = new google.maps.Geocoder(),
-                    $latitude     = $('#jform_latitude'),
-                    $longitude    = $('#jform_longitude'),
-                    $searchButton = $('#fp_searchAddressBtn'),
-                    startLat      = $latitude.val(),
-                    startLng      = $longitude.val();
+                    $latitude     = selector.latitude ? $(selector.latitude) : null,
+                    $longitude    = selector.longitude ? $(selector.longitude) : null,
+                    $address      = $('#fp_address'),
+                    $searchButton = $('#fp_search'),
+                    startLat      = $latitude ? $latitude.val() : null,
+                    startLng      = $longitude ? $longitude.val() : null;
 
                 let zoom = (startLat && startLng) ? 15 : 2;
 
@@ -142,7 +187,7 @@ $defaultCenter = json_encode([
                 });
 
                 let updateMarkerPosition = function(latLng) {
-                    document.getElementById('info').innerHTML = [
+                    document.getElementById('current').innerHTML = [
                         latLng.lat(),
                         latLng.lng()
                     ].join(', ');
@@ -154,7 +199,7 @@ $defaultCenter = json_encode([
                     updateMarkerPosition(marker.getPosition());
                 });
 
-                $('#geoaddress')
+                $address
                     .on('blur', function() {
                         if (this.value === '') {
                             $searchButton.attr('disabled', true);
@@ -162,14 +207,19 @@ $defaultCenter = json_encode([
                     })
                     .on('focus', function() {
                         $searchButton.attr('disabled', false);
+                    })
+                    .on('keyup', function(evt) {
+                        if (evt.which === 13) {
+                            $searchButton.trigger('click');
+                        }
                     });
 
                 $searchButton
                     .on('click', function(evt) {
                         evt.preventDefault();
 
-                        let geoaddress = document.getElementById('geoaddress').value;
-                        geocoder.geocode({'address': geoaddress}, function(results, status) {
+                        let address = $address.val();
+                        geocoder.geocode({address: address}, function(results, status) {
                             if (status === google.maps.GeocoderStatus.OK) {
                                 map.setCenter(results[0].geometry.location);
                                 marker.setPosition(results[0].geometry.location);
@@ -185,21 +235,25 @@ $defaultCenter = json_encode([
                         });
                     });
 
-                $('#openGeocoder').on('click', function() {
+                $(selector.link).on('click', function() {
                     setTimeout(function() {
                         google.maps.event.trigger(map, 'resize');
                         map.panTo(marker.getPosition());
                     }, 800);
                 });
 
-                $('#saveLatLng').on('click', function() {
-                    $latitude.val(marker.getPosition().lat());
-                    $longitude.val(marker.getPosition().lng());
+                $(selector.save).on('click', function(evt) {
+                    if ($latitude) {
+                        $latitude.val(marker.getPosition().lat());
+                    }
+                    if ($longitude) {
+                        $longitude.val(marker.getPosition().lng());
+                    }
                 });
             });
 
         } else {
             $(mapCanvas).html('<?php echo $noAPI; ?>');
         }
-    })(jQuery);
+    });
 </script>

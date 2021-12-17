@@ -12,8 +12,9 @@
   display: inline-block;
 }
 
-#openGeocoder {
-  margin: 10px 0;
+a.btn.uneditable-input {
+  margin: 9px 0;
+  padding-right: 0;
 }
 
 .element-add {
