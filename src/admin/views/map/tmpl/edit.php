@@ -26,6 +26,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\WebAsset\WebAssetManager;
 
 defined('_JEXEC') or die;
@@ -36,13 +37,11 @@ $wa->useScript('keepalive')
     ->useScript('form.validate')
     ->registerAndUseScript('googlemaps', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
 
-//HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
-
 $formFieldsets = $this->form->getFieldsets();
 ?>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
       class="form-validate">
@@ -50,72 +49,78 @@ $formFieldsets = $this->form->getFieldsets();
     <?php
     echo $this->form->renderFieldset('hidden');
     echo LayoutHelper::render('joomla.edit.title_alias', $this);
-
-    echo HTMLHelper::_('uitab.startTabSet', 'map', ['active' => 'basic']);
-
-    echo HTMLHelper::_('uitab.addTab', 'map', 'basic', Text::_($formFieldsets['basic']->label));
     ?>
-    <div class="row-fluid">
-        <div class="form-vertical">
-            <div class="span9">
-                <?php echo $this->form->renderFieldset('basic'); ?>
+    <div class="main-card">
+        <?php
+        echo HTMLHelper::_('uitab.startTabSet', 'map', ['active' => 'basic']);
+
+        echo HTMLHelper::_('uitab.addTab', 'map', 'basic', Text::_($formFieldsets['basic']->label));
+        ?>
+        <div class="row">
+            <div class="col-lg-9">
+                <div>
+                    <fieldset class="adminform">
+                        <?php echo $this->form->getLabel('text'); ?>
+                        <?php echo $this->form->getInput('text'); ?>
+                    </fieldset>
+                </div>
             </div>
-            <div class="span3">
+            <div class="col-lg-3">
                 <?php echo $this->form->renderFieldset('settings'); ?>
             </div>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('uitab.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    $tabFieldset = $formFieldsets['tabs'];
-    echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
-    ?>
-    <div class="row-fluid">
-        <div class="form-vertical">
-            <?php
-            if ($tabDescription = Text::_($tabFieldset->description)) :
+        $tabFieldset = $formFieldsets['tabs'];
+        echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
+        ?>
+        <div class="row-fluid">
+            <div class="form-vertical">
+                <?php
+                if ($tabDescription = Text::_($tabFieldset->description)) :
+                    ?>
+                    <div class="tab-description alert alert-info">
+                        <span class="icon-info" aria-hidden="true"></span>
+                        <?php echo $tabDescription; ?>
+                    </div>
+                <?php
+                endif;
+
+                echo $this->form->renderFieldset('tabs');
                 ?>
-                <div class="tab-description alert alert-info">
-                    <span class="icon-info" aria-hidden="true"></span>
-                    <?php echo $tabDescription; ?>
-                </div>
-            <?php
-            endif;
-
-            echo $this->form->renderFieldset('tabs');
-            ?>
+            </div>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('uitab.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    // Allow plugins to add form tabs
-    PluginHelper::importPlugin('focalpoint');
-    $this->app->triggerEvent('onSlocmapTabs', [$this->form]);
+        // Allow plugins to add form tabs
+        PluginHelper::importPlugin('focalpoint');
+        $this->app->triggerEvent('onSlocmapTabs', [$this->form]);
 
-    echo HTMLHelper::_('uitab.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
-    ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
-            <?php echo $this->form->renderFieldset('metadata'); ?>
+        echo HTMLHelper::_('uitab.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
+        ?>
+        <div class="row-fluid">
+            <div class="form-horizontal">
+                <?php echo $this->form->renderFieldset('metadata'); ?>
+            </div>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('uitab.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    echo HTMLHelper::_('uitab.addTab', 'map', 'params', Text::_($formFieldsets['params']->label));
-    ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
-            <?php echo $this->form->renderFieldset('params'); ?>
+        echo HTMLHelper::_('uitab.addTab', 'map', 'params', Text::_($formFieldsets['params']->label));
+        ?>
+        <div class="row-fluid">
+            <div class="form-horizontal">
+                <?php echo $this->form->renderFieldset('params'); ?>
+            </div>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('uitab.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    echo HTMLHelper::_('uitab.endTabSet');
-    ?>
+        echo HTMLHelper::_('uitab.endTabSet');
+        ?>
+    </div>
 
     <input type="hidden" name="task" value=""/>
     <?php echo HTMLHelper::_('form.token'); ?>
