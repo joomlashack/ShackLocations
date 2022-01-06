@@ -243,12 +243,19 @@ div fieldset.ui-sortable-placeholder {
 }
 
 /******* Modal Objects *********/
-.modal-body .btn:disabled {
+.modal-body .btn:disabled,
+.modal-content .btn:disabled {
   color: #aaa;
 }
 
 .modal-body .fp_controls {
   padding: 0 15px 14px;
+}
+
+.modal-body .fp_controls.fp_joomla4 .btn {
+  padding: 8px;
+  min-width: auto;
+  line-height: unset;
 }
 
 /*******************/

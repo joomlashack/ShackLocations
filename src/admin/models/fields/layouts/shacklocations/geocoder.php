@@ -25,6 +25,7 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Version;
 
 defined('_JEXEC') or die();
 
@@ -111,10 +112,11 @@ ob_start()
 <div class="row-fluid">
     <div id="mapCanvas"></div>
 </div>
-<div class="fp_controls">
-    <div class="row-fluid">
-        <div class="input-append span12">
-            <input class="span6"
+<div class="<?php echo 'fp_controls fp_joomla' . Version::MAJOR_VERSION; ?>">
+    <div class="control-group">
+        <div class="controls">
+            <span class="input-append input-group span12 w-100">
+            <input class="form-control span6 w-50"
                    id="fp_address"
                    type="text"
                    placeholder="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_ADDRESS_HINT'); ?>">
@@ -123,6 +125,7 @@ ob_start()
                    value="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_SEARCH'); ?>"
                    disabled
                    class="btn btn-success">
+            </span>
         </div>
     </div>
     <div class="row-fluid">
@@ -138,7 +141,7 @@ echo HTMLHelper::_(
     'bootstrap.renderModal',
     $modalId,
     [
-        'title'  => '<h3>' . Text::_('COM_FOCALPOINT_GEOCODER_DRAG') . '</h3>',
+        'title'  => Text::_('COM_FOCALPOINT_GEOCODER_DRAG'),
         'footer' => HTMLHelper::_(
                 'alledia.modal.footerSaveButton',
                 ['id' => $saveId],
