@@ -44,7 +44,7 @@ $formFieldsets = $this->form->getFieldsets();
       action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      class="form-validate">
+      class="form-validate fp_joomla4">
 
     <?php
     echo $this->form->renderFieldset('hidden');

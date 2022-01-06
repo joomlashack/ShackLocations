@@ -96,7 +96,7 @@ $selector = (object)[
 echo HTMLHelper::_(
     'link',
     $selector->modal,
-    '<span class="icon-out-2"></span>' . Text::_('COM_FOCALPOINT_OPEN_GEOCODER'),
+    '<span class="icon-out-2"></span> ' . Text::_('COM_FOCALPOINT_OPEN_GEOCODER'),
     [
         'id'             => $linkId,
         'role'           => 'button',
