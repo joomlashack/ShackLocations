@@ -97,10 +97,10 @@ echo HTMLHelper::_(
     $selector->modal,
     '<span class="icon-out-2"></span>' . Text::_('COM_FOCALPOINT_OPEN_GEOCODER'),
     [
-        'id'          => $linkId,
-        'role'        => 'button',
-        'class'       => 'btn btn-primary uneditable-input',
-        'data-toggle' => 'modal',
+        'id'             => $linkId,
+        'role'           => 'button',
+        'class'          => 'btn btn-primary uneditable-input',
+        'data-toggle'    => 'modal',
         'data-bs-toggle' => 'modal',
         'data-bs-target' => $selector->modal,
     ]
