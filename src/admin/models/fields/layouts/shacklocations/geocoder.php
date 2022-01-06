@@ -111,22 +111,24 @@ ob_start()
 <div class="row-fluid">
     <div id="mapCanvas"></div>
 </div>
-<div class="row-fluid">
-    <div class="input-append span12">
-        <input class="span6"
-               id="fp_address"
-               type="text"
-               placeholder="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_ADDRESS_HINT'); ?>">
-        <input type="button"
-               id="fp_search"
-               value="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_SEARCH'); ?>"
-               disabled
-               class="btn">
+<div class="fp_controls">
+    <div class="row-fluid">
+        <div class="input-append span12">
+            <input class="span6"
+                   id="fp_address"
+                   type="text"
+                   placeholder="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_ADDRESS_HINT'); ?>">
+            <input type="button"
+                   id="fp_search"
+                   value="<?php echo Text::_('COM_FOCALPOINT_GEOCODER_SEARCH'); ?>"
+                   disabled
+                   class="btn btn-success">
+        </div>
     </div>
-</div>
-<div class="row-fluid">
-    <b><?php echo Text::_('COM_FOCALPOINT_GEOCODER_CURRENT'); ?></b>
-    <div id="current"></div>
+    <div class="row-fluid">
+        <b><?php echo Text::_('COM_FOCALPOINT_GEOCODER_CURRENT'); ?></b>
+        <div id="current"></div>
+    </div>
 </div>
 <?php
 $modalBody = ob_get_contents();
@@ -206,11 +208,23 @@ echo HTMLHelper::_(
                         }
                     })
                     .on('focus', function() {
-                        $searchButton.attr('disabled', false);
+                        if (this.value === '') {
+                            $searchButton.attr('disabled', true);
+
+                        } else {
+                            $searchButton.attr('disabled', false);
+                        }
                     })
                     .on('keyup', function(evt) {
-                        if (evt.which === 13) {
-                            $searchButton.trigger('click');
+                        if (this.value === '') {
+                            $searchButton.attr('disabled', true);
+
+                        } else {
+                            $searchButton.attr('disabled', false);
+
+                            if (evt.which === 13) {
+                                $searchButton.trigger('click');
+                            }
                         }
                     });
 

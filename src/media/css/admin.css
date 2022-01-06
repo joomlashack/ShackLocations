@@ -89,7 +89,6 @@ a.btn.uneditable-input {
   background: -ms-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
   background: linear-gradient(top, #f7f9fa 0%, #ededed 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f9fa', endColorstr='#ededed', GradientType=0);
-
 }
 
 div fieldset.ui-sortable-placeholder {
@@ -241,6 +240,15 @@ div fieldset.ui-sortable-placeholder {
     background-image: none;
     padding-right: 30px;
   }
+}
+
+/******* Modal Objects *********/
+.modal-body .btn:disabled {
+  color: #aaa;
+}
+
+.modal-body .fp_controls {
+  padding: 0 15px 14px;
 }
 
 /*******************/
