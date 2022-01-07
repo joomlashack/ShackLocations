@@ -38,8 +38,6 @@ $user      = Factory::getUser();
 $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));
 $saveOrder = $ordering == 'a.ordering';
-$task      = $this->app->input->getCmd('task');
-$showHelp  = $this->app->input->getBool('showhelp');
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=maps.saveOrderAjax&tmpl=component';
@@ -60,7 +58,7 @@ endif;
         <?php
         echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 
-        if (empty($this->items) == true) :
+        if (empty($this->items)) :
             if ($this->activeFilters) :
                 ?>
                 <div class="alert alert-no-items">
@@ -81,7 +79,6 @@ endif;
                         </button>
                     </div>
                 </div>
-
             <?php endif; ?>
 
         <?php else : ?>

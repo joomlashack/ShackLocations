@@ -167,7 +167,7 @@ endif;
                                 $title = '';
                                 if (($canChange && $saveOrder) == false) :
                                     $class[] = 'inactive';
-                                    $title = HTMLHelper::tooltipText('JORDERINGDISABLED');
+                                    $title   = HTMLHelper::tooltipText('JORDERINGDISABLED');
                                 endif;
                                 ?>
                                 <span class="<?php echo join(' ', $class); ?>" title="<?php echo $title ?? ''; ?>">
@@ -186,16 +186,16 @@ endif;
                             </td>
 
                             <td class="text-center">
-                                    <?php
-                                    echo (new PublishedButton())->render(
-                                        (int)$item->state,
-                                        $i,
-                                        [
-                                            'task_prefix' => 'maps.',
-                                            'id'          => 'state-' . $item->id
-                                        ]
-                                    );
-                                    ?>
+                                <?php
+                                echo (new PublishedButton())->render(
+                                    (int)$item->state,
+                                    $i,
+                                    [
+                                        'task_prefix' => 'maps.',
+                                        'id'          => 'state-' . $item->id
+                                    ]
+                                );
+                                ?>
                             </td>
 
                             <th class="has-context">
@@ -212,7 +212,8 @@ endif;
                                             ['title' => Text::_('JACTION_EDIT')]
                                         ); ?>
                                     <?php else : ?>
-                                        <span title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>">
+                                        <span title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL',
+                                            $this->escape($item->alias)); ?>">
                                             <?php echo $this->escape($item->title); ?>
                                         </span>
                                     <?php endif; ?>
@@ -230,11 +231,12 @@ endif;
                     <?php endforeach; ?>
                     </tbody>
                 </table>
-
-                <input type="hidden" name="task" value=""/>
-                <input type="hidden" name="boxchecked" value="0"/>
-                <?php echo HTMLHelper::_('form.token'); ?>
+                <?php echo $this->pagination->getListFooter(); ?>
             </div>
         </div>
     </div>
+
+    <input type="hidden" name="task" value=""/>
+    <input type="hidden" name="boxchecked" value="0"/>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
