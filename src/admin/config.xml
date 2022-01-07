@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<config addfieldpath="/administrator/components/com_focalpoint/form/fields">
+<config addfieldpath="/administrator/components/com_focalpoint/models/fields">
     <fieldset name="component"
               label="COM_FOCALPOINT_COMPONENT_LABEL"
-              description="COM_FOCALPOINT_COMPONENT_DESC">
+              description="COM_FOCALPOINT_COMPONENT_DESC"
+              addfieldpath="/administrator/components/com_focalpoint/form/fields">
         <field name="apikey"
                type="textarea"
                label="COM_FOCALPOINT_FORM_CONFIG_API_KEY_LBL"
@@ -21,11 +22,12 @@
         <field name="loadBootstrap"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="0"
                label="COM_FOCALPOINT_FORM_CONFIG_LOAD_BOOTSTRAP_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_LOAD_BOOTSTRAP_DESC">
-            <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
+            <option value="1">JENABLED</option>
         </field>
 
         <field name="mapTypeId"
@@ -42,137 +44,89 @@
         <field name="mapTypeControl"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="0"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_DESC">
-            <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
+            <option value="1">JENABLED</option>
         </field>
 
         <field name="zoom"
-               type="list"
+               type="shacklocations.zoom"
+               layout="joomla.form.field.list-fancy-select"
                label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_LBL"
-               description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_DESC">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-        </field>
+               description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_DESC"/>
 
         <field name="maxzoom"
-               type="list"
+               type="shacklocations.zoom"
+               layout="joomla.form.field.list-fancy-select"
                label="COM_FOCALPOINT_FORM_CONFIG_MAXZOOM_LVL_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAXZOOM_LVL_DESC">
             <option value="0">COM_FOCALPOINT_OPTION_AUTO</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
         </field>
 
         <field name="zoomin"
-               type="list"
+               type="shacklocations.zoom"
+               layout="joomla.form.field.list-fancy-select"
                default="14"
                label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ZOOM_LVL_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ZOOM_LVL_DESC">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
         </field>
 
         <field name="zoomControl"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_DESC">
-            <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
+            <option value="1">JENABLED</option>
         </field>
 
         <field name="scrollwheel"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="0"
                label="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_DESC">
-            <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
+            <option value="1">JENABLED</option>
         </field>
 
         <field name="draggable"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_DESC">
-            <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
+            <option value="1">JENABLED</option>
         </field>
 
         <field name="panControl"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="0"
                label="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_DESC">
-            <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
+            <option value="1">JENABLED</option>
         </field>
 
         <field name="streetViewControl"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_DESC">
-            <option value="1">JENABLED</option>
             <option value="0">JDISABLED</option>
+            <option value="1">JENABLED</option>
         </field>
 
         <field name="mapsizecontrol"
@@ -181,8 +135,8 @@
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_DESC">
-            <option value="1">COM_FOCALPOINT_OPTION_CONFIGURATION</option>
             <option value="0">COM_FOCALPOINT_OPTION_TEMPLATE</option>
+            <option value="1">COM_FOCALPOINT_OPTION_CONFIGURATION</option>
         </field>
 
         <field name="mapsizex"
@@ -220,11 +174,12 @@
         <field name="locationlist"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_DESC">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field name="locationorder"
@@ -248,23 +203,25 @@
         <field name="locationgroup"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_GROUP_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_GROUP_DESC"
                showon="locationlist:1">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field name="showlistfirst"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="0"
                label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_TAB_FIRST_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_LIST_TAB_FIRST_DESC"
                showon="locationlist:1">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
     </fieldset>
 
@@ -278,28 +235,31 @@
         <field name="infoshowaddress"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_CONTENT_LBL">
-            <option value="1">JSHOW</option>
             <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
 
         <field name="infoshowphone"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_LBL">
-            <option value="1">JSHOW</option>
             <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
 
         <field name="infoshowintro"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_LBL">
-            <option value="1">JSHOW</option>
             <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
     </fieldset>
 
@@ -307,48 +267,34 @@
         <field name="mapsearchenabled"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="0"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_DESC">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field name="mapsearchprompt"
                type="text"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_PROMPT_LBL"
-               description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_PROMPT_DESC"/>
+               description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_PROMPT_DESC"
+               showon="mapsearchenabled:1"/>
 
         <field name="mapsearchzoom"
-               type="list"
+               type="shacklocations.zoom"
+               layout="joomla.form.field.list-fancy-select"
                default="12"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_ZOOM_LBL"
-               description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_ZOOM_DESC">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-        </field>
+               description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_ZOOM_DESC"
+               showon="mapsearchenabled:1"/>
 
         <field name="resultradius"
                type="list"
                default="15"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_RADIUS_LBL"
-               description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_RADIUS_DESC">
+               description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_RADIUS_DESC"
+               showon="mapsearchenabled:1">
             <option value=".1">0.1</option>
             <option value=".2">0.2</option>
             <option value=".5">0.5</option>
@@ -373,7 +319,8 @@
                type="text"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_ASSIST_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_ASSIST_DESC"
-               size="40"/>
+               size="40"
+               showon="mapsearchenabled:1"/>
     </fieldset>
 
     <fieldset name="locations" label="Locations">
@@ -389,30 +336,33 @@
                type="radio"
                default="1"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                label="COM_FOCALPOINT_FORM_CONFIG_SHOW_MARKERS_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_SHOW_MARKERS_DESC">
-            <option value="1">JSHOW</option>
             <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
 
         <field name="getdirections"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_DESC">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
 
         <field name="hideintrotext"
                type="radio"
                class="btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_HIDE_INTRO_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_HIDE_INTRO_DESC">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
     </fieldset>
 
