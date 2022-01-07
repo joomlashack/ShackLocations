@@ -291,6 +291,7 @@
 
         <field name="resultradius"
                type="list"
+               layout="joomla.form.field.list-fancy-select"
                default="15"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_RADIUS_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAP_SEARCH_RADIUS_DESC"
