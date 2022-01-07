@@ -154,7 +154,8 @@ endif;
                 foreach ($this->items as $i => $item) :
                     $ordering = ($ordering == 'a.ordering');
                     $canCreate = $user->authorise('core.create', 'com_focalpoint');
-                    $canEdit = $user->authorise('core.edit', 'com_focalpoint');
+                    $canEdit = $user->authorise('core.edit', 'com_focalpoint')
+                        || ($user->authorise('core.edit.own') && $user->id == $item->created_by);
                     $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                     $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
                     ?>
