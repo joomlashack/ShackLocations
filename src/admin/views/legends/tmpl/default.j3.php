@@ -40,7 +40,6 @@ $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));
 $saveOrder = $ordering == 'a.ordering';
 $task      = $this->app->input->getCmd('task');
-$mainClass = empty($this->sidebar) ? 'span12' : 'span10';
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=legends.saveOrderAjax&tmpl=component';
@@ -52,37 +51,38 @@ endif;
       method="post"
       name="adminForm"
       id="adminForm">
-    <?php
-    if ($this->sidebar) :
-        ?>
-        <div id="j-sidebar-container" class="span2">
-            <?php echo $this->sidebar; ?>
-        </div>
-    <?php
-    endif;
-    ?>
-    <div id="j-main-container" class="<?php echo $mainClass; ?>">
+    <div id="j-sidebar-container" class="span2">
+        <?php echo $this->sidebar; ?>
+    </div>
+
+    <div id="j-main-container" class="span10">
         <?php
-        if ($task != 'showhelp') :
-            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
-        endif;
+        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 
         if (empty($this->items)) :
-            if ($task == 'showhelp') :
-                ?>
-                <div class="fp_legends_view">
-                    <div class="hero-unit" style="text-align:left;">
-                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LEGENDS'); ?>
-                    </div>
-                </div>
-            <?php
-            else :
+            if ($this->activeFilters) :
                 ?>
                 <div class="alert alert-no-items">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+
+                </div>
+            <?php else : ?>
+                <div class="alert alert-info span6">
+                    <?php
+                    echo Text::sprintf(
+                        'COM_FOCALPOINT_LEGENDS_EMPTYSTATE_CONTENT',
+                        'index.php?option=com_focalpoint&task=legend.add'
+                    );
+                    ?>
+                    <div class="btn-toolbar text-center">
+                        <button class="btn btn-success" onclick="Joomla.submitbutton('legend.add');">
+                            <?php echo Text::_('COM_FOCALPOINT_LEGENDS_EMPTYSTATE_BUTTON_ADD'); ?>
+                        </button>
+                    </div>
                 </div>
             <?php
             endif;
+
         else :
             ?>
             <table class="table table-striped" id="legendsList">
@@ -247,10 +247,9 @@ endif;
             echo $this->pagination->getListFooter();
         endif;
         ?>
-        <div>
-            <input type="hidden" name="task" value=""/>
-            <input type="hidden" name="boxchecked" value="0"/>
-            <?php echo HTMLHelper::_('form.token'); ?>
-        </div>
     </div>
+
+    <input type="hidden" name="task" value=""/>
+    <input type="hidden" name="boxchecked" value="0"/>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
