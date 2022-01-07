@@ -102,6 +102,10 @@
         <include>ShackDefaultFiles</include>
 
         <obsolete>
+            <preflight>
+                <folder>administrator/components/com_focalpoint/sql</folder>
+            </preflight>
+
             <folder>administrator/components/com_focalpoint/layouts</folder>
             <folder>components/com_focalpoint/helpers</folder>
 
