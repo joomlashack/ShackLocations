@@ -128,7 +128,7 @@ endif;
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_MAPS_CREATED_BY',
-                            'a.created_by',
+                            'created_by_alias',
                             $direction,
                             $ordering
                         );
@@ -228,9 +228,10 @@ endif;
                             </div>
                         </td>
 
-                        <td class="small hidden-phone">
-                            <?php echo $item->created_by; ?>
+                        <td class="hidden-phone">
+                            <?php echo $item->created_by_alias; ?>
                         </td>
+
                         <td class="center hidden-phone">
                             <?php echo (int)$item->id; ?>
                         </td>

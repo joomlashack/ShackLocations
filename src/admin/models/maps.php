@@ -37,7 +37,7 @@ class FocalpointModelmaps extends ListModel
         $config = array_merge_recursive(
             [
                 'filter_fields' => [
-                    'a.created_by',
+                    'created_by_alias',
                     'a.id',
                     'a.ordering',
                     'a.state',
@@ -94,7 +94,7 @@ class FocalpointModelmaps extends ListModel
             ->select([
                 'a.*',
                 'uc.name AS editor',
-                'created_by.name AS created_by'
+                'created_by.name AS created_by_alias'
             ])
             ->from('#__focalpoint_maps AS a')
             ->leftJoin('#__users AS uc ON uc.id = a.checked_out')
