@@ -27,7 +27,7 @@ use Joomla\CMS\Form\FormHelper;
 
 defined('_JEXEC') or die;
 
-FormHelper::loadFieldClass('PredefinedList');
+FormHelper::loadFieldClass('Predefinedlist');
 
 class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
 {
