@@ -70,7 +70,10 @@ endif;
             <?php else : ?>
                 <div class="alert alert-info span6">
                     <?php
-                    echo Text::sprintf('COM_FOCALPOINT_MAPS_EMPTYSTATE_CONTENT', 'index.php?option=com_focalpoint&task=map.add');
+                    echo Text::sprintf(
+                        'COM_FOCALPOINT_MAPS_EMPTYSTATE_CONTENT',
+                        'index.php?option=com_focalpoint&task=map.add'
+                    );
                     ?>
                     <div class="btn-toolbar text-center">
                         <button class="btn btn-success" onclick="Joomla.submitbutton('map.add');">
@@ -81,9 +84,7 @@ endif;
 
             <?php endif; ?>
 
-        <?php else :
-            ?>
-
+        <?php else : ?>
             <table class="table table-striped" id="mapsList">
                 <thead>
                 <tr>
