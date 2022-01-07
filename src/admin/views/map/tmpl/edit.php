@@ -52,7 +52,7 @@ $formFieldsets = $this->form->getFieldsets();
     ?>
     <div class="main-card">
         <?php
-        echo HTMLHelper::_('uitab.startTabSet', 'map', ['active' => 'basic']);
+        echo HTMLHelper::_('uitab.startTabSet', 'map', ['active' => 'basic', 'recall' => true]);
 
         echo HTMLHelper::_('uitab.addTab', 'map', 'basic', Text::_($formFieldsets['basic']->label));
         ?>
