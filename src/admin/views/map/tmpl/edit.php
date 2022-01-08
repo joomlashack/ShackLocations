@@ -75,7 +75,7 @@ $formFieldsets = $this->form->getFieldsets();
         $tabFieldset = $formFieldsets['tabs'];
         echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
         ?>
-        <div class="row-fluid">
+        <div class="row">
             <div class="form-vertical">
                 <?php
                 if ($tabDescription = Text::_($tabFieldset->description)) :
@@ -100,7 +100,7 @@ $formFieldsets = $this->form->getFieldsets();
 
         echo HTMLHelper::_('uitab.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
         ?>
-        <div class="row-fluid">
+        <div class="row">
             <div class="form-horizontal">
                 <?php echo $this->form->renderFieldset('metadata'); ?>
             </div>
@@ -110,7 +110,7 @@ $formFieldsets = $this->form->getFieldsets();
 
         echo HTMLHelper::_('uitab.addTab', 'map', 'params', Text::_($formFieldsets['params']->label));
         ?>
-        <div class="row-fluid">
+        <div class="row">
             <div class="form-horizontal">
                 <?php echo $this->form->renderFieldset('params'); ?>
             </div>
