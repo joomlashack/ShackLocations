@@ -22,15 +22,14 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-use Alledia\Framework\Joomla\Form\Field\ListField;
+use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
 defined('_JEXEC') or die;
 
-include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
+FormHelper::loadFieldClass('list');
 
-class ShacklocationsFormFieldRobots extends ListField
+class ShacklocationsFormFieldRobots extends JFormFieldList
 {
     /**
      * @var string[]
