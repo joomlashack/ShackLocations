@@ -95,14 +95,11 @@
                    rows="3"/>
 
             <field name="robots"
-                   type="list"
-                   useglobal="true"
+                   type="shacklocations.robots"
+                   layout="joomla.form.field.list-fancy-select"
                    label="COM_FOCALPOINT_FORM_METADATA_ROBOTS_LABEL"
                    description="COM_FOCALPOINT_FORM_METADATA_ROBOTS_DESC">
-                <option value="index, follow">JGLOBAL_INDEX_FOLLOW</option>
-                <option value="noindex, follow">JGLOBAL_NOINDEX_FOLLOW</option>
-                <option value="index, nofollow">JGLOBAL_INDEX_NOFOLLOW</option>
-                <option value="noindex, nofollow">JGLOBAL_NOINDEX_NOFOLLOW</option>
+                <option value="">COM_FOCALPOINT_OPTION_IGNORE</option>
             </field>
 
             <field name="author"
@@ -133,6 +130,7 @@
 
             <field name="mapTypeId"
                    type="list"
+                   layout="joomla.form.field.list-fancy-select"
                    useglobal="true"
                    label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_DESC">
@@ -253,6 +251,7 @@
 
             <field name="legendposition"
                    type="list"
+                   layout="joomla.form.field.list-fancy-select"
                    useglobal="true"
                    class="chzn-single"
                    label="COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_LBL"
@@ -283,7 +282,6 @@
                    type="list"
                    useglobal="true"
                    label="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ORDER_LBL"
-                   description="COM_FOCALPOINT_FORM_CONFIG_LOCATION_ORDER_DESC"
                    showon="locationlist!:0">
                 <option value="ordering">COM_FOCALPOINT_OPTION_ORDERING</option>
                 <option value="title">COM_FOCALPOINT_OPTION_TITLE</option>
