@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="hidden">
-        <field name="id"
-               type="hidden"/>
+        <field name="id" type="hidden"/>
     </fieldset>
 
     <!-- title/alias fields -->
@@ -26,7 +25,7 @@
     <fieldset name="general">
         <field name="state"
                type="list"
-               class="chzn-color-state"
+               class="chzn-color-state form-select-color-state"
                label="JSTATUS"
                description="JFIELD_PUBLISHED_DESC"
                default="1">
