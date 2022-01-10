@@ -140,7 +140,6 @@ endif;
                                 $ordering
                             ); ?>
                         </th>
-
                     </tr>
                     </thead>
 
@@ -157,7 +156,7 @@ endif;
                         ?>
                         <tr class="<?php echo 'row' . ($i % 2); ?>"
                             data-draggable-group="0">
-                            <td class="center hidden-phone">
+                            <td class="text-center d-none d-md-table-cell">
                                 <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                             </td>
 
@@ -192,13 +191,14 @@ endif;
                                     $i,
                                     [
                                         'task_prefix' => 'maps.',
-                                        'id'          => 'state-' . $item->id
+                                        'id'          => 'state-' . $item->id,
+                                        'disabled'    => $canChange == false
                                     ]
                                 );
                                 ?>
                             </td>
 
-                            <th class="has-context">
+                            <td class="has-context">
                                 <div class="break-word">
                                     <?php if ($item->checked_out) : ?>
                                         <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
@@ -218,7 +218,7 @@ endif;
                                         </span>
                                     <?php endif; ?>
                                 </div>
-                            </th>
+                            </td>
 
                             <td class="d-none d-md-table-cell">
                                 <?php echo $item->created_by_alias; ?>
