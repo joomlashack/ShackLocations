@@ -141,8 +141,10 @@ echo HTMLHelper::_(
     'bootstrap.renderModal',
     $modalId,
     [
-        'title'  => Text::_('COM_FOCALPOINT_GEOCODER_DRAG'),
-        'footer' => HTMLHelper::_(
+        'title'      => Text::_('COM_FOCALPOINT_GEOCODER_DRAG'),
+        'height' => '400px',
+        'modalWidth' => '80',
+        'footer'     => HTMLHelper::_(
                 'alledia.modal.footerSaveButton',
                 ['id' => $saveId],
                 Text::_('COM_FOCALPOINT_GEOCODER_SAVE')
