@@ -105,8 +105,7 @@
 
         <field name="created_by"
                type="user"
-               label="COM_FOCALPOINT_FORM_LOCATION_CREATED_BY_LBL"
-               description="COM_FOCALPOINT_FORM_LOCATION_CREATED_BY_DESC"/>
+               label="COM_FOCALPOINT_FORM_LOCATION_CREATED_BY_LBL"/>
     </fieldset>
 
     <fieldset name="customfieldsdata"
