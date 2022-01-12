@@ -76,162 +76,173 @@ endif;
     <div class="row">
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
-                <?php echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
+                <?php
+                echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 
-                <table class="adminlist table" id="adminList">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                            <?php echo HTMLHelper::_('grid.checkall'); ?>
-                        </th>
+                if (empty($this->items)) : ?>
+                    <div class="alert alert-info">
+                        <span class="icon-info-circle" aria-hidden="true"></span>
+                        <span class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
+                        <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                    </div>
 
-                        <th scope="col" class="w-1 text-center d-none d-md-table-cell">
-                            <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                '',
-                                'a.ordering',
-                                $direction,
-                                $ordering,
-                                null,
-                                'asc',
-                                'JGRID_HEADING_ORDERING',
-                                'icon-menu-2'
-                            );
-                            ?>
-                        </th>
+                <?php else : ?>
+                    <table class="adminlist table" id="adminList">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
+                                <?php echo HTMLHelper::_('grid.checkall'); ?>
+                            </th>
 
-                        <th scope="col" class="w-1 text-nowrap text-center">
-                            <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction,
-                                $ordering); ?>
-                        </th>
-
-                        <th scope="col">
-                            <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                'COM_FOCALPOINT_MAPS_TITLE',
-                                'a.title',
-                                $direction,
-                                $ordering
-                            );
-                            ?>
-                        </th>
-
-                        <th scope="col" class="w-10 text-nowrap d-none d-md-table-cell">
-                            <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                'COM_FOCALPOINT_MAPS_CREATED_BY',
-                                'created_by_alias',
-                                $direction,
-                                $ordering
-                            );
-                            ?>
-                        </th>
-
-                        <th scope="col" class="w-1 text-nowrap d-none d-md-table-cell">
-                            <?php
-                            echo HTMLHelper::_(
-                                'searchtools.sort',
-                                'JGRID_HEADING_ID',
-                                'a.id',
-                                $direction,
-                                $ordering
-                            ); ?>
-                        </th>
-                    </tr>
-                    </thead>
-
-                    <tbody <?php echo $bodyAttribs ?? ''; ?>>
-                    <?php
-                    foreach ($this->items as $i => $item) :
-                        $editLink = Route::_('index.php?option=com_focalpoint&task=map.edit&id=' . $item->id);
-                        $ordering = ($ordering == 'a.ordering');
-                        $canCreate = $user->authorise('core.create', 'com_focalpoint');
-                        $canEdit = $user->authorise('core.edit', 'com_focalpoint')
-                            || ($user->authorise('core.edit.own', 'com_focalpoint') && $user->id == $item->created_by);
-                        $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
-                        $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
-                        ?>
-                        <tr class="<?php echo 'row' . ($i % 2); ?>"
-                            data-draggable-group="0">
-                            <td class="text-center d-none d-md-table-cell">
-                                <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
-                            </td>
-
-                            <td class="text-nowrap text-center d-none d-md-table-cell">
+                            <th scope="col" class="w-1 text-center d-none d-md-table-cell">
                                 <?php
-                                $class = ['sortable-handler'];
-                                $title = '';
-                                if (($canChange && $saveOrder) == false) :
-                                    $class[] = 'inactive';
-                                    $title   = HTMLHelper::tooltipText('JORDERINGDISABLED');
-                                endif;
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    '',
+                                    'a.ordering',
+                                    $direction,
+                                    $ordering,
+                                    null,
+                                    'asc',
+                                    'JGRID_HEADING_ORDERING',
+                                    'icon-menu-2'
+                                );
                                 ?>
-                                <span class="<?php echo join(' ', $class); ?>" title="<?php echo $title ?? ''; ?>">
+                            </th>
+
+                            <th scope="col" class="w-1 text-nowrap text-center">
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction,
+                                    $ordering); ?>
+                            </th>
+
+                            <th scope="col">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'COM_FOCALPOINT_MAPS_TITLE',
+                                    'a.title',
+                                    $direction,
+                                    $ordering
+                                );
+                                ?>
+                            </th>
+
+                            <th scope="col" class="w-10 text-nowrap d-none d-md-table-cell">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'COM_FOCALPOINT_MAPS_CREATED_BY',
+                                    'created_by_alias',
+                                    $direction,
+                                    $ordering
+                                );
+                                ?>
+                            </th>
+
+                            <th scope="col" class="w-1 text-nowrap d-none d-md-table-cell">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JGRID_HEADING_ID',
+                                    'a.id',
+                                    $direction,
+                                    $ordering
+                                ); ?>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody <?php echo $bodyAttribs ?? ''; ?>>
+                        <?php
+                        foreach ($this->items as $i => $item) :
+                            $editLink = Route::_('index.php?option=com_focalpoint&task=map.edit&id=' . $item->id);
+                            $ordering = ($ordering == 'a.ordering');
+                            $canCreate = $user->authorise('core.create', 'com_focalpoint');
+                            $canEdit = $user->authorise('core.edit', 'com_focalpoint')
+                                || ($user->authorise('core.edit.own',
+                                        'com_focalpoint') && $user->id == $item->created_by);
+                            $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
+                            $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
+                            ?>
+                            <tr class="<?php echo 'row' . ($i % 2); ?>"
+                                data-draggable-group="0">
+                                <td class="text-center d-none d-md-table-cell">
+                                    <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
+                                </td>
+
+                                <td class="text-nowrap text-center d-none d-md-table-cell">
+                                    <?php
+                                    $class = ['sortable-handler'];
+                                    $title = '';
+                                    if (($canChange && $saveOrder) == false) :
+                                        $class[] = 'inactive';
+                                        $title   = HTMLHelper::tooltipText('JORDERINGDISABLED');
+                                    endif;
+                                    ?>
+                                    <span class="<?php echo join(' ', $class); ?>" title="<?php echo $title ?? ''; ?>">
                                     <span class="icon-ellipsis-v"></span>
                                 </span>
 
-                                <?php
-                                if ($canChange && $saveOrder) :
-                                    ?>
-                                    <input type="text"
-                                           name="order[]"
-                                           size="5"
-                                           class="width-20 text-area-order hidden"
-                                           value="<?php echo $item->ordering; ?>"/>
-                                <?php endif; ?>
-                            </td>
-
-                            <td class="text-center">
-                                <?php
-                                echo (new PublishedButton())->render(
-                                    (int)$item->state,
-                                    $i,
-                                    [
-                                        'task_prefix' => 'maps.',
-                                        'id'          => 'state-' . $item->id,
-                                        'disabled'    => $canChange == false
-                                    ]
-                                );
-                                ?>
-                            </td>
-
-                            <td class="has-context">
-                                <div class="break-word">
-                                    <?php if ($item->checked_out) : ?>
-                                        <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
-                                            $item->checked_out_time, 'maps.', $canCheckin); ?>
+                                    <?php
+                                    if ($canChange && $saveOrder) :
+                                        ?>
+                                        <input type="text"
+                                               name="order[]"
+                                               size="5"
+                                               class="width-20 text-area-order hidden"
+                                               value="<?php echo $item->ordering; ?>"/>
                                     <?php endif; ?>
-                                    <?php if ($canEdit) :
-                                        echo HTMLHelper::_(
-                                            'link',
-                                            $editLink,
-                                            $this->escape($item->title),
-                                            ['title' => Text::_('JACTION_EDIT')]
-                                        ); ?>
-                                    <?php else : ?>
-                                        <span title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL',
-                                            $this->escape($item->alias)); ?>">
+                                </td>
+
+                                <td class="text-center">
+                                    <?php
+                                    echo (new PublishedButton())->render(
+                                        (int)$item->state,
+                                        $i,
+                                        [
+                                            'task_prefix' => 'maps.',
+                                            'id'          => 'state-' . $item->id,
+                                            'disabled'    => $canChange == false
+                                        ]
+                                    );
+                                    ?>
+                                </td>
+
+                                <td class="has-context">
+                                    <div class="break-word">
+                                        <?php if ($item->checked_out) : ?>
+                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
+                                                $item->checked_out_time, 'maps.', $canCheckin); ?>
+                                        <?php endif; ?>
+                                        <?php if ($canEdit) :
+                                            echo HTMLHelper::_(
+                                                'link',
+                                                $editLink,
+                                                $this->escape($item->title),
+                                                ['title' => Text::_('JACTION_EDIT')]
+                                            ); ?>
+                                        <?php else : ?>
+                                            <span title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL',
+                                                $this->escape($item->alias)); ?>">
                                             <?php echo $this->escape($item->title); ?>
                                         </span>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
 
-                            <td class="d-none d-md-table-cell">
-                                <?php echo $item->created_by_alias; ?>
-                            </td>
+                                <td class="d-none d-md-table-cell">
+                                    <?php echo $item->created_by_alias; ?>
+                                </td>
 
-                            <td class="text-center d-none d-md-table-cell">
-                                <?php echo (int)$item->id; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-                <?php echo $this->pagination->getListFooter(); ?>
+                                <td class="text-center d-none d-md-table-cell">
+                                    <?php echo (int)$item->id; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php echo $this->pagination->getListFooter(); ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>

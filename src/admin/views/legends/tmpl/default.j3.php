@@ -62,10 +62,10 @@ endif;
         if (empty($this->items)) :
             if ($this->activeFilters) :
                 ?>
-                <div class="alert alert-no-items">
+                <div class="alert alert-warning">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-
                 </div>
+
             <?php else : ?>
                 <div class="alert alert-info span6">
                     <?php

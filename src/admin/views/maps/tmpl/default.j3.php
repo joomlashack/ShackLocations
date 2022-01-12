@@ -63,8 +63,8 @@ endif;
                 ?>
                 <div class="alert alert-no-items">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-
                 </div>
+
             <?php else : ?>
                 <div class="alert alert-info span6">
                     <?php
@@ -79,9 +79,11 @@ endif;
                         </button>
                     </div>
                 </div>
-            <?php endif; ?>
+            <?php
+            endif;
 
-        <?php else : ?>
+        else :
+            ?>
             <table class="table table-striped" id="mapsList">
                 <thead>
                 <tr>
