@@ -60,12 +60,10 @@ class FocalpointModelmaps extends ListModel
      */
     protected function populateState($ordering = 'a.title', $direction = 'ASC')
     {
-        $app = Factory::getApplication();
-
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string');
         $this->setState('filter.state', $published);
 
         parent::populateState($ordering, $direction);
