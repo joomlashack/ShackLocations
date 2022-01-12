@@ -24,7 +24,7 @@
 
 use Joomla\CMS\MVC\Model\ListModel;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointModelGetstarted extends ListModel
 {

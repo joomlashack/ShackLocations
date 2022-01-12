@@ -29,7 +29,7 @@ use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 abstract class FocalpointHelper extends ContentHelper
 {

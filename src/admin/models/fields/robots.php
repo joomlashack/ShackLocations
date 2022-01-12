@@ -25,7 +25,7 @@
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 FormHelper::loadFieldClass('list');
 

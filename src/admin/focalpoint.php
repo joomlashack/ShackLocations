@@ -28,7 +28,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Version;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 // Access check.
 if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {

@@ -24,7 +24,7 @@
 
 use Joomla\CMS\MVC\Controller\AdminController;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointControllerLocationtypes extends AdminController
 {

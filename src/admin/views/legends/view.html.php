@@ -29,7 +29,7 @@ use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointViewLegends extends AbstractList
 {

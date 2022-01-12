@@ -31,7 +31,7 @@ use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 $includePath = JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
 if (is_file($includePath)) {

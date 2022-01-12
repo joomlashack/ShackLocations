@@ -31,7 +31,7 @@ use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Version;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointViewGetstarted extends AbstractBase
 {

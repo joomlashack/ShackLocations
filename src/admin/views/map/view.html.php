@@ -30,7 +30,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointViewMap extends AbstractForm
 {

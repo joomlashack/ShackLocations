@@ -27,7 +27,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Plugin\PluginHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointControllerMap extends FormController
 {

@@ -24,7 +24,7 @@
 
 use Joomla\CMS\MVC\Controller\FormController;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointControllerLegend extends FormController
 {

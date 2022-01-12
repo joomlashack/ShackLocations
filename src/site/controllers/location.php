@@ -22,7 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 require_once JPATH_COMPONENT.'/controller.php';
 

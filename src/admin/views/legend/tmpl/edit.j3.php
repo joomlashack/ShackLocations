@@ -26,7 +26,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.formvalidator');

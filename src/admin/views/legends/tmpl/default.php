@@ -31,7 +31,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\Utilities\ArrayHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 HTMLHelper::_('bootstrap.tooltip');
 

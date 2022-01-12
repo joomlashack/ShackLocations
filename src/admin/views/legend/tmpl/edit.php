@@ -27,7 +27,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\WebAsset\WebAssetManager;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 /** @var WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();

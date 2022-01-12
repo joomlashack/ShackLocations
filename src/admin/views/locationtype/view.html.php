@@ -28,7 +28,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointViewLocationtype extends AbstractList
 {

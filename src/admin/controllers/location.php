@@ -28,7 +28,7 @@ use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointControllerLocation extends FormController
 {

@@ -28,7 +28,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointViewLocation extends FocalpointViewSite
 {

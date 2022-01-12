@@ -25,7 +25,7 @@
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointTablelocationtype extends FocalpointTable
 {
