@@ -77,7 +77,7 @@ endif;
                     ?>
                     <div class="btn-toolbar text-center">
                         <button class="btn btn-success" onclick="Joomla.submitbutton('locationtype.add');">
-                            <?php echo Text::_('COM_FOCALPOINT_LOCATIONTYPE_EMPTYSTATE_BUTTON_ADD'); ?>
+                            <?php echo Text::_('COM_FOCALPOINT_LOCATIONTYPES_EMPTYSTATE_BUTTON_ADD'); ?>
                         </button>
                     </div>
                 </div>
