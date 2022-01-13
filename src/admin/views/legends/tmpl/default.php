@@ -103,8 +103,14 @@ endif;
                             </th>
 
                             <th scope="col" class="w-1 text-nowrap text-center">
-                                <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction,
-                                    $ordering); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JSTATUS',
+                                    'a.state',
+                                    $direction,
+                                    $ordering
+                                );
+                                ?>
                             </th>
 
                             <th scope="col">

@@ -39,7 +39,6 @@ $user      = Factory::getUser();
 $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));
 $saveOrder = $ordering == 'a.ordering';
-$task      = $this->app->input->getCmd('task');
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=legends.saveOrderAjax&tmpl=component';

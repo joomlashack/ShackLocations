@@ -35,9 +35,7 @@ $displayData = [
 
 $user = Factory::getApplication()->getIdentity();
 
-if (
-    $user->authorise('core.create', 'com_focalpoint')
-    || count($user->getAuthorisedCategories('com_focalpoint', 'core.create')) > 0
+if ($user->authorise('core.create', 'com_focalpoint')
 ) {
     $displayData['createURL'] = 'index.php?option=com_focalpoint&task=legend.add';
 }
