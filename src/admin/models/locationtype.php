@@ -24,6 +24,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
@@ -40,7 +41,7 @@ class FocalpointModellocationtype extends AdminModel
      */
     public function getTable($name = 'Locationtype', $prefix = 'FocalpointTable', $options = [])
     {
-        return JTable::getInstance($name, $prefix, $options);
+        return Table::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -80,9 +81,7 @@ class FocalpointModellocationtype extends AdminModel
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            if (isset($item->customfields)) {
-                $item->customfields = json_decode($item->customfields, true);
-            }
+            $item->customfields = json_decode($item->customfields, true);
 
             if (empty($item->id)) {
                 $item->created_by = Factory::getUser()->id;

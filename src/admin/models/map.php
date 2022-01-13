@@ -23,6 +23,7 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
@@ -61,10 +62,10 @@ class FocalpointModelmap extends AdminModel
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         try {
-            $proForm = JForm::getInstance('map.pro', 'map.pro');
+            $proForm = Form::getInstance('map.pro', 'map.pro');
             $form->load($proForm->getXml());
 
-        } catch (Exception $error) {
+        } catch (Throwable $error) {
             // ignore
         }
 

@@ -66,8 +66,8 @@ class FocalpointViewLocationtypes extends AbstractList
 
             parent::display($tpl);
 
-        } catch (Throwable $e) {
-            $this->app->enqueueMessage($e->getMessage(), 'error');
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
     }
 

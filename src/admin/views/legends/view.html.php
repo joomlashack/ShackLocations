@@ -71,8 +71,8 @@ class FocalpointViewLegends extends AbstractList
 
             parent::display($tpl);
 
-        } catch (Throwable $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
+        } catch (Throwable $error) {
+            $app->enqueueMessage($error->getMessage(), 'error');
         }
     }
 
