@@ -22,7 +22,6 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die();
@@ -52,11 +51,7 @@ class FocalpointModelmaps extends ListModel
     }
 
     /**
-     * @param string $ordering
-     * @param string $direction
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     protected function populateState($ordering = 'a.title', $direction = 'ASC')
     {
