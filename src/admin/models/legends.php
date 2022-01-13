@@ -131,9 +131,7 @@ class FocalpointModellegends extends ListModel
 
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
-        if ($ordering && $direction) {
-            $query->order($db->escape($ordering . ' ' . $direction));
-        }
+        $query->order($db->escape($ordering . ' ' . $direction));
 
         return $query;
     }

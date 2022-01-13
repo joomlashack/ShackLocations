@@ -126,10 +126,9 @@ class FocalpointModelmaps extends ListModel
             }
         }
 
-        // Add the list ordering clause.
-        $ordering   = $this->state->get('list.ordering');
-        $direcrtion = $this->state->get('list.direction');
-        $query->order($ordering . ' ' . $direcrtion);
+        $ordering  = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+        $query->order($ordering . ' ' . $direction);
 
         return $query;
     }

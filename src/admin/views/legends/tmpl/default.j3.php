@@ -83,8 +83,7 @@ endif;
             <?php
             endif;
 
-        else :
-            ?>
+        else : ?>
             <table class="table table-striped" id="legendsList">
                 <thead>
                 <tr>
