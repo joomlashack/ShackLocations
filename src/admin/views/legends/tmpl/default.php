@@ -124,7 +124,7 @@ endif;
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'COM_FOCALPOINT_LEGENDS_CREATED_BY',
-                                    'a.created_by',
+                                    'created_by_alias',
                                     $direction,
                                     $ordering
                                 );
@@ -150,8 +150,8 @@ endif;
                         foreach ($this->items as $i => $item) :
                             $ordering = ($ordering == 'a.ordering');
                             $canCreate = $user->authorise('core.create', 'com_focalpoint');
-                            $canEdit = $user->authorise('core.edit', 'com_focalpoint') ||
-                                ($user->authorise('core.edit.own', 'com_focalpoint') && $item->created_by == $user->id);
+                            $canEdit = $user->authorise('core.edit', 'com_focalpoint')
+                                || ($user->authorise('core.edit.own', 'com_focalpoint') && $item->created_by == $user->id);
                             $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                             $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
                             ?>
@@ -221,7 +221,7 @@ endif;
                                 </td>
 
                                 <td class="text-hidden-phone">
-                                    <?php echo $item->created_by; ?>
+                                    <?php echo $item->created_by_alias; ?>
                                 </td>
 
                                 <td class="text-center d-none d-md-table-cell">

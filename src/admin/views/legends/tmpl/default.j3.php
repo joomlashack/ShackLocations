@@ -103,12 +103,15 @@ endif;
                         );
                         ?>
                     </th>
+
                     <th style="width: 1%;" class="hidden-phone">
                         <?php echo HTMLHelper::_('grid.checkall'); ?>
                     </th>
+
                     <th style="width: 1%;min-width:55px" class="nowrap center">
                         <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $ordering); ?>
                     </th>
+
                     <th>
                         <?php
                         echo HTMLHelper::_(
@@ -120,17 +123,19 @@ endif;
                         );
                         ?>
                     </th>
+
                     <th style="width: 10%;" class="nowrap hidden-phone">
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LEGENDS_CREATED_BY',
-                            'a.created_by',
+                            'created_by_alias',
                             $direction,
                             $ordering
                         );
                         ?>
                     </th>
+
                     <th style="width: 1%;" class="nowrap hidden-phone">
                         <?php
                         echo HTMLHelper::_(
@@ -231,8 +236,9 @@ endif;
                                 ?>
                             </div>
                         </td>
+
                         <td class="small hidden-phone">
-                            <?php echo $item->created_by; ?>
+                            <?php echo $item->created_by_alias; ?>
                         </td>
 
                         <td class="center hidden-phone">
