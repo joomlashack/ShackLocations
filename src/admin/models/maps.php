@@ -87,11 +87,11 @@ class FocalpointModelmaps extends ListModel
             ->select([
                 'a.*',
                 'uc.name AS editor',
-                'created_by.name AS created_by_alias'
+                'creator.name AS created_by_alias'
             ])
             ->from('#__focalpoint_maps AS a')
             ->leftJoin('#__users AS uc ON uc.id = a.checked_out')
-            ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
+            ->leftJoin('#__users AS creator ON creator.id = a.created_by');
 
         // Filter by published
         $published = $this->getState('filter.state');
