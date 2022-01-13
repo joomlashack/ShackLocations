@@ -36,7 +36,6 @@ HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 $user      = Factory::getUser();
-$userId    = $user->get('id');
 $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));
 $saveOrder = $ordering == 'a.ordering';
@@ -46,47 +45,46 @@ if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=locationtypes.saveOrderAjax&tmpl=component';
     HTMLHelper::_('sortablelist.sortable', 'locationTypesList', 'adminForm', strtolower($direction), $saveOrderingUrl);
 endif;
-
-$mainContainer = [
-    'id' => 'j-main-container'
-];
-if (!empty($this->sidebar)) {
-    $mainContainer['class'] = 'span10';
-}
 ?>
 
 <form action="<?php echo Route::_('index.php?option=com_focalpoint&view=locationtypes'); ?>"
       method="post"
       id="adminForm"
       name="adminForm">
-    <?php
-    if (!empty($this->sidebar)) :
-        ?>
-        <div id="j-sidebar-container" class="span2">
-            <?php echo $this->sidebar; ?>
-        </div>
-    <?php endif; ?>
 
-    <div <?php echo ArrayHelper::toString($mainContainer); ?>>
+    <div id="j-sidebar-container" class="span2">
+        <?php echo $this->sidebar; ?>
+    </div>
+
+    <div id="j-main-container" class="span10">
         <?php
-        // Search tools bar
-        if ($task != 'showhelp') :
-            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
-        endif;
+        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 
         if (empty($this->items)) :
-            if ($task == 'showhelp') : ?>
-                <div class="fp_locationtypes_view">
-                    <div class="hero-unit" style="text-align:left;">
-                        <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LOCATIONTYPES_NEW'); ?>
-                    </div>
-                </div>
-            <?php else : ?>
-                <div class="alert alert-no-items">
+            if ($this->activeFilters) :
+                ?>
+                <div class="alert alert-warning">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-            <?php endif; ?>
-        <?php else : ?>
+
+            <?php else : ?>
+                <div class="alert alert-info span6">
+                    <?php
+                    echo Text::sprintf(
+                        'COM_FOCALPOINT_LOCATIONTYPES_EMPTYSTATE_CONTENT',
+                        'index.php?option=com_focalpoint&task=locationtype.add'
+                    );
+                    ?>
+                    <div class="btn-toolbar text-center">
+                        <button class="btn btn-success" onclick="Joomla.submitbutton('locationtype.add');">
+                            <?php echo Text::_('COM_FOCALPOINT_LOCATIONTYPE_EMPTYSTATE_BUTTON_ADD'); ?>
+                        </button>
+                    </div>
+                </div>
+            <?php
+            endif;
+
+        else : ?>
             <table class="table table-striped" id="locationTypesList">
                 <thead>
                 <tr>
@@ -143,7 +141,7 @@ if (!empty($this->sidebar)) {
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONTYPES_CREATED_BY',
-                            'created_by.name',
+                            'created_by_alias',
                             $direction,
                             $ordering
                         );
@@ -168,8 +166,8 @@ if (!empty($this->sidebar)) {
                 <?php foreach ($this->items as $i => $item) :
                     $ordering = ($ordering == 'a.ordering');
                     $canCreate = $user->authorise('core.create', 'com_focalpoint');
-                    $canEdit = $user->authorise('core.edit', 'com_focalpoint');
-                    $canEditOwn = $user->authorise('core.edit.own', 'com_focalpoint');
+                    $canEdit = $user->authorise('core.edit', 'com_focalpoint')
+                        || ($user->authorise('core.edit.own', 'com_focalpoint') && $item->created_by == $user->id);
                     $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                     $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
                     $editLink = Route::_('index.php?option=com_focalpoint&task=locationtype.edit&id=' . $item->id);
@@ -178,27 +176,30 @@ if (!empty($this->sidebar)) {
                     <tr class="<?php echo 'row' . ($i % 2); ?>" sortable-group-id="<?php echo $item->legend; ?>">
                         <td class="order nowrap center hidden-phone">
                             <?php
-                            $class = 'sortable-handler';
+                            $sortableAttribs = ['class' => 'sortable-handler'];
+
                             if (!$canChange) :
-                                $class .= ' inactive';
+                                $sortableAttribs['class'] .= ' inactive';
+
                             elseif (!$saveOrder) :
-                                $class .= sprintf(
-                                    ' inactive tip-top hasTooltip" title="%s"',
-                                    HTMLHelper::tooltipText('JORDERINGDISABLED')
-                                );
+                                $sortableAttribs['class'] .= ' inactive tip-top hasTooltip';
+                                $sortableAttribs['title'] = HTMLHelper::tooltipText('JORDERINGDISABLED');
                             endif;
-                            ?>
-                            <span class="<?php echo $class; ?>">
-                                <i class="icon-menu"></i>
-                            </span>
-                            <?php
-                            if ($canChange && $saveOrder) : ?>
+
+                            echo sprintf(
+                                '<span %s> <i class="icon-menu"></i></span>',
+                                ArrayHelper::toString($sortableAttribs)
+                            );
+
+                            if ($canChange && $saveOrder) :
+                                ?>
                                 <input type="text"
                                        style="display:none"
                                        name="order[]"
-                                       size="5"
                                        value="<?php echo $item->ordering; ?>"/>
-                            <?php endif; ?>
+                            <?php
+                            endif;
+                            ?>
                         </td>
 
                         <td class="center hidden-phone">
@@ -234,7 +235,7 @@ if (!empty($this->sidebar)) {
                                     );
                                 endif;
 
-                                if ($canEdit || $canEditOwn) :
+                                if ($canEdit) :
                                     echo HTMLHelper::_(
                                         'link',
                                         $editLink,
@@ -253,7 +254,7 @@ if (!empty($this->sidebar)) {
                         </td>
 
                         <td class="small hidden-phone">
-                            <?php echo $item->created_by; ?>
+                            <?php echo $item->created_by_alias; ?>
                         </td>
 
                         <td class="center hidden-phone">
@@ -267,9 +268,9 @@ if (!empty($this->sidebar)) {
             echo $this->pagination->getListFooter();
         endif;
         ?>
-
-        <input type="hidden" name="task" value=""/>
-        <input type="hidden" name="boxchecked" value="0"/>
-        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
+
+    <input type="hidden" name="task" value=""/>
+    <input type="hidden" name="boxchecked" value="0"/>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
