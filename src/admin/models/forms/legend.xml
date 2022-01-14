@@ -16,9 +16,9 @@
 
         <field name="alias"
                type="text"
-               class="inputbox"
-               label="COM_FOCALPOINT_FORM_LEGEND_ALIAS_LBL"
-               required="false"
+               label="JFIELD_ALIAS_LABEL"
+               description="COM_FOCALPOINT_FORM_FIELD_ALIAS_DESC"
+               filter="safehtml"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
 

@@ -18,8 +18,8 @@
 
         <field name="alias"
                type="text"
-               label="COM_FOCALPOINT_FORM_MAP_ALIAS_LBL"
-               description="JFIELD_ALIAS_DESC"
+               label="JFIELD_ALIAS_LABEL"
+               description="COM_FOCALPOINT_FORM_FIELD_ALIAS_DESC"
                filter="safehtml"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
