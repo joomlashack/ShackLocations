@@ -76,20 +76,18 @@ $formFieldsets = $this->form->getFieldsets();
         echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
         ?>
         <div class="row">
-            <div class="form-vertical">
-                <?php
-                if ($tabDescription = Text::_($tabFieldset->description)) :
-                    ?>
-                    <div class="tab-description alert alert-info">
-                        <span class="icon-info" aria-hidden="true"></span>
-                        <?php echo $tabDescription; ?>
-                    </div>
-                <?php
-                endif;
-
-                echo $this->form->renderFieldset('tabs');
+            <?php
+            if ($tabDescription = Text::_($tabFieldset->description)) :
                 ?>
-            </div>
+                <div class="tab-description alert alert-info">
+                    <span class="icon-info" aria-hidden="true"></span>
+                    <?php echo $tabDescription; ?>
+                </div>
+            <?php
+            endif;
+
+            echo $this->form->renderFieldset('tabs');
+            ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab');
