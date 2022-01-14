@@ -24,7 +24,6 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 
@@ -32,7 +31,7 @@ defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModelmap extends AdminModel
+class FocalpointModelmap extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
@@ -54,9 +53,14 @@ class FocalpointModelmap extends AdminModel
      */
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm('com_focalpoint.map', 'map', ['control' => 'jform', 'load_data' => $loadData]);
-
-        return $form ?: false;
+        return $this->loadForm(
+            'com_focalpoint.map',
+            'map',
+            [
+                'control'   => 'jform',
+                'load_data' => $loadData
+            ]
+        );
     }
 
     /**
@@ -111,26 +115,10 @@ class FocalpointModelmap extends AdminModel
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            if (empty($item->id)) {
-                $item->created_by = Factory::getUser()->id;
-            }
-
             $item->tabsdata = json_decode($item->tabsdata, true);
             $item->metadata = json_decode($item->metadata, true);
         }
 
         return $item;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function prepareTable($table)
-    {
-        $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
-
-        if (!$table->id) {
-            $table->ordering = $table->getNextOrder();
-        }
     }
 }

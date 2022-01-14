@@ -23,11 +23,10 @@
  */
 
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die();
 
-class FocalpointModellegends extends ListModel
+class FocalpointModellegends extends FocalpointModelList
 {
     /**
      * @inheritDoc

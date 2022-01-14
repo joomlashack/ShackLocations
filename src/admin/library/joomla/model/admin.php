@@ -2,8 +2,7 @@
 /**
  * @package   ShackLocations
  * @contact   www.joomlashack.com, help@joomlashack.com
- * @copyright 2013-2017 John Pitchers <john@viperfish.com.au> - http://viperfish.com.au
- * @copyright 2018-2021 Joomlashack.com. All rights reserved
+ * @copyright 2022 Joomlashack.com. All rights reserved
  * @license   https://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of ShackLocations.
@@ -22,10 +21,36 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\AdminModel;
 
 defined('_JEXEC') or die();
 
-class FocalpointModelGetstarted extends BaseDatabaseModel
+abstract class FocalpointModelAdmin extends AdminModel
 {
+    /**
+     * @inheritDoc
+     */
+    public function getItem($pk = null)
+    {
+        $item = parent::getItem($pk);
+
+        if (empty($item->id) && property_exists($item, 'created_by')) {
+            $item->created_by = Factory::getUser()->id;
+        }
+
+        return $item;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function prepareTable($table)
+    {
+        parent::prepareTable($table);
+
+        if (empty($table->id)) {
+            $table->ordering = $table->getNextOrder();
+        }
+    }
 }

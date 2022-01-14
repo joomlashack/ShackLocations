@@ -133,15 +133,24 @@ class FocalpointModellocationtypes extends ListModel
 
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
-        $query->order($ordering . ' ' . $direction);
-        switch ($ordering) {
-            case 'legend_title':
-                $query->order('a.title ' . $direction);
-                break;
+        if ($ordering == 'a.ordering') {
+            $query->order([
+                'legend_title ' . $direction,
+                'a.legend ' . $direction,
+                'a.ordering ' . $direction
+            ]);
 
-            case 'a.title':
-                $query->order('legend_title ' . $direction);
-                break;
+        } else {
+            $query->order($ordering . ' ' . $direction);
+            switch ($ordering) {
+                case 'legend_title':
+                    $query->order('a.title ' . $direction);
+                    break;
+
+                case 'a.title':
+                    $query->order('legend_title ' . $direction);
+                    break;
+            }
         }
 
         return $query;

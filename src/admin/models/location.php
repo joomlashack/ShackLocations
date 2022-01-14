@@ -22,9 +22,9 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
@@ -32,7 +32,7 @@ defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellocation extends AdminModel
+class FocalpointModellocation extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
@@ -103,7 +103,7 @@ class FocalpointModellocation extends AdminModel
      */
     protected function prepareTable($table)
     {
-        $table->alias = JFilterOutput::stringURLSafe($table->get('alias') ?: $table->get('title'));
+        $table->alias = ApplicationHelper::stringURLSafe($table->get('alias') ?: $table->get('title'));
 
         if (!$table->id) {
             $table->ordering = $table->getNextOrder();

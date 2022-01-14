@@ -22,15 +22,15 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellocationtype extends AdminModel
+class FocalpointModellocationtype extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
@@ -85,27 +85,9 @@ class FocalpointModellocationtype extends AdminModel
     {
         if ($item = parent::getItem($pk)) {
             $item->customfields = json_decode($item->customfields, true);
-
-            if (empty($item->id)) {
-                $item->created_by = Factory::getUser()->id;
-            }
         }
 
         return $item;
-    }
-
-    /**
-     * @param Table $table
-     *
-     * @return void
-     */
-    protected function prepareTable($table)
-    {
-        $table->alias = JFilterOutput::stringUrlSafe($table->alias ?: $table->title);
-
-        if (!$table->id) {
-            $table->ordering = $table->getNextOrder();
-        }
     }
 
     /**

@@ -22,15 +22,15 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellegend extends AdminModel
+class FocalpointModellegend extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
@@ -77,34 +77,6 @@ class FocalpointModellegend extends AdminModel
         }
 
         return $data;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getItem($pk = null)
-    {
-        if ($item = parent::getItem($pk)) {
-            if (empty($item->id)) {
-                $item->created_by = Factory::getUser()->id;
-            }
-        }
-
-        return $item;
-    }
-
-    /**
-     * @param Table $table
-     *
-     * @return void
-     */
-    protected function prepareTable($table)
-    {
-        $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
-
-        if (!$table->id) {
-            $table->ordering = $table->getNextOrder();
-        }
     }
 
     /**

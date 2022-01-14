@@ -22,11 +22,9 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\MVC\Model\ListModel;
-
 defined('_JEXEC') or die();
 
-class FocalpointModelmaps extends ListModel
+class FocalpointModelmaps extends FocalpointModelList
 {
     /**
      * @inheritDoc
