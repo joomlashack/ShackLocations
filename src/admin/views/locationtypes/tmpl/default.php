@@ -64,10 +64,6 @@ endif;
       id="adminForm"
       name="adminForm">
 
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this->sidebar; ?>
-    </div>
-
     <div class="row">
         <div class="col-md-12">
             <div id="j-main-container" class="j-main-container">
