@@ -61,7 +61,7 @@ try {
 
             case 'administrator':
                 if (Version::MAJOR_VERSION < 4) {
-                    HTMLHelper::_('stylesheet', 'com_focalpoint/fontawesome/css/all.min.css', ['relative' => true]);
+                    HTMLHelper::_('stylesheet', 'lib_allediaframework/fontawesome/css/all.min.css', ['relative' => true]);
                 }
 
                 HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
