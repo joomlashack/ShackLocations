@@ -81,4 +81,5 @@ class FocalpointTablelocationtype extends FocalpointTable
 
         return false;
     }
+
 }
