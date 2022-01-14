@@ -35,6 +35,9 @@ class FocalpointModellegend extends AdminModel
 {
     use FocalpointModelTraits;
 
+    /**
+     * @inheritdoc
+     */
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
