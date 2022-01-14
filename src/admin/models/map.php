@@ -27,6 +27,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
+use Joomla\Filter\OutputFilter;
 
 defined('_JEXEC') or die();
 
@@ -36,6 +37,9 @@ class FocalpointModelmap extends AdminModel
 {
     use FocalpointModelTraits;
 
+    /**
+     * @inheritdoc
+     */
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
@@ -124,7 +128,7 @@ class FocalpointModelmap extends AdminModel
      */
     protected function prepareTable($table)
     {
-        $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
+        $table->alias = OutputFilter::stringUrlSafe($table->alias ?: $table->title);
 
         if (!$table->id) {
             $table->ordering = $table->getNextOrder();
