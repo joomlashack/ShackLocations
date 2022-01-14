@@ -25,7 +25,6 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Table\Table;
-use Joomla\Filter\OutputFilter;
 
 defined('_JEXEC') or die();
 
@@ -101,7 +100,7 @@ class FocalpointModellegend extends AdminModel
      */
     protected function prepareTable($table)
     {
-        $table->alias = OutputFilter::stringUrlSafe($table->alias ?: $table->title);
+        $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
 
         if (!$table->id) {
             $table->ordering = $table->getNextOrder();

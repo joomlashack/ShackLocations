@@ -23,7 +23,6 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
@@ -104,7 +103,7 @@ class FocalpointModellocation extends AdminModel
      */
     protected function prepareTable($table)
     {
-        $table->alias = OutputFilter::stringURLSafe($table->get('alias') ?: $table->get('title'));
+        $table->alias = JFilterOutput::stringURLSafe($table->get('alias') ?: $table->get('title'));
 
         if (!$table->id) {
             $table->ordering = $table->getNextOrder();
