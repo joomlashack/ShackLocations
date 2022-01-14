@@ -83,7 +83,7 @@ class FocalpointViewLegends extends AbstractList
     {
         $user = Factory::getUser();
 
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'legend');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
             ToolbarHelper::addNew('legend.add');

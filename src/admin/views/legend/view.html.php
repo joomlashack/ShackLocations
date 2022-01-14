@@ -69,7 +69,7 @@ class FocalpointViewLegend extends AbstractForm
         $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
 
         $title = 'COM_FOCALPOINT_TITLE_LEGEND_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'list-2');
+        ToolbarHelper::title(Text::_($title), 'legend');
 
         if (!$checkedOut) {
             if ($user->authorise('core.edit', 'com_focalpoint')

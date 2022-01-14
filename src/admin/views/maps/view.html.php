@@ -80,7 +80,7 @@ class FocalpointViewMaps extends AbstractList
     {
         $user = Factory::getUser();
 
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_MAPS'), 'compass');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_MAPS'), 'map');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
             ToolbarHelper::addNew('map.add');

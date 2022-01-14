@@ -27,6 +27,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Version;
 
 defined('_JEXEC') or die();
 
@@ -59,6 +60,10 @@ try {
                 break;
 
             case 'administrator':
+                if (Version::MAJOR_VERSION < 4) {
+                    HTMLHelper::_('stylesheet', 'com_focalpoint/fontawesome/css/all.min.css', ['relative' => true]);
+                }
+
                 HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
                 JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
                 break;

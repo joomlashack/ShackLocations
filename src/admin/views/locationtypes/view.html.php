@@ -78,7 +78,7 @@ class FocalpointViewLocationtypes extends AbstractList
     {
         $user = Factory::getUser();
 
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'), 'location');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'), 'location-type');
 
         if ($user->authorise('core.create', 'com_focalpoint')) {
             ToolbarHelper::addNew('locationtype.add');

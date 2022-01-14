@@ -64,7 +64,7 @@ class FocalpointViewLocationtype extends AbstractList
         $isNew = empty($this->item->id);
 
         $title = 'COM_FOCALPOINT_TITLE_LOCATIONTYPE_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'location');
+        ToolbarHelper::title(Text::_($title), 'location-type');
 
         if (
             $user->authorise('core.edit', 'com_focalpoint')

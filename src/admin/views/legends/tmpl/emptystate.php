@@ -30,7 +30,7 @@ $displayData = [
     'textPrefix' => 'COM_FOCALPOINT_LEGENDS',
     'formURL'    => 'index.php?option=com_focalpoint&view=legends',
     'helpURL'    => 'https://www.joomlashack.com/docs/shack-locations/getting-started-with-shack-locations/',
-    'icon'       => 'icon-list',
+    'icon'       => 'icon-legend',
 ];
 
 $user = Factory::getApplication()->getIdentity();

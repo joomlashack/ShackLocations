@@ -81,7 +81,7 @@ class FocalpointViewMap extends AbstractForm
         $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
 
         $title = 'COM_FOCALPOINT_TITLE_MAP_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'compass');
+        ToolbarHelper::title(Text::_($title), 'map');
 
         if (!$checkedOut) {
             if (
