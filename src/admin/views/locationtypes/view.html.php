@@ -96,10 +96,10 @@ class FocalpointViewLocationtypes extends AbstractList
 
         if ($user->authorise('core.delete', 'com_focalpoint')) {
             if ($this->state->get('filter.state') == -2) {
-                ToolbarHelper::deleteList('', 'legends.delete');
+                ToolbarHelper::deleteList('', 'locationtypes.delete');
 
             } else {
-                ToolbarHelper::trash('legends.trash');
+                ToolbarHelper::trash('locationtypes.trash');
             }
         }
 
