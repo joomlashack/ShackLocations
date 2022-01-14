@@ -66,7 +66,7 @@ class FocalpointViewGetstarted extends AbstractBase
      */
     protected function addToolbar()
     {
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_GETSTARTED'), 'legends.png');
+        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_GETSTARTED'), 'map');
 
         $user = Factory::getUser();
 
