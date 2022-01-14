@@ -42,23 +42,27 @@ class FocalpointViewLocationtype extends AbstractList
      */
     public function display($tpl = null)
     {
-        $this->model = $this->getModel();
-        $this->state = $this->model->getState();
-        $this->item  = $this->model->getItem();
-        $this->form  = $this->model->getForm();
+        try {
+            $this->model = $this->getModel();
+            $this->state = $this->model->getState();
+            $this->item  = $this->model->getItem();
+            $this->form  = $this->model->getForm();
 
-        $this->addToolbar();
+            $this->addToolbar();
 
-        parent::display($tpl);
+            parent::display($tpl);
+
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
+        }
     }
 
     /**
      * @return void
-     * @throws Exception
      */
     protected function addToolbar()
     {
-        Factory::getApplication()->input->set('hidemainmenu', true);
+        $this->app->input->set('hidemainmenu', true);
 
         $user  = Factory::getUser();
         $isNew = empty($this->item->id);
@@ -66,27 +70,24 @@ class FocalpointViewLocationtype extends AbstractList
         $title = 'COM_FOCALPOINT_TITLE_LOCATIONTYPE_' . ($isNew ? 'ADD' : 'EDIT');
         ToolbarHelper::title(Text::_($title), 'location-type');
 
-        if (
-            $user->authorise('core.edit', 'com_focalpoint')
-            || $user->authorise('core.create', 'com_focalpoint')
-        ) {
-            ToolbarHelper::apply('locationtype.apply');
-            ToolbarHelper::save('locationtype.save');
+        if (empty($this->item->checked_out) || $this->item->checked_out == $user->get('id')) {
+            if (
+                $user->authorise('core.edit', 'com_focalpoint')
+                || $user->authorise('core.create', 'com_focalpoint')
+            ) {
+                ToolbarHelper::apply('locationtype.apply');
+                ToolbarHelper::save('locationtype.save');
+            }
+
+            if ($user->authorise('core.create', 'com_focalpoint')) {
+                ToolbarHelper::save2new('locationtype.save2new');
+            }
         }
 
-        if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::save2new('locationtype.save2new');
-        }
-
-        if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
+        if ($isNew == false && $user->authorise('core.create', 'com_focalpoint')) {
             ToolbarHelper::save2copy('locationtype.save2copy');
         }
 
-        if (!$this->item->get('id')) {
-            ToolbarHelper::cancel('locationtype.cancel');
-
-        } else {
-            ToolbarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CLOSE');
-        }
+        ToolbarHelper::cancel('locationtype.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

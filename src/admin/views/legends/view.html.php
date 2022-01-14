@@ -38,9 +38,6 @@ class FocalpointViewLegends extends AbstractList
      */
     public function display($tpl = null)
     {
-        /** @var AdministratorApplication $app */
-        $app = Factory::getApplication();
-
         try {
             $this->model = $this->getModel();
 
@@ -65,14 +62,10 @@ class FocalpointViewLegends extends AbstractList
                 ->select('id')
                 ->from('#__focalpoint_legends');
 
-            if (empty($db->setQuery($query)->loadResult())) {
-                $app->input->set('task', 'showhelp');
-            }
-
             parent::display($tpl);
 
         } catch (Throwable $error) {
-            $app->enqueueMessage($error->getMessage(), 'error');
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
     }
 
@@ -99,11 +92,13 @@ class FocalpointViewLegends extends AbstractList
             ToolbarHelper::checkin('legends.checkin');
         }
 
-        if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            ToolbarHelper::deleteList('', 'legends.delete');
+        if ($user->authorise('core.delete', 'com_focalpoint')) {
+            if ($this->state->get('filter.state') == -2) {
+                ToolbarHelper::deleteList('', 'legends.delete');
 
-        } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolbarHelper::trash('legends.trash');
+            } else {
+                ToolbarHelper::trash('legends.trash');
+            }
         }
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {

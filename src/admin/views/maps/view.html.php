@@ -103,10 +103,10 @@ class FocalpointViewMaps extends AbstractList
             } else {
                 ToolbarHelper::trash('maps.trash');
             }
+        }
 
-            if ($user->authorise('core.admin', 'com_focalpoint')) {
-                ToolbarHelper::preferences('com_focalpoint');
-            }
+        if ($user->authorise('core.admin', 'com_focalpoint')) {
+            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

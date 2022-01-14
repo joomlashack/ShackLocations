@@ -94,11 +94,13 @@ class FocalpointViewLocationtypes extends AbstractList
             ToolbarHelper::checkin('locationtypes.checkin');
         }
 
-        if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            ToolbarHelper::deleteList('', 'locationtypes.delete');
+        if ($user->authorise('core.delete', 'com_focalpoint')) {
+            if ($this->state->get('filter.state') == -2) {
+                ToolbarHelper::deleteList('', 'legends.delete');
 
-        } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolbarHelper::trash('locationtypes.trash');
+            } else {
+                ToolbarHelper::trash('legends.trash');
+            }
         }
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {

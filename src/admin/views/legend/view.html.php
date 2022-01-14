@@ -66,12 +66,10 @@ class FocalpointViewLegend extends AbstractForm
         $user  = Factory::getUser();
         $isNew = ($this->item->id == 0);
 
-        $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
-
         $title = 'COM_FOCALPOINT_TITLE_LEGEND_' . ($isNew ? 'ADD' : 'EDIT');
         ToolbarHelper::title(Text::_($title), 'legend');
 
-        if (!$checkedOut) {
+        if (empty($this->item->checked_out) || $this->item->checked_out == $user->get('id')) {
             if ($user->authorise('core.edit', 'com_focalpoint')
                 || ($user->authorise('core.create', 'com_focalpoint'))
             ) {
@@ -84,7 +82,7 @@ class FocalpointViewLegend extends AbstractForm
             }
         }
 
-        if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
+        if ($isNew == false && $user->authorise('core.create', 'com_focalpoint')) {
             ToolbarHelper::save2copy('legend.save2copy');
         }
 
