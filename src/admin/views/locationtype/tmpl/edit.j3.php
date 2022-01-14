@@ -35,14 +35,6 @@ HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 HTMLHelper::_('jquery.ui', ['core', 'sortable']);
 ?>
-<script type="text/javascript">
-    Joomla.submitbutton = function(task) {
-        if (task === 'locationtype.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
-        }
-    }
-</script>
-
 <form action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
