@@ -28,7 +28,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewAdminList extends AbstractList
+abstract class FocalpointViewAdminList extends AbstractList
 {
     /**
      * @param string $single
