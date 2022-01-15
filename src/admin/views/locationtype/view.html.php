@@ -22,21 +22,10 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractList;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Toolbar\ToolbarHelper;
-
 defined('_JEXEC') or die();
 
-class FocalpointViewLocationtype extends AbstractList
+class FocalpointViewLocationtype extends FocalpointViewAdminForm
 {
-    /**
-     * @var CMSObject
-     */
-    protected $item;
-
     /**
      * @inheritDoc
      */
@@ -48,46 +37,12 @@ class FocalpointViewLocationtype extends AbstractList
             $this->item  = $this->model->getItem();
             $this->form  = $this->model->getForm();
 
-            $this->addToolbar();
+            $this->addToolbar('locationtype');
 
             parent::display($tpl);
 
         } catch (Throwable $error) {
             $this->app->enqueueMessage($error->getMessage(), 'error');
         }
-    }
-
-    /**
-     * @return void
-     */
-    protected function addToolbar()
-    {
-        $this->app->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = empty($this->item->id);
-
-        $title = 'COM_FOCALPOINT_TITLE_LOCATIONTYPE_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'location-type');
-
-        if (empty($this->item->checked_out) || $this->item->checked_out == $user->get('id')) {
-            if (
-                $user->authorise('core.edit', 'com_focalpoint')
-                || $user->authorise('core.create', 'com_focalpoint')
-            ) {
-                ToolbarHelper::apply('locationtype.apply');
-                ToolbarHelper::save('locationtype.save');
-            }
-
-            if ($user->authorise('core.create', 'com_focalpoint')) {
-                ToolbarHelper::save2new('locationtype.save2new');
-            }
-        }
-
-        if ($isNew == false && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::save2copy('locationtype.save2copy');
-        }
-
-        ToolbarHelper::cancel('locationtype.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

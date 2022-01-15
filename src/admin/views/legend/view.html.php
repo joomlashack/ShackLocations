@@ -22,21 +22,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractForm;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLegend extends AbstractForm
+class FocalpointViewLegend extends FocalpointViewAdminForm
 {
-    /**
-     * @var CMSObject
-     */
-    protected $item = null;
-
     /**
      * @param string $tpl
      *
@@ -45,47 +36,18 @@ class FocalpointViewLegend extends AbstractForm
      */
     public function display($tpl = null)
     {
-        $this->model = $this->getModel();
-        $this->state = $this->model->getState();
-        $this->item  = $this->model->getItem();
-        $this->form  = $this->model->getForm();
+        try {
+            $this->model = $this->getModel();
+            $this->state = $this->model->getState();
+            $this->item  = $this->model->getItem();
+            $this->form  = $this->model->getForm();
 
-        $this->addToolbar();
+            $this->addToolbar('legend');
 
-        parent::display($tpl);
-    }
+            parent::display($tpl);
 
-    /**
-     * @return void
-     * @throws Exception
-     */
-    protected function addToolbar()
-    {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = ($this->item->id == 0);
-
-        $title = 'COM_FOCALPOINT_TITLE_LEGEND_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'legend');
-
-        if (empty($this->item->checked_out) || $this->item->checked_out == $user->get('id')) {
-            if ($user->authorise('core.edit', 'com_focalpoint')
-                || ($user->authorise('core.create', 'com_focalpoint'))
-            ) {
-                ToolbarHelper::apply('legend.apply');
-                ToolbarHelper::save('legend.save');
-            }
-
-            if ($user->authorise('core.create', 'com_focalpoint')) {
-                ToolbarHelper::save2new('legend.save2new');
-            }
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
-
-        if ($isNew == false && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::save2copy('legend.save2copy');
-        }
-
-        ToolbarHelper::cancel('legend.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

@@ -32,13 +32,8 @@ use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewMap extends AbstractForm
+class FocalpointViewMap extends FocalpointViewAdminForm
 {
-    /**
-     * @var CMSObject
-     */
-    protected $item = null;
-
     /**
      * @var Registry
      */
@@ -56,7 +51,7 @@ class FocalpointViewMap extends AbstractForm
             $this->form   = $this->model->getForm();
             $this->params = $this->extension->params;
 
-            $this->addToolbar();
+            $this->addToolbar('map');
 
             PluginHelper::importPlugin('focalpoint');
             $this->app->triggerEvent('onSlocmapBeforeLoad', [&$this->item]);
@@ -66,39 +61,5 @@ class FocalpointViewMap extends AbstractForm
         } catch (Throwable $error) {
             $this->app->enqueueMessage($error->getMessage(), 'error');
         }
-    }
-
-    /**
-     * @return void
-     */
-    protected function addToolbar()
-    {
-        $this->app->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = ($this->item->id == 0);
-
-        $title = 'COM_FOCALPOINT_TITLE_MAP_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'map');
-
-        if (empty($this->item->checked_out) || $this->item->checked_out == $user->get('id')) {
-            if (
-                $user->authorise('core.edit', 'com_focalpoint')
-                || $user->authorise('core.create', 'com_focalpoint')
-            ) {
-                ToolbarHelper::apply('map.apply');
-                ToolbarHelper::save('map.save');
-            }
-
-            if ($user->authorise('core.create', 'com_focalpoint')) {
-                ToolbarHelper::save2new('map.save2new');
-            }
-        }
-
-        if ($isNew == false && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::save2copy('map.save2copy');
-        }
-
-        ToolbarHelper::cancel('map.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }
