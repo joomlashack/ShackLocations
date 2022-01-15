@@ -50,7 +50,7 @@ abstract class FocalpointModelAdmin extends AdminModel
         parent::prepareTable($table);
 
         if (empty($table->id)) {
-            $table->ordering = $table->getNextOrder();
+            $table->reorder();
         }
     }
 }

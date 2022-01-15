@@ -100,4 +100,12 @@ class FocalpointModellocationtype extends FocalpointModelAdmin
 
         return parent::save($data);
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReorderConditions($table)
+    {
+        return ['legend = ' . (int) $table->legend];
+    }
 }
