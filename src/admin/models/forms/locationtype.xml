@@ -37,6 +37,7 @@
 
         <field name="legend"
                type="shacklocations.legend"
+               layout="joomla.form.field.list-fancy-select"
                label="COM_FOCALPOINT_FORM_LOCATIONTYPE_LEGEND_LBL"
                required="true"
                description="COM_FOCALPOINT_FORM_LOCATIONTYPE_LEGEND_DESC"/>
