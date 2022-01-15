@@ -22,8 +22,6 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractList;
-use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
@@ -31,7 +29,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLegends extends AbstractList
+class FocalpointViewLegends extends FocalpointViewAdminList
 {
     /**
      * @inheritDoc
@@ -47,62 +45,15 @@ class FocalpointViewLegends extends AbstractList
             $this->filterForm    = $this->model->getFilterForm();
             $this->activeFilters = $this->model->getActiveFilters();
 
-            $this->addToolbar();
+            $this->addToolbar('legend', 'legends');
 
             FocalpointHelper::addSubmenu('legends');
             $this->sidebar = Sidebar::render();
-
-            /*
-             * This is part of the getting started walk through. If we've gotten this far then the
-             * user has successfully saved their configuration and defined a map.
-             * Check we have at least one legend defined
-             */
-            $db    = Factory::getDbo();
-            $query = $db->getQuery(true)
-                ->select('id')
-                ->from('#__focalpoint_legends');
 
             parent::display($tpl);
 
         } catch (Throwable $error) {
             $this->app->enqueueMessage($error->getMessage(), 'error');
-        }
-    }
-
-    /**
-     * @return void
-     */
-    protected function addToolbar()
-    {
-        $user = Factory::getUser();
-
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'legend');
-
-        if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::addNew('legend.add');
-        }
-
-        if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolbarHelper::editList('legend.edit');
-        }
-
-        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolbarHelper::publishList('legends.publish');
-            ToolbarHelper::unpublishList('legends.unpublish');
-            ToolbarHelper::checkin('legends.checkin');
-        }
-
-        if ($user->authorise('core.delete', 'com_focalpoint')) {
-            if ($this->state->get('filter.state') == -2) {
-                ToolbarHelper::deleteList('', 'legends.delete');
-
-            } else {
-                ToolbarHelper::trash('legends.trash');
-            }
-        }
-
-        if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

@@ -587,6 +587,10 @@ div fieldset.ui-sortable-placeholder {
   content: "\f05a";
 }
 
-.icon-location-type:before {
+.icon-locationtype:before {
   content: "\f5a0"
+}
+
+.icon-location:before {
+  content: "\f3c5" !important;
 }

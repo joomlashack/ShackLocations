@@ -22,15 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractList;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLocations extends AbstractList
+class FocalpointViewLocations extends FocalpointViewAdminList
 {
     /**
      * @inheritDoc
@@ -46,65 +42,15 @@ class FocalpointViewLocations extends AbstractList
             $this->filterForm    = $this->model->getFilterForm();
             $this->activeFilters = $this->model->getActiveFilters();
 
-            $this->addToolbar();
+            $this->addToolbar('location', 'locations');
 
             FocalpointHelper::addSubmenu('locations');
             $this->sidebar = Sidebar::render();
-
-            /*
-             * This is part of the getting started walk through. If we've gotten this far then the
-             * user has successfully created a map, legend and location tyeps.
-             * Check we have at least one location defined
-             */
-            $db    = Factory::getDbo();
-            $query = $db->getQuery(true)
-                ->select('id')
-                ->from('#__focalpoint_locations');
-
-            if (!$db->setQuery($query)->loadResult()) {
-                $this->app->input->set('task', 'congratulations');
-            }
 
             parent::display($tpl);
 
         } catch (Throwable $error) {
             $this->app->enqueueMessage($error->getMessage(), 'error');
-        }
-    }
-
-    /**
-     * @return void
-     */
-    protected function addToolbar()
-    {
-        $user = Factory::getUser();
-
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LOCATIONS'), 'location');
-
-        if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::addNew('location.add');
-        }
-
-        if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolbarHelper::editList('location.edit');
-        }
-
-        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolbarHelper::publishList('locations.publish');
-            ToolbarHelper::unpublishList('locations.unpublish');
-            ToolbarHelper::checkin('locations.checkin');
-        }
-
-
-        if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            ToolbarHelper::deleteList('', 'locations.delete');
-
-        } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolbarHelper::trash('locations.trash');
-        }
-
-        if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

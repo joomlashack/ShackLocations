@@ -22,15 +22,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractList;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewMaps extends AbstractList
+class FocalpointViewMaps extends FocalpointViewAdminList
 {
     /**
      * @inheritDoc
@@ -48,7 +45,7 @@ class FocalpointViewMaps extends AbstractList
             FocalpointHelper::addSubmenu('maps');
             $this->sidebar = Sidebar::render();
 
-            $this->addToolbar();
+            $this->addToolbar('map', 'maps');
 
             /*
              * This is part of the getting started walk through. If we've gotten this far then the
@@ -70,43 +67,6 @@ class FocalpointViewMaps extends AbstractList
 
         } catch (Throwable $error) {
             $this->app->enqueueMessage($error->getMessage(), 'error');
-        }
-    }
-
-    /**
-     * @return void
-     */
-    protected function addToolbar()
-    {
-        $user = Factory::getUser();
-
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_MAPS'), 'map');
-
-        if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::addNew('map.add');
-        }
-
-        if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolbarHelper::editList('map.edit');
-        }
-
-        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolbarHelper::publishList('maps.publish');
-            ToolbarHelper::unpublishList('maps.unpublish');
-            ToolbarHelper::checkin('maps.checkin');
-        }
-
-        if ($user->authorise('core.delete', 'com_focalpoint')) {
-            if ($this->state->get('filter.state') == -2) {
-                ToolbarHelper::deleteList('', 'maps.delete');
-
-            } else {
-                ToolbarHelper::trash('maps.trash');
-            }
-        }
-
-        if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }

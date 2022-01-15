@@ -30,7 +30,7 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLocationtypes extends AbstractList
+class FocalpointViewLocationtypes extends FocalpointViewAdminList
 {
     /**
      * @inheritDoc
@@ -45,66 +45,15 @@ class FocalpointViewLocationtypes extends AbstractList
             $this->filterForm    = $this->model->getFilterForm();
             $this->activeFilters = $this->model->getActiveFilters();
 
-            $this->addToolbar();
+            $this->addToolbar('locationtype', 'locationtypes');
 
             FocalpointHelper::addSubmenu('locationtypes');
             $this->sidebar = Sidebar::render();
-
-            /*
-             * This is part of the getting started walk through. If we've gotten this far then the
-             * user has successfully saved their configuration, added a map and defined a legend.
-             * Check we have at least one location type defined
-             */
-            $db    = Factory::getDbo();
-            $query = $db->getQuery(true)
-                ->select('id')
-                ->from('#__focalpoint_locationtypes');
-
-            if (!$db->setQuery($query)->loadResult()) {
-                $this->app->input->set('task', 'showhelp');
-            }
 
             parent::display($tpl);
 
         } catch (Throwable $error) {
             $this->app->enqueueMessage($error->getMessage(), 'error');
-        }
-    }
-
-    /**
-     * @return void
-     */
-    protected function addToolbar()
-    {
-        $user = Factory::getUser();
-
-        ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'), 'location-type');
-
-        if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolbarHelper::addNew('locationtype.add');
-        }
-
-        if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolbarHelper::editList('locationtype.edit');
-        }
-
-        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolbarHelper::publishList('locationtypes.publish');
-            ToolbarHelper::unpublishList('locationtypes.unpublish');
-            ToolbarHelper::checkin('locationtypes.checkin');
-        }
-
-        if ($user->authorise('core.delete', 'com_focalpoint')) {
-            if ($this->state->get('filter.state') == -2) {
-                ToolbarHelper::deleteList('', 'locationtypes.delete');
-
-            } else {
-                ToolbarHelper::trash('locationtypes.trash');
-            }
-        }
-
-        if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolbarHelper::preferences('com_focalpoint');
         }
     }
 }
