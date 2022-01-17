@@ -40,7 +40,7 @@
     <fieldset name="params">
         <field name="state"
                type="list"
-               class="chzn-color chzn-color-state"
+               class="chzn-color chzn-color-state form-select-color-state"
                label="JSTATUS"
                description="JFIELD_PUBLISHED_DESC"
                size="1"
