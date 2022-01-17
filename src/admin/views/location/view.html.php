@@ -22,70 +22,27 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractForm;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Toolbar\ToolbarHelper;
-
 defined('_JEXEC') or die();
 
-class FocalpointViewLocation extends AbstractForm
+class FocalpointViewLocation extends FocalpointViewAdminForm
 {
-    /**
-     * @var object
-     */
-    protected $item = null;
-
     /**
      * @inheritDoc
      */
     public function display($tpl = null)
     {
-        $this->model = $this->getModel();
-        $this->state = $this->model->getState();
-        $this->item  = $this->model->getItem();
-        $this->form  = $this->model->getForm();
+        try {
+            $this->model = $this->getModel();
+            $this->state = $this->model->getState();
+            $this->item  = $this->model->getItem();
+            $this->form  = $this->model->getForm();
 
-        $this->addToolbar();
+            $this->addToolbar('location');
 
-        parent::display($tpl);
-    }
+            parent::display($tpl);
 
-    /**
-     * @return void
-     * @throws Exception
-     */
-    protected function addToolbar()
-    {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = empty($this->item->id);
-        if (isset($this->item->checked_out)) {
-            $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
-        } else {
-            $checkedOut = false;
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
-        $canDo = FocalpointHelper::getActions();
-
-        $title = 'COM_FOCALPOINT_TITLE_LOCATION_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'location.png');
-
-        if (!$checkedOut) {
-            if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
-                ToolbarHelper::apply('location.apply');
-                ToolbarHelper::save('location.save');
-            }
-
-            if ($canDo->get('core.create')) {
-                ToolbarHelper::save2new('location.save2new');
-            }
-        }
-
-        if (!$isNew && $canDo->get('core.create')) {
-            ToolbarHelper::save2copy('location.save2copy');
-        }
-
-        ToolbarHelper::cancel('location.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }
