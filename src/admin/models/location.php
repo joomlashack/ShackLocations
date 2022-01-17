@@ -36,6 +36,9 @@ class FocalpointModellocation extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
+    /**
+     * @inheritdoc
+     */
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
@@ -43,6 +46,9 @@ class FocalpointModellocation extends FocalpointModelAdmin
      */
     protected $item = null;
 
+    /**
+     * @inheritDoc
+     */
     public function getTable($name = 'Location', $prefix = 'FocalpointTable', $options = [])
     {
         return Table::getInstance($name, $prefix, $options);
