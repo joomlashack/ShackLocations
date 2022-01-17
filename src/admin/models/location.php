@@ -107,7 +107,7 @@ class FocalpointModellocation extends FocalpointModelAdmin
     /**
      * @inheritDoc
      */
-    public function prepareTable($table)
+    protected function prepareTable($table)
     {
         $table->alias = ApplicationHelper::stringURLSafe($table->get('alias') ?: $table->get('title'));
 

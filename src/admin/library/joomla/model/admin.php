@@ -45,7 +45,7 @@ abstract class FocalpointModelAdmin extends AdminModel
     /**
      * @inheritDoc
      */
-    public function prepareTable($table)
+    protected function prepareTable($table)
     {
         parent::prepareTable($table);
 
