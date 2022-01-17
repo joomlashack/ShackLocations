@@ -22,13 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractForm;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
