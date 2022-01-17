@@ -35,21 +35,15 @@ defined('_JEXEC') or die();
 class FocalpointViewMap extends FocalpointViewAdminForm
 {
     /**
-     * @var Registry
-     */
-    protected $params = null;
-
-    /**
      * @inheritDoc
      */
     public function display($tpl = null)
     {
         try {
-            $this->model  = $this->getModel();
-            $this->state  = $this->model->getState();
-            $this->item   = $this->model->getItem();
-            $this->form   = $this->model->getForm();
-            $this->params = $this->extension->params;
+            $this->model = $this->getModel();
+            $this->state = $this->model->getState();
+            $this->item  = $this->model->getItem();
+            $this->form  = $this->model->getForm();
 
             $this->addToolbar('map');
 

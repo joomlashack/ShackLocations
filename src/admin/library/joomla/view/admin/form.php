@@ -26,15 +26,31 @@ use Alledia\Framework\Joomla\View\Admin\AbstractForm;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
 abstract class FocalpointViewAdminForm extends AbstractForm
 {
     /**
+     * @var Registry
+     */
+    protected $params = null;
+
+    /**
      * @var CMSObject
      */
     protected $item = null;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setup()
+    {
+        parent::setup();
+
+        $this->params = $this->extension->params;
+    }
 
     /**
      * @param string $prefix
