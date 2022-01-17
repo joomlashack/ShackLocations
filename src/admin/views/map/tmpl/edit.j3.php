@@ -40,13 +40,6 @@ HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->params
 
 $formFieldsets = $this->form->getFieldsets();
 ?>
-<script type="text/javascript">
-    Joomla.submitbutton = function(task) {
-        if (task === 'map.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
-        }
-    }
-</script>
 <form name="adminForm"
       id="adminForm"
       action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
