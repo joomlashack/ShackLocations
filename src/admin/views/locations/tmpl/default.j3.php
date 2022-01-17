@@ -26,7 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die();
 
@@ -52,30 +52,37 @@ if ($saveOrder) {
       method="post"
       name="adminForm"
       id="adminForm">
-    <?php
-    if (!empty($this->sidebar)) :
-        ?>
-        <div id="j-sidebar-container" class="span2">
-            <?php echo $this->sidebar; ?>
-        </div>
-    <?php endif; ?>
-    <div id="j-main-container" class="<?php echo $mainClass; ?>">
+    <div id="j-sidebar-container" class="span2">
+        <?php echo $this->sidebar; ?>
+    </div>
+
+    <div id="j-main-container" class="span10">
         <?php
-        if ($task != 'congratulations') :
-            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
-        endif;
+        echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
 
         if (empty($this->items)) :
-            if ($task == 'congratulations') :
+            if ($this->activeFilters) :
                 ?>
-                <div class="hero-unit" style="text-align:left;">
-                    <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_LOCATIONS_NEW'); ?>
-                </div>
-            <?php else : ?>
                 <div class="alert alert-no-items">
                     <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
-            <?php endif;
+
+            <?php else : ?>
+                <div class="alert alert-info span6">
+                    <?php
+                    echo Text::sprintf(
+                        'COM_FOCALPOINT_LOCATIONS_EMPTYSTATE_CONTENT',
+                        'index.php?option=com_focalpoint&task=location.add'
+                    );
+                    ?>
+                    <div class="btn-toolbar text-center">
+                        <button class="btn btn-success" onclick="Joomla.submitbutton('location.add');">
+                            <?php echo Text::_('COM_FOCALPOINT_LOCATIONS_EMPTYSTATE_BUTTON_ADD'); ?>
+                        </button>
+                    </div>
+                </div>
+            <?php
+            endif;
 
         else :
             ?>
@@ -173,31 +180,28 @@ if ($saveOrder) {
                 foreach ($this->items as $i => $item) :
                     $ordering = ($ordering == 'a.ordering');
                     $canCreate = $user->authorise('core.create', 'com_focalpoint');
-                    $canEdit = $user->authorise('core.edit', 'com_focalpoint');
+                    $canEdit = $user->authorise('core.edit', 'com_focalpoint')
+                        || ($user->authorise('core.edit.own') && $user->id == $item->created_by);
                     $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                     $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
                     ?>
                     <tr class="<?php echo 'row' . ($i % 2); ?>" sortable-group-id="<?php echo $item->map_id; ?>">
                         <td class="order nowrap center hidden-phone">
                             <?php
-                            $iconAttribs = [
-                                'class' => 'sortable-handler'
-                            ];
-
-                            if (!$canChange) :
-                                $iconAttribs['class'] .= ' inactive';
-
-                            elseif (!$saveOrder) :
-                                $iconAttribs['class'] .= ' inactive tip-top hasTooltip';
-                                $iconAttribs['title'] = HTMLHelper::tooltipText('JORDERINGDISABLED');
-                            endif;
-
-                            echo sprintf(
-                                '<span %s> <i class="icon-menu"></i></span>',
-                                ArrayHelper::toString($iconAttribs)
-                            );
-
-                            if ($canChange && $saveOrder) : ?>
+                            $iconClass = '';
+                            if (!$canChange) {
+                                $iconClass = ' inactive';
+                            } elseif (!$saveOrder) {
+                                $iconClass = ' inactive tip-top hasTooltip" title="'
+                                    . HTMLHelper::tooltipText('JORDERINGDISABLED');
+                            }
+                            ?>
+                            <span class="sortable-handler<?php echo $iconClass ?>">
+                                <i class="icon-menu"></i>
+                            </span>
+                            <?php
+                            if ($canChange && $saveOrder) :
+                                ?>
                                 <input type="text"
                                        style="display:none"
                                        name="order[]"
@@ -242,7 +246,7 @@ if ($saveOrder) {
                                 if ($canEdit) :
                                     echo HTMLHelper::_(
                                         'link',
-                                        JRoute::_('index.php?option=com_focalpoint&task=location.edit&id=' . $item->id),
+                                        Route::_('index.php?option=com_focalpoint&task=location.edit&id=' . $item->id),
                                         $this->escape($item->title),
                                         sprintf('title="%s"', Text::_('JACTION_EDIT'))
                                     );
@@ -253,15 +257,15 @@ if ($saveOrder) {
                             </div>
                         </td>
 
-                        <td class="">
+                        <td>
                             <?php echo $item->map_title; ?>
                         </td>
 
-                        <td class="">
+                        <td>
                             <?php echo $item->locationtype_title; ?>
                         </td>
 
-                        <td class="small hidden-phone">
+                        <td class="hidden-phone">
                             <?php echo $item->created_by; ?>
                         </td>
 
@@ -277,6 +281,7 @@ if ($saveOrder) {
             echo $this->pagination->getListFooter();
         endif;
         ?>
+
         <input type="hidden" name="task" value=""/>
         <input type="hidden" name="boxchecked" value="0"/>
         <?php echo HTMLHelper::_('form.token'); ?>

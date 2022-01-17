@@ -26,15 +26,15 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\WebAsset\WebAssetManager;
 
 defined('_JEXEC') or die();
 
-HTMLHelper::_('bootstrap.tooltip');
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
-
-HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
+/** @var WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+    ->useScript('form.validate')
+    ->registerAndUseScript('googlemaps', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();
 ?>
@@ -43,7 +43,7 @@ $formFieldsets = $this->form->getFieldsets();
       action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      class="tmpl_<?php echo $this->app->getTemplate(); ?> form-validate">
+      class="form-validate fp_joomla4">
 
     <?php
     echo $this->form->renderFieldset('hidden');
@@ -51,41 +51,40 @@ $formFieldsets = $this->form->getFieldsets();
 
     echo LayoutHelper::render('joomla.edit.title_alias', $this);
 
-    echo HTMLHelper::_('bootstrap.startTabSet', 'location', ['active' => 'basic']);
+    echo HTMLHelper::_('uitab.startTabSet', 'location', ['active' => 'basic', 'recall' => true]);
 
-    echo HTMLHelper::_('bootstrap.addTab', 'location', 'basic', Text::_($formFieldsets['basic']->label));
+    echo HTMLHelper::_('uitab.addTab', 'location', 'basic', Text::_($formFieldsets['basic']->label));
     ?>
-    <div class="row-fluid">
-        <div class="form-vertical">
-            <div class="span9">
+    <div class="row">
+        <div class="col-lg-9">
+            <div>
                 <?php
                 echo $this->form->renderFieldset('basic');
                 unset($formFieldsets['basic']);
                 ?>
             </div>
+        </div>
+        <div class="col-lg-3">
+            <?php
+            echo $this->form->renderFieldset('params');
+            unset($formFieldsets['params']);
+            ?>
 
-            <div class="span3">
-                <?php
-                echo $this->form->renderFieldset('params');
-                unset($formFieldsets['params']);
-                ?>
-
-            </div>
         </div>
     </div>
+
     <?php
-    echo HTMLHelper::_('bootstrap.endTab');
+    echo HTMLHelper::_('uitab.endTab');
 
     foreach ($formFieldsets as $fieldsetName => $fieldset) :
         echo HTMLHelper::_(
-            'bootstrap.addTab',
+            'uitab.addTab',
             'location',
             $fieldsetName,
             Text::_($fieldset->label)
         );
         ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
+        <div class="row">
             <?php
             if ($fieldset->description) :
                 ?>
@@ -97,14 +96,14 @@ $formFieldsets = $this->form->getFieldsets();
             endif;
 
             echo $this->form->renderFieldset($fieldsetName);
-            echo HTMLHelper::_('bootstrap.endTab');
             ?>
         </div>
-    </div>
-    <?php
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
+
     endforeach;
 
-    echo HTMLHelper::_('bootstrap.endTabSet');
+    echo HTMLHelper::_('uitab.endTabSet');
     ?>
     <input type="hidden" name="task" value=""/>
     <?php echo HTMLHelper::_('form.token'); ?>

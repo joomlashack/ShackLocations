@@ -29,7 +29,8 @@
                label="COM_FOCALPOINT_FORM_LOCATION_IMAGE_LBL"
                description="COM_FOCALPOINT_FORM_LOCATION_IMAGE_DESC"/>
 
-        <field name="description" type="editor"
+        <field name="description"
+               type="editor"
                label="COM_FOCALPOINT_FORM_LOCATION_DESCRIPTION_LBL"
                description="COM_FOCALPOINT_FORM_LOCATION_DESCRIPTION_DESC"
                height="250"
@@ -45,12 +46,13 @@
                description="JFIELD_PUBLISHED_DESC"
                size="1"
                default="1">
-            <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
+            <option value="1">JPUBLISHED</option>
         </field>
 
         <field name="map_id"
                type="shacklocations.map"
+               layout="joomla.form.field.list-fancy-select"
                label="COM_FOCALPOINT_FORM_LOCATION_MAP_ID_LBL"
                description="COM_FOCALPOINT_FORM_LOCATION_MAP_ID_DESC"
                required="true"
@@ -58,12 +60,14 @@
 
         <field name="type"
                type="shacklocations.locationtype"
+               layout="joomla.form.field.groupedlist-fancy-select"
                label="COM_FOCALPOINT_FORM_LOCATION_TYPE_ALT_LBL"
                required="true"
                description="COM_FOCALPOINT_FORM_LOCATION_TYPE_DESC"/>
 
         <field name="othertypes"
                type="shacklocations.locationtype"
+               layout="joomla.form.field.groupedlist-fancy-select"
                label="COM_FOCALPOINT_OTHERTYPES_LABEL"
                description="COM_FOCALPOINT_OTHERTYPES_DESC"
                multiple="true"
@@ -211,50 +215,34 @@
 
             <field name="mapTypeControl"
                    type="list"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
+                <option value="true">JEnabled</option>
             </field>
 
             <field name="zoomin"
-                   type="list"
+                   type="shacklocations.zoom"
                    label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
             </field>
 
             <field name="zoomControl"
                    type="list"
-                   class="chzn-color chzn-color-state"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="true">JEnabled</option>
                 <option value="false">JDISABLED</option>
+                <option value="true">JEnabled</option>
             </field>
 
             <field name="scrollwheel"
                    type="list"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -264,6 +252,7 @@
 
             <field name="draggable"
                    type="list"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -273,6 +262,7 @@
 
             <field name="panControl"
                    type="list"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -282,6 +272,7 @@
 
             <field name="streetViewControl"
                    type="list"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -291,7 +282,7 @@
 
             <field name="infoshowaddress"
                    type="list"
-                   class="chzn-color chzn-color-state"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_CONTENT_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_CONTENT_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -301,7 +292,7 @@
 
             <field name="infoshowphone"
                    type="list"
-                   class="chzn-color chzn-color-state"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -311,7 +302,7 @@
 
             <field name="infoshowintro"
                    type="list"
-                   class="chzn-color chzn-color-state"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -321,7 +312,7 @@
 
             <field name="getdirections"
                    type="list"
-                   class="chzn-color chzn-color-state"
+                   class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
