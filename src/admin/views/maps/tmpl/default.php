@@ -111,8 +111,14 @@ endif;
                             </th>
 
                             <th scope="col" class="w-1 text-nowrap text-center">
-                                <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction,
-                                    $ordering); ?>
+                                <?php echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JSTATUS',
+                                    'a.state',
+                                    $direction,
+                                    $ordering
+                                );
+                                ?>
                             </th>
 
                             <th scope="col">
@@ -211,22 +217,28 @@ endif;
                                 <td class="has-context">
                                     <div class="break-word">
                                         <?php if ($item->checked_out) : ?>
-                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
-                                                $item->checked_out_time, 'maps.', $canCheckin); ?>
-                                        <?php endif; ?>
-                                        <?php if ($canEdit) :
+                                            <?php echo HTMLHelper::_(
+                                                'jgrid.checkedout',
+                                                $i,
+                                                $item->editor,
+                                                $item->checked_out_time,
+                                                'maps.',
+                                                $canCheckin
+                                            ); ?>
+                                        <?php endif;
+
+                                        if ($canEdit) :
                                             echo HTMLHelper::_(
                                                 'link',
                                                 $editLink,
                                                 $this->escape($item->title),
                                                 ['title' => Text::_('JACTION_EDIT')]
-                                            ); ?>
-                                        <?php else : ?>
-                                            <span title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL',
-                                                $this->escape($item->alias)); ?>">
-                                            <?php echo $this->escape($item->title); ?>
-                                        </span>
-                                        <?php endif; ?>
+                                            );
+
+                                        else :
+                                            echo $this->escape($item->title);
+                                        endif;
+                                        ?>
                                     </div>
                                 </td>
 

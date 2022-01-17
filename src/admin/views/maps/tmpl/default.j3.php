@@ -162,12 +162,12 @@ endif;
                         <td class="order nowrap center hidden-phone">
                             <?php
                             $iconClass = '';
-                            if (!$canChange) {
+                            if ($canChange == false) :
                                 $iconClass = ' inactive';
-                            } elseif (!$saveOrder) {
+                            elseif (!$saveOrder) :
                                 $iconClass = ' inactive tip-top hasTooltip" title="'
                                     . HTMLHelper::tooltipText('JORDERINGDISABLED');
-                            }
+                            endif;
                             ?>
                             <span class="sortable-handler<?php echo $iconClass ?>">
                                 <i class="icon-menu"></i>
