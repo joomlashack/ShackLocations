@@ -11,7 +11,6 @@
         <field name="title"
                type="text"
                label="COM_FOCALPOINT_FORM_MAP_TITLE_LBL"
-               description="COM_FOCALPOINT_FORM_MAP_TITLE_DESC"
                required="true"
                filter="string"
                maxlength="150"/>
@@ -28,7 +27,6 @@
         <field name="text"
                type="editor"
                label="COM_FOCALPOINT_FORM_MAP_DESCRIPTION_LBL"
-               description="COM_FOCALPOINT_FORM_MAP_DESCRIPTION_DESC"
                filter="\Joomla\CMS\Component\ComponentHelper::filterText"/>
     </fieldset>
 
@@ -49,16 +47,16 @@
 
         <field name="latitude"
                type="text"
-               label="COM_FOCALPOINT_FORM_MAP_LATITUDE_LBL"
-               description="COM_FOCALPOINT_FORM_MAP_LATITUDE_DESC"
+               label="COM_FOCALPOINT_FORM_GEOCODE_LATITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_GEOCODE_LATITUDE_DESC"
                required="true"
                filter="raw"
                maxlength="30"/>
 
         <field name="longitude"
                type="text"
-               label="COM_FOCALPOINT_FORM_MAP_LONGITUDE_LBL"
-               description="COM_FOCALPOINT_FORM_MAP_LONGITUDE_DESC"
+               label="COM_FOCALPOINT_FORM_GEOCODE_LONGITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_GEOCODE_LONGITUDE_DESC"
                required="true"
                filter="raw"
                maxlength="30"/>

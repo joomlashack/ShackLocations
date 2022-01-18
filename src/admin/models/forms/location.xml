@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-    <!-- title/alias fields -->
     <fieldset>
         <field name="title"
                type="text"
                label="COM_FOCALPOINT_FORM_LOCATION_TITLE_LBL"
-               description="COM_FOCALPOINT_FORM_LOCATION_TITLE_DESC"
                required="true"
                filter="string"
                maxlength="150"/>

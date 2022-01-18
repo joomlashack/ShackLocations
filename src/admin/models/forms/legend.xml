@@ -10,7 +10,6 @@
                type="text"
                class="inputbox input-xxlarge input-large-text"
                label="COM_FOCALPOINT_FORM_LEGEND_TITLE_LBL"
-               description="COM_FOCALPOINT_FORM_LEGEND_TITLE_DESC"
                required="true"
                maxlength="150"/>
 
