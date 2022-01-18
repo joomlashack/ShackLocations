@@ -42,11 +42,6 @@ class FocalpointModellocation extends FocalpointModelAdmin
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
-     * @var CMSObject
-     */
-    protected $item = null;
-
-    /**
      * @inheritDoc
      */
     public function getTable($name = 'Location', $prefix = 'FocalpointTable', $options = [])
@@ -62,7 +57,10 @@ class FocalpointModellocation extends FocalpointModelAdmin
         return $this->loadForm(
             'com_focalpoint.location',
             'location',
-            ['control' => 'jform', 'load_data' => $loadData]
+            [
+                'control' => 'jform',
+                'load_data' => $loadData
+            ]
         );
     }
 
@@ -97,10 +95,6 @@ class FocalpointModellocation extends FocalpointModelAdmin
             $item->customfieldsdata = json_decode($item->get('customfieldsdata'), true);
         }
 
-        if (empty($item->id)) {
-            $item->created_by = Factory::getUser()->id;
-        }
-
         return $item;
     }
 
@@ -109,11 +103,7 @@ class FocalpointModellocation extends FocalpointModelAdmin
      */
     protected function prepareTable($table)
     {
-        $table->alias = ApplicationHelper::stringURLSafe($table->get('alias') ?: $table->get('title'));
-
-        if (!$table->id) {
-            $table->ordering = $table->getNextOrder();
-        }
+        parent::prepareTable($table);
 
         $parts = preg_split('#(<hr\s+id="system-readmore"\s*/>)#', $table->get('description'));
         if (count($parts) == 2) {
@@ -214,5 +204,13 @@ class FocalpointModellocation extends FocalpointModelAdmin
             . ' VALUES ' . join(',', $typeValues)
         )
             ->execute();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReorderConditions($table)
+    {
+        return ['map_id = ' . (int)$table->map_id];
     }
 }
