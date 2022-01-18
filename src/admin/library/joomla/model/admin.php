@@ -52,9 +52,11 @@ abstract class FocalpointModelAdmin extends AdminModel
         $ordering = $table->getColumnAlias('ordering');
         if (property_exists($table, $ordering)) {
             if (empty($table->id)) {
-                $table->reorder();
+                $conditions = $this->getReorderConditions($table);
+
+                $table->reorder($conditions);
                 if (empty($table->{$ordering})) {
-                    $table->{$ordering} = $table->getNextOrder($this->getReorderConditions($table));
+                    $table->{$ordering} = $table->getNextOrder($conditions);
                 }
             }
         }
