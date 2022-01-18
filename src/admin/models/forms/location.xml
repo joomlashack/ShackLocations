@@ -48,6 +48,22 @@
             <option value="1">JPUBLISHED</option>
         </field>
 
+        <field name="geocoder" type="shacklocations.geocoder"/>
+
+        <field name="latitude"
+               type="text"
+               label="COM_FOCALPOINT_FORM_GEOCODE_LATITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_GEOCODE_LATITUDE_DESC"
+               required="true"
+               maxlength="30"/>
+
+        <field name="longitude"
+               type="text"
+               label="COM_FOCALPOINT_FORM_GEOCODE_LONGITUDE_LBL"
+               description="COM_FOCALPOINT_FORM_GEOCODE_LONGITUDE_DESC"
+               required="true"
+               maxlength="30"/>
+
         <field name="map_id"
                type="shacklocations.map"
                layout="joomla.form.field.list-fancy-select"
@@ -83,22 +99,6 @@
                label="COM_FOCALPOINT_FORM_LOCATION_PHONE_LBL"
                description="COM_FOCALPOINT_FORM_LOCATION_PHONE_DESC"
                maxlength="300"/>
-
-        <field name="geocoder" type="shacklocations.geocoder"/>
-
-        <field name="latitude"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LOCATION_LATITUDE_LBL"
-               description="COM_FOCALPOINT_FORM_LOCATION_LATITUDE_DESC"
-               required="true"
-               maxlength="30"/>
-
-        <field name="longitude"
-               type="text"
-               label="COM_FOCALPOINT_FORM_LOCATION_LONGITUDE_LBL"
-               description="COM_FOCALPOINT_FORM_LOCATION_LONGITUDE_DESC"
-               required="true"
-               maxlength="30"/>
 
         <field name="marker"
                type="media"
