@@ -138,7 +138,7 @@ endif;
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'COM_FOCALPOINT_LOCATIONS_MAP_ID',
-                                    'map_title',
+                                    'map.title',
                                     $direction,
                                     $ordering
                                 );
@@ -150,7 +150,7 @@ endif;
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'COM_FOCALPOINT_LOCATIONS_TYPE',
-                                    'locationtype_title',
+                                    'type.title',
                                     $direction,
                                     $ordering
                                 );
@@ -162,7 +162,7 @@ endif;
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
                                     'COM_FOCALPOINT_LOCATIONS_CREATED_BY',
-                                    'a.created_by',
+                                    'creator.name',
                                     $direction,
                                     $ordering
                                 );
@@ -277,7 +277,7 @@ endif;
                                 </td>
 
                                 <td class="d-none d-md-table-cell">
-                                    <?php echo $item->created_by; ?>
+                                    <?php echo $item->created_by_alias; ?>
                                 </td>
 
 

@@ -45,14 +45,14 @@
             <option value="a.state DESC">JSTATUS_DESC</option>
             <option value="a.title ASC">JGLOBAL_TITLE_ASC</option>
             <option value="a.title DESC">JGLOBAL_TITLE_DESC</option>
-            <option value="a.created_by ASC">JAUTHOR_ASC</option>
-            <option value="a.created_by DESC">JAUTHOR_DESC</option>
+            <option value="creator.name ASC">JAUTHOR_ASC</option>
+            <option value="creator.name DESC">JAUTHOR_DESC</option>
             <option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
             <option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
-            <option value="map_title ASC">COM_FOCALPOINT_FILTER_MAP_ASC</option>
-            <option value="map_title DESC">COM_FOCALPOINT_FILTER_MAP_DESC</option>
-            <option value="locationtype_title ASC">COM_FOCALPOINT_FILTER_LOCATIONTYPE_ASC</option>
-            <option value="locationtype_title DESC">COM_FOCALPOINT_FILTER_LOCATIONTYPE_DESC</option>
+            <option value="map.title ASC">COM_FOCALPOINT_FILTER_MAP_ASC</option>
+            <option value="map.title DESC">COM_FOCALPOINT_FILTER_MAP_DESC</option>
+            <option value="type.title ASC">COM_FOCALPOINT_FILTER_LOCATIONTYPE_ASC</option>
+            <option value="type.title DESC">COM_FOCALPOINT_FILTER_LOCATIONTYPE_DESC</option>
         </field>
 
         <field name="limit"

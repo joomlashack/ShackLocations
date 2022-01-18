@@ -130,7 +130,7 @@ if ($saveOrder) {
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONS_MAP_ID',
-                            'map_title',
+                            'map.title',
                             $direction,
                             $ordering
                         );
@@ -142,7 +142,7 @@ if ($saveOrder) {
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONS_TYPE',
-                            'locationtype_title',
+                            'type.title',
                             $direction,
                             $ordering
                         );
@@ -154,7 +154,7 @@ if ($saveOrder) {
                         echo HTMLHelper::_(
                             'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONS_CREATED_BY',
-                            'a.created_by',
+                            'creator.name',
                             $direction,
                             $ordering
                         );
@@ -266,7 +266,7 @@ if ($saveOrder) {
                         </td>
 
                         <td class="hidden-phone">
-                            <?php echo $item->created_by; ?>
+                            <?php echo $item->created_by_alias; ?>
                         </td>
 
 
