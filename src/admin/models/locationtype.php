@@ -68,7 +68,6 @@ class FocalpointModellocationtype extends FocalpointModelAdmin
      */
     protected function loadFormData()
     {
-        // Check the session for previously entered form data.
         $data = Factory::getApplication()->getUserState('com_focalpoint.edit.locationtype.data', []);
 
         if (empty($data)) {
