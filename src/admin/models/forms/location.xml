@@ -147,7 +147,7 @@
                key_field="id"
                value_field="title"
                showon="linktype:2">
-            <option value="">COM_FOCALPOINT_OPTION_SELECT</option>
+            <option value="0">COM_FOCALPOINT_OPTION_SELECT</option>
         </field>
 
         <field name="menulink"
@@ -155,7 +155,7 @@
                label="COM_FOCALPOINT_FORM_LOCATION_MENUITEM_LBL"
                description="COM_FOCALPOINT_FORM_LOCATION_MENUITEM_DESC"
                showon="linktype:4">
-            <option value="">COM_FOCALPOINT_OPTION_SELECT</option>
+            <option value="0">COM_FOCALPOINT_OPTION_SELECT</option>
         </field>
     </fieldset>
 
