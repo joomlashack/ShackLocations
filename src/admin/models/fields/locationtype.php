@@ -25,6 +25,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Version;
 
 defined('_JEXEC') or die();
 
@@ -53,30 +54,8 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
             }
 
             $primaryName = (string)$this->element['primary'];
-            if ($primary = $this->form->getField($primaryName)) {
-                HTMLHelper::_('jquery.framework');
-                $js = <<<JSCODE
-(function($) {
-    $(document).ready(function() {
-        $('#{$primary->id}')
-            .on('change', function() {
-                var primary = this.value,
-                    secondary = $('#{$this->id}');
-                    
-                secondary.find('option').each(function (idx, option) {
-                    if (option.value == primary) {
-                        $(option).prop('disabled', true).prop('selected', false);
-                    } else {
-                        $(option).prop('disabled', false);
-                    }
-                });
-                secondary.trigger('liszt:updated');
-            })
-            .trigger('change');
-    });
-})(jQuery);
-JSCODE;
-                Factory::getDocument()->addScriptDeclaration($js);
+            if ($primaryField = $this->form->getField($primaryName)) {
+                $this->loadJs($primaryField);
             }
         }
 
@@ -120,5 +99,72 @@ JSCODE;
         }
 
         return array_merge(parent::getGroups(), static::$typeOptions);
+    }
+
+    /**
+     * @param self $primaryField
+     *
+     * @return void
+     */
+    protected function loadJs(self $primaryField)
+    {
+        HTMLHelper::_('jquery.framework');
+
+        if (Version::MAJOR_VERSION < 4) {
+            $js = <<<JSCODE
+jQuery(document).ready(function($) {
+    let \$primary = $('#{$primaryField->id}'),
+        \$secondary = $('#{$this->id}');
+        
+        \$primary.on('change', function() {
+            let primaryValue = this.value;
+
+            \$secondary.find('option').each(function (idx, option) {
+                if (option.value == primaryValue) {
+                    $(option).prop('disabled', true).prop('selected', false);
+                } else {
+                    $(option).prop('disabled', false);
+                }
+            });
+            \$secondary.trigger('liszt:updated');
+        })
+        .trigger('change');
+});
+JSCODE;
+
+        } else {
+            $js = <<<JSCODE
+document.addEventListener('DOMContentLoaded', function() {
+    let \$primary        = $('#{$primaryField->id}'),
+        secondary        = document.getElementById('{$this->id}'),
+        secondaryChoices = secondary.closest('joomla-field-fancy-select') || null;
+
+    if (secondaryChoices) {
+        secondaryChoices = secondaryChoices.choicesInstance;
+    
+        \$primary.on('change', function (evt) {
+            let primaryValue = this.value;
+            if (secondaryChoices) {
+                let options = secondaryChoices.config.choices; 
+                options.forEach(function(option) {
+                    if (option.value == primaryValue) {
+                        option.disabled = true;
+                        secondaryChoices.removeActiveItemsByValue(primaryValue);
+
+                    } else {
+                        option.disabled = false
+                    }
+                });
+
+                secondaryChoices.setChoices(options, 'value', 'label', true);
+            }
+        })
+        .trigger('change');
+    }
+});
+JSCODE;
+        }
+
+        Factory::getDocument()->addScriptDeclaration($js);
     }
 }
