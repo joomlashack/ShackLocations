@@ -128,7 +128,8 @@ class FocalpointModellocation extends FocalpointModelAdmin
         $this->checkSave2copy($data);
 
         if (parent::save($data)) {
-            $id = $data['id'] ?: $this->getDbo()->insertid();
+            $id = $data['id'] ?: $this->getState('location.id');
+
             $this->updateTypes($id, $data);
 
             return true;
