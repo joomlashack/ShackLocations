@@ -111,9 +111,9 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
      */
     protected function loadJs(self $primaryField)
     {
-        HTMLHelper::_('jquery.framework');
-
         if (Version::MAJOR_VERSION < 4) {
+            HTMLHelper::_('jquery.framework');
+
             $js = <<<JSCODE
 jQuery(document).ready(function($) {
     let \$primary = $('#{$primaryField->id}'),
@@ -138,46 +138,45 @@ JSCODE;
         } else {
             $js = <<<JSCODE
 document.addEventListener('DOMContentLoaded', function() {
-    let primaryField        = document.getElementById('{$primaryField->id}'),
-        secondaryField      = document.getElementById('{$this->id}'),
-        secondary           = secondaryField.closest('joomla-field-fancy-select') || null;
+    let primaryField   = document.getElementById('{$primaryField->id}'),
+        secondaryField = document.getElementById('{$this->id}'),
+        secondary      = secondaryField.closest('joomla-field-fancy-select') || null;
 
     if (primaryField && secondary) {
         let choices       = secondary.choicesInstance,
             dropdownClass = choices.config.classNames.listDropdown,
             groupClass    = choices.config.classNames.group,
-            itemClass     = choices.config.classNames.itemChoice,
             listClass     = choices.config.classNames.list,
-            choiceList    = secondary.getElementsByClassName(dropdownClass).item(0), 
+            choiceList    = secondary.getElementsByClassName(dropdownClass).item(0),
             options       = [];
 
         if (choiceList) {
             if (choiceList = choiceList.getElementsByClassName(listClass).item(0)) {
                 choiceList = choiceList.childNodes
-                
+
                 let group = null;
                 for (let i = 0; i < choiceList.length; i++) {
                     let option = choiceList[i];
-                    
+
                     if (option.classList.contains(groupClass)) {
                         if (group) {
                             options.push(group);
                         }
-        
+
                         group = {
-                        label: option.dataset.value,
-                        id: option.dataset.id,
-                        disabled: false,
-                        choices: []
-                    }
-        
+                            label   : option.dataset.value,
+                            id      : option.dataset.id,
+                            disabled: false,
+                            choices : []
+                        }
+
                     } else {
                         if (group) {
                             group.choices.push(
                                 {
                                     value: option.dataset.value,
                                     label: option.innerHTML
-                                 }
+                                }
                             );
                         }
                     }
@@ -185,13 +184,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (group) {
                     options.push(group);
                 }
-            } 
+            }
         }
 
         primaryField.addEventListener('change', function() {
             choices.passedElement.triggerEvent('change');
         });
-        
+
         secondaryField.addEventListener('change', function() {
             let primaryValue = primaryField.value;
 
@@ -200,11 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     choice.disabled = primaryValue === choice.value
                 });
             });
-            
+
             choices.setChoices(options, 'value', 'label', true);
             choices.removeActiveItemsByValue(primaryValue);
         });
-        
+
         secondaryField.dispatchEvent(new Event('change'));
     }
 });
