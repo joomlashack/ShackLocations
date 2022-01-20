@@ -30,7 +30,7 @@ $displayData = [
     'textPrefix' => 'COM_FOCALPOINT_LOCATIONTYPES',
     'formURL'    => 'index.php?option=com_focalpoint&view=locationtypes',
     'helpURL'    => 'https://www.joomlashack.com/docs/shack-locations/getting-started-with-shack-locations/',
-    'icon'       => 'icon-location-type',
+    'icon'       => 'icon-locationtype',
 ];
 
 $user = Factory::getApplication()->getIdentity();
