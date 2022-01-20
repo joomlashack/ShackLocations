@@ -54,7 +54,10 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
             }
 
             $primaryName = (string)$this->element['primary'];
-            if ($primaryField = $this->form->getField($primaryName)) {
+            if (
+                ($primaryField = $this->form->getField($primaryName))
+                && $primaryField instanceof self
+            ) {
                 $this->loadJs($primaryField);
             }
         }
@@ -135,31 +138,74 @@ JSCODE;
         } else {
             $js = <<<JSCODE
 document.addEventListener('DOMContentLoaded', function() {
-    let \$primary        = $('#{$primaryField->id}'),
-        secondary        = document.getElementById('{$this->id}'),
-        secondaryChoices = secondary.closest('joomla-field-fancy-select') || null;
+    let primaryField        = document.getElementById('{$primaryField->id}'),
+        secondaryField      = document.getElementById('{$this->id}'),
+        secondary           = secondaryField.closest('joomla-field-fancy-select') || null;
 
-    if (secondaryChoices) {
-        secondaryChoices = secondaryChoices.choicesInstance;
-    
-        \$primary.on('change', function (evt) {
-            let primaryValue = this.value;
-            if (secondaryChoices) {
-                let options = secondaryChoices.config.choices; 
-                options.forEach(function(option) {
-                    if (option.value == primaryValue) {
-                        option.disabled = true;
-                        secondaryChoices.removeActiveItemsByValue(primaryValue);
+    if (primaryField && secondary) {
+        let choices       = secondary.choicesInstance,
+            dropdownClass = choices.config.classNames.listDropdown,
+            groupClass    = choices.config.classNames.group,
+            itemClass     = choices.config.classNames.itemChoice,
+            listClass     = choices.config.classNames.list,
+            choiceList    = secondary.getElementsByClassName(dropdownClass).item(0), 
+            options       = [];
 
-                    } else {
-                        option.disabled = false
+        if (choiceList) {
+            if (choiceList = choiceList.getElementsByClassName(listClass).item(0)) {
+                choiceList = choiceList.childNodes
+                
+                let group = null;
+                for (let i = 0; i < choiceList.length; i++) {
+                    let option = choiceList[i];
+                    
+                    if (option.classList.contains(groupClass)) {
+                        if (group) {
+                            options.push(group);
+                        }
+        
+                        group = {
+                        label: option.dataset.value,
+                        id: option.dataset.id,
+                        disabled: false,
+                        choices: []
                     }
-                });
+        
+                    } else {
+                        if (group) {
+                            group.choices.push(
+                                {
+                                    value: option.dataset.value,
+                                    label: option.innerHTML
+                                 }
+                            );
+                        }
+                    }
+                }
+                if (group) {
+                    options.push(group);
+                }
+            } 
+        }
 
-                secondaryChoices.setChoices(options, 'value', 'label', true);
-            }
-        })
-        .trigger('change');
+        primaryField.addEventListener('change', function() {
+            choices.passedElement.triggerEvent('change');
+        });
+        
+        secondaryField.addEventListener('change', function() {
+            let primaryValue = primaryField.value;
+
+            options.forEach(function(option) {
+                option.choices.forEach(function(choice) {
+                    choice.disabled = primaryValue === choice.value
+                });
+            });
+            
+            choices.setChoices(options, 'value', 'label', true);
+            choices.removeActiveItemsByValue(primaryValue);
+        });
+        
+        secondaryField.dispatchEvent(new Event('change'));
     }
 });
 JSCODE;
