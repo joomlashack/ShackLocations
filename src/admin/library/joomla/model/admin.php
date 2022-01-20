@@ -61,4 +61,52 @@ abstract class FocalpointModelAdmin extends AdminModel
             }
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function save($data)
+    {
+        if (parent::save($data)) {
+            $this->garbageCollect();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete(&$pks)
+    {
+        if (parent::delete($pks)) {
+            $this->garbageCollect();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Clear any orhpaned table rows
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function garbageCollect()
+    {
+        $db = $this->getDbo();
+
+        $query = $db->getQuery(true)
+            ->delete('#__focalpoint_location_type_xref')
+            ->where([
+                'location_id NOT IN (SELECT id FROM #__focalpoint_locations)',
+                'locationtype_id NOT IN (SELECT id FROM #__focalpoint_locationtypes)'
+            ], 'OR');
+
+        $db->setQuery($query)->execute();
+    }
 }
