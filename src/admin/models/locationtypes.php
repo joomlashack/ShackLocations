@@ -23,11 +23,10 @@
  */
 
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\MVC\Model\ListModel;
 
 defined('_JEXEC') or die();
 
-class FocalpointModellocationtypes extends ListModel
+class FocalpointModellocationtypes extends FocalpointModelList
 {
     /**
      * @inheritDoc
@@ -44,7 +43,8 @@ class FocalpointModellocationtypes extends ListModel
                     'a.title',
                     'a.legend',
                     'created_by_alias',
-                    'legend_title'
+                    'legend_title',
+                    'state'
                 ]
             ]
         );

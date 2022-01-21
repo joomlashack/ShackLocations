@@ -39,6 +39,9 @@ class FocalpointModellocations extends FocalpointModelList
                     'a.title',
                     'map.title',
                     'type.title',
+                    'state',
+                    'map_id',
+                    'type'
                 ]
             ]
         );
