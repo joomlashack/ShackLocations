@@ -326,13 +326,6 @@
   padding-right: 0;
 }
 
-#fp_googleMapContainer.fp_above .input-append input[type="text"],
-#fp_googleMapContainer.fp_below .input-append input[type="text"] {
-  border-left: none;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-}
-
 .fp-location-view .fp_right_column button.btn,
 #fp_googleMapContainer.fp_side .fp_mapsearch button.btn {
   width: 30%;
@@ -346,7 +339,6 @@
 }
 
 #focalpoint .input-append {
-  margin-bottom: 0;
   display: inline-block;
 }
 
@@ -412,4 +404,21 @@
   .fp-map-view .fp_listitem {
     width: 97%;
   }
+}
+
+#focalpoint .btn {
+  border-color: #30638d;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.7rem;
+}
+
+#focalpoint .btn-group * {
+  font-size: 14px;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+#focalpoint .btn-group input[type="text"] {
+  width: 210px;
 }
