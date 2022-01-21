@@ -149,6 +149,18 @@ endif;
                                 <?php
                                 echo HTMLHelper::_(
                                     'searchtools.sort',
+                                    'COM_FOCALPOINT_LOCATIONS_LEGEND',
+                                    'legend.title',
+                                    $direction,
+                                    $ordering
+                                );
+                                ?>
+                            </th>
+
+                            <th scope="col">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
                                     'COM_FOCALPOINT_LOCATIONS_TYPE',
                                     'type.title',
                                     $direction,
@@ -270,6 +282,10 @@ endif;
 
                                 <td>
                                     <?php echo $item->map_title; ?>
+                                </td>
+
+                                <td>
+                                    <?php echo $item->legend_title; ?>
                                 </td>
 
                                 <td>

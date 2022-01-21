@@ -22,6 +22,14 @@
             <option value="">COM_FOCALPOINT_LOCATIONS_MAP_ID_FILTER</option>
         </field>
 
+        <field name="legend"
+               type="shacklocations.legend"
+               label="COM_FOCALPOINT_LOCATIONTYPES_LEGEND"
+               description="COM_FOCALPOINT_FILTER_LEGEND"
+               onchange="this.form.submit();">
+            <option value="">COM_FOCALPOINT_FILTER_SELECT_LEGEND</option>
+        </field>
+
         <field name="type"
                type="shacklocations.locationtype"
                label="COM_FOCALPOINT_LOCATIONTYPES_LEGEND"
@@ -51,6 +59,8 @@
             <option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
             <option value="map.title ASC">COM_FOCALPOINT_FILTER_MAP_ASC</option>
             <option value="map.title DESC">COM_FOCALPOINT_FILTER_MAP_DESC</option>
+            <option value="legend.title ASC">COM_FOCALPOINT_FILTER_LEGEND_ASC</option>
+            <option value="legend.title DESC">COM_FOCALPOINT_FILTER_LEGEND_DESC</option>
             <option value="type.title ASC">COM_FOCALPOINT_FILTER_LOCATIONTYPE_ASC</option>
             <option value="type.title DESC">COM_FOCALPOINT_FILTER_LOCATIONTYPE_DESC</option>
         </field>

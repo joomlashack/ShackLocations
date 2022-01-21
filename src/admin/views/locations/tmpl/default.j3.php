@@ -141,6 +141,18 @@ if ($saveOrder) {
                         <?php
                         echo HTMLHelper::_(
                             'searchtools.sort',
+                            'COM_FOCALPOINT_LOCATIONS_LEGEND',
+                            'legend.title',
+                            $direction,
+                            $ordering
+                        );
+                        ?>
+                    </th>
+
+                    <th>
+                        <?php
+                        echo HTMLHelper::_(
+                            'searchtools.sort',
                             'COM_FOCALPOINT_LOCATIONS_TYPE',
                             'type.title',
                             $direction,
@@ -262,13 +274,16 @@ if ($saveOrder) {
                         </td>
 
                         <td>
+                            <?php echo $item->legend_title; ?>
+                        </td>
+
+                        <td>
                             <?php echo $item->locationtype_title; ?>
                         </td>
 
                         <td class="hidden-phone">
                             <?php echo $item->created_by_alias; ?>
                         </td>
-
 
                         <td class="center hidden-phone">
                             <?php echo (int)$item->id; ?>

@@ -38,9 +38,11 @@ class FocalpointModellocations extends FocalpointModelList
                     'a.state',
                     'a.title',
                     'map.title',
+                    'legend.title',
                     'type.title',
                     'state',
                     'map_id',
+                    'legend',
                     'type'
                 ]
             ]
@@ -66,8 +68,11 @@ class FocalpointModellocations extends FocalpointModelList
         $mapId = $this->getUserStateFromRequest($this->context . '.filter.map_id', 'filter_map_id', '', 'string');
         $this->setState('filter.map_id', $mapId);
 
-        $type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string');
-        $this->setState('filter.type', $type);
+        $legendId = $this->getUserStateFromRequest($this->context . '.filter.legend', 'filter_legend', '', 'int');
+        $this->setState('filter.legend', $legendId);
+
+        $typeId = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string');
+        $this->setState('filter.type', $typeId);
 
         parent::populateState($ordering, $direction);
     }
@@ -97,6 +102,7 @@ class FocalpointModellocations extends FocalpointModelList
                     'uc.name AS editor',
                     'map.title AS map_title',
                     'type.title AS locationtype_title',
+                    'legend.title AS legend_title',
                     'creator.name AS created_by_alias'
                 ]
             )
@@ -104,6 +110,7 @@ class FocalpointModellocations extends FocalpointModelList
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
             ->leftJoin('#__focalpoint_maps AS map ON map.id = a.map_id')
             ->leftJoin('#__focalpoint_locationtypes AS type ON type.id = a.type')
+            ->leftJoin('#__focalpoint_legends AS legend ON legend.id = type.legend')
             ->leftJoin('#__users AS creator ON creator.id = a.created_by');
 
         $published = $this->getState('filter.state');
@@ -140,8 +147,12 @@ class FocalpointModellocations extends FocalpointModelList
             $query->where('a.map_id = ' . $mapId);
         }
 
-        if ($type = (int)$this->state->get('filter.type')) {
-            $query->where('a.type = ' . $type);
+        if ($legendId = (int)$this->getState('filter.legend')) {
+            $query->where('type.legend = ' . $legendId);
+        }
+
+        if ($typeId = (int)$this->state->get('filter.type')) {
+            $query->where('a.type = ' . $typeId);
         }
 
         $ordering  = $this->state->get('list.ordering');
@@ -162,6 +173,13 @@ class FocalpointModellocations extends FocalpointModelList
                 case 'type.title':
                 case 'creator.name':
                     $query->order('a.title ' . $direction);
+                    break;
+
+                case 'legend.title':
+                    $query->order([
+                        'type.title ' . $direction,
+                        'a.title ' . $direction
+                    ]);
                     break;
             }
         }
