@@ -179,36 +179,7 @@ if ($createTabs) :
 <?php
 
 if ($createTabs) :
-    $mapUpdate = "window.slocMap['{$this->item->id}'].update();";
-
-    $jScript = <<<JSCRIPT
-;jQuery(function($) {
-    let \$mapTabs = $('#mapTabs li').find('a'),
-        showAreas = [];
-
-    \$mapTabs.each(function () {
-        let show = this.getAttribute('data-show');
-        if (show) {
-            showAreas.push($(this).data('show'));
-        }
-    });
-    
-    \$mapTabs.on('click', function(evt) {
-        evt.preventDefault();
-        
-        let show = this.getAttribute('data-show');
-        showAreas.forEach(function(area) {
-            if (area === show) {
-                $(area).show();
-            } else {
-                $(area).hide();
-            }
-        });
-        
-        {$mapUpdate}
-    });
-});
-JSCRIPT;
-
-    Factory::getDocument()->addScriptDeclaration($jScript);
+    Factory::getDocument()->addScriptDeclaration(
+        "jQuery(document).ready(function($) { new jQuery.sloc.tabs({$this->item->id}); });"
+    );
 endif;

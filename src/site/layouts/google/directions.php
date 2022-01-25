@@ -24,7 +24,6 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
-use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
@@ -38,8 +37,7 @@ defined('_JEXEC') or die();
 extract($displayData);
 /**
  * @var string   $mapId
- * @var Registry $params
- * @var array    $destination
+ * @var string[] $destination
  */
 ?>
     <div id="fp_googleMap_directions"></div>
@@ -59,36 +57,8 @@ extract($displayData);
         </form>
     </div>
 <?php
-
 $destination = json_encode($destination);
 
-$jScript = <<<JSCRIPT
-;jQuery(function($) {
-    let mapId      = '{$mapId}',
-        \$address   = $('#fp_searchAddress'),
-        searchText = null;
-
-    $('#fp_searchAddressBtn').on('click', function(evt) {
-        evt.preventDefault();
-
-        searchText = \$address.val();
-        if (!searchText) {
-            alert(Joomla.Text._('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED'));
-            return;
-        }
-
-        try {
-            map = window.slocMap['{$mapId}'];
-
-        } catch (error) {
-            alert('Unable to find basemap');
-
-            return;
-        }
-
-        map.getDirections(searchText, {$destination});
-    });
-});
-JSCRIPT;
-
-Factory::getDocument()->addScriptDeclaration($jScript);
+Factory::getDocument()->addScriptDeclaration(
+    "jQuery(document).ready(function ($) { $.sloc.map.destination = {$destination}; });"
+);
