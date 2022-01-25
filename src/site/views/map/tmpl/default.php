@@ -52,7 +52,7 @@ $pageClass      = $this->getPageClass('fp-map-view legend_' . $legendPosition);
             <?php
             echo $this->loadTemplate($this->mapEngine . '_tabs');
 
-            if ($this->app->input->getBool("debug")) :
+            if ($this->app->input->getBool('debug')) :
                 echo sprintf(
                     '<textarea style="width:100%;height:500px;"><pre>%s</pre></textarea>',
                     print_r($this->item, 1)
