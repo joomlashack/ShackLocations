@@ -29,6 +29,11 @@ defined('_JEXEC') or die();
 
 class FocalpointViewSite extends FocalpointView
 {
+    /**
+     * @var string
+     */
+    protected $mapEngine = 'google';
+
     public function __construct($config = [])
     {
         parent::__construct($config);

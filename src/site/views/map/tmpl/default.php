@@ -50,7 +50,7 @@ $pageClass      = $this->getPageClass('fp-map-view legend_' . $legendPosition);
 
         <div id="fp_main" class="clearfix">
             <?php
-            echo $this->loadTemplate('google_tabs');
+            echo $this->loadTemplate($this->mapEngine . '_tabs');
 
             if ($this->app->input->getBool("debug")) :
                 echo sprintf(
@@ -63,4 +63,4 @@ $pageClass      = $this->getPageClass('fp-map-view legend_' . $legendPosition);
     </div>
 <?php
 
-echo $this->loadTemplate('google');
+echo $this->loadTemplate($this->mapEngine);
