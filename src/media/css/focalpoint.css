@@ -92,18 +92,6 @@
   background-position: 0 -16px;
 }
 
-/* Chrome, Safari, Opera */
-@-webkit-keyframes fadeIn {
-  from {
-    opacity: 0;
-    margin-bottom: 40px;
-  }
-  to {
-    opacity: 1;
-    margin-bottom: 0;
-  }
-}
-
 /* Standard syntax */
 @keyframes fadeIn {
   from {
@@ -125,7 +113,6 @@
   border-radius: 5px;
   font-weight: 400;
   font-size: 12px;
-  zoom: 1;
 }
 
 .infoBox {
