@@ -88,10 +88,6 @@
 
 }
 
-#fp_googleMapSidebar ul.sidebar li a.active {
-
-}
-
 #fp_googleMapSidebar ul.sidebar li a.active:before {
   background-position: 0 -16px;
 }
