@@ -92,20 +92,6 @@
   background-position: 0 -16px;
 }
 
-#fp_googleMap .infoBox {
-  background: #fff;
-  width: 320px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  font-weight: 400;
-  font-size: 12px;
-  zoom: 1;
-}
-
-.infoBox {
-  animation: fadeIn 400ms;
-}
-
 /* Chrome, Safari, Opera */
 @-webkit-keyframes fadeIn {
   from {
@@ -128,6 +114,22 @@
     opacity: 1;
     margin-bottom: 0;
   }
+}
+
+/*** InfoBox ***/
+#fp_googleMap .infoBox {
+  box-sizing: border-box;
+  background: #fff;
+  width: 320px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 12px;
+  zoom: 1;
+}
+
+.infoBox {
+  animation: fadeIn 400ms;
 }
 
 #fp_googleMap .infoBox img {
