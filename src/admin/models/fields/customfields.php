@@ -26,6 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Version;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -89,6 +90,10 @@ class ShacklocationsFormFieldCustomfields extends FormField
      */
     public function renderField($options = [])
     {
+        if (Version::MAJOR_VERSION > 3) {
+            return '<div class="alert alert-warning">Not available yet</div>';
+        }
+
         $this->loadAssets($options);
 
         $htmlOutput = [
