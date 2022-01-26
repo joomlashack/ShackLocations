@@ -271,7 +271,6 @@
 
 .row-fluid .offset9:first-child {
   margin-left: 76.59574468085106%;
-  *margin-left: 76.48936170212764%;
 }
 
 .row-fluid .offset8 {
@@ -1014,10 +1013,6 @@
   text-decoration: none;
   background-color: transparent;
   cursor: default;
-}
-
-@-ms-viewport {
-  width: device-width;
 }
 
 .hidden {
