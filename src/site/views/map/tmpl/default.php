@@ -23,13 +23,9 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Version;
 
 defined('_JEXEC') or die();
-
-if ($this->params->get('loadBootstrap')) {
-    HTMLHelper::_('stylesheet', 'com_focalpoint/bootstrap.css', ['relative' => true]);
-    HTMLHelper::_('bootstrap.framework');
-}
 
 $legendPosition = $this->params->get('legendposition');
 $pageHeading    = $this->getPageHeading($this->item->title);

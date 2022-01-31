@@ -56,40 +56,55 @@
 
         /**
          * @param {string}  mapId
-         * @param {string=} container
+         * @param {string=} containerId
          *
          * @return void
          */
-        tabs: function(mapId, container) {
+        tabs: function(mapId, containerId) {
             if (!mapId) {
                 return;
             }
 
-            $(document).ready(function() {
-                container = container || '#mapTabs';
+            let displayTab = function(link, show) {
+                show = show || false;
 
-                let $tabs     = $(container + ' li').find('a'),
-                    showAreas = [];
+                let tab     = link.closest('li'),
+                    content = document.querySelector(link.getAttribute('href')),
+                    showId  = link.dataset.show;
 
-                $tabs.each(function() {
-                    if (this.dataset.show) {
-                        showAreas.push(this.dataset.show);
+                if (show) {
+                    tab.classList.add('active');
+                    content.style.display = 'block';
+                    if (showId) {
+                        document.getElementById(showId).style.display = 'block'
                     }
-                });
 
-                $tabs.on('click', function(evt) {
-                    evt.preventDefault();
+                } else {
+                    tab.classList.remove('active');
+                    content.style.display = 'none';
+                    if (showId) {
+                        document.getElementById(showId).style.display = 'none'
+                    }
+                }
+            }
 
-                    let show = this.dataset.show;
-                    showAreas.forEach(function(area) {
-                        if (area === show) {
-                            $(area).show();
-                        } else {
-                            $(area).hide();
-                        }
+            $(document).ready(function() {
+                containerId = containerId || '#slocTabs';
+
+                let links = document.querySelectorAll(containerId + ' li > a');
+
+                links.forEach(function(activeLink) {
+                    activeLink.dataset.content = activeLink.getAttribute('href');
+
+                    activeLink.addEventListener('click', function(evt) {
+                        evt.preventDefault();
+
+                        links.forEach(function(link) {
+                            displayTab(link);
+                        });
+
+                        displayTab(activeLink, true);
                     });
-
-                    $.sloc.map.update(mapId);
                 });
             });
         },

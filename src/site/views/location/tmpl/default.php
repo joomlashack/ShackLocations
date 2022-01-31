@@ -28,11 +28,6 @@ use Joomla\CMS\Layout\LayoutHelper;
 
 defined('_JEXEC') or die();
 
-if ($this->item->params->get('loadBootstrap')) :
-    HTMLHelper::_('stylesheet', 'com_focalpoint/bootstrap.css', ['relative' => true]);
-    HTMLHelper::_('bootstrap.framework');
-endif;
-
 if (empty($this->item->backlink)) :
     $backLink = null;
 
