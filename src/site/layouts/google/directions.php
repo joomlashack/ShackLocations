@@ -41,19 +41,21 @@ extract($displayData);
  */
 ?>
     <div id="fp_googleMap_directions"></div>
-    <div id="fp_map_actions" class="input-append">
+    <div id="fp_map_actions">
         <form>
-            <label for="fp_searchAddress">
-                <?php echo Text::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>
-            </label>
-            <input id="fp_searchAddress"
-                   type="text"
-                   placeholder="<?php echo Text::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>"/>
-            <button class="btn"
-                    id="fp_searchAddressBtn"
-                    type="button">
-                <?php echo Text::_('COM_FOCALPOINT_GET_DIRECTIONS'); ?>
-            </button>
+            <div class="fp_mapsearch btn-group input-append">
+                <label for="fp_searchAddress">
+                    <?php echo Text::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>
+                </label>
+                <input id="fp_searchAddress"
+                       type="text"
+                       placeholder="<?php echo Text::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>"/>
+                <button class="btn"
+                        id="fp_searchAddressBtn"
+                        type="button">
+                    <?php echo Text::_('COM_FOCALPOINT_GET_DIRECTIONS'); ?>
+                </button>
+            </div>
         </form>
     </div>
 <?php
