@@ -43,7 +43,7 @@ extract($displayData);
     <div id="fp_googleMap_directions"></div>
     <div id="fp_map_actions">
         <form>
-            <div class="fp_mapsearch btn-group input-append">
+            <div class="fp_mapsearch btn-group">
                 <label for="fp_searchAddress">
                     <?php echo Text::_('COM_FOCALPOINT_YOUR_ADDRESS'); ?>
                 </label>
