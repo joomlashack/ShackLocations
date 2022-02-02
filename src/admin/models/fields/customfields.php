@@ -400,7 +400,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
             }
             $blanks = json_encode($blanks);
 
-            HTMLHelper::_('jquery.ui', ['core', 'sortable']);
+            HTMLHelper::_('sloc.ui');
 
             Factory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT
