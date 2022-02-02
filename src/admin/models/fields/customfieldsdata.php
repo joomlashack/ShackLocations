@@ -84,10 +84,6 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      */
     public function renderField($options = [])
     {
-        if (Version::MAJOR_VERSION > 3) {
-            return '<div class="alert alert-warning">Not available yet</div>';
-        }
-
         if ($customFields = $this->getCustomFields()) {
             $renderedFields = [];
 
