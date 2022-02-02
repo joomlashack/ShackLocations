@@ -122,7 +122,10 @@ class ShacklocationsFormFieldCustomfields extends FormField
                     '<button class="btn btn-small button-apply btn-success pull-left sl-customfield-new" data-type="%s">',
                     $fieldType
                 )
-                . '<span class="icon-plus icon-white"></span>'
+                . sprintf(
+                    '<span class="icon-%s icon-white"></span>',
+                    Version::MAJOR_VERSION == 3 ? 'plus' : 'plus-circle'
+                )
                 . Text::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $fieldType)
                 . '</button>'
                 . '</li>';
