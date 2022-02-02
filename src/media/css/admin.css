@@ -23,9 +23,16 @@ a.btn.uneditable-input {
   display: inline-block;
 }
 
-.subform-repeatable-group {
-  overflow: hidden;
-  padding-bottom: 30px !important;
+.com_focalpoint.layout-edit #tabs .mce-edit-area iframe {
+  height: 200px !important;
+}
+
+.com_focalpoint.layout-edit #tabs .row > .control-group > .control-label {
+  display: none;
+}
+
+.com_focalpoint.layout-edit #tabs .row > .control-group > .controls table th {
+  width: auto !important;
 }
 
 .sl-subfield-delete,
@@ -131,10 +138,6 @@ div fieldset.ui-sortable-placeholder {
 .linkhelper {
   display: inline-block;
   margin-top: 5px;
-}
-
-.mce-edit-area iframe {
-  height: 200px !important;
 }
 
 #j-main-container {
