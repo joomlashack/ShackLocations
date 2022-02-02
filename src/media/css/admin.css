@@ -48,15 +48,11 @@ a.btn.uneditable-input {
   padding-right: 5px;
 }
 
-.sl-subfield-delete,
-.sl-subfield-insert {
+.sl-subfield-delete {
   display: block;
-  width: 12px !important;
-  height: 12px !important;
-  padding: 6px 6px;
+  padding: 12px 6px;
   font-size: 14px !important;
   float: right;
-  position: relative;
   right: 5px;
   top: -32px;
   cursor: pointer;
@@ -65,10 +61,6 @@ a.btn.uneditable-input {
 
 .sl-subfield-delete {
   color: #942a25;
-}
-
-.sl-subfield-insert {
-  color: #46a546;
 }
 
 .sl-subfield-wrapper fieldset * {
@@ -80,21 +72,27 @@ a.btn.uneditable-input {
 .sl-subfield-wrapper fieldset legend {
   font-size: 16px;
   margin-bottom: 0;
+  display: block;
+  width: 100%;
+  padding: 0;
+  line-height: 36px;
+  color: #333;
+  border: 0;
+  border-bottom: 1px solid #e5e5e5;
+  float: none;
 }
 
 .sl-subfield-wrapper fieldset .control-group:first-of-type {
-  margin-top: 9px;
+  margin: 9px 0 18px;
 }
 
-.sl-subfield-wrapper fieldset:hover a.sl-subfield-delete:hover,
-.sl-subfield-wrapper fieldset:hover a.sl-subfield-insert:hover {
+.sl-subfield-wrapper fieldset:hover a.sl-subfield-delete:hover {
   text-decoration: none;
   color: #000;
   opacity: 1;
 }
 
-.sl-subfield-wrapper fieldset:hover .sl-subfield-delete,
-.sl-subfield-wrapper fieldset:hover .sl-subfield-insert {
+.sl-subfield-wrapper fieldset:hover .sl-subfield-delete {
   opacity: 0.6;
 }
 
@@ -612,4 +610,8 @@ div fieldset.ui-sortable-placeholder {
 
 .icon-location:before {
   content: "\f3c5" !important;
+}
+
+.icon-trash-alt:before {
+  content: "\f2ed"
 }

@@ -212,8 +212,11 @@ class ShacklocationsFormFieldCustomfields extends FormField
             $blockHtml = array_merge(
                 [
                     '<fieldset class="clearfix">',
-                    sprintf('<legend><i class="icon-menu"></i>&nbsp;%s</legend>', $blockHeader),
-                    $this->getTrashButton()
+                    sprintf(
+                        '<legend><i class="icon-menu"></i>&nbsp;%s%s</legend>',
+                        $blockHeader,
+                        $this->getTrashButton()
+                    ),
                 ],
                 $this->getSubfields($hash, $data, $options),
                 ['</fieldset>']
@@ -369,7 +372,8 @@ class ShacklocationsFormFieldCustomfields extends FormField
             static::$trashButton = sprintf(
                 '<a %s></a>',
                 ArrayHelper::toString([
-                    'class' => 'hasTip sl-subfield-delete icon-cancel',
+                    'class' => sprintf('hasTip sl-subfield-delete icon-%s',
+                        Version::MAJOR_VERSION == 3 ? 'trash' : 'trash-alt'),
                     'title' => 'Delete this field'
                 ])
             );
