@@ -26,7 +26,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Version;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -224,7 +223,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
         $subFieldGroup['name'] = $fieldName;
 
         $renderedSubfields = [
-            '<fieldset>',
+            '<fieldset class="sl-customfield-group">',
             sprintf('<legend>%s</legend>', $customField['label'])
         ];
 
@@ -377,13 +376,14 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 'options' => [
                     'attributes' => [
                         'class'   => 'btn-group btn-group-yesno',
+                        'layout'  => 'joomla.form.field.radio.switcher',
                         'default' => '1'
                     ],
                     'options'    => HTMLHelper::_(
                         'select.options',
                         [
+                            HTMLHelper::_('select.option', 0, Text::_('JNO')),
                             HTMLHelper::_('select.option', 1, Text::_('JYES')),
-                            HTMLHelper::_('select.option', 0, Text::_('JNO'))
                         ],
                         [
                             'option.key.toHtml'  => false,

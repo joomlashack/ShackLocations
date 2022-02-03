@@ -108,6 +108,23 @@ a.btn.uneditable-input {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f9fa', endColorstr='#ededed', GradientType=0);
 }
 
+fieldset.sl-customfield-group {
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin: 0 0 1rem;
+}
+
+fieldset.sl-customfield-group legend {
+  display: block;
+  float: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  width: auto;
+  padding: 0 6px;
+  margin: 3px 0;
+  border: none;
+}
+
 div fieldset.ui-sortable-placeholder {
   visibility: visible !important;
   background: #fffff0 !important;

@@ -284,13 +284,14 @@ class ShacklocationsFormFieldCustomfields extends FormField
         $fieldOptions = [
             'attributes' => [
                 'class'   => 'btn-group btn-group-yesno',
+                'layout'  => 'joomla.form.field.radio.switcher',
                 'default' => 0
             ],
             'options'    => HTMLHelper::_(
                 'select.options',
                 [
+                    HTMLHelper::_('select.option', 0, Text::_('JNO')),
                     HTMLHelper::_('select.option', 1, Text::_('JYES')),
-                    HTMLHelper::_('select.option', 0, Text::_('JNO'))
                 ],
                 [
                     'option.key.toHtml'  => false,
