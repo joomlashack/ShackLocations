@@ -119,9 +119,8 @@ class FocalpointModellocation extends FocalpointModelAdmin
      */
     public function save($data)
     {
-        if (empty($data['othertypes'])) {
-            $data['othertypes'] = [];
-        }
+        $data['othertypes']       = $data['othertypes'] ?? [];
+        $data['customfieldsdata'] = $data['customfieldsdata'] ?? '{}';
 
         $this->checkSave2copy($data);
 
