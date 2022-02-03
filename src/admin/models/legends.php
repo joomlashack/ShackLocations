@@ -23,12 +23,10 @@
  */
 
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Model\ListModel;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-class FocalpointModellegends extends ListModel
+class FocalpointModellegends extends FocalpointModelList
 {
     /**
      * @inheritDoc
@@ -43,7 +41,7 @@ class FocalpointModellegends extends ListModel
                     'a.ordering',
                     'a.state',
                     'a.title',
-                    'a.created_by',
+                    'created_by_alias',
                     'state'
                 ]
             ]
@@ -57,12 +55,10 @@ class FocalpointModellegends extends ListModel
      */
     protected function populateState($ordering = null, $direction = null)
     {
-        $app = Factory::getApplication();
-
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
         $this->setState('filter.state', $published);
 
 
@@ -77,8 +73,8 @@ class FocalpointModellegends extends ListModel
      */
     protected function getStoreId($id = '')
     {
-        $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.state');
+        $id .= ':' . $this->getState('filter.search')
+            . ':' . $this->getState('filter.state');
 
         return parent::getStoreId($id);
     }
@@ -94,11 +90,11 @@ class FocalpointModellegends extends ListModel
             ->select([
                 'a.*',
                 'uc.name AS editor',
-                'created_by.name AS created_by'
+                'creator.name AS created_by_alias'
             ])
             ->from('`#__focalpoint_legends` AS a')
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
-            ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
+            ->leftJoin('#__users AS creator ON creator.id = a.created_by');
 
         $published = $this->getState('filter.state');
         if ($published != '*') {
@@ -134,9 +130,7 @@ class FocalpointModellegends extends ListModel
 
         $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
-        if ($ordering && $direction) {
-            $query->order($db->escape($ordering . ' ' . $direction));
-        }
+        $query->order($db->escape($ordering . ' ' . $direction));
 
         return $query;
     }

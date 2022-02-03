@@ -26,9 +26,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('List');
+FormHelper::loadFieldClass('list');
 
 class ShacklocationsFormFieldLegend extends JFormFieldList
 {
@@ -45,7 +45,7 @@ class ShacklocationsFormFieldLegend extends JFormFieldList
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    protected  function getOptions()
     {
         if (static::$options === null) {
             static::$options = [];

@@ -22,11 +22,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
 use Joomla\CMS\Form\FormHelper;
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('predefinedlist');
+FormHelper::loadFieldClass('Predefinedlist');
 
 class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
 {

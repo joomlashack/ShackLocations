@@ -27,7 +27,7 @@ use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
-class FocalpointTablemap extends Table
+class FocalpointTablemap extends FocalpointTable
 {
     /**
      * @inheritdoc
@@ -45,22 +45,11 @@ class FocalpointTablemap extends Table
         'published' => 'state'
     ];
 
+    /**
+     * @inheritDoc
+     */
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_maps', 'id', $db);
-    }
-
-    public function bind($src, $ignore = [])
-    {
-        if (parent::bind($src, $ignore)) {
-            if (empty($this->alias) && !empty($this->title)) {
-                $this->alias = $this->title;
-            }
-            $this->alias = ApplicationHelper::stringURLSafe($this->alias);
-
-            return true;
-        }
-
-        return false;
     }
 }

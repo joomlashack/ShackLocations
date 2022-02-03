@@ -23,12 +23,14 @@
  */
 
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-class FocalpointModellocationtypes extends JModelList
+class FocalpointModellocationtypes extends FocalpointModelList
 {
+    /**
+     * @inheritDoc
+     */
     public function __construct($config = [])
     {
         $config = array_merge_recursive(
@@ -40,8 +42,9 @@ class FocalpointModellocationtypes extends JModelList
                     'a.state',
                     'a.title',
                     'a.legend',
-                    'created_by.name',
-                    'legend_title'
+                    'created_by_alias',
+                    'legend_title',
+                    'state'
                 ]
             ]
         );
@@ -50,23 +53,17 @@ class FocalpointModellocationtypes extends JModelList
     }
 
     /**
-     * @param string $ordering
-     * @param string $direction
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     protected function populateState($ordering = null, $direction = null)
     {
-        $app = Factory::getApplication('administrator');
-
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
         $this->setState('filter.state', $published);
 
-        $legend = $app->getUserStateFromRequest($this->context . '.filter.legend', 'filter_legend', '', 'string');
+        $legend = $this->getUserStateFromRequest($this->context . '.filter.legend', 'filter_legend', '', 'string');
         $this->setState('filter.legend', $legend);
 
         $params = ComponentHelper::getParams('com_focalpoint');
@@ -75,14 +72,20 @@ class FocalpointModellocationtypes extends JModelList
         parent::populateState('a.title', 'asc');
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getStoreId($id = '')
     {
-        $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.state');
+        $id .= ':' . $this->getState('filter.search')
+            . ':' . $this->getState('filter.state');
 
         return parent::getStoreId($id);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getListQuery()
     {
         $db = $this->getDbo();
@@ -92,14 +95,13 @@ class FocalpointModellocationtypes extends JModelList
                 'a.*',
                 'uc.name AS editor',
                 'b.title AS legend_title',
-                'created_by.name AS created_by'
+                'creator.name AS created_by_alias'
             ])
             ->from('`#__focalpoint_locationtypes` AS a')
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
             ->leftJoin('#__focalpoint_legends AS b ON b.id = a.legend')
-            ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
+            ->leftJoin('#__users AS creator ON creator.id = a.created_by');
 
-        // Filter by published
         $published = $this->getState('filter.state');
         if ($published != '*') {
             if ($published == '') {
@@ -110,36 +112,45 @@ class FocalpointModellocationtypes extends JModelList
             }
         }
 
-        $search = $this->getState('filter.search');
-        if (!empty($search)) {
+        if ($search = $this->getState('filter.search')) {
             if (stripos($search, 'id:') === 0) {
                 $query->where('a.id = ' . (int)substr($search, 3));
 
             } else {
-                $search = $db->quote('%' . $db->escape($search, true) . '%');
-                $query->where(
-                    sprintf(
-                        '(%s)',
-                        join(
-                            ' OR ',
-                            [
-                                'a.title LIKE ' . $search,
-                                'a.description LIKE ' . $search
-                            ]
-                        )
-                    )
-                );
+                $search = $db->quote('%' . $search . '%');
+
+                $ors = [
+                    'a.title LIKE ' . $search,
+                    'a.description LIKE ' . $search
+                ];
+                $query->where(sprintf('(%s)', join(' OR ', $ors)));
             }
         }
 
-        if ($filterLegend = (int)$this->state->get("filter.legend")) {
+        if ($filterLegend = (int)$this->state->get('filter.legend')) {
             $query->where('a.legend = ' . $filterLegend);
         }
 
-        $odering   = $this->state->get('list.ordering');
+        $ordering  = $this->state->get('list.ordering');
         $direction = $this->state->get('list.direction');
-        if ($odering && $direction) {
-            $query->order($db->escape($odering . ' ' . $direction));
+        if ($ordering == 'a.ordering') {
+            $query->order([
+                'legend_title ' . $direction,
+                'a.legend ' . $direction,
+                'a.ordering ' . $direction
+            ]);
+
+        } else {
+            $query->order($ordering . ' ' . $direction);
+            switch ($ordering) {
+                case 'legend_title':
+                    $query->order('a.title ' . $direction);
+                    break;
+
+                case 'a.title':
+                    $query->order('legend_title ' . $direction);
+                    break;
+            }
         }
 
         return $query;

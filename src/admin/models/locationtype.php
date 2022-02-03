@@ -22,24 +22,29 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellocationtype extends JModelAdmin
+class FocalpointModellocationtype extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
+    /**
+     * @inheritdoc
+     */
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
      * @inheritDoc
      */
-    public function getTable($type = 'Locationtype', $prefix = 'FocalpointTable', $config = [])
+    public function getTable($name = 'Locationtype', $prefix = 'FocalpointTable', $options = [])
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -47,7 +52,7 @@ class FocalpointModellocationtype extends JModelAdmin
      */
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm(
+        return $this->loadForm(
             'com_focalpoint.locationtype',
             'locationtype',
             [
@@ -55,16 +60,14 @@ class FocalpointModellocationtype extends JModelAdmin
                 'load_data' => $loadData
             ]
         );
-
-        return $form;
     }
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function loadFormData()
     {
-        // Check the session for previously entered form data.
         $data = Factory::getApplication()->getUserState('com_focalpoint.edit.locationtype.data', []);
 
         if (empty($data)) {
@@ -80,13 +83,7 @@ class FocalpointModellocationtype extends JModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            if (isset($item->customfields)) {
-                $item->customfields = json_decode($item->customfields, true);
-            }
-
-            if (empty($item->id)) {
-                $item->created_by = Factory::getUser()->id;
-            }
+            $item->customfields = json_decode($item->customfields, true);
         }
 
         return $item;
@@ -94,11 +91,20 @@ class FocalpointModellocationtype extends JModelAdmin
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function save($data)
     {
         $this->checkSave2copy($data);
 
         return parent::save($data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReorderConditions($table)
+    {
+        return ['legend = ' . (int) $table->legend];
     }
 }

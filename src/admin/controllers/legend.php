@@ -22,9 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
+use Joomla\CMS\MVC\Controller\FormController;
 
-class FocalpointControllerLegend extends JControllerForm
+defined('_JEXEC') or die();
+
+class FocalpointControllerLegend extends FormController
 {
     protected $view_list = 'legends';
 }

@@ -22,14 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-defined('_JEXEC') or die;
+use Joomla\CMS\MVC\Controller\FormController;
 
-jimport('joomla.application.component.controllerform');
+defined('_JEXEC') or die();
 
-/**
- * Locationtype controller class.
- */
-class FocalpointControllerLocationtype extends JControllerForm
+class FocalpointControllerLocationtype extends FormController
 {
     protected $view_list = 'locationtypes';
 }

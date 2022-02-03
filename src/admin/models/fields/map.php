@@ -22,13 +22,14 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\Form\Field\ListField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('List');
+FormHelper::loadFieldClass('list');
 
 class ShacklocationsFormFieldMap extends JFormFieldList
 {

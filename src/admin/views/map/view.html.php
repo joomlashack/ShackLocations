@@ -22,104 +22,32 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-class FocalpointViewMap extends HtmlView
+class FocalpointViewMap extends FocalpointViewAdminForm
 {
     /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $item = null;
-
-    /**
-     * @var Form
-     */
-    protected $form = null;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        $app = Factory::getApplication();
-
         try {
-            /** @var FocalpointModelMap $model */
-            $model = $this->getModel();
+            $this->model = $this->getModel();
+            $this->state = $this->model->getState();
+            $this->item  = $this->model->getItem();
+            $this->form  = $this->model->getForm();
 
-            $this->state = $model->getState();
-            $this->item  = $model->getItem();
-            $this->form  = $model->getForm();
-
-            if (count($errors = $this->get('Errors'))) {
-                throw new Exception(implode("\n", $errors));
-            }
-
-            $this->addToolbar();
+            $this->addToolbar('map');
 
             PluginHelper::importPlugin('focalpoint');
-            $app->triggerEvent('onSlocmapBeforeLoad', [&$this->item]);
+            $this->app->triggerEvent('onSlocmapBeforeLoad', [&$this->item]);
 
             parent::display($tpl);
 
-            echo FocalpointHelper::renderAdminFooter();
-
-        } catch (Exception $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
-
-        } catch (Throwable $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function addToolbar()
-    {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = ($this->item->id == 0);
-
-        $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
-
-        $title = 'COM_FOCALPOINT_TITLE_MAP_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'compass');
-
-        if (!$checkedOut) {
-            if ($user->authorise('core.edit', 'com_focalpoint')
-                || $user->authorise('core.create', 'com_focalpoint')
-            ) {
-                ToolBarHelper::apply('map.apply');
-                ToolBarHelper::save('map.save');
-            }
-
-            if ($user->authorise('core.create', 'com_focalpoint')) {
-                ToolBarHelper::save2new('map.save2new');
-            }
-        }
-
-        if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::save2copy('map.save2copy');
-        }
-
-        ToolBarHelper::cancel('map.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

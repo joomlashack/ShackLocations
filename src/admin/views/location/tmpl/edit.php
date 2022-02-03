@@ -22,37 +22,28 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\WebAsset\WebAssetManager;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-HTMLHelper::_('bootstrap.tooltip');
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
-
-$params = JComponentHelper::getParams('com_focalpoint');
-HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
+/** @var WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+    ->useScript('form.validate')
+    ->registerAndUseScript('googlemaps', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();
-
 ?>
-<script type="text/javascript">
-    Joomla.submitbutton = function(task) {
-        if (task === 'location.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
-        }
-    }
-</script>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      class="tmpl_<?php echo Factory::getApplication()->getTemplate(); ?> form-validate">
+      class="form-validate fp_joomla4">
 
     <?php
     echo $this->form->renderFieldset('hidden');
@@ -60,41 +51,40 @@ $formFieldsets = $this->form->getFieldsets();
 
     echo LayoutHelper::render('joomla.edit.title_alias', $this);
 
-    echo HTMLHelper::_('bootstrap.startTabSet', 'location', ['active' => 'basic']);
+    echo HTMLHelper::_('uitab.startTabSet', 'location', ['active' => 'basic', 'recall' => true]);
 
-    echo HTMLHelper::_('bootstrap.addTab', 'location', 'basic', Text::_($formFieldsets['basic']->label));
+    echo HTMLHelper::_('uitab.addTab', 'location', 'basic', Text::_($formFieldsets['basic']->label));
     ?>
-    <div class="row-fluid">
-        <div class="span9">
-            <div class="form-vertical">
+    <div class="row">
+        <div class="col-lg-9">
+            <div>
                 <?php
                 echo $this->form->renderFieldset('basic');
                 unset($formFieldsets['basic']);
                 ?>
             </div>
         </div>
+        <div class="col-lg-3">
+            <?php
+            echo $this->form->renderFieldset('params');
+            unset($formFieldsets['params']);
+            ?>
 
-        <div class="span3">
-            <div class="form-vertical">
-                <?php
-                echo $this->form->renderFieldset('params');
-                unset($formFieldsets['params']);
-                ?>
-            </div>
         </div>
     </div>
+
     <?php
-    echo HTMLHelper::_('bootstrap.endTab');
+    echo HTMLHelper::_('uitab.endTab');
 
     foreach ($formFieldsets as $fieldsetName => $fieldset) :
         echo HTMLHelper::_(
-            'bootstrap.addTab',
+            'uitab.addTab',
             'location',
             $fieldsetName,
             Text::_($fieldset->label)
         );
         ?>
-        <div class="form-horizontal">
+        <div class="row">
             <?php
             if ($fieldset->description) :
                 ?>
@@ -102,19 +92,19 @@ $formFieldsets = $this->form->getFieldsets();
                     <span class="icon-info" aria-hidden="true"></span>
                     <?php echo Text::_($fieldset->description); ?>
                 </div>
-                <?php
+            <?php
             endif;
 
             echo $this->form->renderFieldset($fieldsetName);
-            echo HTMLHelper::_('bootstrap.endTab');
             ?>
         </div>
         <?php
+        echo HTMLHelper::_('uitab.endTab');
+
     endforeach;
 
-    echo HTMLHelper::_('bootstrap.endTabSet');
+    echo HTMLHelper::_('uitab.endTabSet');
     ?>
     <input type="hidden" name="task" value=""/>
     <?php echo HTMLHelper::_('form.token'); ?>
-
 </form>

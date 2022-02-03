@@ -22,133 +22,38 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Pagination\Pagination;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-class FocalpointViewLegends extends JViewLegacy
+class FocalpointViewLegends extends FocalpointViewAdminList
 {
     /**
-     * @var object[]
-     */
-    protected $items = null;
-
-    /**
-     * @var Pagination
-     */
-    protected $pagination = null;
-
-    /**
-     * @var Form
-     */
-    public $filterForm = null;
-
-    /**
-     * @var mixed[]
-     */
-    public $activeFilters = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        /** @var AdministratorApplication $app */
-        $app = Factory::getApplication();
-
         try {
-            /** @var FocalpointModellegends $model */
-            $model = $this->getModel();
+            $this->model = $this->getModel();
 
-            $this->state         = $model->getState();
-            $this->items         = $model->getItems();
-            $this->pagination    = $model->getPagination();
-            $this->filterForm    = $model->getFilterForm();
-            $this->activeFilters = $model->getActiveFilters();
+            $this->state         = $this->model->getState();
+            $this->items         = $this->model->getItems();
+            $this->pagination    = $this->model->getPagination();
+            $this->filterForm    = $this->model->getFilterForm();
+            $this->activeFilters = $this->model->getActiveFilters();
 
-            // Check for errors.
-            if ($errors = $model->getErrors()) {
-                throw new Exception(implode("\n", $errors));
-            }
-
-            $this->addToolbar();
+            $this->addToolbar('legend', 'legends');
 
             FocalpointHelper::addSubmenu('legends');
-            $this->sidebar = JHtmlSidebar::render();
-
-            /*
-             * This is part of the getting started walk through. If we've gotten this far then the
-             * user has successfully saved their configuration and defined a map.
-             * Check we have at least one legend defined
-             */
-            $db    = Factory::getDbo();
-            $query = $db->getQuery(true)
-                ->select('id')
-                ->from('#__focalpoint_legends');
-
-            if (!$db->setQuery($query)->loadResult()) {
-                $app->input->set('task', 'showhelp');
-            }
+            $this->sidebar = Sidebar::render();
 
             parent::display($tpl);
 
-            echo FocalpointHelper::renderAdminFooter();
-
-        } catch (Exception $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
-
-        } catch (Throwable $e) {
-            $app->enqueueMessage($e->getMessage(), 'error');
-        }
-    }
-
-    /**
-     * Add the page title and toolbar.
-     *
-     * @since    1.6
-     */
-    protected function addToolbar()
-    {
-        $user = Factory::getUser();
-
-        ToolbarHelper::title(JText::_('COM_FOCALPOINT_TITLE_LEGENDS'), 'list-2');
-
-        if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::addNew('legend.add');
-        }
-
-        if ($user->authorise('core.edit', 'com_focalpoint')) {
-            ToolBarHelper::editList('legend.edit');
-        }
-
-        if ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::publishList('legends.publish');
-            ToolBarHelper::unpublishList('legends.unpublish');
-            ToolBarHelper::checkin('legends.checkin');
-        }
-
-        if ($this->state->get('filter.state') == -2 && $user->authorise('core.delete', 'com_focalpoint')) {
-            ToolBarHelper::deleteList('', 'legends.delete');
-
-        } elseif ($user->authorise('core.edit.state', 'com_focalpoint')) {
-            ToolBarHelper::trash('legends.trash');
-        }
-
-        if ($user->authorise('core.admin', 'com_focalpoint')) {
-            ToolBarHelper::preferences('com_focalpoint');
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
     }
 }

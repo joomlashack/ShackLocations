@@ -22,11 +22,9 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
+defined('_JEXEC') or die();
 
-defined('_JEXEC') or die;
-
-class FocalpointModellocations extends JModelList
+class FocalpointModellocations extends FocalpointModelList
 {
     public function __construct($config = [])
     {
@@ -34,15 +32,17 @@ class FocalpointModellocations extends JModelList
             $config,
             [
                 'filter_fields' => [
+                    'creator.name',
+                    'a.id',
                     'a.ordering',
                     'a.state',
                     'a.title',
-                    'map_title',
-                    'locationtype_title',
-                    'a.created_by',
-                    'a.id',
+                    'map.title',
+                    'legend.title',
+                    'type.title',
                     'state',
                     'map_id',
+                    'legend',
                     'type'
                 ]
             ]
@@ -54,50 +54,31 @@ class FocalpointModellocations extends JModelList
 
 
     /**
-     * Method to auto-populate the model state.
-     *
-     * Note. Calling getState in this method will result in recursion.
+     * @inheritDoc
      */
-    protected function populateState($ordering = null, $direction = null)
+    protected function populateState($ordering = 'a.title', $direction = 'asc')
     {
-        $app = Factory::getApplication('administrator');
-
-        // Load the filter state.
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
         $this->setState('filter.state', $published);
 
 
-        //Filtering map_id
-        $this->setState('filter.map_id',
-            $app->getUserStateFromRequest($this->context . '.filter.map_id', 'filter_map_id', '', 'string'));
+        $mapId = $this->getUserStateFromRequest($this->context . '.filter.map_id', 'filter_map_id', '', 'string');
+        $this->setState('filter.map_id', $mapId);
 
-        //Filtering type
-        $this->setState('filter.type',
-            $app->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string'));
+        $legendId = $this->getUserStateFromRequest($this->context . '.filter.legend', 'filter_legend', '', 'int');
+        $this->setState('filter.legend', $legendId);
 
+        $typeId = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type', '', 'string');
+        $this->setState('filter.type', $typeId);
 
-        // Load the parameters.
-        $params = JComponentHelper::getParams('com_focalpoint');
-        $this->setState('params', $params);
-
-        // List state information.
-        parent::populateState('a.title', 'asc');
+        parent::populateState($ordering, $direction);
     }
 
     /**
-     * Method to get a store id based on model configuration state.
-     *
-     * This is necessary because the model is used by the component and
-     * different modules that might need different sets of data or different
-     * ordering requirements.
-     *
-     * @param string $id A prefix for the store id.
-     *
-     * @return    string        A store id.
-     * @since    1.6
+     * @inheritDoc
      */
     protected function getStoreId($id = '')
     {
@@ -109,88 +90,98 @@ class FocalpointModellocations extends JModelList
     }
 
     /**
-     * Build an SQL query to load the list data.
-     *
-     * @return    JDatabaseQuery
-     * @since    1.6
+     * @inheritDoc
      */
     protected function getListQuery()
     {
-        // Create a new query object.
-        $db    = $this->getDbo();
-        $query = $db->getQuery(true);
+        $db = $this->getDbo();
 
-        // Select the required fields from the table.
-        $query->select(
-            $this->getState(
-                'list.select',
-                'a.*'
+        $query = $db->getQuery(true)
+            ->select([
+                    'a.*',
+                    'uc.name AS editor',
+                    'map.title AS map_title',
+                    'type.title AS locationtype_title',
+                    'legend.title AS legend_title',
+                    'creator.name AS created_by_alias'
+                ]
             )
-        );
-        $query->from('`#__focalpoint_locations` AS a');
+            ->from('`#__focalpoint_locations` AS a')
+            ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
+            ->leftJoin('#__focalpoint_maps AS map ON map.id = a.map_id')
+            ->leftJoin('#__focalpoint_locationtypes AS type ON type.id = a.type')
+            ->leftJoin('#__focalpoint_legends AS legend ON legend.id = type.legend')
+            ->leftJoin('#__users AS creator ON creator.id = a.created_by');
 
-        // Join over the users for the checked out user.
-        $query->select('uc.name AS editor');
-        $query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-
-        // Join over the category 'map_id'
-        $query->select('map_title.title AS map_title');
-        $query->join('LEFT', '#__focalpoint_maps AS map_title ON map_title.id = a.map_id');
-
-        // Join over the foreign key 'type'
-        $query->select('c.title AS locationtype_title');
-        $query->join('LEFT', '#__focalpoint_locationtypes AS c ON c.id = a.type');
-
-        // Join over the user field 'created_by'
-        $query->select('created_by.name AS created_by');
-        $query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
-
-        // Filter by published
         $published = $this->getState('filter.state');
         if ($published != '*') {
             if ($published == '') {
-                $query->where('(a.state IN (0, 1))');
+                $query->where('a.state IN (0, 1)');
 
             } else {
                 $query->where('a.state = ' . (int)$published);
             }
         }
 
-        // Filter by search in title
-        $search = $this->getState('filter.search');
-        if (!empty($search)) {
+        if ($search = $this->getState('filter.search')) {
             if (stripos($search, 'id:') === 0) {
                 $query->where('a.id = ' . (int)substr($search, 3));
+
             } else {
-                $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                $query->where('( a.title LIKE ' . $search . '  OR  a.description LIKE ' . $search . '  OR  a.address LIKE ' . $search . ' )');
+                $search = $db->quote('%' . $search . '%');
+
+                $ors = [
+                    'a.title LIKE ' . $search,
+                    'a.description LIKE ' . $search,
+                    'a.address LIKE ' . $search
+                ];
+                $query->where(sprintf('(%s)', join(' OR ', $ors)));
             }
         }
 
-        //Filtering created_by
-        $filter_created_by = $this->state->get("filter.created_by");
-        if ($filter_created_by) {
-            $query->where("a.created_by = '" . $db->escape($filter_created_by) . "'");
+        if ($createdBy = (int)$this->state->get('filter.created_by')) {
+            $query->where('a.created_by = ' . $createdBy);
         }
 
-        //Filtering map_id
-        $filter_map_id = $this->state->get("filter.map_id");
-        if ($filter_map_id) {
-            $query->where("a.map_id = '" . $db->escape($filter_map_id) . "'");
+        if ($mapId = (int)$this->state->get('filter.map_id')) {
+            $query->where('a.map_id = ' . $mapId);
         }
 
-        //Filtering type
-        $filter_type = $this->state->get("filter.type");
-        if ($filter_type) {
-            $query->where("a.type = '" . $db->escape($filter_type) . "'");
+        if ($legendId = (int)$this->getState('filter.legend')) {
+            $query->where('type.legend = ' . $legendId);
         }
 
+        if ($typeId = (int)$this->state->get('filter.type')) {
+            $query->where('a.type = ' . $typeId);
+        }
 
-        // Add the list ordering clause.
-        $orderCol  = $this->state->get('list.ordering');
-        $orderDirn = $this->state->get('list.direction');
-        if ($orderCol && $orderDirn) {
-            $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        $ordering  = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+
+        if ($ordering == 'a.ordering') {
+            $query->order([
+                'map.title ' . $direction,
+                'a.map_id ' . $direction,
+                'a.ordering ' . $direction
+            ]);
+
+        } else {
+            $query->order($ordering . ' ' . $direction);
+            switch ($ordering) {
+                case 'a.state':
+                case 'map.title':
+                case 'type.title':
+                case 'creator.name':
+                    $query->order('a.title ' . $direction);
+                    break;
+
+                case 'legend.title':
+                    $query->order([
+                        'type.title ' . $direction,
+                        'a.title ' . $direction
+                    ]);
+                    break;
+            }
         }
 
         return $query;

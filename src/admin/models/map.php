@@ -23,24 +23,29 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModelmap extends JModelAdmin
+class FocalpointModelmap extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
+    /**
+     * @inheritdoc
+     */
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
      * @inheritDoc
      */
-    public function getTable($type = 'Map', $prefix = 'FocalpointTable', $config = [])
+    public function getTable($name = 'Map', $prefix = 'FocalpointTable', $options = [])
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -48,12 +53,14 @@ class FocalpointModelmap extends JModelAdmin
      */
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm('com_focalpoint.map', 'map', ['control' => 'jform', 'load_data' => $loadData]);
-        if (empty($form)) {
-            return false;
-        }
-
-        return $form;
+        return $this->loadForm(
+            'com_focalpoint.map',
+            'map',
+            [
+                'control'   => 'jform',
+                'load_data' => $loadData
+            ]
+        );
     }
 
     /**
@@ -62,10 +69,10 @@ class FocalpointModelmap extends JModelAdmin
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         try {
-            $proForm = JForm::getInstance('map.pro', 'map.pro');
+            $proForm = Form::getInstance('map.pro', 'map.pro');
             $form->load($proForm->getXml());
 
-        } catch (Exception $error) {
+        } catch (Throwable $error) {
             // ignore
         }
 
@@ -74,6 +81,7 @@ class FocalpointModelmap extends JModelAdmin
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function loadFormData()
     {
@@ -88,9 +96,7 @@ class FocalpointModelmap extends JModelAdmin
     }
 
     /**
-     * @param array $data
-     *
-     * @return bool
+     * @inheritDoc
      * @throws Exception
      */
     public function save($data)
@@ -109,28 +115,10 @@ class FocalpointModelmap extends JModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            if (empty($item->id)) {
-                $item->created_by = Factory::getUser()->id;
-            }
-
             $item->tabsdata = json_decode($item->tabsdata, true);
             $item->metadata = json_decode($item->metadata, true);
         }
 
         return $item;
-    }
-
-    /**
-     * @param JTable $table
-     *
-     * @return void
-     */
-    protected function prepareTable($table)
-    {
-        $table->alias = JFilterOutput::stringURLSafe($table->alias ?: $table->title);
-
-        if (!$table->id) {
-            $table->ordering = $table->getNextOrder();
-        }
     }
 }

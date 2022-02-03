@@ -37,7 +37,7 @@ $sidebar       = in_array($this->item->params->get('legendposition'), ['left', '
     <div id="fp_map_actions">
         <form onsubmit="return false;">
             <?php if ($showMapSearch) : ?>
-                <div class="fp_mapsearch input-append">
+                <div class="fp_mapsearch btn-group">
                     <label for="fp_searchAddress"><?php echo $searchPrompt; ?></label>
                     <input id="fp_searchAddress"
                            type="text"
@@ -47,13 +47,15 @@ $sidebar       = in_array($this->item->params->get('legendposition'), ['left', '
                             type="button"><?php echo Text::_('COM_FOCALPOINT_SEARCH_BUTTON_TEXT'); ?></button>
                 </div>
             <?php endif; ?>
-            <div id="fp_map_buttons" class="input-append">
-                <button class="btn btn-mini"
-                        id="fp_reset"><?php echo Text::_('COM_FOCALPOINT_BUTTON_RESET_MAP'); ?></button>
-
-                <button class="btn btn-mini"
+            <div id="fp_map_buttons" class="btn-group">
+                <button class="btn"
+                        id="fp_reset">
+                    <?php echo Text::_('COM_FOCALPOINT_BUTTON_RESET_MAP'); ?>
+                </button>
+                <button class="btn"
                         id="fp_toggle"
-                        data-togglestate="on"></button>
+                        data-togglestate="on">
+                </button>
             </div>
         </form>
     </div>

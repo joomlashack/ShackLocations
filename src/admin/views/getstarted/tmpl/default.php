@@ -22,22 +22,20 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-$task = Factory::getApplication()->input->getCmd('task', 'config');
 ?>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo Route::_('index.php?option=com_focalpoint&view=legends'); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint'); ?>"
       method="post"
-      class="fp_<?php echo $task; ?> tmpl_<?php echo Factory::getApplication()->getTemplate(); ?>">
+      class="fp_config">
     <?php
     $class = '';
-    if (!empty($this->sidebar)) :
+    if ($this->sidebar) :
         $class = 'span10';
         ?>
         <div id="j-sidebar-container" class="span2">
@@ -47,29 +45,7 @@ $task = Factory::getApplication()->input->getCmd('task', 'config');
     <div id="j-main-container" class="<?php echo $class; ?>>">
         <div id="fp_pointer"></div>
         <div class="hero-unit" style="text-align:left;">
-            <?php
-            switch ($task) {
-                case 'config':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_CONFIG';
-                    break;
-
-                case 'map':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_MAPS';
-                    break;
-
-                case 'legend':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_LEGENDS';
-                    break;
-
-                case 'locationtype':
-                    $message = 'COM_FOCALPOINT_GETSTARTED_LOCATIONTYPES';
-                    break;
-            }
-
-            if (!empty($message)) :
-                echo Text::_($message);
-            endif;
-            ?>
+            <?php echo Text::_('COM_FOCALPOINT_GETSTARTED_CONFIG'); ?>
         </div>
     </div>
 </form>

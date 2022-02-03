@@ -24,17 +24,22 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Version;
 
-defined('_JEXEC') or die;
-HTMLHelper::_('behavior.tabstate');
+defined('_JEXEC') or die();
 
 // Access check.
 if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
-    throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+    throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
 }
 
 require_once __DIR__ . '/include.php';
+
+if (Version::MAJOR_VERSION < 4) {
+    HTMLHelper::_('behavior.tabstate');
+}
 
 $controller = BaseController::getInstance('Focalpoint');
 $controller->execute(Factory::getApplication()->input->getCmd('task'));

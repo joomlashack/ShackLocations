@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
     <fieldset name="hidden">
-        <field name="id"
-               type="hidden"/>
+        <field name="id" type="hidden"/>
     </fieldset>
 
     <!-- title/alias fields -->
@@ -10,23 +9,22 @@
         <field name="title"
                type="text"
                class="inputbox input-xxlarge input-large-text"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_TITLE"
-               description="COM_FOCALPOINT_FORM_DESC_LEGEND_TITLE"
+               label="COM_FOCALPOINT_FORM_LEGEND_TITLE_LBL"
                required="true"
                maxlength="150"/>
 
         <field name="alias"
                type="text"
-               class="inputbox"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_ALIAS"
-               required="false"
+               label="JFIELD_ALIAS_LABEL"
+               description="COM_FOCALPOINT_FORM_FIELD_ALIAS_DESC"
+               filter="safehtml"
                hint="JFIELD_ALIAS_PLACEHOLDER"/>
     </fieldset>
 
     <fieldset name="general">
         <field name="state"
                type="list"
-               class="chzn-color-state"
+               class="chzn-color-state form-select-color-state"
                label="JSTATUS"
                description="JFIELD_PUBLISHED_DESC"
                default="1">
@@ -37,15 +35,14 @@
 
         <field name="subtitle"
                type="text"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_SUBTITLE"
-               description="COM_FOCALPOINT_FORM_DESC_LEGEND_SUBTITLE"
+               label="COM_FOCALPOINT_FORM_LEGEND_SUBTITLE_LBL"
+               description="COM_FOCALPOINT_FORM_LEGEND_SUBTITLE_DESC"
                size="30"
                maxlength="300"/>
 
         <field name="created_by"
                type="user"
-               label="COM_FOCALPOINT_FORM_LBL_LEGEND_CREATED_BY"
-               description="COM_FOCALPOINT_FORM_DESC_LEGEND_CREATED_BY"/>
+               label="COM_FOCALPOINT_FORM_LEGEND_CREATED_BY_LBL"/>
     </fieldset>
 
 </form>

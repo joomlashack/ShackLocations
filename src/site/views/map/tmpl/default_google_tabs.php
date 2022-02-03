@@ -79,25 +79,24 @@ $mapStyle       = join(' ', $mapStyle);
 $legendStyle    = join(' ', $legendStyle);
 
 
-$mapTabId = 'tabs1-map';
-$mapTab   = HTMLHelper::_(
+$tabPrefix = 'maptab-';
+$mapTabId  = $tabPrefix . 'map';
+$mapTab    = HTMLHelper::_(
     'link',
     '#' . $mapTabId,
     Text::_('COM_FOCALPOINT_MAP'),
     [
-        'data-toggle' => 'tab',
-        'data-show'   => '#fp_googleMap'
+        'data-show' => 'fp_googleMap'
     ]
 );
 
-$listTabId = 'tabs1-list';
+$listTabId = $tabPrefix . 'list';
 $listTab   = HTMLHelper::_(
     'link',
     '#' . $mapTabId,
     Text::_('COM_FOCALPOINT_LIST'),
     [
-        'data-toggle' => 'tab',
-        'data-show'   => '#fp_locationlist_container'
+        'data-show' => 'fp_locationlist_container'
     ]
 );
 
@@ -107,10 +106,9 @@ $customTabs    = $this->item->tabsdata->tabs;
 $createTabs    = $showListTab || $customTabs;
 
 if ($createTabs) :
-    // Begin tabs
     echo '<div id="tab-container" class="tab-container">';
     ?>
-    <ul id="mapTabs" class='nav nav-tabs'>
+    <ul id="slocTabs" class='sloc-tabs'>
         <?php if ($showListTab && $showListFirst) : ?>
             <li><?php echo $listTab; ?></li>
         <?php endif; ?>
@@ -122,7 +120,8 @@ if ($createTabs) :
         <?php endif;
 
         foreach ($customTabs as $key => $tab) :
-            $customTab = HTMLHelper::_('link', '#tabs1-' . $key, $tab->name, ['data-toggle' => 'tab']);
+            $customId = $tabPrefix . 'custom' . $key;
+            $customTab = HTMLHelper::_('link', '#' . $customId, $tab->name);
             ?>
             <li><?php echo $customTab; ?></li>
         <?php endforeach;
@@ -167,7 +166,7 @@ if ($createTabs) :
 
             foreach ($customTabs as $key => $tab) :
                 ?>
-                <div id="tabs1-<?php echo $key; ?>" class="fp-custom-tab tab-pane">
+                <div id="<?php echo $tabPrefix . 'custom' . $key; ?>" class="fp-custom-tab tab-pane">
                     <?php echo $tab->content; ?>
                 </div>
             <?php endforeach;
@@ -179,36 +178,7 @@ if ($createTabs) :
 <?php
 
 if ($createTabs) :
-    $mapUpdate = "window.slocMap['{$this->item->id}'].update();";
-
-    $jScript = <<<JSCRIPT
-;jQuery(function($) {
-    let \$mapTabs = $('#mapTabs li').find('a'),
-        showAreas = [];
-
-    \$mapTabs.each(function () {
-        let show = this.getAttribute('data-show');
-        if (show) {
-            showAreas.push($(this).data('show'));
-        }
-    });
-    
-    \$mapTabs.on('click', function(evt) {
-        evt.preventDefault();
-        
-        let show = this.getAttribute('data-show');
-        showAreas.forEach(function(area) {
-            if (area === show) {
-                $(area).show();
-            } else {
-                $(area).hide();
-            }
-        });
-        
-        {$mapUpdate}
-    });
-});
-JSCRIPT;
-
-    Factory::getDocument()->addScriptDeclaration($jScript);
+    Factory::getDocument()->addScriptDeclaration(
+        "jQuery(document).ready(function($) { new jQuery.sloc.tabs({$this->item->id}); });"
+    );
 endif;

@@ -25,38 +25,41 @@
 use Alledia\Framework\Joomla\Extension\Licensed;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 abstract class FocalpointHelper extends ContentHelper
 {
     // Bradenton, FL
-    const HOME_LAT = '27.6648274';
-    const HOME_LNG = '-81.5157535';
+    public const HOME_LAT = '27.6648274';
+    public const HOME_LNG = '-81.5157535';
 
     /**
      * @inheritDoc
      */
     public static function addSubmenu($vName)
     {
-        JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_MAPS'),
+        Sidebar::addEntry(
+            Text::_('COM_FOCALPOINT_TITLE_MAPS'),
             'index.php?option=com_focalpoint&view=maps',
             $vName == 'maps'
         );
-        JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_LEGENDS'),
+        Sidebar::addEntry(
+            Text::_('COM_FOCALPOINT_TITLE_LEGENDS'),
             'index.php?option=com_focalpoint&view=legends',
             $vName == 'legends'
         );
-        JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'),
+        Sidebar::addEntry(
+            Text::_('COM_FOCALPOINT_TITLE_LOCATIONTYPES'),
             'index.php?option=com_focalpoint&view=locationtypes',
             $vName == 'locationtypes'
         );
 
-        JHtmlSidebar::addEntry(
-            JText::_('COM_FOCALPOINT_TITLE_LOCATIONS'),
+        Sidebar::addEntry(
+            Text::_('COM_FOCALPOINT_TITLE_LOCATIONS'),
             'index.php?option=com_focalpoint&view=locations',
             $vName == 'locations'
         );
@@ -68,7 +71,7 @@ abstract class FocalpointHelper extends ContentHelper
     public static function getActions($component = '', $section = '', $id = 0)
     {
         $user   = Factory::getUser();
-        $result = new JObject;
+        $result = new CMSObject();
 
         $assetName = 'com_focalpoint';
 
@@ -87,15 +90,5 @@ abstract class FocalpointHelper extends ContentHelper
         }
 
         return $result;
-    }
-
-    /**
-     * @return string
-     */
-    public static function renderAdminFooter()
-    {
-        $extension = new Licensed('focalpoint', 'component');
-
-        return $extension->getFooterMarkup();
     }
 }

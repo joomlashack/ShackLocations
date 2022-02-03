@@ -23,11 +23,11 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
 class FocalpointViewLocation extends FocalpointViewSite
 {
@@ -67,7 +67,7 @@ class FocalpointViewLocation extends FocalpointViewSite
         if ($this->_layout == 'edit') {
             $authorised = $user->authorise('core.create', 'com_focalpoint');
             if ($authorised !== true) {
-                throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+                throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
             }
         }
 
@@ -83,8 +83,7 @@ class FocalpointViewLocation extends FocalpointViewSite
             [
                 'com_focalpoint.location',
                 &$this->item,
-                &$this->params,
-                $limitstart = 0
+                &$this->params
             ]
         );
         $this->item->description = $this->item->text;
@@ -96,7 +95,7 @@ class FocalpointViewLocation extends FocalpointViewSite
                 'com_focalpoint.location',
                 &$this->item,
                 &$this->params,
-                $limitstart = 0
+                0
             ]
         );
         $this->item->fulldescription = $this->item->text;

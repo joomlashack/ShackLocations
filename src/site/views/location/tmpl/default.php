@@ -26,12 +26,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 
-defined('_JEXEC') or die;
-
-if ($this->item->params->get('loadBootstrap')) :
-    HTMLHelper::_('stylesheet', 'com_focalpoint/bootstrap.css', ['relative' => true]);
-    HTMLHelper::_('bootstrap.framework');
-endif;
+defined('_JEXEC') or die();
 
 if (empty($this->item->backlink)) :
     $backLink = null;
@@ -71,7 +66,6 @@ $pageClass   = $this->getPageClass('fp-location-view');
             if ($this->item->params->get('getdirections')) :
                 $displayData = [
                     'mapId'       => 'L' . $this->item->id,
-                    'params'      => $this->item->params,
                     'destination' => [
                         'lat' => $this->item->latitude,
                         'lng' => $this->item->longitude
@@ -115,7 +109,6 @@ $pageClass   = $this->getPageClass('fp-location-view');
                             <p><?php echo $this->item->phone; ?></p>
                         </div>
                     <?php endif; ?>
-
                 </div>
             <?php endif;
 
@@ -124,7 +117,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
             if ($this->item->image) :
                 ?>
                 <div class="fp_article_image">
-                    <p><img src="<?php echo $this->item->image; ?>" title=""/></p>
+                    <p><img src="<?php echo $this->item->image; ?>" alt=""/></p>
                 </div>
             <?php endif;
 
@@ -142,7 +135,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
     </div>
 
     <?php
-    echo $this->loadTemplate('google');
+    echo $this->loadTemplate($this->mapEngine);
 
     echo $this->renderModule('shacklocations-below-map');
 

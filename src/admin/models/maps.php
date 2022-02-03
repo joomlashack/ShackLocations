@@ -22,19 +22,19 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
+defined('_JEXEC') or die();
 
-defined('_JEXEC') or die;
-
-class FocalpointModelmaps extends JModelList
+class FocalpointModelmaps extends FocalpointModelList
 {
+    /**
+     * @inheritDoc
+     */
     public function __construct($config = [])
     {
         $config = array_merge_recursive(
             [
                 'filter_fields' => [
-                    'a.created_by',
+                    'created_by_alias',
                     'a.id',
                     'a.ordering',
                     'a.state',
@@ -49,36 +49,33 @@ class FocalpointModelmaps extends JModelList
     }
 
     /**
-     * @param string $ordering
-     * @param string $direction
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     protected function populateState($ordering = 'a.title', $direction = 'ASC')
     {
-        $app = Factory::getApplication('administrator');
-
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
 
-        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $published = $this->getUserStateFromRequest($this->context . '.filter.state', 'filter_state', '', 'string');
         $this->setState('filter.state', $published);
-
-        $params = ComponentHelper::getParams('com_focalpoint');
-        $this->setState('params', $params);
 
         parent::populateState($ordering, $direction);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getStoreId($id = '')
     {
-        $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.state');
+        $id .= ':' . $this->getState('filter.search')
+            . ':' . $this->getState('filter.state');
 
         return parent::getStoreId($id);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getListQuery()
     {
         $db = $this->getDbo();
@@ -88,11 +85,11 @@ class FocalpointModelmaps extends JModelList
             ->select([
                 'a.*',
                 'uc.name AS editor',
-                'created_by.name AS created_by'
+                'creator.name AS created_by_alias'
             ])
             ->from('#__focalpoint_maps AS a')
             ->leftJoin('#__users AS uc ON uc.id = a.checked_out')
-            ->leftJoin('#__users AS created_by ON created_by.id = a.created_by');
+            ->leftJoin('#__users AS creator ON creator.id = a.created_by');
 
         // Filter by published
         $published = $this->getState('filter.state');
@@ -127,10 +124,9 @@ class FocalpointModelmaps extends JModelList
             }
         }
 
-        // Add the list ordering clause.
-        $ordering   = $this->state->get('list.ordering');
-        $direcrtion = $this->state->get('list.direction');
-        $query->order($ordering . ' ' . $direcrtion);
+        $ordering  = $this->state->get('list.ordering');
+        $direction = $this->state->get('list.direction');
+        $query->order($ordering . ' ' . $direction);
 
         return $query;
     }

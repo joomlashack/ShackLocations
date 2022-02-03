@@ -22,11 +22,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Table\Table;
+use Joomla\CMS\Filter\InputFilter;
+use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-class FocalpointTablelocationtype extends Table
+class FocalpointTablelocationtype extends FocalpointTable
 {
     /**
      * @inheritdoc
@@ -42,27 +43,16 @@ class FocalpointTablelocationtype extends Table
         'published' => 'state'
     ];
 
+    /**
+     * @inheritDoc
+     */
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_locationtypes', 'id', $db);
     }
 
-    public function bind($src, $ignore = [])
-    {
-        if (parent::bind($src, $ignore)) {
-            if (empty($this->alias) && !empty($this->title)) {
-                $this->alias = $this->title;
-            }
-            $this->alias = JApplicationHelper::stringURLSafe($this->alias);
-
-            return true;
-        }
-
-        return false;
-    }
-
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function check()
     {
@@ -73,7 +63,7 @@ class FocalpointTablelocationtype extends Table
                     : $this->customfields;
 
                 if (is_array($customfields)) {
-                    $filter = JFilterInput::getInstance();
+                    $filter = InputFilter::getInstance();
 
                     foreach ($customfields as &$field) {
                         $field['name'] = $filter->clean($field['name'], 'cmd');
@@ -82,9 +72,10 @@ class FocalpointTablelocationtype extends Table
                     $this->customfields = json_encode($customfields);
 
                 } else {
-                    $this->setError(JText::_('COM_FOCALPOINT_ERROR_CUSTOMFIELDS_INVALID'));
+                    $this->setError(Text::_('COM_FOCALPOINT_ERROR_CUSTOMFIELDS_INVALID'));
                 }
             }
+
             return true;
         }
 

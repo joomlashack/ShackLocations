@@ -32,7 +32,7 @@ defined('_JEXEC') or die();
 abstract class JhtmlSlocGoogle
 {
     /**
-     * @param int             $id
+     * @param int|string      $id
      * @param mixed           $params
      * @param object|array    $center
      * @param object|object[] $markerData
@@ -42,7 +42,7 @@ abstract class JhtmlSlocGoogle
      */
     public static function map($id, $params, $center = null, $markerData = [])
     {
-        if (!$params instanceof Registry) {
+        if ($params instanceof Registry == false) {
             $params = new Registry($params);
         }
 
@@ -56,23 +56,22 @@ abstract class JhtmlSlocGoogle
             $center = (object)$center;
 
         }
-        if (!is_object($center) || !isset($center->lat) || !isset($center->lng)) {
+        if (
+            is_object($center) == false
+            || isset($center->lat) == false
+            || isset($center->lng) == false) {
             Factory::getApplication()->enqueueMessage('Invalid Position', 'error');
+
             return;
         }
 
-        if (!is_array($markerData)) {
+        if (is_array($markerData) == false) {
             $markerData = [$markerData];
         }
 
-        HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
-        HTMLHelper::_('script', 'com_focalpoint/infobox.js', ['relative' => true]);
-        HTMLHelper::_('jquery.framework');
-        HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
-
         $texts = [
-            'COM_FOCALPOINT_BUTTTON_HIDE_ALL',
-            'COM_FOCALPOINT_BUTTTON_SHOW_ALL',
+            'COM_FOCALPOINT_BUTTON_HIDE_ALL',
+            'COM_FOCALPOINT_BUTTON_SHOW_ALL',
             'COM_FOCALPOINT_ERROR_GEOCODE',
             'COM_FOCALPOINT_ERROR_OVERLAY',
             'COM_FOCALPOINT_NO_LOCATION_TYPES_SELECTED',
@@ -124,17 +123,19 @@ abstract class JhtmlSlocGoogle
             ]
         ]);
 
-        $init = <<<JSINIT
-jQuery(document).ready(function ($) {
-    window.slocMap = window.slocMap || {};
-    
-    let map = new $.sloc.map.google;
-    map.init({$options});
-    
-    window.slocMap['{$id}'] = map;
-});
-JSINIT;
+        HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
+        HTMLHelper::_('script', 'com_focalpoint/infobox.js', ['relative' => true]);
+        HTMLHelper::_('jquery.framework');
+        HTMLHelper::_('script', 'com_focalpoint/sloc.js', ['relative' => true]);
+        HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
 
+        $init = <<<JSCRIPT
+jQuery(document).ready(function ($) {
+    let map = new $.sloc.map.google();
+    map.init({$options});
+    $.sloc.map.register('{$id}', map); 
+});
+JSCRIPT;
         Factory::getDocument()->addScriptDeclaration($init);
     }
 
@@ -143,7 +144,7 @@ JSINIT;
      *
      * @return string
      */
-    protected static function infoboxContent($marker)
+    protected static function infoboxContent(object $marker): string
     {
         $link = ($marker->params->get('infopopupevent') !== 'hover')
             ? static::infoboxLink($marker)
@@ -177,9 +178,9 @@ JSINIT;
      *
      * @return string
      */
-    protected static function infoboxLink($marker)
+    protected static function infoboxLink(object $marker): string
     {
-        if (!empty($marker->link)) {
+        if (empty($marker->link) == false) {
             return LayoutHelper::render(
                 'marker.infobox.link',
                 [
@@ -197,7 +198,7 @@ JSINIT;
      *
      * @return object[]
      */
-    protected static function createMarkers(array $markerData)
+    protected static function createMarkers(array $markerData): array
     {
         $markers = [];
         foreach ($markerData as $marker) {

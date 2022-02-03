@@ -22,66 +22,60 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\WebAsset\WebAssetManager;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-$params = ComponentHelper::getParams('com_focalpoint');
-
-HTMLHelper::_('bootstrap.tooltip');
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('jquery.ui', ['core', 'sortable']);
-HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
+/** @var WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+    ->useScript('form.validate')
+    ->registerAndUseScript('googlemaps', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
 
 $formFieldsets = $this->form->getFieldsets();
 ?>
-<script type="text/javascript">
-    Joomla.submitbutton = function(task) {
-        if (task === 'map.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
-        }
-    }
-</script>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      class="form-validate">
+      class="form-validate fp_joomla4">
 
     <?php
     echo $this->form->renderFieldset('hidden');
     echo LayoutHelper::render('joomla.edit.title_alias', $this);
-
-    echo HTMLHelper::_('bootstrap.startTabSet', 'map', ['active' => 'basic']);
-
-    echo HTMLHelper::_('bootstrap.addTab', 'map', 'basic', JText::_($formFieldsets['basic']->label));
     ?>
-    <div class="row-fluid">
-        <div class="form-vertical">
-            <div class="span9">
-                <?php echo $this->form->renderFieldset('basic'); ?>
+    <div class="main-card">
+        <?php
+        echo HTMLHelper::_('uitab.startTabSet', 'map', ['active' => 'basic', 'recall' => true]);
+
+        echo HTMLHelper::_('uitab.addTab', 'map', 'basic', Text::_($formFieldsets['basic']->label));
+        ?>
+        <div class="row">
+            <div class="col-lg-9">
+                <div>
+                    <fieldset class="adminform">
+                        <?php echo $this->form->getLabel('text'); ?>
+                        <?php echo $this->form->getInput('text'); ?>
+                    </fieldset>
+                </div>
             </div>
-            <div class="span3">
+            <div class="col-lg-3">
                 <?php echo $this->form->renderFieldset('settings'); ?>
             </div>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('bootstrap.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    $tabFieldset = $formFieldsets['tabs'];
-    echo HTMLHelper::_('bootstrap.addTab', 'map', 'tabs', JText::_($tabFieldset->label));
-    ?>
-    <div class="row-fluid">
-        <div class="form-vertical">
+        $tabFieldset = $formFieldsets['tabs'];
+        echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
+        ?>
+        <div class="row">
             <?php
             if ($tabDescription = Text::_($tabFieldset->description)) :
                 ?>
@@ -95,36 +89,36 @@ $formFieldsets = $this->form->getFieldsets();
             echo $this->form->renderFieldset('tabs');
             ?>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('bootstrap.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    // Allow pluginsto add form tabs
-    PluginHelper::importPlugin('focalpoint');
-    Factory::getApplication()->triggerEvent('onSlocmapTabs', [$this->form]);
+        // Allow plugins to add form tabs
+        PluginHelper::importPlugin('focalpoint');
+        $this->app->triggerEvent('onSlocmapTabs', [$this->form]);
 
-    echo HTMLHelper::_('bootstrap.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
-    ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
-            <?php echo $this->form->renderFieldset('metadata'); ?>
+        echo HTMLHelper::_('uitab.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
+        ?>
+        <div class="row">
+            <div class="form-horizontal">
+                <?php echo $this->form->renderFieldset('metadata'); ?>
+            </div>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('bootstrap.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    echo HTMLHelper::_('bootstrap.addTab', 'map', 'params', Text::_($formFieldsets['params']->label));
-    ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
-            <?php echo $this->form->renderFieldset('params'); ?>
+        echo HTMLHelper::_('uitab.addTab', 'map', 'params', Text::_($formFieldsets['params']->label));
+        ?>
+        <div class="row">
+            <div class="form-horizontal">
+                <?php echo $this->form->renderFieldset('params'); ?>
+            </div>
         </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('bootstrap.endTab');
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
 
-    echo HTMLHelper::_('bootstrap.endTabSet');
-    ?>
+        echo HTMLHelper::_('uitab.endTabSet');
+        ?>
+    </div>
 
     <input type="hidden" name="task" value=""/>
     <?php echo HTMLHelper::_('form.token'); ?>

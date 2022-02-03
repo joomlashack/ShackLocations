@@ -24,30 +24,23 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\WebAsset\WebAssetManager;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-HTMLHelper::_('bootstrap.tooltip');
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
+/** @var WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+    ->useScript('form.validate');
 ?>
-<script type="text/javascript">
-    Joomla.submitbutton = function(task) {
-        if (task === 'legend.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
-        }
-    }
-</script>
 <form name="adminForm"
       id="adminForm"
-      action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+      action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
-      class="form-validate">
-    <?php
-    echo LayoutHelper::render('joomla.edit.title_alias', $this);
-    ?>
+      class="form-validate fp_joomla4">
+    <?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
     <div class="row-fluid">
         <div class="form-horizontal">
             <?php echo $this->form->renderFieldset('general'); ?>

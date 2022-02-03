@@ -23,29 +23,28 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
 
-class FocalpointModellocation extends JModelAdmin
+class FocalpointModellocation extends FocalpointModelAdmin
 {
     use FocalpointModelTraits;
 
+    /**
+     * @inheritdoc
+     */
     protected $text_prefix = 'COM_FOCALPOINT';
 
     /**
-     * @var CMSObject
+     * @inheritDoc
      */
-    protected $item = null;
-
-    public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = [])
+    public function getTable($name = 'Location', $prefix = 'FocalpointTable', $options = [])
     {
-        return Table::getInstance($type, $prefix, $config);
+        return Table::getInstance($name, $prefix, $options);
     }
 
     /**
@@ -53,17 +52,19 @@ class FocalpointModellocation extends JModelAdmin
      */
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm(
+        return $this->loadForm(
             'com_focalpoint.location',
             'location',
-            ['control' => 'jform', 'load_data' => $loadData]
+            [
+                'control'   => 'jform',
+                'load_data' => $loadData
+            ]
         );
-
-        return $form;
     }
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function loadFormData()
     {
@@ -83,17 +84,13 @@ class FocalpointModellocation extends JModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            $item->description = trim($item->fulldescription) == ''
+            $item->description = trim($item->get('fulldescription')) == ''
                 ? $item->description
-                : $item->description . '<hr id="system-readmore" />' . $item->fulldescription;
+                : $item->description . '<hr id="system-readmore" />' . $item->get('fulldescription');
 
-            $item->metadata         = json_decode($item->metadata, true);
-            $item->othertypes       = json_decode($item->othertypes, true);
-            $item->customfieldsdata = json_decode($item->customfieldsdata, true);
-        }
-
-        if (empty($item->id)) {
-            $item->created_by = Factory::getUser()->id;
+            $item->metadata         = json_decode($item->get('metadata'), true);
+            $item->othertypes       = json_decode($item->get('othertypes'), true);
+            $item->customfieldsdata = json_decode($item->get('customfieldsdata'), true);
         }
 
         return $item;
@@ -104,13 +101,9 @@ class FocalpointModellocation extends JModelAdmin
      */
     protected function prepareTable($table)
     {
-        $table->alias = OutputFilter::stringURLSafe($table->alias ?: $table->title);
+        parent::prepareTable($table);
 
-        if (!$table->id) {
-            $table->ordering = $table->getNextOrder();
-        }
-
-        $parts = preg_split('#(<hr\s+id="system-readmore"\s*/>)#', $table->description);
+        $parts = preg_split('#(<hr\s+id="system-readmore"\s*/>)#', $table->get('description'));
         if (count($parts) == 2) {
             $table->fulldescription = trim(array_pop($parts));
             $table->description     = trim(array_pop($parts));
@@ -122,17 +115,18 @@ class FocalpointModellocation extends JModelAdmin
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function save($data)
     {
-        if (empty($data['othertypes'])) {
-            $data['othertypes'] = [];
-        }
+        $data['othertypes']       = $data['othertypes'] ?? [];
+        $data['customfieldsdata'] = $data['customfieldsdata'] ?? '{}';
 
         $this->checkSave2copy($data);
 
         if (parent::save($data)) {
-            $id = $data['id'] ?: $this->getDbo()->insertid();
+            $id = $data['id'] ?: $this->getState('location.id');
+
             $this->updateTypes($id, $data);
 
             return true;
@@ -177,7 +171,7 @@ class FocalpointModellocation extends JModelAdmin
      *
      * @return void
      */
-    protected function updateTypes($id, array $data)
+    protected function updateTypes(int $id, array $data)
     {
         $db = $this->getDbo();
 
@@ -208,5 +202,13 @@ class FocalpointModellocation extends JModelAdmin
             . ' VALUES ' . join(',', $typeValues)
         )
             ->execute();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getReorderConditions($table)
+    {
+        return ['map_id = ' . (int)$table->map_id];
     }
 }

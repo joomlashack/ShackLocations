@@ -23,65 +23,62 @@
  */
 
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\WebAsset\WebAssetManager;
 
-defined('_JEXEC') or die;
+defined('_JEXEC') or die();
 
-HTMLHelper::_('bootstrap.tooltip');
-HTMLHelper::_('behavior.formvalidator');
-HTMLHelper::_('behavior.keepalive');
-HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('jquery.ui', ['core', 'sortable']);
+/** @var WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+    ->useScript('form.validate');
+
 ?>
-<script type="text/javascript">
-    Joomla.submitbutton = function(task) {
-        if (task === 'locationtype.cancel' || document.formvalidator.isValid(document.getElementById('adminForm'))) {
-            Joomla.submitform(task, document.getElementById('adminForm'));
-        }
-    }
-</script>
-
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
+<form action="<?php echo Route::_('index.php?option=com_focalpoint&layout=edit&id=' . (int)$this->item->id); ?>"
       method="post"
       enctype="multipart/form-data"
       name="adminForm"
       id="adminForm"
       class="form-validate">
     <?php
-    echo LayoutHelper::render('joomla.edit.title_alias', $this);
-
     echo $this->form->renderFieldset('hidden');
 
-    echo HTMLHelper::_('bootstrap.startTabSet', 'locationtype', ['active' => 'general']);
-    echo HTMLHelper::_('bootstrap.addTab', 'locationtype', 'general', JText::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
+    echo LayoutHelper::render('joomla.edit.title_alias', $this);
     ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
-            <?php echo $this->form->renderFieldset('general'); ?>
-        </div>
-    </div>
-    <?php
-    echo HTMLHelper::_('bootstrap.endTab');
+    <div class="main-card">
+        <?php
+        echo HTMLHelper::_('uitab.startTabSet', 'locationtype', ['active' => 'general', 'recall' => true]);
 
-    echo HTMLHelper::_(
-        'bootstrap.addTab',
-        'locationtype',
-        'customfields',
-        JText::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_LABEL')
-    );
-    ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
+        echo HTMLHelper::_('uitab.addTab', 'locationtype', 'general',
+            Text::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
+        ?>
+        <div class="row">
+            <div class="col-lg-9">
+                <?php echo $this->form->renderFieldset('general'); ?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
+
+        echo HTMLHelper::_(
+            'uitab.addTab',
+            'locationtype',
+            'customfields',
+            Text::_('COM_FOCALPOINT_LOCATIONTYPE_CUSTOM_FIELDS_LABEL')
+        );
+        ?>
+        <div class="row">
             <?php echo $this->form->renderFieldset('customfields'); ?>
         </div>
+        <?php
+        echo HTMLHelper::_('uitab.endTab');
+
+        echo HTMLHelper::_('uitab.endTabSet');
+        ?>
     </div>
-    <?php
 
-    echo HTMLHelper::_('bootstrap.endTab');
-
-    echo HTMLHelper::_('bootstrap.endTabSet');
-
-    ?>
     <input type="hidden" name="task" value=""/>
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>

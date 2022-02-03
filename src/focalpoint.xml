@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.0.0" method="upgrade">
+<extension type="component" method="upgrade">
     <name>COM_FOCALPOINT</name>
-    <creationDate>May 25 2021</creationDate>
-    <copyright>Copyright 2018-2021 Joomlashack.com, all rights reserved.</copyright>
-    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <author>Joomlashack</author>
     <authorEmail>help@joomlashack.com</authorEmail>
-    <authorUrl>https://www.joomlashack.com</authorUrl>
-    <version>1.5.7</version>
+    <authorUrl>https://www.joomlashack.com/</authorUrl>
+    <copyright>Copyright 2018-2021 Joomlashack.com, all rights reserved.</copyright>
+    <license>GNU GPL; see LICENSE file</license>
     <description>COM_FOCALPOINT_DESCRIPTION</description>
+    <version>2.0.0b5</version>
+    <creationDate>February 03 2022</creationDate>
     <variant>FREE</variant>
 
     <install>
@@ -52,10 +52,10 @@
     <administration>
         <menu>COM_FOCALPOINT</menu>
         <submenu>
-            <menu link="option=com_focalpoint&amp;view=maps" view="maps">COM_FOCALPOINT_TITLE_MAPS</menu>
-            <menu link="option=com_focalpoint&amp;view=legends" view="legends">COM_FOCALPOINT_TITLE_LEGENDS</menu>
-            <menu link="option=com_focalpoint&amp;view=locationtypes" view="locationtypes">COM_FOCALPOINT_TITLE_LOCATIONTYPES</menu>
-            <menu link="option=com_focalpoint&amp;view=locations" view="locations">COM_FOCALPOINT_TITLE_LOCATIONS</menu>
+            <menu view="maps">COM_FOCALPOINT_TITLE_MAPS</menu>
+            <menu view="legends">COM_FOCALPOINT_TITLE_LEGENDS</menu>
+            <menu view="locationtypes">COM_FOCALPOINT_TITLE_LOCATIONTYPES</menu>
+            <menu view="locations">COM_FOCALPOINT_TITLE_LOCATIONS</menu>
         </submenu>
 
         <files folder="admin">
@@ -63,7 +63,6 @@
             <folder>form</folder>
             <folder>helpers</folder>
             <folder>language</folder>
-            <folder>layouts</folder>
             <folder>library</folder>
             <folder>models</folder>
             <folder>sql</folder>
@@ -79,39 +78,42 @@
     </administration>
 
 	<updateservers>
-        <server type="extension" priority="1" name="ShackLocations"><![CDATA[https://deploy.ostraining.com/client/update/free/stable/com_focalpoint]]></server>
+        <server type="extension" priority="1" name="Shack Locations Free"><![CDATA[https://deploy.ostraining.com/client/update/free/stable/com_focalpoint]]></server>
     </updateservers>
 
     <alledia>
         <element>focalpoint</element>
         <namespace>FocalPoint</namespace>
+        <name>Shack Locations</name>
         <license>free</license>
         <targetplatform>3.7</targetplatform>
-        <phpminimum>5.6</phpminimum>
+        <phpminimum>7.2.5</phpminimum>
 
-        <relatedExtensions uninstall="true" publish="true" downgrade="true">
-            <extension type="plugin"
-                       group="system"
-                       element="ossystem"
-                       ordering="first"
-                       downgrade="false"
-                       uninstall="false">OSSystem</extension>
+        <relatedExtensions>
+            <extension type="library"
+                       element="allediaframework">ShackFramework</extension>
 
             <extension type="plugin"
                        group="system"
                        element="osmylicensesmanager"
-                       ordering="last"
-                       downgrade="false"
-                       uninstall="false">OSMyLicensesManager</extension>
+                       ordering="last">ShackExtensionSupport</extension>
         </relatedExtensions>
 
-        <include>AllediaFreeDefaultFiles</include>
+        <include>ShackDefaultFiles</include>
 
         <obsolete>
+            <preflight>
+                <folder>administrator/components/com_focalpoint/sql</folder>
+            </preflight>
+
+            <folder>administrator/components/com_focalpoint/layouts</folder>
             <folder>components/com_focalpoint/helpers</folder>
 
+            <file>administrator/components/com_focalpoint/helpers/maps.php</file>
+            <file>administrator/components/com_focalpoint/library/AutoLoader.php</file>
             <file>administrator/components/com_focalpoint/models/fields/createdby.php</file>
             <file>administrator/components/com_focalpoint/models/fields/custom_field.php</file>
+            <file>administrator/components/com_focalpoint/models/fields/maptabs.php</file>
             <file>administrator/components/com_focalpoint/models/fields/othertypeslist.php</file>
             <file>administrator/components/com_focalpoint/models/fields/statusalt.php</file>
             <file>administrator/components/com_focalpoint/models/fields/timecreated.php</file>

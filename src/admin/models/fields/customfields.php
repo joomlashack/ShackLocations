@@ -26,6 +26,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Version;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -85,6 +86,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function renderField($options = [])
     {
@@ -110,7 +112,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
     /**
      * @return string
      */
-    protected function createNewButtons()
+    protected function createNewButtons(): string
     {
         $newButtons = ['<ul class="inline">'];
 
@@ -120,7 +122,10 @@ class ShacklocationsFormFieldCustomfields extends FormField
                     '<button class="btn btn-small button-apply btn-success pull-left sl-customfield-new" data-type="%s">',
                     $fieldType
                 )
-                . '<span class="icon-plus icon-white"></span>'
+                . sprintf(
+                    '<span class="icon-%s icon-white"></span>',
+                    Version::MAJOR_VERSION == 3 ? 'plus' : 'plus-circle'
+                )
                 . Text::_('COM_FOCALPOINT_CUSTOMFIELD_TYPE_' . $fieldType)
                 . '</button>'
                 . '</li>';
@@ -143,9 +148,16 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param bool   $required
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfield($hash, $name, $type, $label, $options, $required = false)
-    {
+    protected function renderSubfield(
+        string $hash,
+        string $name,
+        string $type,
+        string $label,
+        array $options,
+        bool $required = false
+    ): string {
         $baseGroup = $this->fieldGroup['name'];
         $groupName = $baseGroup . '.' . $hash;
 
@@ -189,8 +201,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array    $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function getFieldBlock($hash, $data, $options)
+    protected function getFieldBlock(string $hash, array $data, array $options): string
     {
         $type = empty($data['type']) ? null : $data['type'];
         if ($type) {
@@ -199,8 +212,11 @@ class ShacklocationsFormFieldCustomfields extends FormField
             $blockHtml = array_merge(
                 [
                     '<fieldset class="clearfix">',
-                    sprintf('<legend><i class="icon-menu"></i>&nbsp;%s</legend>', $blockHeader),
-                    $this->getTrashButton()
+                    sprintf(
+                        '<legend><i class="icon-menu"></i>&nbsp;%s%s</legend>',
+                        $blockHeader,
+                        $this->getTrashButton()
+                    ),
                 ],
                 $this->getSubfields($hash, $data, $options),
                 ['</fieldset>']
@@ -226,8 +242,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array    $options
      *
      * @return array
+     * @throws Exception
      */
-    protected function getSubfields($hash, $data, $options)
+    protected function getSubfields(string $hash, array $data, array $options): array
     {
         $type = empty($data['type']) ? null : $data['type'];
         if (!$type) {
@@ -260,19 +277,21 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldTextarea($hash, $options)
+    protected function renderSubfieldTextarea(string $hash, array $options): string
     {
         $fieldOptions = [
             'attributes' => [
                 'class'   => 'btn-group btn-group-yesno',
+                'layout'  => 'joomla.form.field.radio.switcher',
                 'default' => 0
             ],
             'options'    => HTMLHelper::_(
                 'select.options',
                 [
+                    HTMLHelper::_('select.option', 0, Text::_('JNO')),
                     HTMLHelper::_('select.option', 1, Text::_('JYES')),
-                    HTMLHelper::_('select.option', 0, Text::_('JNO'))
                 ],
                 [
                     'option.key.toHtml'  => false,
@@ -281,15 +300,13 @@ class ShacklocationsFormFieldCustomfields extends FormField
             )
         ];
 
-        $renderedField = $this->renderSubfield(
+        return $this->renderSubfield(
             $hash,
             'loadeditor',
             'radio',
             Text::_('COM_FOCALPOINT_CUSTOMFIELD_LOAD_EDITOR'),
             array_merge($options, $fieldOptions)
         );
-
-        return $renderedField;
     }
 
     /**
@@ -297,18 +314,17 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldImage($hash, $options)
+    protected function renderSubfieldImage(string $hash, array $options): string
     {
-        $renderedField = $this->renderSubfield(
+        return $this->renderSubfield(
             $hash,
             'directory',
             'text',
             'COM_FOCALPOINT_CUSTOMFIELD_DEFAULT_DIRECTORY',
             $options
         );
-
-        return $renderedField;
     }
 
     /**
@@ -316,8 +332,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldSelectlist($hash, $options)
+    protected function renderSubfieldSelectlist(string $hash, array $options): string
     {
         $fieldOptions = [
             'attributes' => [
@@ -326,15 +343,13 @@ class ShacklocationsFormFieldCustomfields extends FormField
             ]
         ];
 
-        $renderedField = $this->renderSubfield(
+        return $this->renderSubfield(
             $hash,
             'options',
             'textarea',
             'COM_FOCALPOINT_CUSTOMFIELD_OPTIONS',
             array_merge($options, $fieldOptions)
         );
-
-        return $renderedField;
     }
 
     /**
@@ -342,8 +357,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfieldMultiselect($hash, $options)
+    protected function renderSubfieldMultiselect(string $hash, array $options): string
     {
         return $this->renderSubfieldSelectlist($hash, $options);
     }
@@ -351,13 +367,14 @@ class ShacklocationsFormFieldCustomfields extends FormField
     /**
      * @return string
      */
-    protected function getTrashButton()
+    protected function getTrashButton(): string
     {
         if (static::$trashButton === null) {
             static::$trashButton = sprintf(
                 '<a %s></a>',
                 ArrayHelper::toString([
-                    'class' => 'hasTip sl-subfield-delete icon-cancel',
+                    'class' => sprintf('hasTip sl-subfield-delete icon-%s',
+                        Version::MAJOR_VERSION == 3 ? 'trash' : 'trash-alt'),
                     'title' => 'Delete this field'
                 ])
             );
@@ -372,8 +389,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
      * @param array $options
      *
      * @return void
+     * @throws Exception
      */
-    protected function loadAssets($options)
+    protected function loadAssets(array $options)
     {
         if (!static::$assetsLoaded) {
             $dummyId = 'BLANKFIELD';
@@ -386,7 +404,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
             }
             $blanks = json_encode($blanks);
 
-            HTMLHelper::_('jquery.ui', ['core', 'sortable']);
+            HTMLHelper::_('sloc.ui');
 
             Factory::getDocument()->addScriptDeclaration(
                 <<<JSCRIPT

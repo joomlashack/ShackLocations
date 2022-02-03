@@ -25,10 +25,11 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Version;
 
-defined('JPATH_PLATFORM') or die;
+defined('_JEXEC') or die();
 
-FormHelper::loadFieldType('GroupedList');
+FormHelper::loadFieldClass('GroupedList');
 
 class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
 {
@@ -53,30 +54,11 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
             }
 
             $primaryName = (string)$this->element['primary'];
-            if ($primary = $this->form->getField($primaryName)) {
-                JHtml::_('jquery.framework');
-                $js = <<<JSCODE
-(function($) {
-    $(document).ready(function() {
-        $('#{$primary->id}')
-            .on('change', function() {
-                var primary = this.value,
-                    secondary = $('#{$this->id}');
-                    
-                secondary.find('option').each(function (idx, option) {
-                    if (option.value == primary) {
-                        $(option).prop('disabled', true).prop('selected', false);
-                    } else {
-                        $(option).prop('disabled', false);
-                    }
-                });
-                secondary.trigger('liszt:updated');
-            })
-            .trigger('change');
-    });
-})(jQuery);
-JSCODE;
-                Factory::getDocument()->addScriptDeclaration($js);
+            if (
+                ($primaryField = $this->form->getField($primaryName))
+                && $primaryField instanceof self
+            ) {
+                $this->loadJs($primaryField);
             }
         }
 
@@ -120,5 +102,114 @@ JSCODE;
         }
 
         return array_merge(parent::getGroups(), static::$typeOptions);
+    }
+
+    /**
+     * @param self $primaryField
+     *
+     * @return void
+     */
+    protected function loadJs(self $primaryField)
+    {
+        if (Version::MAJOR_VERSION < 4) {
+            HTMLHelper::_('jquery.framework');
+
+            $js = <<<JSCODE
+jQuery(document).ready(function($) {
+    let \$primary = $('#{$primaryField->id}'),
+        \$secondary = $('#{$this->id}');
+        
+        \$primary.on('change', function() {
+            let primaryValue = this.value;
+
+            \$secondary.find('option').each(function (idx, option) {
+                if (option.value == primaryValue) {
+                    $(option).prop('disabled', true).prop('selected', false);
+                } else {
+                    $(option).prop('disabled', false);
+                }
+            });
+            \$secondary.trigger('liszt:updated');
+        })
+        .trigger('change');
+});
+JSCODE;
+
+        } else {
+            $js = <<<JSCODE
+document.addEventListener('DOMContentLoaded', function() {
+    let primaryField   = document.getElementById('{$primaryField->id}'),
+        secondaryField = document.getElementById('{$this->id}'),
+        secondary      = secondaryField.closest('joomla-field-fancy-select') || null;
+
+    if (primaryField && secondary) {
+        let choices       = secondary.choicesInstance,
+            dropdownClass = choices.config.classNames.listDropdown,
+            groupClass    = choices.config.classNames.group,
+            listClass     = choices.config.classNames.list,
+            choiceList    = secondary.getElementsByClassName(dropdownClass).item(0),
+            options       = [];
+
+        if (choiceList) {
+            if (choiceList = choiceList.getElementsByClassName(listClass).item(0)) {
+                choiceList = choiceList.childNodes
+
+                let group = null;
+                for (let i = 0; i < choiceList.length; i++) {
+                    let option = choiceList[i];
+
+                    if (option.classList.contains(groupClass)) {
+                        if (group) {
+                            options.push(group);
+                        }
+
+                        group = {
+                            label   : option.dataset.value,
+                            id      : option.dataset.id,
+                            disabled: false,
+                            choices : []
+                        }
+
+                    } else {
+                        if (group) {
+                            group.choices.push(
+                                {
+                                    value: option.dataset.value,
+                                    label: option.innerHTML
+                                }
+                            );
+                        }
+                    }
+                }
+                if (group) {
+                    options.push(group);
+                }
+            }
+        }
+
+        primaryField.addEventListener('change', function() {
+            choices.passedElement.triggerEvent('change');
+        });
+
+        secondaryField.addEventListener('change', function() {
+            let primaryValue = primaryField.value;
+
+            options.forEach(function(option) {
+                option.choices.forEach(function(choice) {
+                    choice.disabled = primaryValue === choice.value
+                });
+            });
+
+            choices.setChoices(options, 'value', 'label', true);
+            choices.removeActiveItemsByValue(primaryValue);
+        });
+
+        secondaryField.dispatchEvent(new Event('change'));
+    }
+});
+JSCODE;
+        }
+
+        Factory::getDocument()->addScriptDeclaration($js);
     }
 }

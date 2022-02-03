@@ -22,16 +22,37 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\Form\Field\TraitLayouts;
 use Joomla\CMS\Form\FormField;
 
 defined('_JEXEC') or die();
 
+include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
+
 class ShacklocationsFormFieldGeocoder extends FormField
 {
+    use TraitLayouts;
+
     /**
      * @inheritdoc
      */
-    protected $layout = 'shacklocations.form.field.geocoder';
+    protected $layout = 'shacklocations.geocoder';
+
+    /**
+     * @inheritDoc
+     */
+    protected function getLayoutData()
+    {
+        $layoutData = array_merge(
+            parent::getLayoutData(),
+            [
+                'latitude'  => $this->form->getField('latitude'),
+                'longitude' => $this->form->getField('longitude')
+            ]
+        );
+
+        return $layoutData;
+    }
 
     /**
      * @inheritDoc

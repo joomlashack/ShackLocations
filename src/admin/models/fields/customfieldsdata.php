@@ -25,6 +25,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -78,6 +79,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function renderField($options = [])
     {
@@ -85,9 +87,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
             $renderedFields = [];
 
             foreach ($customFields as $hash => $value) {
-                if (isset($customFields[$hash])) {
-                    $renderedFields[] = $this->renderFieldBlock($hash, $customFields[$hash], $options);
-                }
+                $renderedFields[] = $this->renderFieldBlock($hash, $value, $options);
             }
 
         } else {
@@ -102,10 +102,10 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 )
                     ->loadResult();
 
-                $message = JText::sprintf('COM_FOCALPOINT_CUSTOMFIELDSDATA_NONE', $locationType);
+                $message = Text::sprintf('COM_FOCALPOINT_CUSTOMFIELDSDATA_NONE', $locationType);
 
             } else {
-                $message = JText::_('COM_FOCALPOINT_CUSTOMFIELDSDATA_SAVE');
+                $message = Text::_('COM_FOCALPOINT_CUSTOMFIELDSDATA_SAVE');
             }
 
 
@@ -128,7 +128,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @return string
      * @throws Exception
      */
-    protected function renderFieldBlock($hash, array $customField, array $options)
+    protected function renderFieldBlock(string $hash, array $customField, array $options): string
     {
         $fieldType = $customField['type'];
         $fieldName = $customField['name'];
@@ -142,15 +142,13 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
 
             $renderer = 'renderSubField' . ucfirst($fieldType);
             if (method_exists($this, $renderer)) {
-                $subField = $this->{$renderer}($fieldName, $fieldGroup, $groupName, $customField, $options);
-
-                return $subField;
+                return $this->{$renderer}($fieldName, $fieldGroup, $groupName, $customField, $options);
             }
 
-            $error = JText::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_UNKNOWN', $fieldType);
+            $error = Text::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_UNKNOWN', $fieldType);
 
         } else {
-            $error = JText::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_CONFIGURATION', $fieldType, $fieldName);
+            $error = Text::sprintf('COM_FOCALPOINT_ERROR_CUSTOMFIELD_CONFIGURATION', $fieldType, $fieldName);
         }
 
         Factory::getApplication()->enqueueMessage('Custom field configuration issue', 'Warning');
@@ -170,16 +168,23 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array  $options
      *
      * @return string
+     * @throws Exception
      */
-    protected function renderSubfield($type, $name, $label, $description, $groupName, array $options)
-    {
+    protected function renderSubfield(
+        string $type,
+        string $name,
+        string $label,
+        string $description,
+        string $groupName,
+        array $options
+    ): string {
         $attributes = [
             'name'        => $name,
             'type'        => $type,
             'label'       => addslashes(htmlspecialchars($label)),
             'description' => addslashes(htmlspecialchars($description))
         ];
-        if (!empty($options['attributes'])) {
+        if (empty($options['attributes']) == false) {
             $attributes = array_merge($attributes, $options['attributes']);
         }
 
@@ -192,9 +197,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
         $field = new SimpleXMLElement($fieldXml);
         $this->form->setField($field, $groupName);
 
-        $renderedField = $this->form->renderField($name, $groupName, null, $options);
-
-        return $renderedField;
+        return $this->form->renderField($name, $groupName, null, $options);
     }
 
     /**
@@ -206,20 +209,21 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubfieldGroup(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $subFields,
         array $options
-    ) {
+    ): string {
         $subFieldGroup         = $fieldGroup->addChild('fields');
         $subFieldGroup['name'] = $fieldName;
 
         $renderedSubfields = [
-            '<fieldset>',
+            '<fieldset class="sl-customfield-group">',
             sprintf('<legend>%s</legend>', $customField['label'])
         ];
 
@@ -259,10 +263,10 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      *
      * @return string
      */
-    protected function safeTranslate($constant)
+    protected function safeTranslate(string $constant): string
     {
         if (Factory::getLanguage()->hasKey($constant)) {
-            return JText::_($constant);
+            return Text::_($constant);
         }
 
         return '';
@@ -276,14 +280,15 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubFieldTextbox(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $options
-    ) {
+    ): string {
         $label       = $customField['label'];
         $description = $customField['description'];
 
@@ -298,14 +303,15 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubfieldTextarea(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $options
-    ) {
+    ): string {
         $type        = $customField['loadeditor'] ? 'editor' : 'textarea';
         $label       = $customField['label'];
         $description = $customField['description'];
@@ -321,14 +327,15 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubfieldImage(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $options
-    ) {
+    ): string {
         $label       = $customField['label'];
         $description = $customField['description'];
 
@@ -352,14 +359,15 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubfieldLink(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $options
-    ) {
+    ): string {
         $subFields = [
             'url'      => ['type' => 'text'],
             'linktext' => ['type' => 'text'],
@@ -368,13 +376,14 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 'options' => [
                     'attributes' => [
                         'class'   => 'btn-group btn-group-yesno',
+                        'layout'  => 'joomla.form.field.radio.switcher',
                         'default' => '1'
                     ],
                     'options'    => HTMLHelper::_(
                         'select.options',
                         [
-                            HTMLHelper::_('select.option', 1, JText::_('JYES')),
-                            HTMLHelper::_('select.option', 0, JText::_('JNO'))
+                            HTMLHelper::_('select.option', 0, Text::_('JNO')),
+                            HTMLHelper::_('select.option', 1, Text::_('JYES')),
                         ],
                         [
                             'option.key.toHtml'  => false,
@@ -396,14 +405,15 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubfieldEmail(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $options
-    ) {
+    ): string {
         $subFields = [
             'email'    => ['type' => 'email'],
             'linktext' => ['type' => 'text']
@@ -420,14 +430,15 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubfieldSelectlist(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $options
-    ) {
+    ): string {
         $selectOptions = array_filter(
             array_unique(
                 array_map('trim', preg_split('/\r?\n/', $customField['options']))
@@ -455,9 +466,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
         $label       = $customField['label'];
         $description = $customField['description'];
 
-        $renderedField = $this->renderSubfield('list', $fieldName, $label, $description, $groupName, $fieldOptions);
-
-        return $renderedField;
+        return $this->renderSubfield('list', $fieldName, $label, $description, $groupName, $fieldOptions);
     }
 
     /**
@@ -468,14 +477,15 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
      * @param array            $options
      *
      * @return string
+     * @throws Exception
      */
     protected function renderSubfieldMultiselect(
-        $fieldName,
+        string $fieldName,
         SimpleXMLElement $fieldGroup,
-        $groupName,
+        string $groupName,
         array $customField,
         array $options
-    ) {
+    ): string {
         $fieldOptions = array_merge(
             $options,
             [
@@ -489,11 +499,9 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
     /**
      * Get defined custom fields for the selected location type
      *
-     * @param int $type
-     *
      * @return array
      */
-    protected function getCustomFields()
+    protected function getCustomFields(): array
     {
         if ($this->customFields === null && $this->typeField) {
             $db = Factory::getDbo();
@@ -503,9 +511,8 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 ->from('#__focalpoint_locationtypes')
                 ->where('id = ' . (int)$this->typeField->value);
 
-            if ($customFields = $db->setQuery($query)->loadResult()) {
-                $this->customFields = json_decode($customFields, true);
-            }
+            $customFields       = $db->setQuery($query)->loadResult();
+            $this->customFields = $customFields ? json_decode($customFields, true) : [];
         }
 
         return $this->customFields;

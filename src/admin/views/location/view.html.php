@@ -22,42 +22,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Toolbar\ToolbarHelper;
-
 defined('_JEXEC') or die();
 
-class FocalpointViewLocation extends HtmlView
+class FocalpointViewLocation extends FocalpointViewAdminForm
 {
     /**
-     * @var FocalpointModelLocation
-     */
-    protected $model = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
-    /**
-     * @var object
-     */
-    protected $item = null;
-
-    /**
-     * @var Form
-     */
-    protected $form;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
@@ -67,62 +37,12 @@ class FocalpointViewLocation extends HtmlView
             $this->item  = $this->model->getItem();
             $this->form  = $this->model->getForm();
 
-            // Check for errors.
-            if (count($errors = $this->get('Errors'))) {
-                throw new Exception(implode("\n", $errors));
-            }
-
-            $this->addToolbar();
+            $this->addToolbar('location');
 
             parent::display($tpl);
 
-            echo FocalpointHelper::renderAdminFooter();
-
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            echo $e->getLine() . ': ' . $e->getCode();
-
-        } catch (Throwable $e) {
-            echo $e->getMessage();
-            echo $e->getLine() . ': ' . $e->getCode();
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     */
-    protected function addToolbar()
-    {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = empty($this->item->id);
-        if (isset($this->item->checked_out)) {
-            $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
-        } else {
-            $checkedOut = false;
-        }
-        $canDo = FocalpointHelper::getActions();
-
-        $title = 'COM_FOCALPOINT_TITLE_LOCATION_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'location.png');
-
-        if (!$checkedOut) {
-            if ($canDo->get('core.edit') || ($canDo->get('core.create'))) {
-                ToolBarHelper::apply('location.apply');
-                ToolBarHelper::save('location.save');
-            }
-
-            if ($canDo->get('core.create')) {
-                ToolBarHelper::save2new('location.save2new');
-            }
-        }
-
-        if (!$isNew && $canDo->get('core.create')) {
-            ToolBarHelper::save2copy('location.save2copy');
-        }
-
-        ToolBarHelper::cancel('location.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

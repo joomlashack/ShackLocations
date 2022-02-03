@@ -23,28 +23,6 @@
 ;jQuery(function($) {
     $.sloc = $.extend(true, {map: {}}, $.sloc);
 
-    /**
-     * @param {string} string
-     * @param {array}  replacements
-     *
-     * @return {string}
-     */
-    $.sloc.sprintf = function(string, replacements) {
-        let result = string.toString();
-
-        for (let i = 0; i < replacements.length; i++) {
-            let ordered = '%' + (i + 1) + '$s';
-
-            if (result.indexOf(ordered) === -1) {
-                result = result.replace('%s', replacements[i]);
-            } else {
-                result = result.replace(ordered, replacements[i]);
-            }
-        }
-
-        return result;
-    };
-
     $.sloc.map.google = function() {
         const FULLSCREEN = {
             position: {
@@ -65,6 +43,15 @@
 
         let defaults       = {
                 canvasId      : 'fp_googleMap',
+                selector      : {
+                    resetButton  : '#fp_reset',
+                    listHolder   : '#fp_locationlist .fp_ll_holder',
+                    legendToggles: '.markertoggles',
+                    mainToggle   : '#fp_toggle',
+                    searchAddress: '#fp_searchAddress',
+                    searchbutton : '#fp_searchAddressBtn',
+                    directions   : '#fp_googleMap_directions'
+                },
                 clusterOptions: null,
                 fitBounds     : false,
                 mapProperties : {
@@ -110,6 +97,8 @@
             isDesktop      = true,
             allowScrollTo  = true,
             canvas         = null,
+            destination    = $.sloc.map.destination,
+            directions     = null,
             clusterMarkers = [],
             clusterManager = null,
             $listHolder    = null,
@@ -136,6 +125,11 @@
                 text: ''
             };
 
+        /**
+         * @param {google.maps.map} map
+         *
+         * @return void
+         */
         let addOverlay = function(map) {
             let kml = options.overlay || null;
 
@@ -163,16 +157,17 @@
             isDesktop = window.screen.availWidth > 979;
 
             if (options.show.listTab) {
-                $listHolder = $('#fp_locationlist .fp_ll_holder');
+                $listHolder = $(options.selector.listHolder);
             }
 
             initMap();
             setMarkers();
+            initDirections();
 
             if (options.show.legend) {
-                $('#fp_reset').on('click', resetMap);
-                $('.markertoggles').on('click', toggleTypes);
-                $('#fp_toggle').on('click', toggleMarkers).trigger('click');
+                $(options.selector.resetButton).on('click', resetMap);
+                $(options.selector.legendToggles).on('click', toggleTypes);
+                $(options.selector.mainToggle).on('click', toggleMarkers).trigger('click');
             }
 
             setSearch();
@@ -180,7 +175,7 @@
 
             if (!options.show.markers) {
                 setTimeout(function() {
-                    $('#fp_toggle').trigger('click');
+                    $(options.selector.mainToggle).trigger('click');
                 }, 100);
             }
         };
@@ -224,17 +219,35 @@
         };
 
         /**
-         * @return google.maps.Map
+         * @return void
          */
-        let getMap = function() {
-            return map;
-        };
+        let initDirections = function() {
+            if (destination === null) {
+                return;
+            }
 
-        /**
-         * @return {object}
-         */
-        let getOptions = function() {
-            return options;
+            directions = $(options.selector.directions).get(0) || false;
+            if (directions) {
+                let $address   = $(options.selector.searchAddress),
+                    searchText = null;
+
+                $(options.selector.searchbutton).on('click', function(evt) {
+                    evt.preventDefault();
+
+                    searchText = $address.val();
+                    if (searchText) {
+                        try {
+                            getDirections(searchText, destination);
+
+                        } catch (error) {
+                            alert('Error: ' + error.message);
+                        }
+
+                    } else {
+                        alert(Joomla.Text._('COM_FOCALPOINT_SEARCH_ADDRESS_REQUIRED'));
+                    }
+                });
+            }
         };
 
         /**
@@ -244,11 +257,11 @@
          * @return void
          */
         let getDirections = function(searchAddress, destination) {
+            geocoder = new google.maps.Geocoder();
+
             if (options.search.assist) {
                 searchAddress += ', ' + options.search.assist;
             }
-
-            let geocoder = new google.maps.Geocoder();
 
             geocoder.geocode(
                 {address: searchAddress},
@@ -563,7 +576,7 @@
             allowScrollTo = false;
 
             search.text = '';
-            $('#fp_searchAddress').val(search.text);
+            $(options.selector.searchAddress).val(search.text);
 
             markers.forEach(function(marker, id) {
                 if (marker.status < -999) {
@@ -573,13 +586,13 @@
                 }
             });
 
-            $('#fp_toggle').each(function() {
+            $(options.selector.mainToggle).each(function() {
                 let $toggle        = $(this),
-                    $markerToggles = $('.markertoggles');
+                    $markerToggles = $(options.selector.legendToggles);
 
                 if (options.show.markers) {
                     $toggle.data('togglestate', 'off')
-                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_HIDE_ALL'));
 
                     $markerToggles.each(function() {
                         let $markerToggle = $(this);
@@ -592,7 +605,7 @@
 
                 } else {
                     $toggle.data('togglestate', 'on')
-                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
+                        .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_SHOW_ALL'));
 
                     $markerToggles.each(function() {
                         let $markerToggle = $(this);
@@ -623,11 +636,11 @@
         let toggleMarkers = function(evt) {
             allowScrollTo = false;
             let $this     = $(this),
-                $toggles  = $('.markertoggles');
+                $toggles  = $(options.selector.legendToggles);
 
             if ($this.data('togglestate') === 'on') {
                 $this.data('togglestate', 'off')
-                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_HIDE_ALL'));
 
                 $toggles.each(function() {
                     if (!$(this).hasClass('active')) {
@@ -637,7 +650,7 @@
 
             } else {
                 $this.data('togglestate', 'on')
-                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_SHOW_ALL'));
+                    .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_SHOW_ALL'));
 
                 $toggles.each(function() {
                     if ($(this).hasClass('active')) {
@@ -654,8 +667,8 @@
          */
         let setSearch = function() {
             if (options.show.search) {
-                let $searchField  = $('#fp_searchAddress'),
-                    $searchButton = $('#fp_searchAddressBtn');
+                let $searchField  = $(options.selector.searchAddress),
+                    $searchButton = $(options.selector.searchbutton);
 
                 $searchField.on('keypress', function(evt) {
                     if (this.value && evt.which === 13) {
@@ -695,13 +708,13 @@
                                         }
                                     });
 
-                                    $('#fp_toggle').each(function() {
+                                    $(options.selector.mainToggle).each(function() {
                                         let $toggle = $(this);
 
                                         $toggle.data('togglestate', 'off')
-                                            .html(Joomla.Text._('COM_FOCALPOINT_BUTTTON_HIDE_ALL'));
+                                            .html(Joomla.Text._('COM_FOCALPOINT_BUTTON_HIDE_ALL'));
 
-                                        $('.markertoggles').each(function() {
+                                        $(options.selector.legendToggles).each(function() {
                                             let $typeToggle = $(this);
 
                                             if ($typeToggle.hasClass('active')) {
@@ -790,11 +803,8 @@
         };
 
         return {
-            init         : init,
-            update       : updateDisplay,
-            getDirections: getDirections,
-            getMap       : getMap,
-            getOptions   : getOptions
-        }
+            init      : init,
+            update    : updateDisplay,
+        };
     };
 });

@@ -22,32 +22,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 
 defined('_JEXEC') or die();
 
-class FocalpointViewLegend extends HtmlView
+class FocalpointViewLegend extends FocalpointViewAdminForm
 {
-    /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $item;
-
-    /**
-     * @var Form
-     */
-    protected $form;
-
     /**
      * @param string $tpl
      *
@@ -56,57 +36,18 @@ class FocalpointViewLegend extends HtmlView
      */
     public function display($tpl = null)
     {
-        /** @var FocalpointModellegend $model */
-        $model = $this->getModel();
+        try {
+            $this->model = $this->getModel();
+            $this->state = $this->model->getState();
+            $this->item  = $this->model->getItem();
+            $this->form  = $this->model->getForm();
 
-        $this->state = $model->getState();
-        $this->item  = $model->getItem();
-        $this->form  = $model->getForm();
+            $this->addToolbar('legend');
 
-        if ($errors = $model->getErrors()) {
-            throw new Exception(implode("\n", $errors));
+            parent::display($tpl);
+
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
-
-        $this->addToolbar();
-
-        parent::display($tpl);
-
-        echo FocalpointHelper::renderAdminFooter();
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     */
-    protected function addToolbar()
-    {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = ($this->item->id == 0);
-
-        $checkedOut = !empty($this->item->checked_out) && $this->item->checked_out != $user->get('id');
-
-        $title = 'COM_FOCALPOINT_TITLE_LEGEND_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'list-2');
-
-        if (!$checkedOut) {
-            if ($user->authorise('core.edit', 'com_focalpoint')
-                || ($user->authorise('core.create', 'com_focalpoint'))
-            ) {
-                ToolBarHelper::apply('legend.apply');
-                ToolBarHelper::save('legend.save');
-            }
-
-            if ($user->authorise('core.create', 'com_focalpoint')) {
-                ToolBarHelper::save2new('legend.save2new');
-            }
-        }
-
-        if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::save2copy('legend.save2copy');
-        }
-
-        ToolBarHelper::cancel('legend.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
     }
 }

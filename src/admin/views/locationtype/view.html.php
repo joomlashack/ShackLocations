@@ -22,93 +22,27 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\MVC\View\HtmlView;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Toolbar\ToolbarHelper;
+defined('_JEXEC') or die();
 
-defined('_JEXEC') or die;
-
-class FocalpointViewLocationtype extends HtmlView
+class FocalpointViewLocationtype extends FocalpointViewAdminForm
 {
     /**
-     * @var CMSObject
-     */
-    protected $state = null;
-
-    /**
-     * @var CMSObject
-     */
-    protected $item;
-
-    /**
-     * @var Form
-     */
-    protected $form;
-
-    /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {
-        /** @var FocalpointModellocationtype $model */
-        $model = $this->getModel();
+        try {
+            $this->model = $this->getModel();
+            $this->state = $this->model->getState();
+            $this->item  = $this->model->getItem();
+            $this->form  = $this->model->getForm();
 
-        $this->state = $model->getState();
-        $this->item  = $model->getItem();
-        $this->form  = $model->getForm();
+            $this->addToolbar('locationtype');
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
-        }
+            parent::display($tpl);
 
-        $this->addToolbar();
-
-        parent::display($tpl);
-
-        echo FocalpointHelper::renderAdminFooter();
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     */
-    protected function addToolbar()
-    {
-        Factory::getApplication()->input->set('hidemainmenu', true);
-
-        $user  = Factory::getUser();
-        $isNew = empty($this->item->id);
-
-        $title = 'COM_FOCALPOINT_TITLE_LOCATIONTYPE_' . ($isNew ? 'ADD' : 'EDIT');
-        ToolbarHelper::title(Text::_($title), 'location');
-
-        if ($user->authorise('core.edit', 'com_focalpoint')
-            || $user->authorise('core.create', 'com_focalpoint')
-        ) {
-            ToolBarHelper::apply('locationtype.apply');
-            ToolBarHelper::save('locationtype.save');
-        }
-
-        if ($user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::save2new('locationtype.save2new');
-        }
-
-        if (!$isNew && $user->authorise('core.create', 'com_focalpoint')) {
-            ToolBarHelper::save2copy('locationtype.save2copy');
-        }
-
-        if (!($this->item->get('id'))) {
-            ToolBarHelper::cancel('locationtype.cancel');
-
-        } else {
-            ToolBarHelper::cancel('locationtype.cancel', 'JTOOLBAR_CLOSE');
+        } catch (Throwable $error) {
+            $this->app->enqueueMessage($error->getMessage(), 'error');
         }
     }
 }

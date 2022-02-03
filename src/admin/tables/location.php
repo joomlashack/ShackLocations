@@ -22,11 +22,9 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Table\Table;
-
 defined('_JEXEC') or die();
 
-class FocalpointTablelocation extends Table
+class FocalpointTablelocation extends FocalpointTable
 {
     /**
      * @inheritdoc
@@ -46,22 +44,11 @@ class FocalpointTablelocation extends Table
         'catid'     => 'type'
     ];
 
+    /**
+     * @inheritDoc
+     */
     public function __construct(&$db)
     {
         parent::__construct('#__focalpoint_locations', 'id', $db);
-    }
-
-    public function bind($src, $ignore = [])
-    {
-        if (parent::bind($src, $ignore)) {
-            if (empty($this->alias) && !empty($this->title)) {
-                $this->alias = $this->title;
-            }
-            $this->alias = JApplicationHelper::stringURLSafe($this->alias);
-
-            return true;
-        }
-
-        return false;
     }
 }
