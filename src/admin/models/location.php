@@ -22,10 +22,8 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
@@ -58,7 +56,7 @@ class FocalpointModellocation extends FocalpointModelAdmin
             'com_focalpoint.location',
             'location',
             [
-                'control' => 'jform',
+                'control'   => 'jform',
                 'load_data' => $loadData
             ]
         );
