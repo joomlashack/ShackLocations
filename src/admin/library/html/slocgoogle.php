@@ -124,10 +124,11 @@ abstract class JhtmlSlocGoogle
         ]);
 
         HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
-        HTMLHelper::_('script', 'com_focalpoint/infobox.js', ['relative' => true]);
+
         HTMLHelper::_('jquery.framework');
-        HTMLHelper::_('script', 'com_focalpoint/sloc.js', ['relative' => true]);
-        HTMLHelper::_('script', 'com_focalpoint/googleMap.js', ['relative' => true]);
+        HTMLHelper::_('script', 'com_focalpoint/infobox.min.js', ['relative' => true]);
+        HTMLHelper::_('script', 'com_focalpoint/sloc.min.js', ['relative' => true]);
+        HTMLHelper::_('script', 'com_focalpoint/googleMap.min.js', ['relative' => true]);
 
         $init = <<<JSCRIPT
 jQuery(document).ready(function ($) {

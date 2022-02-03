@@ -89,6 +89,12 @@
         <targetplatform>3.7</targetplatform>
         <phpminimum>7.2.5</phpminimum>
 
+        <minify>
+            <script>media/js/googleMap.js</script>
+            <script>media/js/infobox.js</script>
+            <script>media/js/sloc.js</script>
+        </minify>
+
         <relatedExtensions>
             <extension type="library"
                        element="allediaframework">ShackFramework</extension>
