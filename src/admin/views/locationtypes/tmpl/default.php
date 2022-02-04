@@ -33,8 +33,6 @@ use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 
-HTMLHelper::_('bootstrap.tooltip');
-
 $user      = Factory::getUser();
 $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));

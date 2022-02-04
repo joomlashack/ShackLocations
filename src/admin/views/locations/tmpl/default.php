@@ -42,8 +42,6 @@ defined('_JEXEC') or die();
  * @var string                  $filetofind
  */
 
-HTMLHelper::_('bootstrap.tooltip');
-
 $user      = Factory::getUser();
 $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));
