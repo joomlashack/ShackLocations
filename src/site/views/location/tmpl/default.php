@@ -60,8 +60,10 @@ $pageClass   = $this->getPageClass('fp-location-view');
     </div>
 
     <div class="row-fluid">
+        <div id="fp_googleMap"></div>
+    </div>
+    <div class="row-fluid">
         <div class="fp_left_column span8">
-            <div id="fp_googleMap"></div>
             <?php
             if ($this->item->params->get('getdirections')) :
                 $displayData = [
@@ -125,7 +127,6 @@ $pageClass   = $this->getPageClass('fp-location-view');
             ?>
         </div>
     </div>
-
     <div class="row-fluid">
         <?php
         if ($backLink) :
