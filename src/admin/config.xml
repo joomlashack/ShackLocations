@@ -10,8 +10,8 @@
                description="COM_FOCALPOINT_FORM_CONFIG_API_KEY_DESC"
                rows="3"/>
 
-        <field type="customfooter"
-               name="customfooter"
+        <field name="customfooter"
+               type="customfooter"
                media="com_focalpoint"
                showgoproad="https://www.joomlashack.com/joomla-extensions/shack-locations/"
                jedurl="https://extensions.joomla.org/extension/shack-locations/"/>
