@@ -64,7 +64,7 @@ try {
                     HTMLHelper::_('stylesheet', 'lib_allediaframework/fontawesome/css/all.min.css', ['relative' => true]);
                 }
 
-                HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
+                HTMLHelper::_('stylesheet', 'com_focalpoint/admin.min.css', ['relative' => true]);
                 JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
                 break;
         }
