@@ -131,6 +131,41 @@
             <file>modules/mod_focalpointlocationmap/tmpl/mapjs.php</file>
             <file>plugins/focalpoint/mapstyles/assets/styles.json</file>
             <file>plugins/focalpoint/mapstyles/fields/snazzyselect.php</file>
+
+            <!-- Remove pro features -->
+            <file>administrator/components/com_focalpoint/models/forms/map.pro.xml</file>
+
+            <extension type="module"
+                       element="focalpointlocationmap"/>
+
+            <extension type="plugin"
+                       group="focalpoint"
+                       element="fitbounds"/>
+
+            <extension type="plugin"
+                       group="focalpoint"
+                       element="fullscreen"/>
+
+            <extension type="plugin"
+                       group="focalpoint"
+                       element="mapstyles"/>
+
+            <extension type="plugin"
+                       group="focalpoint"
+                       element="markerclusters"/>
+
+            <extension type="plugin"
+                       group="focalpoint"
+                       element="mylocation"/>
+
+            <extension type="plugin"
+                       group="focalpoint"
+                       element="overlays"/>
+
+            <extension type="plugin"
+                       group="search"
+                       element="focalpoint"/>
+
         </obsolete>
     </alledia>
 </extension>
