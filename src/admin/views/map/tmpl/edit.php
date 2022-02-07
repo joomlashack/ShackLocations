@@ -25,7 +25,6 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\WebAsset\WebAssetManager;
 
@@ -92,9 +91,19 @@ $formFieldsets = $this->form->getFieldsets();
         <?php
         echo HTMLHelper::_('uitab.endTab');
 
-        // Allow plugins to add form tabs
-        PluginHelper::importPlugin('focalpoint');
-        $this->app->triggerEvent('onSlocmapTabs', [$this->form]);
+        $customTabs = array_filter($this->app->triggerEvent('onSlocmapTabs', [$this->form]));
+        foreach ($customTabs as $customTab) :
+            echo HTMLHelper::_('uitab.addTab', 'map', $customTab, Text::_($formFieldsets[$customTab]->label));
+            ?>
+            <div class="row-fluid">
+                <div class="form-horizontal">
+                    <?php echo $this->form->renderFieldset($customTab); ?>
+                </div>
+            </div>
+            <?php
+            echo HTMLHelper::_('uitab.endTab');
+        endforeach;
+
 
         echo HTMLHelper::_('uitab.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
         ?>

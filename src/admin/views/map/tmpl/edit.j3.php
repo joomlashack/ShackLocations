@@ -22,11 +22,9 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die();
@@ -89,9 +87,18 @@ $formFieldsets = $this->form->getFieldsets();
     <?php
     echo HTMLHelper::_('bootstrap.endTab');
 
-    // Allow pluginsto add form tabs
-    PluginHelper::importPlugin('focalpoint');
-    $this->app->triggerEvent('onSlocmapTabs', [$this->form]);
+    $customTabs = array_filter($this->app->triggerEvent('onSlocmapTabs', [$this->form]));
+    foreach ($customTabs as $customTab) :
+        echo HTMLHelper::_('bootstrap.addTab', 'map', $customTab, Text::_($formFieldsets[$customTab]->label));
+        ?>
+        <div class="row-fluid">
+            <div class="form-horizontal">
+                <?php echo $this->form->renderFieldset($customTab); ?>
+            </div>
+        </div>
+        <?php
+        echo HTMLHelper::_('bootstrap.endTab');
+    endforeach;
 
     echo HTMLHelper::_('bootstrap.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
     ?>
