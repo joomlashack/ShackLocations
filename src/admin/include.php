@@ -26,6 +26,7 @@ use Alledia\Framework\AutoLoader;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Version;
 
@@ -49,6 +50,7 @@ try {
 
         AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
         HTMLHelper::addIncludePath(SLOC_LIBRARY . '/html');
+        PluginHelper::importPlugin('focalpoint');
 
         // Application specific loads
         switch (Factory::getApplication()->getName()) {

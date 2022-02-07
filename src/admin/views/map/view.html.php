@@ -22,8 +22,6 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Plugin\PluginHelper;
-
 defined('_JEXEC') or die();
 
 class FocalpointViewMap extends FocalpointViewAdminForm
@@ -41,7 +39,6 @@ class FocalpointViewMap extends FocalpointViewAdminForm
 
             $this->addToolbar('map');
 
-            PluginHelper::importPlugin('focalpoint');
             $this->app->triggerEvent('onSlocmapBeforeLoad', [&$this->item]);
 
             parent::display($tpl);

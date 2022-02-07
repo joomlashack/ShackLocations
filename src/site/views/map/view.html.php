@@ -72,7 +72,6 @@ class FocalpointViewMap extends FocalpointViewSite
             throw new Exception(implode("\n", $errors));
         }
 
-        PluginHelper::importPlugin('focalpoint');
         $app->triggerEvent('onSlocmapPrepareRender', [&$this->item]);
 
         $offset = $this->state->get('list.offset');
@@ -124,13 +123,10 @@ class FocalpointViewMap extends FocalpointViewSite
             );
         }
 
-        // Load FocalPoint Plugins. Trigger onSlocmapBeforeRender
-        PluginHelper::importPlugin('focalpoint');
         $app->triggerEvent('onSlocmapBeforeRender', [&$this->item]);
 
         parent::display($tpl);
 
-        // Load FocalPoint Plugins. Trigger onSlocmapAfterRender
         $app->triggerEvent('onSlocmapAfterRender', [&$this->item]);
     }
 

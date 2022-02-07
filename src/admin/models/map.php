@@ -24,7 +24,6 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 
 defined('_JEXEC') or die();
@@ -101,7 +100,6 @@ class FocalpointModelmap extends FocalpointModelAdmin
      */
     public function save($data)
     {
-        PluginHelper::importPlugin('focalpoint');
         Factory::getApplication()->triggerEvent('onSlocmapBeforeSave', [&$data]);
 
         $this->checkSave2copy($data);
