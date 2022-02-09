@@ -197,15 +197,14 @@ class FocalpointModelMap extends FocalpointModelSite
             $query->order('a.' . $order . ' ' . $direction);
         }
 
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
+        $locations = $db->setQuery($query)->loadObjectList();
 
-        foreach ($results as $result) {
+        foreach ($locations as $location) {
             // Merge global params with item params so Item params take precedence
-            $itemParams = new Registry($result->params);
+            $itemParams = new Registry($location->params);
             $itemParams->set('mapTypeId', 'TEST');
-            $result->params = clone $params;
-            $result->params->merge($itemParams);
+            $location->params = clone $params;
+            $location->params->merge($itemParams);
 
             /*
              * Set the marker icon
@@ -215,29 +214,28 @@ class FocalpointModelMap extends FocalpointModelSite
              *   2.Location Type marker (second priority)
              *   3.Configuration default marker (third priority).
              */
-            if ($result->marker_location) {
-                $result->marker = $result->marker_location;
+            if ($location->marker_location) {
+                $location->marker = $location->marker_location;
 
-            } elseif ($result->marker_type) {
-                $result->marker = $result->marker_type;
+            } elseif ($location->marker_type) {
+                $location->marker = $location->marker_type;
 
             } else {
-                $result->marker = $params->get('marker');
+                $location->marker = $params->get('marker');
             }
-            $result->marker = Uri::base() . $result->marker;
-            unset($result->marker_location, $result->marker_type);
 
-            /*
-             * Create $result->link.
-             */
+            $location->marker = Uri::base() . $location->marker;
+            unset($location->marker_location, $location->marker_type);
+
+            // Create link.
             $linkQuery = [
                 'option' => 'com_focalpoint',
                 'view'   => 'location',
-                'id'     => $result->id
+                'id'     => $location->id
             ];
 
-            $result->link = null;
-            switch ($result->linktype) {
+            $location->link = null;
+            switch ($location->linktype) {
                 case '0':
                     // Current Page (Own page)
                     $linkQuery['Itemid'] = $this->getState('menu.id');
@@ -245,8 +243,8 @@ class FocalpointModelMap extends FocalpointModelSite
 
                 case '1':
                     // URL
-                    if ($result->altlink) {
-                        $result->link = $result->altlink;
+                    if ($location->altlink) {
+                        $location->link = $location->altlink;
                         $linkQuery    = null;
 
                     } elseif ($menuId = $this->getState('menu.id')) {
@@ -256,9 +254,9 @@ class FocalpointModelMap extends FocalpointModelSite
 
                 case '2':
                     // Map Id
-                    if ($result->maplinkid) {
+                    if ($location->maplinkid) {
                         $linkQuery['view'] = 'map';
-                        $linkQuery['id']   = $result->maplinkid;
+                        $linkQuery['id']   = $location->maplinkid;
                     }
                     break;
 
@@ -269,8 +267,8 @@ class FocalpointModelMap extends FocalpointModelSite
 
                 case '4':
                     // Menu Item
-                    if ($result->menulink) {
-                        if ($targetMenu = $app->getMenu()->getItem($result->menulink)) {
+                    if ($location->menulink) {
+                        if ($targetMenu = $app->getMenu()->getItem($location->menulink)) {
                             $linkQuery = [
                                 'option' => $targetMenu->query['option'],
                                 'Itemid' => $targetMenu->id
@@ -279,18 +277,18 @@ class FocalpointModelMap extends FocalpointModelSite
                     }
                     break;
             }
-            unset($result->altlink, $result->maplink);
+            unset($location->altlink, $location->maplink);
 
-            if (!$result->link && $linkQuery) {
-                $result->link = 'index.php?' . http_build_query($linkQuery);
+            if (!$location->link && $linkQuery) {
+                $location->link = 'index.php?' . http_build_query($linkQuery);
             }
 
             // check format of address field
-            $result->address = str_replace('||', '<br>', $result->address);
+            $location->address = str_replace('||', '<br>', $location->address);
 
-            $this->formatCustomFields($result);
+            $this->formatCustomFields($location);
         }
 
-        return $results;
+        return $locations;
     }
 }
