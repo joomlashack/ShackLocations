@@ -71,11 +71,11 @@ $formFieldsets = $this->form->getFieldsets();
         <?php
         echo HTMLHelper::_('uitab.endTab');
 
-        $tabFieldset = $formFieldsets['tabs'];
-        echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
+        $customTabsFieldset = $formFieldsets['tabs'];
+        echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($customTabsFieldset->label));
         ?>
         <div class="row">
-            <?php echo $this->form->renderFieldset('tabs'); ?>
+            <?php echo $this->form->getField('tabs', 'tabsdata')->renderField(); ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab');

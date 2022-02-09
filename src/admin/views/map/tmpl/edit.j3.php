@@ -65,12 +65,12 @@ $formFieldsets = $this->form->getFieldsets();
     <?php
     echo HTMLHelper::_('bootstrap.endTab');
 
-    $tabFieldset = $formFieldsets['tabs'];
-    echo HTMLHelper::_('bootstrap.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
+    $customTabsFieldset = $formFieldsets['tabs'];
+    echo HTMLHelper::_('bootstrap.addTab', 'map', 'tabs', Text::_($customTabsFieldset->label));
     ?>
     <div class="row-fluid">
         <div class="form-vertical">
-            <?php echo $this->form->renderFieldset('tabs'); ?>
+            <?php echo $this->form->getField('tabs', 'tabsdata')->renderField(); ?>
         </div>
     </div>
     <?php
