@@ -70,18 +70,7 @@ $formFieldsets = $this->form->getFieldsets();
     ?>
     <div class="row-fluid">
         <div class="form-vertical">
-            <?php
-            if ($tabDescription = Text::_($tabFieldset->description)) :
-                ?>
-                <div class="tab-description alert alert-info">
-                    <span class="icon-info" aria-hidden="true"></span>
-                    <?php echo $tabDescription; ?>
-                </div>
-            <?php
-            endif;
-
-            echo $this->form->renderFieldset('tabs');
-            ?>
+            <?php echo $this->form->renderFieldset('tabs'); ?>
         </div>
     </div>
     <?php
@@ -90,10 +79,21 @@ $formFieldsets = $this->form->getFieldsets();
     $customTabs = array_filter($this->app->triggerEvent('onSlocmapTabs', [$this->form]));
     foreach ($customTabs as $customTab) :
         echo HTMLHelper::_('bootstrap.addTab', 'map', $customTab, Text::_($formFieldsets[$customTab]->label));
+        $customDescription = $formFieldsets[$customTab]->description ?? null;
         ?>
         <div class="row-fluid">
             <div class="form-horizontal">
-                <?php echo $this->form->renderFieldset($customTab); ?>
+                <?php
+                if ($customDescription) :
+                    ?>
+                    <div class="tab-description alert alert-info">
+                        <span class="icon-info" aria-hidden="true"></span>
+                        <?php echo $customDescription; ?>
+                    </div>
+                <?php
+                endif;
+
+                echo $this->form->renderFieldset($customTab); ?>
             </div>
         </div>
         <?php

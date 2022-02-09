@@ -75,18 +75,7 @@ $formFieldsets = $this->form->getFieldsets();
         echo HTMLHelper::_('uitab.addTab', 'map', 'tabs', Text::_($tabFieldset->label));
         ?>
         <div class="row">
-            <?php
-            if ($tabDescription = Text::_($tabFieldset->description)) :
-                ?>
-                <div class="tab-description alert alert-info">
-                    <span class="icon-info" aria-hidden="true"></span>
-                    <?php echo $tabDescription; ?>
-                </div>
-            <?php
-            endif;
-
-            echo $this->form->renderFieldset('tabs');
-            ?>
+            <?php echo $this->form->renderFieldset('tabs'); ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab');
@@ -94,23 +83,29 @@ $formFieldsets = $this->form->getFieldsets();
         $customTabs = array_filter($this->app->triggerEvent('onSlocmapTabs', [$this->form]));
         foreach ($customTabs as $customTab) :
             echo HTMLHelper::_('uitab.addTab', 'map', $customTab, Text::_($formFieldsets[$customTab]->label));
+            $customDescription = $formFieldsets[$customTab]->description ?? null;
             ?>
-            <div class="row-fluid">
-                <div class="form-horizontal">
-                    <?php echo $this->form->renderFieldset($customTab); ?>
-                </div>
+            <div class="row">
+                <?php
+                if ($customDescription) :
+                    ?>
+                    <div class="tab-description alert alert-info">
+                        <span class="icon-info" aria-hidden="true"></span>
+                        <?php echo $customDescription; ?>
+                    </div>
+                <?php
+                endif;
+
+                echo $this->form->renderFieldset($customTab); ?>
             </div>
             <?php
             echo HTMLHelper::_('uitab.endTab');
         endforeach;
 
-
         echo HTMLHelper::_('uitab.addTab', 'map', 'metadata', Text::_($formFieldsets['metadata']->label));
         ?>
         <div class="row">
-            <div class="form-horizontal">
-                <?php echo $this->form->renderFieldset('metadata'); ?>
-            </div>
+            <?php echo $this->form->renderFieldset('metadata'); ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab');
@@ -118,9 +113,7 @@ $formFieldsets = $this->form->getFieldsets();
         echo HTMLHelper::_('uitab.addTab', 'map', 'params', Text::_($formFieldsets['params']->label));
         ?>
         <div class="row">
-            <div class="form-horizontal">
-                <?php echo $this->form->renderFieldset('params'); ?>
-            </div>
+            <?php echo $this->form->renderFieldset('params'); ?>
         </div>
         <?php
         echo HTMLHelper::_('uitab.endTab');
