@@ -27,8 +27,9 @@ use Joomla\CMS\MVC\Controller\BaseController;
 
 defined('_JEXEC') or die();
 
-require_once JPATH_COMPONENT_ADMINISTRATOR . '/include.php';
+if (include JPATH_COMPONENT_ADMINISTRATOR . '/include.php') {
+    $controller = BaseController::getInstance('Focalpoint');
+    $controller->execute(Factory::getApplication()->input->getCmd('task'));
+    $controller->redirect();
+}
 
-$controller = BaseController::getInstance('Focalpoint');
-$controller->execute(Factory::getApplication()->input->getCmd('task'));
-$controller->redirect();

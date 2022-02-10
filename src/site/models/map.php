@@ -33,10 +33,10 @@ use Joomla\Registry\Registry;
 
 defined('_JEXEC') or die();
 
-if (!defined('SLOC_LOADED')) {
+if (defined('SLOC_LOADED') == false) {
     $include = JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
     if (is_file($include)) {
-        require_once $include;
+        include $include;
     }
 }
 

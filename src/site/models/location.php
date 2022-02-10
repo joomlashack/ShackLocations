@@ -33,9 +33,11 @@ use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
 
-$includePath = JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
-if (is_file($includePath)) {
-    include $includePath;
+if (defined('SLOC_LOADED') == false) {
+    $include = JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
+    if (is_file($include)) {
+        include $include;
+    }
 }
 
 class FocalpointModelLocation extends FocalpointModelSite
