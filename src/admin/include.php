@@ -40,12 +40,13 @@ try {
         if ($app->isClient('administrator')) {
             $app->enqueueMessage('[ShackLocations] Joomlashack framework not found', 'error');
         }
+
         return false;
     }
 
     if (defined('ALLEDIA_FRAMEWORK_LOADED') && !defined('SLOC_LOADED')) {
         define('SLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
-        define('SLOC_SITE', JPATH_SITE . '/components/com_com_focalpoint');
+        define('SLOC_SITE', JPATH_SITE . '/components/com_focalpoint');
         define('SLOC_LIBRARY', SLOC_ADMIN . '/library');
 
         AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
