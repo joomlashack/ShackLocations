@@ -189,6 +189,10 @@
             updateList(delay);
         };
 
+        let getManager = function() {
+            return map;
+        };
+
         /**
          * @return void
          */
@@ -805,6 +809,7 @@
         return {
             init      : init,
             update    : updateDisplay,
+            getManager: getManager
         };
     };
 });
