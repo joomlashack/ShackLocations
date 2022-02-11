@@ -73,6 +73,7 @@
                     styles                  : null
                 },
                 markerData    : [],
+                overlay       : {},
                 infoBox       : {
                     alignBottom   : true,
                     closeBoxMargin: '7px 5px 1px 1px',
@@ -126,7 +127,7 @@
             };
 
         /**
-         * @param {google.maps.map} map
+         * @param {google.maps.Map} map
          *
          * @return void
          */
@@ -134,7 +135,7 @@
             let kml = options.overlay || null;
 
             if (kml && kml.url) {
-                kml.map      = map;
+                kml.map   = map;
                 let kmlLayer = new google.maps.KmlLayer(kml);
 
                 kmlLayer.addListener('status_changed', function() {
@@ -142,6 +143,16 @@
                         alert(Joomla.Text._('COM_FOCALPOINT_ERROR_OVERLAY').replace('%s', kmlLayer.getStatus()));
                     }
                 });
+
+                if (kml.preserveViewport === false) {
+                    // Update map properties
+                    google.maps.event.addListenerOnce(map, 'center_changed', function() {
+                        options.mapProperties.center = map.getCenter();
+                    });
+                    google.maps.event.addListenerOnce(map, 'zoom_changed', function() {
+                        options.mapProperties.zoom = map.getZoom();
+                    });
+                }
             }
         };
 
