@@ -126,7 +126,6 @@ a.btn.uneditable-input {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f7f9fa), color-stop(100%, #ededed));
   background: -webkit-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
   background: -o-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
-  background: -ms-linear-gradient(top, #f7f9fa 0%, #ededed 100%);
   background: linear-gradient(top, #f7f9fa 0%, #ededed 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f9fa', endColorstr='#ededed', GradientType=0);
 }
@@ -226,7 +225,6 @@ div fieldset.ui-sortable-placeholder {
 
 .fp_config #fp_pointer {
   transform: rotate(200deg);
-  -ms-transform: rotate(200deg); /* IE 9 */
   -webkit-transform: rotate(200deg);
 
   animation: optionshere 1000ms ease infinite;
@@ -237,7 +235,6 @@ div fieldset.ui-sortable-placeholder {
 
 .fp_legend #fp_pointer {
   transform: rotate(90deg);
-  -ms-transform: rotate(90deg); /* IE 9 */
   -webkit-transform: rotate(90deg);
 
   animation: legendshere 1000ms ease infinite;
@@ -248,7 +245,6 @@ div fieldset.ui-sortable-placeholder {
 
 .fp_locationtype #fp_pointer {
   transform: rotate(90deg);
-  -ms-transform: rotate(90deg); /* IE 9 */
   -webkit-transform: rotate(90deg);
 
   animation: typeshere 1000ms ease infinite;
@@ -260,7 +256,6 @@ div fieldset.ui-sortable-placeholder {
 .fp_legends_view #fp_pointer,
 .fp_locationtypes_view #fp_pointer {
   transform: rotate(120deg);
-  -ms-transform: rotate(120deg); /* IE 9 */
   -webkit-transform: rotate(120deg);
 
   animation: pressnew 1000ms ease infinite;
