@@ -154,8 +154,9 @@
         </field>
 
         <field name="sidebarx"
-               type="text"
+               type="number"
                default="25"
+               min="0"
                label="COM_FOCALPOINT_FORM_CONFIG_SIDEBAR_WIDTH_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_SIDEBAR_WIDTH_DESC"
                showon="mapsizecontrol:1[AND]legendposition:left[OR]legendposition:right"/>
