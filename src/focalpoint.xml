@@ -132,6 +132,10 @@
             <file>plugins/focalpoint/mapstyles/assets/styles.json</file>
             <file>plugins/focalpoint/mapstyles/fields/snazzyselect.php</file>
 
+            <extension type="plugin"
+                       group="system"
+                       element="ossystem"/>
+
             <!-- Remove pro features -->
             <file>administrator/components/com_focalpoint/models/forms/map.pro.xml</file>
 
