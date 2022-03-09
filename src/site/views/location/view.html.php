@@ -83,7 +83,8 @@ class FocalpointViewLocation extends FocalpointViewSite
             [
                 'com_focalpoint.location',
                 &$this->item,
-                &$this->params
+                &$this->params,
+                0
             ]
         );
         $this->item->description = $this->item->text;
