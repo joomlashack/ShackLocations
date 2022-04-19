@@ -30,7 +30,6 @@ use Joomla\CMS\Version;
 
 defined('_JEXEC') or die();
 
-// Access check.
 if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
     throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
 }
@@ -44,4 +43,3 @@ if (include __DIR__ . '/include.php') {
     $controller->execute(Factory::getApplication()->input->getCmd('task'));
     $controller->redirect();
 }
-
