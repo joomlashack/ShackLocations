@@ -185,4 +185,15 @@ class FocalpointRouter extends JComponentRouterBase
 
         return null;
     }
+
+    public function preprocess($query)
+    {
+        if (!empty($query['id'])) {
+            if ($targetMenu = $this->findMenu($query['view'], $query['id'])) {
+                $query['Itemid'] = $targetMenu->id;
+            }
+        }
+
+        return $query;
+    }
 }
