@@ -190,6 +190,7 @@ class FocalpointRouter extends JComponentRouterBase
     {
         if (!empty($query['id'])) {
             if ($targetMenu = $this->findMenu($query['view'], $query['id'])) {
+                unset($query['id']);
                 $query['Itemid'] = $targetMenu->id;
             }
         }
