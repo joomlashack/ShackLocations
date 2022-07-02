@@ -43,6 +43,8 @@ class FocalpointRouter extends JComponentRouterBase
 
     protected $alias = [];
 
+    protected $map_id = [];
+
     /**
      * @param array $query
      *
@@ -186,12 +188,40 @@ class FocalpointRouter extends JComponentRouterBase
         return null;
     }
 
+    public function getMapId($location_id)
+    {
+        if (empty($this->map_id[$location_id])) {
+            $db = Factory::getDbo();
+
+            $sqlQuery = $db->getQuery(true)
+                ->select('map_id')
+                ->from('#__focalpoint_locations')
+                ->where('id=' . (int)$location_id);
+
+            $this->map_id[$location_id] = $db->setQuery($sqlQuery)->loadResult();
+        }
+
+        if (!empty($this->map_id[$location_id])) {
+            return $this->map_id[$location_id];
+        }
+
+        return null;
+    }
+
     public function preprocess($query)
     {
         if (!empty($query['id'])) {
             if ($targetMenu = $this->findMenu($query['view'], $query['id'])) {
                 unset($query['id']);
                 $query['Itemid'] = $targetMenu->id;
+            }
+
+            if ($query['view'] == 'location') {
+                if ($location_id = $this->getMapId($query['id'])) {
+                    if ($targetMenu = $this->findMenu('map', $location_id)) {
+                        $query['Itemid'] = $targetMenu->id;
+                    }
+                }
             }
         }
 
