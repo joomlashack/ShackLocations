@@ -24,7 +24,7 @@
 
 use Joomla\CMS\Language\Text;
 
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 
 $showMapSearch = $this->item->params->get('mapsearchenabled');
 $searchPrompt  = $this->item->params->get('mapsearchprompt')
