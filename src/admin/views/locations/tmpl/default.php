@@ -239,7 +239,7 @@ endif;
                                         (int)$item->state,
                                         $i,
                                         [
-                                            'task_prefix' => 'maps.',
+                                            'task_prefix' => 'locations.',
                                             'id'          => 'state-' . $item->id,
                                             'disabled'    => $canChange == false
                                         ]
