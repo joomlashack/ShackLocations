@@ -84,7 +84,7 @@ class com_focalpointInstallerScript extends AbstractScript
 
         $maps = $db->setQuery($query)->loadObjectList();
         foreach ($maps as $map) {
-            $params = json_decode($map->params, true);
+            $params = json_decode((string)$map->params, true);
             if (array_intersect($params, ['true', 'false', 'null', 'on', 'off'])) {
                 foreach ($params as $name => $value) {
                     switch ($value) {
@@ -110,7 +110,7 @@ class com_focalpointInstallerScript extends AbstractScript
         $table = Table::getInstance('Extension');
         $table->load(['element' => 'com_focalpoint', 'type' => 'component']);
 
-        $params      = json_decode($table->params);
+        $params      = json_decode((string)$table->params);
         $paramsCheck = md5(json_encode($params));
 
         if (isset($params->mapTypeControl) && in_array($params->mapTypeControl, ['true', 'false'])) {
@@ -190,7 +190,7 @@ class com_focalpointInstallerScript extends AbstractScript
 
         $fixed = 0;
         foreach ($maps as $map) {
-            if ($tabsdata = json_decode($map->tabsdata)) {
+            if ($tabsdata = json_decode((string)$map->tabsdata)) {
                 $newData = [];
                 if (!isset($tabsdata->tabs)) {
                     foreach ($tabsdata as $hash => $tab) {
@@ -231,7 +231,7 @@ class com_focalpointInstallerScript extends AbstractScript
             ->loadObjectList();
 
         foreach ($locationTypes as $locationType) {
-            $customFields = json_decode($locationType->customfields, true);
+            $customFields = json_decode((string)$locationType->customfields, true);
             if (substr_count(key($customFields), '.') == 1) {
                 $locationType->customfields = [];
                 foreach ($customFields as $key => $customField) {
@@ -266,7 +266,7 @@ class com_focalpointInstallerScript extends AbstractScript
 
         $locations = $db->setQuery($query)->loadObjectList();
         foreach ($locations as $location) {
-            if ($values = json_decode($location->customfieldsdata, true)) {
+            if ($values = json_decode((string)$location->customfieldsdata, true)) {
                 $fixedValues = [];
                 foreach ($values as $fieldKey => $value) {
                     $keyParts = explode('.', $fieldKey);
@@ -306,7 +306,7 @@ class com_focalpointInstallerScript extends AbstractScript
 
         $focalpoint = $db->setQuery($query)->loadObject();
 
-        $params = json_decode($focalpoint->params);
+        $params = json_decode((string)$focalpoint->params);
         $update = clone $params;
 
         /**

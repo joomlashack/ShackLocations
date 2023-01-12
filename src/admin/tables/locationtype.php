@@ -57,7 +57,7 @@ class FocalpointTablelocationtype extends FocalpointTable
     public function check()
     {
         if (parent::check()) {
-            if (!empty($this->customfields)) {
+            if (empty($this->customfields) == false) {
                 $customfields = is_string($this->customfields)
                     ? json_decode($this->customfields, true)
                     : $this->customfields;

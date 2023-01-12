@@ -83,7 +83,7 @@ class FocalpointModelMap extends FocalpointModelSite
                     if (!$published || ($published == $table->state)) {
                         $this->item = new CMSObject($table->getProperties());
 
-                        $this->item->tabsdata = json_decode($this->item->tabsdata) ?: new stdClass();
+                        $this->item->tabsdata = json_decode((string)$this->item->tabsdata) ?: new stdClass();
                         $this->item->metadata = new Registry($this->item->metadata);
 
                         // Some additional tweaking for custom tabs

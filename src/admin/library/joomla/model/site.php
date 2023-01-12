@@ -51,7 +51,7 @@ abstract class FocalpointModelSite extends FormModel
                 ->where('id = ' . $type);
 
             $customFields  = [];
-            $fieldSettings = json_decode($db->setQuery($query)->loadResult());
+            $fieldSettings = json_decode((string)$db->setQuery($query)->loadResult());
 
             if ($fieldSettings) {
                 foreach ($fieldSettings as $hash => $customField) {

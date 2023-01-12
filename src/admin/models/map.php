@@ -113,8 +113,8 @@ class FocalpointModelmap extends FocalpointModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            $item->tabsdata = json_decode($item->tabsdata, true);
-            $item->metadata = json_decode($item->metadata, true);
+            $item->tabsdata = json_decode((string)$item->tabsdata, true);
+            $item->metadata = json_decode((string)$item->metadata, true);
         }
 
         return $item;

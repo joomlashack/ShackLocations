@@ -83,7 +83,7 @@ class FocalpointModellocationtype extends FocalpointModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            $item->customfields = json_decode($item->customfields, true);
+            $item->customfields = json_decode((string)$item->customfields, true);
         }
 
         return $item;

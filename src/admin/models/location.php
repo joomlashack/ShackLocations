@@ -84,13 +84,13 @@ class FocalpointModellocation extends FocalpointModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            $item->description = trim($item->get('fulldescription')) == ''
+            $item->description = trim((string)$item->get('fulldescription')) == ''
                 ? $item->description
                 : $item->description . '<hr id="system-readmore" />' . $item->get('fulldescription');
 
-            $item->metadata         = json_decode($item->get('metadata'), true);
-            $item->othertypes       = json_decode($item->get('othertypes'), true);
-            $item->customfieldsdata = json_decode($item->get('customfieldsdata'), true);
+            $item->metadata         = json_decode((string)$item->get('metadata'), true);
+            $item->othertypes       = json_decode((string)$item->get('othertypes'), true);
+            $item->customfieldsdata = json_decode((string)$item->get('customfieldsdata'), true);
         }
 
         return $item;
