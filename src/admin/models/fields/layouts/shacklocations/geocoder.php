@@ -142,7 +142,7 @@ echo HTMLHelper::_(
     $modalId,
     [
         'title'      => Text::_('COM_FOCALPOINT_GEOCODER_DRAG'),
-        'height' => '400px',
+        'height'     => '400px',
         'modalWidth' => '80',
         'footer'     => HTMLHelper::_(
                 'alledia.modal.footerSaveButton',
