@@ -210,18 +210,10 @@ class FocalpointRouter extends JComponentRouterBase
 
     public function preprocess($query)
     {
-        if (!empty($query['id'])) {
+        if (empty($query['id']) == false) {
             if ($targetMenu = $this->findMenu($query['view'], $query['id'])) {
                 unset($query['id']);
                 $query['Itemid'] = $targetMenu->id;
-            }
-
-            if ($query['view'] == 'location') {
-                if ($location_id = $this->getMapId($query['id'])) {
-                    if ($targetMenu = $this->findMenu('map', $location_id)) {
-                        $query['Itemid'] = $targetMenu->id;
-                    }
-                }
             }
         }
 
