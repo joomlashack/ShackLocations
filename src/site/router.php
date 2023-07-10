@@ -25,7 +25,10 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Menu\MenuItem;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 /*
  * Component Routes
@@ -39,16 +42,18 @@ defined('_JEXEC') or die();
 
 class FocalpointRouter extends JComponentRouterBase
 {
+    /**
+     * @var MenuItem[]
+     */
     protected $menuItems = null;
 
+    /**
+     * @var array
+     */
     protected $alias = [];
 
-    protected $map_id = [];
-
     /**
-     * @param array $query
-     *
-     * @return array
+     * @inheritDoc
      */
     public function build(&$query)
     {
@@ -56,7 +61,7 @@ class FocalpointRouter extends JComponentRouterBase
 
         $menuItem = empty($query['Itemid']) ? $this->menu->getActive() : $this->menu->getItem($query['Itemid']);
 
-        if (!empty($query['view'])) {
+        if (empty($query['view']) == false) {
             $view = $query['view'];
             unset($query['view']);
 
@@ -65,7 +70,7 @@ class FocalpointRouter extends JComponentRouterBase
         }
 
         if ($view != $menuItem->query['view']) {
-            if (!empty($query['id'])) {
+            if (empty($query['id']) == false) {
                 $id = $query['id'];
                 unset($query['id']);
 
@@ -82,9 +87,7 @@ class FocalpointRouter extends JComponentRouterBase
     }
 
     /**
-     * @param array $segments
-     *
-     * @return array
+     * @inheritDoc
      */
     public function parse(&$segments)
     {
@@ -93,7 +96,7 @@ class FocalpointRouter extends JComponentRouterBase
         if ($segments) {
             $menuItem = $this->menu->getActive();
 
-            if (!$menuItem || $menuItem->query['view'] !== 'location') {
+            if ($menuItem == false || $menuItem->query['view'] !== 'location') {
                 $locationAlias = array_pop($segments);
 
                 $db = Factory::getDbo();
@@ -103,7 +106,8 @@ class FocalpointRouter extends JComponentRouterBase
                     ->from('#__focalpoint_locations')
                     ->where('alias = ' . $db->quote($locationAlias));
 
-                if (!empty($menuItem)
+                if (
+                    empty($menuItem) == false
                     && $menuItem->query['option'] == 'com_focalpoint'
                     && $menuItem->query['view'] == 'map'
                 ) {
@@ -124,9 +128,9 @@ class FocalpointRouter extends JComponentRouterBase
      * @param string $view
      * @param string $id
      *
-     * @return MenuItem
+     * @return ?MenuItem
      */
-    protected function findMenu($view, $id)
+    protected function findMenu(string $view, string $id): ?MenuItem
     {
         if ($this->menuItems === null) {
             $menuItems = $this->menu->getItems('component', 'com_focalpoint');
@@ -134,7 +138,7 @@ class FocalpointRouter extends JComponentRouterBase
             $this->menuItems = [];
             foreach ($menuItems as $menuItem) {
                 $menuView = $menuItem->query['view'];
-                if (!isset($this->menuItems[$menuView])) {
+                if (isset($this->menuItems[$menuView]) == false) {
                     $this->menuItems[$menuView] = [];
                 }
 
@@ -144,7 +148,7 @@ class FocalpointRouter extends JComponentRouterBase
             }
         }
 
-        if (!empty($this->menuItems[$view][$id])) {
+        if (empty($this->menuItems[$view][$id]) == false) {
             return $this->menuItems[$view][$id];
         }
 
@@ -155,9 +159,9 @@ class FocalpointRouter extends JComponentRouterBase
      * @param string $view
      * @param string $id
      *
-     * @return string
+     * @return ?string
      */
-    protected function getAlias($view, $id)
+    protected function getAlias(string $view, string $id): ?string
     {
         if (empty($this->alias[$view][$id])) {
             $tables = [
@@ -165,8 +169,8 @@ class FocalpointRouter extends JComponentRouterBase
                 'map'      => 'maps'
             ];
 
-            if (!empty($tables[$view])) {
-                if (!isset($this->alias[$view])) {
+            if (empty($tables[$view]) == false) {
+                if (isset($this->alias[$view]) == false) {
                     $this->alias[$view] = [];
                 }
 
@@ -181,33 +185,16 @@ class FocalpointRouter extends JComponentRouterBase
             }
         }
 
-        if (!empty($this->alias[$view][$id])) {
+        if (empty($this->alias[$view][$id]) == false) {
             return $this->alias[$view][$id];
         }
 
         return null;
     }
 
-    public function getMapId($location_id)
-    {
-        if (empty($this->map_id[$location_id])) {
-            $db = Factory::getDbo();
-
-            $sqlQuery = $db->getQuery(true)
-                ->select('map_id')
-                ->from('#__focalpoint_locations')
-                ->where('id=' . (int)$location_id);
-
-            $this->map_id[$location_id] = $db->setQuery($sqlQuery)->loadResult();
-        }
-
-        if (!empty($this->map_id[$location_id])) {
-            return $this->map_id[$location_id];
-        }
-
-        return null;
-    }
-
+    /**
+     * @inheritDoc
+     */
     public function preprocess($query)
     {
         if (empty($query['id']) == false) {
