@@ -30,10 +30,15 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Extension;
 use Joomla\CMS\Table\Table;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 $installPath = __DIR__ . (is_dir(__DIR__ . '/admin') ? '/admin' : '');
 require_once $installPath . '/library/Installer/include.php';
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
 
 class com_focalpointInstallerScript extends AbstractScript
 {
@@ -182,7 +187,7 @@ class com_focalpointInstallerScript extends AbstractScript
         $query = $db->getQuery(true)
             ->select([
                 'id',
-                'tabsdata'
+                'tabsdata',
             ])
             ->from('#__focalpoint_maps');
 
@@ -192,9 +197,9 @@ class com_focalpointInstallerScript extends AbstractScript
         foreach ($maps as $map) {
             if ($tabsdata = json_decode((string)$map->tabsdata)) {
                 $newData = [];
-                if (!isset($tabsdata->tabs)) {
+                if (isset($tabsdata->tabs) == false) {
                     foreach ($tabsdata as $hash => $tab) {
-                        if ($hash =='mapstyle') {
+                        if ($hash == 'mapstyle') {
                             $newData[$hash] = $tab;
                         } else {
                             $newData['tabs'][$hash] = $tab;
@@ -223,7 +228,7 @@ class com_focalpointInstallerScript extends AbstractScript
             $db->getQuery(true)
                 ->select([
                     'id',
-                    'customfields'
+                    'customfields',
                 ])
                 ->from('#__focalpoint_locationtypes')
                 ->where('customfields != ' . $db->quote(''))
@@ -235,7 +240,7 @@ class com_focalpointInstallerScript extends AbstractScript
             if (substr_count(key($customFields), '.') == 1) {
                 $locationType->customfields = [];
                 foreach ($customFields as $key => $customField) {
-                    list($type, $hash) = explode('.', $key);
+                    [$type, $hash] = explode('.', $key);
 
                     $customField['type']               = $type;
                     $locationType->customfields[$hash] = $customField;
@@ -260,7 +265,7 @@ class com_focalpointInstallerScript extends AbstractScript
         $query = $db->getQuery(true)
             ->select([
                 'id',
-                'customfieldsdata'
+                'customfieldsdata',
             ])
             ->from('#__focalpoint_locations');
 
@@ -275,7 +280,7 @@ class com_focalpointInstallerScript extends AbstractScript
                         $hash      = array_pop($keyParts);
 
                         $fixedValues[$hash] = [
-                            $fieldName => $value
+                            $fieldName => $value,
                         ];
 
                         $location->customfieldsdata = json_encode($fixedValues);
@@ -296,12 +301,12 @@ class com_focalpointInstallerScript extends AbstractScript
         $query = $db->getQuery(true)
             ->select([
                 'extension_id',
-                'params'
+                'params',
             ])
             ->from('#__extensions')
             ->where([
                 'type = ' . $db->quote('component'),
-                'element = ' . $db->quote('com_focalpoint')
+                'element = ' . $db->quote('com_focalpoint'),
             ]);
 
         $focalpoint = $db->setQuery($query)->loadObject();
@@ -313,7 +318,7 @@ class com_focalpointInstallerScript extends AbstractScript
          * Add Choosable info popup event
          * @since v1.5.0
          */
-        if (!property_exists($update, 'infopopupevent')) {
+        if (property_exists($update, 'infopopupevent') == false) {
             $update->infopopupevent = 'click';
         }
 
