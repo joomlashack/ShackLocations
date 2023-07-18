@@ -212,6 +212,8 @@ class com_focalpointInstallerScript extends AbstractScript
                 }
             }
         }
+
+        $this->sendDebugMessage(sprintf('Fixed %s map tabs data entries', $fixed));
     }
 
     /**
