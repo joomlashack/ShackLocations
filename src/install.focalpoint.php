@@ -57,7 +57,7 @@ class com_focalpointInstallerScript extends AbstractScript
     /**
      * @inheritDoc
      */
-    protected function customPostFlight($type, $parent)
+    protected function customPostFlight($type, $parent): void
     {
         switch ($type) {
             case 'install':
