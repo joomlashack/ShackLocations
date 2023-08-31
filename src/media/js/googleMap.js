@@ -135,7 +135,8 @@
             let kml = options.overlay || null;
 
             if (kml && kml.url) {
-                kml.map   = map;
+                kml.map = map;
+
                 let kmlLayer = new google.maps.KmlLayer(kml);
 
                 kmlLayer.addListener('status_changed', function() {
@@ -236,6 +237,23 @@
         /**
          * @return void
          */
+        let updateClusters = function() {
+            if (options.show.clusters) {
+                clusterMarkers = [];
+                markers.forEach(function(marker) {
+                    if (marker.status > 0) {
+                        clusterMarkers.push(marker);
+                    }
+                });
+
+                clusterManager.clearMarkers();
+                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
+            }
+        };
+
+        /**
+         * @return void
+         */
         let initDirections = function() {
             if (destination === null) {
                 return;
@@ -272,7 +290,7 @@
          * @return void
          */
         let getDirections = function(searchAddress, destination) {
-            geocoder = new google.maps.Geocoder();
+            let geocoder = new google.maps.Geocoder();
 
             if (options.search.assist) {
                 searchAddress += ', ' + options.search.assist;
@@ -347,7 +365,7 @@
 
                     markerInfoBox[marker.id] = new InfoBox(infoBoxData);
 
-                    google.maps.event.addListener(map, 'click', function(e) {
+                    google.maps.event.addListener(map, 'click', function() {
                         markers.forEach(function(marker, id) {
                             markerInfoBox[id].close();
                         });
@@ -361,7 +379,7 @@
                     }
 
                     if (marker.infoBox.event) {
-                        let infoOpen = function(evt) {
+                        let infoOpen = function() {
                             if (mapinfobox === markerInfoBox[marker.id] && mapinfobox.getVisible()) {
                                 mapinfobox.close();
 
@@ -449,13 +467,11 @@
          */
         let updateActiveCount = function() {
             if (options.show.legend) {
-                let displayText      = '',
-                    displayArguments = [],
-                    status           = '',
-                    activeCount      = 0,
-                    $noLocations     = $('.nolocations');
+                let status       = '',
+                    activeCount  = 0,
+                    $noLocations = $('.nolocations');
 
-                markers.forEach(function(marker, id) {
+                markers.forEach(function(marker) {
                     if (marker.status > 0) {
                         activeCount += 1;
                         status += marker.status;
@@ -477,13 +493,14 @@
                     }
                 }
 
-                if (search.text !== '') {
-                    displayText      = 'COM_FOCALPOINT_SEARCH_WITHIN';
-                    displayArguments = [activeCount, options.search.radius, search.text];
-
-                } else {
+                let displayText, displayArguments;
+                if (search.text === '') {
                     displayText      = 'COM_FOCALPOINT_SEARCH_SHOWING';
                     displayArguments = [activeCount]
+
+                } else {
+                    displayText      = 'COM_FOCALPOINT_SEARCH_WITHIN';
+                    displayArguments = [activeCount, options.search.radius, search.text];
                 }
 
                 if (activeCount === 1) {
@@ -555,39 +572,26 @@
                     }
                 });
 
-                if (bounds !== null) {
-                    map.fitBounds(bounds);
-
-                } else {
+                if (bounds === null) {
                     if (options.mapProperties.center) {
                         map.panTo(options.mapProperties.center);
                     }
                     map.setZoom(options.mapProperties.zoom);
+
+                } else {
+                    map.fitBounds(bounds);
                 }
             }
 
-            if (options.show.clusters) {
-                clusterMarkers = [];
-                markers.forEach(function(marker) {
-                    if (marker.status > 0) {
-                        clusterMarkers.push(marker);
-                    }
-                });
-
-                clusterManager.clearMarkers();
-                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
-            }
-
+            updateClusters();
             updateActiveCount();
             updateList(150);
         };
 
         /**
-         * @param {jQuery.Event} evt
-         *
          * @return void
          */
-        let resetMap = function(evt) {
+        let resetMap = function() {
             allowScrollTo = false;
 
             search.text = '';
@@ -636,7 +640,7 @@
             map.setZoom(options.mapProperties.zoom);
 
             // Open all the infoboxes if requested
-            options.markerData.forEach(function(marker, id) {
+            options.markerData.forEach(function(marker) {
                 if (marker.infoBox.event === 'always' && markers[marker.id].getVisible()) {
                     markerInfoBox[marker.id].open(map, markers[marker.id]);
                 }
@@ -644,11 +648,9 @@
         };
 
         /**
-         * @param {jQuery.Event} evt
-         *
          * @return
          */
-        let toggleMarkers = function(evt) {
+        let toggleMarkers = function() {
             allowScrollTo = false;
             let $this     = $(this),
                 $toggles  = $(options.selector.legendToggles);
@@ -762,18 +764,7 @@
                                         allowScrollTo = true;
                                     });
 
-                                    if (options.show.clusters) {
-                                        clusterMarkers = [];
-                                        markers.forEach(function(marker) {
-                                            if (marker.status > 0) {
-                                                clusterMarkers.push(marker);
-                                            }
-                                        });
-
-                                        clusterManager.clearMarkers();
-                                        clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
-                                    }
-
+                                    updateClusters();
                                     map.setCenter(location);
                                     map.setZoom(options.search.zoom);
 
