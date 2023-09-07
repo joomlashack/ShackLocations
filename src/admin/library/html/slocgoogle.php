@@ -27,14 +27,17 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\Registry\Registry;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 abstract class JhtmlSlocGoogle
 {
     /**
      * @param int|string      $id
      * @param mixed           $params
-     * @param object|array    $center
+     * @param mixed           $center
      * @param object|object[] $markerData
      *
      * @return void
@@ -42,30 +45,14 @@ abstract class JhtmlSlocGoogle
      */
     public static function map($id, $params, $center = null, $markerData = [])
     {
-        if ($params instanceof Registry == false) {
-            $params = new Registry($params);
-        }
+        // Ensure valid params object
+        $params = new Registry($params);
 
-        if (empty($center)) {
-            $center = (object)[
-                'lat' => FocalpointHelper::HOME_LAT,
-                'lng' => FocalpointHelper::HOME_LNG
-            ];
+        $center = new Registry($center);
+        $center->def('lat', FocalpointHelper::HOME_LAT);
+        $center->def('lng', FocalpointHelper::HOME_LNG);
 
-        } elseif (is_array($center)) {
-            $center = (object)$center;
-
-        }
-        if (
-            is_object($center) == false
-            || isset($center->lat) == false
-            || isset($center->lng) == false) {
-            Factory::getApplication()->enqueueMessage('Invalid Position', 'error');
-
-            return;
-        }
-
-        if (is_array($markerData) == false) {
+        if (is_object($markerData)) {
             $markerData = [$markerData];
         }
 
@@ -91,8 +78,8 @@ abstract class JhtmlSlocGoogle
             'fitBounds'      => (bool)$params->get('fitbounds'),
             'mapProperties'  => [
                 'center'                   => [
-                    'lat' => $center->lat,
-                    'lng' => $center->lng
+                    'lat' => $center->get('lat'),
+                    'lng' => $center->get('lng'),
                 ],
                 'draggable'                => (int)(bool)$params->get('draggable'),
                 'fullscreenControl'        => (int)(bool)$params->get('fullscreen'),
@@ -112,15 +99,15 @@ abstract class JhtmlSlocGoogle
             'search'         => [
                 'assist' => (string)$params->get('searchassist', ''),
                 'radius' => (float)$params->get('resultradius', 15),
-                'zoom'   => (int)$params->get('mapsearchzoom', 12)
+                'zoom'   => (int)$params->get('mapsearchzoom', 12),
             ],
             'show'           => [
                 'clusters' => (bool)$params->get('markerclusters'),
                 'legend'   => (bool)$params->get('showlegend'),
                 'listTab'  => (bool)$params->get('locationlist'),
                 'markers'  => (bool)$params->get('showmarkers'),
-                'search'   => (bool)$params->get('mapsearchenabled')
-            ]
+                'search'   => (bool)$params->get('mapsearchenabled'),
+            ],
         ]);
 
         HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
@@ -156,7 +143,7 @@ JSCRIPT;
             [
                 'marker' => $marker,
                 'params' => $marker->params,
-                'link'   => $link
+                'link'   => $link,
             ],
             null,
             ['component' => 'com_focalpoint']
@@ -186,7 +173,7 @@ JSCRIPT;
                 'marker.infobox.link',
                 [
                     'marker' => $marker,
-                    'params' => $marker->params
+                    'params' => $marker->params,
                 ]
             );
         }
@@ -211,13 +198,13 @@ JSCRIPT;
                 'infoBox'  => [
                     'event'   => $popupEvent,
                     'content' => static::infoboxContent($marker),
-                    'link'    => $popupEvent == 'hover' ? static::infoboxLink($marker) : ''
+                    'link'    => $popupEvent == 'hover' ? static::infoboxLink($marker) : '',
                 ],
                 'marker'   => $marker->marker,
                 'position' => [
                     'lat' => $marker->latitude,
-                    'lng' => $marker->longitude
-                ]
+                    'lng' => $marker->longitude,
+                ],
             ];
         }
 
