@@ -45,8 +45,16 @@ abstract class JhtmlSlocGoogle
      */
     public static function map($id, $params, $center = null, $markerData = [])
     {
-        // Ensure valid params object
+        $app    = Factory::getApplication();
         $params = new Registry($params);
+
+        $apiKey = $params->get('apikey');
+        if ($apiKey == false) {
+            Factory::getLanguage()->load('com_focalpoint', SLOC_ADMIN);
+            $app->enqueueMessage(Text::_('COM_FOCALPOINT_ERROR_MAPS_API_MISSING'), 'warning');
+
+            return;
+        }
 
         $center = new Registry($center);
         $center->def('lat', FocalpointHelper::HOME_LAT);
@@ -110,12 +118,12 @@ abstract class JhtmlSlocGoogle
             ],
         ]);
 
-        HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $params->get('apikey'));
 
-        HTMLHelper::_('jquery.framework');
-        HTMLHelper::_('script', 'com_focalpoint/infobox.min.js', ['relative' => true]);
-        HTMLHelper::_('script', 'com_focalpoint/sloc.min.js', ['relative' => true]);
-        HTMLHelper::_('script', 'com_focalpoint/googleMap.min.js', ['relative' => true]);
+        $googleVars = [
+            'key'      => $apiKey,
+            'callback' => 'Function.prototype',
+        ];
+        HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?' . http_build_query($googleVars));
 
         $init = <<<JSCRIPT
 jQuery(document).ready(function ($) {
@@ -124,7 +132,12 @@ jQuery(document).ready(function ($) {
     $.sloc.map.register('{$id}', map); 
 });
 JSCRIPT;
-        Factory::getDocument()->addScriptDeclaration($init);
+        $app->getDocument()->addScriptDeclaration($init);
+
+        HTMLHelper::_('jquery.framework');
+        HTMLHelper::_('script', 'com_focalpoint/infobox.min.js', ['relative' => true]);
+        HTMLHelper::_('script', 'com_focalpoint/sloc.min.js', ['relative' => true]);
+        HTMLHelper::_('script', 'com_focalpoint/googleMap.min.js', ['relative' => true]);
     }
 
     /**
