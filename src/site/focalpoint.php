@@ -32,4 +32,3 @@ if (include JPATH_COMPONENT_ADMINISTRATOR . '/include.php') {
     $controller->execute(Factory::getApplication()->input->getCmd('task'));
     $controller->redirect();
 }
-
