@@ -45,13 +45,8 @@ abstract class JhtmlSlocGoogle
      */
     public static function map($id, $params, $center = null, $markerData = [])
     {
+        $app    = Factory::getApplication();
         $params = new Registry($params);
-        if (static::checkMootools($params)) {
-            // Don't load when mootools is loaded
-            return;
-        }
-
-        $app = Factory::getApplication();
 
         $apiKey = $params->get('apikey');
         if ($apiKey == false) {
@@ -143,37 +138,6 @@ JSCRIPT;
         HTMLHelper::_('script', 'com_focalpoint/infobox.min.js', ['relative' => true]);
         HTMLHelper::_('script', 'com_focalpoint/sloc.min.js', ['relative' => true]);
         HTMLHelper::_('script', 'com_focalpoint/googleMap.min.js', ['relative' => true]);
-    }
-
-    /**
-     * @param Registry $params
-     *
-     * @return bool
-     * @throws Exception
-     */
-    protected static function checkMootools(Registry $params): bool
-    {
-        $app      = Factory::getApplication();
-        $mootools = $params->get('mootools');
-        $fail     = $mootools == 'fail';
-
-        switch ($mootools) {
-            case 'fix':
-                $scripts = &$app->getDocument()->_scripts;
-                foreach ($scripts as $src => $script) {
-                    if (str_contains($src, 'mootools')) {
-                        unset($scripts[$src]);
-                    }
-                }
-                $fail = false;
-                break;
-
-            case 'warn':
-                $app->enqueueMessage('Cannot work with Mootools', 'error');
-                break;
-        }
-
-        return $fail;
     }
 
     /**
