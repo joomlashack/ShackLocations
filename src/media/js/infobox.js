@@ -131,34 +131,38 @@ InfoBox.prototype = new google.maps.OverlayView();
  * @private
  */
 InfoBox.prototype.createInfoBoxDiv_ = function() {
+    let i,
+        events,
+        bw,
+        me = this;
 
-    var i;
-    var events;
-    var bw;
-    var me = this;
-
-    // This handler prevents an event in the InfoBox from being passed on to the map.
-    //
-    var cancelHandler = function(e) {
-        e.cancelBubble = true;
-        if (e.stopPropagation) {
-            e.stopPropagation();
+    /**
+     *  Prevent an event in the InfoBox from being passed on to the map.
+     *
+     * @param {Event} event
+     *
+     * @return void
+     */
+    let cancelHandler = function(event) {
+        event.cancelBubble = true;
+        if (event.stopPropagation) {
+            event.stopPropagation();
         }
     };
 
-    /*
-     * This handler ignores the current event in the InfoBox and conditionally prevents
+    /**
+     * Ignore the current event in the InfoBox and conditionally prevent
      * the event from being passed on to the map. It is used for the contextmenu event.
+     *
+     * @param {Event} event
+     *
+     * @return void
      */
-    var ignoreHandler = function(e) {
-        e.returnValue = false;
-
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
+    let ignoreHandler = function(event) {
+        event.preventDefault();
 
         if (!me.enableEventPropagation_) {
-            cancelHandler(e);
+            cancelHandler(event);
         }
     };
 
@@ -168,11 +172,11 @@ InfoBox.prototype.createInfoBoxDiv_ = function() {
         this.setBoxStyle_();
 
         if (typeof this.content_.nodeType === 'undefined') {
-            this.div_.innerHTML = this.getCloseBoxImg_() + this.content_;
+            this.div_.innerHTML = this.content_;
         } else {
-            this.div_.innerHTML = this.getCloseBoxImg_();
             this.div_.appendChild(this.content_);
         }
+        this.div_.prepend(this.getCloseBoxImg_());
 
         // Add the InfoBox DIV to the DOM
         this.getPanes()[this.pane_].appendChild(this.div_);
@@ -208,7 +212,7 @@ InfoBox.prototype.createInfoBoxDiv_ = function() {
              * Note: mousemove not included (to resolve Issue 152)
              */
             events = ['mousedown', 'mouseover', 'mouseout', 'mouseup',
-                'click', 'dblclick', 'touchstart', 'touchend', 'touchmove'];
+                      'click', 'dblclick', 'touchstart', 'touchend', 'touchmove'];
 
             for (i = 0; i < events.length; i++) {
                 this.eventListeners_.push(google.maps.event.addDomListener(this.div_, events[i], cancelHandler));
@@ -218,7 +222,7 @@ InfoBox.prototype.createInfoBoxDiv_ = function() {
              * Workaround for Google bug that causes the cursor to change to a pointer
              * when the mouse moves over a marker underneath InfoBox.
              */
-            this.eventListeners_.push(google.maps.event.addDomListener(this.div_, 'mouseover', function(e) {
+            this.eventListeners_.push(google.maps.event.addDomListener(this.div_, 'mouseover', function() {
                 this.style.cursor = 'default';
             }));
         }
@@ -234,21 +238,18 @@ InfoBox.prototype.createInfoBoxDiv_ = function() {
 };
 
 /**
- * Returns the HTML <IMG> tag for the close box.
- * @private
+ * Returns the HTML <img> element for the close box.
+ *
+ * @return {Image}
  */
 InfoBox.prototype.getCloseBoxImg_ = function() {
-    var img = '';
-
+    let img = '';
     if (this.closeBoxURL_ !== '') {
-        img = '<img';
-        img += ' src="' + this.closeBoxURL_ + '"';
-        img += ' align=right'; // Do this because Opera chokes on style='float: right;'
-        img += ' style="';
-        img += ' position: relative;'; // Required by MSIE
-        img += ' cursor: pointer;';
-        img += ' margin: ' + this.closeBoxMargin_ + ';';
-        img += '">';
+        img = document.createElement('img');
+        img.setAttribute('src', this.closeBoxURL_);
+        img.style.cursor = 'pointer';
+        img.style.margin = this.closeBoxMargin_;
+        img.style.float  = 'right';
     }
 
     return img;
@@ -259,14 +260,13 @@ InfoBox.prototype.getCloseBoxImg_ = function() {
  * @private
  */
 InfoBox.prototype.addClickHandler_ = function() {
-    var closeBox;
-
-    if (this.closeBoxURL_ !== '') {
-        closeBox            = this.div_.firstChild;
-        this.closeListener_ = google.maps.event.addDomListener(closeBox, 'click', this.getCloseClickHandler_());
+    if (this.closeBoxURL_ === '') {
+        this.closeListener_ = null;
 
     } else {
-        this.closeListener_ = null;
+        let closeBox = this.div_.firstChild;
+
+        this.closeListener_ = google.maps.event.addDomListener(closeBox, 'click', this.getCloseClickHandler_());
     }
 };
 
@@ -275,7 +275,7 @@ InfoBox.prototype.addClickHandler_ = function() {
  * @private
  */
 InfoBox.prototype.getCloseClickHandler_ = function() {
-    var me = this;
+    let me = this;
 
     return function(e) {
         // 1.0.3 fix: Always prevent propagation of a close box click to the map:
@@ -300,9 +300,9 @@ InfoBox.prototype.getCloseClickHandler_ = function() {
  * @private
  */
 InfoBox.prototype.panBox_ = function(disablePan) {
-    var map;
-    var bounds;
-    var xOffset = 0, yOffset = 0;
+    let map,
+        xOffset = 0,
+        yOffset = 0;
 
     if (!disablePan) {
         map = this.getMap();
@@ -317,18 +317,16 @@ InfoBox.prototype.panBox_ = function(disablePan) {
                 map.setCenter(this.position_);
             }
 
-            bounds = map.getBounds();
-
-            var mapDiv      = map.getDiv();
-            var mapWidth    = mapDiv.offsetWidth;
-            var mapHeight   = mapDiv.offsetHeight;
-            var iwOffsetX   = this.pixelOffset_.width;
-            var iwOffsetY   = this.pixelOffset_.height;
-            var iwWidth     = this.div_.offsetWidth;
-            var iwHeight    = this.div_.offsetHeight;
-            var padX        = this.infoBoxClearance_.width;
-            var padY        = this.infoBoxClearance_.height;
-            var pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position_);
+            let mapDiv      = map.getDiv(),
+                mapWidth    = mapDiv.offsetWidth,
+                mapHeight   = mapDiv.offsetHeight,
+                iwOffsetX   = this.pixelOffset_.width,
+                iwOffsetY   = this.pixelOffset_.height,
+                iwWidth     = this.div_.offsetWidth,
+                iwHeight    = this.div_.offsetHeight,
+                padX        = this.infoBoxClearance_.width,
+                padY        = this.infoBoxClearance_.height,
+                pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position_);
 
             if (pixPosition.x < (-iwOffsetX + padX)) {
                 xOffset = pixPosition.x + iwOffsetX - padX;
@@ -354,9 +352,8 @@ InfoBox.prototype.panBox_ = function(disablePan) {
                 }
             }
 
-            if (!(xOffset === 0 && yOffset === 0)) {
+            if (xOffset || yOffset) {
                 // Move the map to the shifted center.
-                var c = map.getCenter();
                 map.panBy(xOffset, yOffset);
             }
         }
@@ -369,7 +366,8 @@ InfoBox.prototype.panBox_ = function(disablePan) {
  * @private
  */
 InfoBox.prototype.setBoxStyle_ = function() {
-    var i, boxStyle;
+    let i,
+        boxStyle;
 
     if (this.div_) {
         // Apply style values from the style sheet defined in the boxClass parameter:
@@ -414,9 +412,9 @@ InfoBox.prototype.setBoxStyle_ = function() {
  * @return {Object} widths object (top, bottom left, right)
  */
 InfoBox.prototype.getBoxWidths_ = function() {
-    var computedStyle;
-    var bw  = {top: 0, bottom: 0, left: 0, right: 0};
-    var box = this.div_;
+    let computedStyle,
+        bw  = {top: 0, bottom: 0, left: 0, right: 0},
+        box = this.div_;
 
     if (document.defaultView && document.defaultView.getComputedStyle) {
         computedStyle = box.ownerDocument.defaultView.getComputedStyle(box, '');
@@ -458,7 +456,7 @@ InfoBox.prototype.onRemove = function() {
 InfoBox.prototype.draw = function() {
     this.createInfoBoxDiv_();
 
-    var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
+    let pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
 
     this.div_.style.left = (pixPosition.x + this.pixelOffset_.width) + 'px';
 
@@ -572,12 +570,13 @@ InfoBox.prototype.setContent = function(content) {
         }
 
         if (typeof content.nodeType === 'undefined') {
-            this.div_.innerHTML = this.getCloseBoxImg_() + content;
+            this.div_.innerHTML = content;
 
         } else {
-            this.div_.innerHTML = this.getCloseBoxImg_();
             this.div_.appendChild(content);
         }
+        this.div_.prepend(this.getCloseBoxImg_());
+
 
         /*
          * Perverse code required to make things work with MSIE.
@@ -586,12 +585,12 @@ InfoBox.prototype.setContent = function(content) {
         if (!this.fixedWidthSet_) {
             this.div_.style.width = this.div_.offsetWidth + 'px';
             if (typeof content.nodeType === 'undefined') {
-                this.div_.innerHTML = this.getCloseBoxImg_() + content;
+                this.div_.innerHTML = content;
 
             } else {
-                this.div_.innerHTML = this.getCloseBoxImg_();
                 this.div_.appendChild(content);
             }
+            this.div_.prepend(this.getCloseBoxImg_());
         }
 
         this.addClickHandler_();
@@ -680,7 +679,7 @@ InfoBox.prototype.getZIndex = function() {
  * @returns {boolean}
  */
 InfoBox.prototype.getVisible = function() {
-    var isVisible;
+    let isVisible;
 
     if ((typeof this.getMap() === 'undefined') || (this.getMap() === null)) {
         isVisible = false;
@@ -722,7 +721,7 @@ InfoBox.prototype.hide = function() {
  * @param {MVCObject}             [anchor]
  */
 InfoBox.prototype.open = function(map, anchor) {
-    var me = this;
+    let me = this;
 
     if (anchor) {
         this.position_     = anchor.getPosition();
@@ -742,15 +741,13 @@ InfoBox.prototype.open = function(map, anchor) {
  * Removes the InfoBox from the map.
  */
 InfoBox.prototype.close = function() {
-    var i;
-
     if (this.closeListener_) {
         google.maps.event.removeListener(this.closeListener_);
         this.closeListener_ = null;
     }
 
     if (this.eventListeners_) {
-        for (i = 0; i < this.eventListeners_.length; i++) {
+        for (let i = 0; i < this.eventListeners_.length; i++) {
             google.maps.event.removeListener(this.eventListeners_[i]);
         }
 
