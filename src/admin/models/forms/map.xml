@@ -27,7 +27,8 @@
         <field name="text"
                type="editor"
                label="COM_FOCALPOINT_FORM_MAP_DESCRIPTION_LBL"
-               filter="\Joomla\CMS\Component\ComponentHelper::filterText"/>
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText"
+               hide="readmore"/>
     </fieldset>
 
     <fieldset name="settings">
