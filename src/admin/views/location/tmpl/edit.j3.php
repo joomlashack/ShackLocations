@@ -34,7 +34,11 @@ HTMLHelper::_('behavior.formvalidator');
 HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
+$googleVars = [
+    'key'      =>  $this->params->get('apikey'),
+    'callback' => 'Function.prototype',
+];
+HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?' . http_build_query($googleVars));
 
 $formFieldsets = $this->form->getFieldsets();
 ?>

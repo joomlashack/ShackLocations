@@ -30,11 +30,16 @@ use Joomla\CMS\WebAsset\WebAssetManager;
 
 defined('_JEXEC') or die();
 
+$googleVars = [
+    'key'      =>  $this->params->get('apikey'),
+    'callback' => 'Function.prototype',
+];
+
 /** @var WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate')
-    ->registerAndUseScript('googlemaps', '//maps.googleapis.com/maps/api/js?key=' . $this->params->get('apikey'));
+    ->registerAndUseScript('googlemaps', '//maps.googleapis.com/maps/api/js?' . http_build_query($googleVars));
 
 $formFieldsets = $this->form->getFieldsets();
 ?>
