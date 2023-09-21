@@ -78,7 +78,7 @@ $noAPI = sprintf(
 
 $defaultCenter = json_encode([
     'lat' => FocalpointHelper::HOME_LAT,
-    'lng' => FocalpointHelper::HOME_LNG
+    'lng' => FocalpointHelper::HOME_LNG,
 ]);
 
 $modalId = $field->id . '_modal';
@@ -149,20 +149,20 @@ echo HTMLHelper::_(
                 ['id' => $saveId],
                 Text::_('COM_FOCALPOINT_GEOCODER_SAVE')
             )
-            . HTMLHelper::_('alledia.modal.footerCloseButton')
+            . HTMLHelper::_('alledia.modal.footerCloseButton'),
     ],
     $modalBody
 );
 
 ?>
 <script>
-    ;jQuery(function($) {
+    (function($) {
         let defaultCenter = <?php echo $defaultCenter;  ?>,
             mapCanvas     = document.getElementById('mapCanvas'),
             selector      = <?php echo json_encode($selector); ?>
 
         if (google.maps) {
-            google.maps.event.addDomListener(window, 'load', function() {
+            window.addEventListener('load', function() {
                 let geocoder      = new google.maps.Geocoder(),
                     $latitude     = selector.latitude ? $(selector.latitude) : null,
                     $longitude    = selector.longitude ? $(selector.longitude) : null,
@@ -274,5 +274,5 @@ echo HTMLHelper::_(
         } else {
             $(mapCanvas).html('<?php echo $noAPI; ?>');
         }
-    });
+    })(jQuery);
 </script>
