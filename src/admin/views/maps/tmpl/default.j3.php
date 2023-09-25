@@ -79,11 +79,9 @@ endif;
                         </button>
                     </div>
                 </div>
-            <?php
-            endif;
+            <?php endif;
 
-        else :
-            ?>
+        else : ?>
             <table class="table table-striped" id="mapsList">
                 <thead>
                 <tr>

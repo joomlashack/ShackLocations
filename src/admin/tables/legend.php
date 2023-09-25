@@ -22,7 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// phpcs:disable PSR1.Files.SideEffects
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointTablelegend extends FocalpointTable
 {
