@@ -51,6 +51,7 @@ try {
         AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
         HTMLHelper::addIncludePath(SLOC_LIBRARY . '/html');
         PluginHelper::importPlugin('focalpoint');
+        JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
 
         // Application specific loads
         switch (Factory::getApplication()->getName()) {
@@ -64,7 +65,6 @@ try {
             case 'administrator':
                 HTMLHelper::_('alledia.fontawesome');
                 HTMLHelper::_('stylesheet', 'com_focalpoint/admin.css', ['relative' => true]);
-                JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
                 break;
         }
 
