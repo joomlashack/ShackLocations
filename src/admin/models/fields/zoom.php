@@ -22,17 +22,23 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 FormHelper::loadFieldClass('list');
 
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+
 class ShacklocationsFormFieldZoom extends JFormFieldList
 {
+    /**
+     * @inheritDoc
+     */
     protected function getOptions()
     {
         $options = [];

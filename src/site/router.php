@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Component\Router\RouterBase;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Menu\MenuItem;
 
@@ -30,17 +31,7 @@ defined('_JEXEC') or die();
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-/*
- * Component Routes
- * @TODO: This is not entirely accurate. Routing needs to be reviewed/improved
- *
- *  http://root/{menu_alias}  <- if menu exists
- *  http://root/{menu_alias}/{location_alias} <- shows location view at menu id
- *  http://root/component/focalpoint/map/id <-- map view
- *  http://root/component/focalpoint/location/id <-- location view
- */
-
-class FocalpointRouter extends JComponentRouterBase
+class FocalpointRouter extends RouterBase
 {
     /**
      * @var MenuItem[]
@@ -166,7 +157,7 @@ class FocalpointRouter extends JComponentRouterBase
         if (empty($this->alias[$view][$id])) {
             $tables = [
                 'location' => 'locations',
-                'map'      => 'maps'
+                'map'      => 'maps',
             ];
 
             if (empty($tables[$view]) == false) {

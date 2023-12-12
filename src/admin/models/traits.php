@@ -24,7 +24,10 @@
 use Joomla\CMS\Factory;
 use Joomla\String\StringHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 trait FocalpointModelTraits
 {
@@ -61,12 +64,12 @@ trait FocalpointModelTraits
      * them to avoid title/alias clashes with previously saved items.
      *
      * @param array $data
-     * @param ?int   $categoryId
+     * @param ?int  $categoryId
      *
      * @return void
      * @throws Exception
      */
-    protected function checkSave2copy(array &$data, ?int $categoryId = null)
+    protected function checkSave2copy(array &$data, ?int $categoryId = null): void
     {
         $app = Factory::getApplication();
         if ($app->input->getCmd('task') == 'save2copy') {
@@ -74,7 +77,7 @@ trait FocalpointModelTraits
             $original->load($app->input->getInt('id'));
 
             if ($data['title'] == $original->title) {
-                list($title, $alias) = $this->generateNewTitle($categoryId, $data['alias'], $data['title']);
+                [$title, $alias] = $this->generateNewTitle($categoryId, $data['alias'], $data['title']);
 
                 $data['title'] = $title;
                 $data['alias'] = $alias;

@@ -25,7 +25,10 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointViewMaps extends FocalpointViewAdminList
 {

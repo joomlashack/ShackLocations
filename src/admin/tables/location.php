@@ -22,7 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
 
 class FocalpointTablelocation extends FocalpointTable
 {
@@ -41,7 +45,7 @@ class FocalpointTablelocation extends FocalpointTable
      */
     protected $_columnAlias = [
         'published' => 'state',
-        'catid'     => 'type'
+        'catid'     => 'type',
     ];
 
     /**

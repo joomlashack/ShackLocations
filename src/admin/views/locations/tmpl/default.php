@@ -53,19 +53,19 @@ if ($saveOrder && $this->items) :
     $saveOrderingUrl = 'index.php?' . http_build_query([
             'option' => 'com_focalpoint',
             'task'   => 'locations.saveOrderAjax',
-            'tmpl'   => 'component'
+            'tmpl'   => 'component',
         ]);
 
     $bodyAttribs = ArrayHelper::toString([
         'class'          => 'js-draggable',
         'data-url'       => $saveOrderingUrl,
         'data-direction' => strtolower($direction),
-        'data-nested'    => 'true'
+        'data-nested'    => 'true',
     ]);
 endif;
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=locations'); ?>"
+<form action="<?php echo Route::_('index.php?option=com_focalpoint&view=locations'); ?>"
       method="post"
       name="adminForm"
       id="adminForm">
@@ -241,7 +241,7 @@ endif;
                                         [
                                             'task_prefix' => 'locations.',
                                             'id'          => 'state-' . $item->id,
-                                            'disabled'    => $canChange == false
+                                            'disabled'    => $canChange == false,
                                         ]
                                     );
                                     ?>
@@ -264,10 +264,12 @@ endif;
                                         if ($canEdit) :
                                             echo HTMLHelper::_(
                                                 'link',
-                                                Route::_('index.php?option=com_focalpoint&task=location.edit&id=' . $item->id),
+                                                Route::_(
+                                                    'index.php?option=com_focalpoint&task=location.edit&id=' . $item->id
+                                                ),
                                                 $this->escape($item->title),
                                                 [
-                                                    'title' => Text::_('JACTION_EDIT')
+                                                    'title' => Text::_('JACTION_EDIT'),
                                                 ]
                                             );
 

@@ -22,10 +22,16 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointModellocations extends FocalpointModelList
 {
+    /**
+     * @inheritDoc
+     */
     public function __construct($config = [])
     {
         $config = array_merge_recursive(
@@ -43,15 +49,14 @@ class FocalpointModellocations extends FocalpointModelList
                     'state',
                     'map_id',
                     'legend',
-                    'type'
-                ]
+                    'type',
+                ],
             ]
         );
 
 
         parent::__construct($config);
     }
-
 
     /**
      * @inheritDoc
@@ -98,14 +103,13 @@ class FocalpointModellocations extends FocalpointModelList
 
         $query = $db->getQuery(true)
             ->select([
-                    'a.*',
-                    'uc.name AS editor',
-                    'map.title AS map_title',
-                    'type.title AS locationtype_title',
-                    'legend.title AS legend_title',
-                    'creator.name AS created_by_alias'
-                ]
-            )
+                'a.*',
+                'uc.name AS editor',
+                'map.title AS map_title',
+                'type.title AS locationtype_title',
+                'legend.title AS legend_title',
+                'creator.name AS created_by_alias',
+            ])
             ->from('`#__focalpoint_locations` AS a')
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
             ->leftJoin('#__focalpoint_maps AS map ON map.id = a.map_id')
@@ -133,7 +137,7 @@ class FocalpointModellocations extends FocalpointModelList
                 $ors = [
                     'a.title LIKE ' . $search,
                     'a.description LIKE ' . $search,
-                    'a.address LIKE ' . $search
+                    'a.address LIKE ' . $search,
                 ];
                 $query->where(sprintf('(%s)', join(' OR ', $ors)));
             }
@@ -162,7 +166,7 @@ class FocalpointModellocations extends FocalpointModelList
             $query->order([
                 'map.title ' . $direction,
                 'a.map_id ' . $direction,
-                'a.ordering ' . $direction
+                'a.ordering ' . $direction,
             ]);
 
         } else {
@@ -178,7 +182,7 @@ class FocalpointModellocations extends FocalpointModelList
                 case 'legend.title':
                     $query->order([
                         'type.title ' . $direction,
-                        'a.title ' . $direction
+                        'a.title ' . $direction,
                     ]);
                     break;
             }

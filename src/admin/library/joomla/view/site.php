@@ -25,7 +25,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointViewSite extends FocalpointView
 {
@@ -34,6 +37,9 @@ class FocalpointViewSite extends FocalpointView
      */
     protected $mapEngine = 'google';
 
+    /**
+     * @inheritDoc
+     */
     public function __construct($config = [])
     {
         parent::__construct($config);
@@ -50,7 +56,7 @@ class FocalpointViewSite extends FocalpointView
      *
      * @return string
      */
-    public static function renderModule($position, $attribs = [])
+    public static function renderModule(string $position, $attribs = []): string
     {
         $results = ModuleHelper::getModules($position);
         $content = '';
@@ -68,19 +74,19 @@ class FocalpointViewSite extends FocalpointView
      * Renders a custom field using the relevant template.
      *
      * @param object $field
-     * @param bool   $hidelabel
+     * @param ?bool  $hidelabel
      *
      * @return string
      * @throws Exception
      *
      */
-    protected function renderField($field, $hidelabel = false)
+    protected function renderField(object $field, ?bool $hidelabel = false): string
     {
-        if (!empty($field->datatype)) {
+        if (empty($field->datatype) == false) {
             $data = array_merge(
                 get_object_vars($field),
                 [
-                    'showlabel' => !$hidelabel
+                    'showlabel' => !$hidelabel,
                 ]
             );
 
@@ -91,14 +97,14 @@ class FocalpointViewSite extends FocalpointView
     }
 
     /**
-     * @param string $string
-     * @param object $customFields
+     * @param string  $string
+     * @param ?object $customFields
      *
      * @return string
      */
-    protected function replaceFieldTokens($string, $customFields)
+    protected function replaceFieldTokens(string $string, ?object $customFields): string
     {
-        if (!empty($customFields)) {
+        if ($customFields) {
             preg_match_all('/{(.*?)}/i', $string, $matches, PREG_SET_ORDER);
 
             if ($matches) {
@@ -109,7 +115,7 @@ class FocalpointViewSite extends FocalpointView
                                 'custom.field.' . $customField->datatype,
                                 [
                                     'label' => $customField->label,
-                                    'data'  => $customField->data
+                                    'data'  => $customField->data,
                                 ]
                             );
 
@@ -121,18 +127,5 @@ class FocalpointViewSite extends FocalpointView
         }
 
         return $string;
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     *
-     * @deprecated v1.4.0
-     */
-    protected function renderCustomField()
-    {
-        Factory::getApplication()->enqueueMessage(
-            'The template override is using an obsolete method and requires updating'
-        );
     }
 }

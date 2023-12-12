@@ -24,7 +24,10 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 abstract class FocalpointModelAdmin extends AdminModel
 {
@@ -64,6 +67,7 @@ abstract class FocalpointModelAdmin extends AdminModel
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function save($data)
     {
@@ -78,6 +82,7 @@ abstract class FocalpointModelAdmin extends AdminModel
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function delete(&$pks)
     {
@@ -96,7 +101,7 @@ abstract class FocalpointModelAdmin extends AdminModel
      * @return void
      * @throws Exception
      */
-    protected function garbageCollect()
+    protected function garbageCollect(): void
     {
         $db = $this->getDbo();
 
@@ -104,7 +109,7 @@ abstract class FocalpointModelAdmin extends AdminModel
             ->delete('#__focalpoint_location_type_xref')
             ->where([
                 'location_id NOT IN (SELECT id FROM #__focalpoint_locations)',
-                'locationtype_id NOT IN (SELECT id FROM #__focalpoint_locationtypes)'
+                'locationtype_id NOT IN (SELECT id FROM #__focalpoint_locationtypes)',
             ], 'OR');
 
         $db->setQuery($query)->execute();

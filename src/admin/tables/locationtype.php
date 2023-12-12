@@ -25,8 +25,11 @@
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Text;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
-
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
 class FocalpointTablelocationtype extends FocalpointTable
 {
     /**

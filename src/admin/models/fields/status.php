@@ -22,12 +22,15 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 use Joomla\CMS\Form\FormHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 FormHelper::loadFieldClass('Predefinedlist');
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
 {
@@ -38,6 +41,6 @@ class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
         '1'  => 'JPUBLISHED',
         '0'  => 'JUNPUBLISHED',
         '-2' => 'JTRASHED',
-        '*'  => 'JALL'
+        '*'  => 'JALL',
     ];
 }

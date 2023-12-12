@@ -29,7 +29,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Version;
 use Joomla\Utilities\ArrayHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class ShacklocationsFormFieldCustomfields extends FormField
 {
@@ -48,7 +51,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
         'textarea',
         'image',
         'selectlist',
-        'multiselect'
+        'multiselect',
     ];
 
     /**
@@ -63,7 +66,6 @@ class ShacklocationsFormFieldCustomfields extends FormField
 
     /**
      * @inheritDoc
-     *
      */
     public function setup(SimpleXMLElement $element, $value, $group = null)
     {
@@ -167,7 +169,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
         $attributes = [
             'name'  => $name,
             'type'  => $type,
-            'label' => $label
+            'label' => $label,
         ];
 
         if (!empty($options['attributes'])) {
@@ -229,7 +231,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
                     '<legend><i class="icon-ban-circle"></i>&nbsp;%s</legend>',
                     Text::sprintf('COM_FOCALPOINT_CUSTOMFIELD_TYPE_UNKNOWN', $type)
                 ),
-                '</fieldset>'
+                '</fieldset>',
             ];
         }
 
@@ -253,15 +255,15 @@ class ShacklocationsFormFieldCustomfields extends FormField
 
         $hiddenOptions = [
             'attributes' => [
-                'default' => $type
-            ]
+                'default' => $type,
+            ],
         ];
 
         $renderedFields = [
             $this->renderSubfield($hash, 'type', 'hidden', '', array_merge($options, $hiddenOptions)),
             $this->renderSubfield($hash, 'name', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_NAME', $options, true),
             $this->renderSubfield($hash, 'description', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_TOOLTIP', $options),
-            $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options)
+            $this->renderSubfield($hash, 'label', 'text', 'COM_FOCALPOINT_CUSTOMFIELD_LABEL', $options),
         ];
 
         $typeRenderer = 'renderSubfield' . ucfirst($type);
@@ -285,7 +287,7 @@ class ShacklocationsFormFieldCustomfields extends FormField
             'attributes' => [
                 'class'   => 'btn-group btn-group-yesno',
                 'layout'  => 'joomla.form.field.radio.switcher',
-                'default' => 0
+                'default' => 0,
             ],
             'options'    => HTMLHelper::_(
                 'select.options',
@@ -295,9 +297,9 @@ class ShacklocationsFormFieldCustomfields extends FormField
                 ],
                 [
                     'option.key.toHtml'  => false,
-                    'option.text.toHtml' => false
+                    'option.text.toHtml' => false,
                 ]
-            )
+            ),
         ];
 
         return $this->renderSubfield(
@@ -339,8 +341,8 @@ class ShacklocationsFormFieldCustomfields extends FormField
         $fieldOptions = [
             'attributes' => [
                 'rows'     => 20,
-                'required' => 'true'
-            ]
+                'required' => 'true',
+            ],
         ];
 
         return $this->renderSubfield(
@@ -373,9 +375,11 @@ class ShacklocationsFormFieldCustomfields extends FormField
             static::$trashButton = sprintf(
                 '<a %s></a>',
                 ArrayHelper::toString([
-                    'class' => sprintf('hasTip sl-subfield-delete icon-%s',
-                        Version::MAJOR_VERSION == 3 ? 'trash' : 'trash-alt'),
-                    'title' => 'Delete this field'
+                    'class' => sprintf(
+                        'hasTip sl-subfield-delete icon-%s',
+                        Version::MAJOR_VERSION == 3 ? 'trash' : 'trash-alt'
+                    ),
+                    'title' => 'Delete this field',
                 ])
             );
         }

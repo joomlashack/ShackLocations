@@ -35,7 +35,7 @@ HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 $googleVars = [
-    'key'      =>  $this->params->get('apikey'),
+    'key'      => $this->params->get('apikey'),
     'callback' => 'Function.prototype',
 ];
 HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?' . http_build_query($googleVars));
@@ -88,25 +88,23 @@ $formFieldsets = $this->form->getFieldsets();
             Text::_($fieldset->label)
         );
         ?>
-    <div class="row-fluid">
-        <div class="form-horizontal">
-            <?php
-            if ($fieldset->description) :
-                ?>
-                <div class="tab-description alert alert-info">
-                    <span class="icon-info" aria-hidden="true"></span>
-                    <?php echo Text::_($fieldset->description); ?>
-                </div>
-            <?php
-            endif;
+        <div class="row-fluid">
+            <div class="form-horizontal">
+                <?php
+                if ($fieldset->description) :
+                    ?>
+                    <div class="tab-description alert alert-info">
+                        <span class="icon-info" aria-hidden="true"></span>
+                        <?php echo Text::_($fieldset->description); ?>
+                    </div>
+                <?php endif;
 
-            echo $this->form->renderFieldset($fieldsetName);
-            echo HTMLHelper::_('bootstrap.endTab');
-            ?>
+                echo $this->form->renderFieldset($fieldsetName);
+                echo HTMLHelper::_('bootstrap.endTab');
+                ?>
+            </div>
         </div>
-    </div>
-    <?php
-    endforeach;
+    <?php endforeach;
 
     echo HTMLHelper::_('bootstrap.endTabSet');
     ?>

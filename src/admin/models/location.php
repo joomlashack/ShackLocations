@@ -26,9 +26,13 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointModellocation extends FocalpointModelAdmin
 {
@@ -171,7 +175,7 @@ class FocalpointModellocation extends FocalpointModelAdmin
      *
      * @return void
      */
-    protected function updateTypes(int $id, array $data)
+    protected function updateTypes(int $id, array $data): void
     {
         $db = $this->getDbo();
 

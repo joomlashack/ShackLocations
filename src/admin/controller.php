@@ -26,10 +26,16 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointController extends BaseController
 {
+    /**
+     * @inheritdoc
+     */
     protected $default_view = 'maps';
 
     /**
@@ -67,7 +73,7 @@ class FocalpointController extends BaseController
                 }
 
             } elseif (array_sum([$locationTypes, $locations]) == 0) {
-                if (in_array($view, ['maps','map','legends', 'legend', 'locationtypes', 'locationtype']) == false) {
+                if (in_array($view, ['maps', 'map', 'legends', 'legend', 'locationtypes', 'locationtype']) == false) {
                     $this->setRedirect('index.php?option=com_focalpoint&view=locationtypes');
                 }
             }

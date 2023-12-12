@@ -31,7 +31,7 @@ use Joomla\CMS\WebAsset\WebAssetManager;
 defined('_JEXEC') or die();
 
 $googleVars = [
-    'key'      =>  $this->params->get('apikey'),
+    'key'      => $this->params->get('apikey'),
     'callback' => 'Function.prototype',
 ];
 
@@ -98,8 +98,7 @@ $formFieldsets = $this->form->getFieldsets();
                         <span class="icon-info" aria-hidden="true"></span>
                         <?php echo $customDescription; ?>
                     </div>
-                <?php
-                endif;
+                <?php endif;
 
                 echo $this->form->renderFieldset($customTab); ?>
             </div>

@@ -22,7 +22,10 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointModelmaps extends FocalpointModelList
 {
@@ -39,8 +42,8 @@ class FocalpointModelmaps extends FocalpointModelList
                     'a.ordering',
                     'a.state',
                     'a.title',
-                    'state'
-                ]
+                    'state',
+                ],
             ],
             $config
         );
@@ -85,7 +88,7 @@ class FocalpointModelmaps extends FocalpointModelList
             ->select([
                 'a.*',
                 'uc.name AS editor',
-                'creator.name AS created_by_alias'
+                'creator.name AS created_by_alias',
             ])
             ->from('#__focalpoint_maps AS a')
             ->leftJoin('#__users AS uc ON uc.id = a.checked_out')
@@ -116,7 +119,7 @@ class FocalpointModelmaps extends FocalpointModelList
                             ' OR ',
                             [
                                 'a.title LIKE ' . $search,
-                                'a.text LIKE ' . $search
+                                'a.text LIKE ' . $search,
                             ]
                         )
                     )

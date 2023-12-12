@@ -22,17 +22,15 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Object\CMSObject;
-
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointViewLegend extends FocalpointViewAdminForm
 {
     /**
-     * @param string $tpl
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
     public function display($tpl = null)
     {

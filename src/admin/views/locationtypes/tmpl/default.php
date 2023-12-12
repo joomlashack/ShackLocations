@@ -45,14 +45,14 @@ if ($saveOrder && $this->items) :
             'option'                => 'com_focalpoint',
             'task'                  => 'locationtypes.saveOrderAjax',
             'tmpl'                  => 'component',
-            Session::getFormToken() => 1
+            Session::getFormToken() => 1,
         ]);
 
     $bodyAttribs = ArrayHelper::toString([
         'class'          => 'js-draggable',
         'data-url'       => $saveOrderingUrl,
         'data-direction' => strtolower($direction),
-        'data-nested'    => 'true'
+        'data-nested'    => 'true',
     ]);
 endif;
 ?>
@@ -170,7 +170,9 @@ endif;
                                 );
                             $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                             $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
-                            $editLink = Route::_('index.php?option=com_focalpoint&task=locationtype.edit&id=' . $item->id);
+                            $editLink = Route::_(
+                                'index.php?option=com_focalpoint&task=locationtype.edit&id=' . $item->id
+                            );
                             ?>
 
                             <tr class="<?php echo 'row' . ($i % 2); ?>"
@@ -211,7 +213,7 @@ endif;
                                         [
                                             'task_prefix' => 'locationtypes.',
                                             'id'          => 'state-' . $item->id,
-                                            'disabled'    => $canChange == false
+                                            'disabled'    => $canChange == false,
                                         ]
                                     );
                                     ?>
@@ -220,21 +222,33 @@ endif;
                                 <td class="has-context">
                                     <div class="break-word">
                                         <?php if ($item->checked_out) : ?>
-                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
-                                                $item->checked_out_time, 'locationtypes.', $canCheckin); ?>
-                                        <?php endif; ?>
-                                        <?php if ($canEdit) :
+                                            <?php echo HTMLHelper::_(
+                                                'jgrid.checkedout',
+                                                $i,
+                                                $item->editor,
+                                                $item->checked_out_time,
+                                                'locationtypes.',
+                                                $canCheckin
+                                            ); ?>
+                                        <?php endif;
+
+                                        if ($canEdit) :
                                             echo HTMLHelper::_(
                                                 'link',
-                                                JRoute::_('index.php?option=com_focalpoint&task=locationtype.edit&id=' . $item->id),
+                                                Route::_(
+                                                    'index.php?option=com_focalpoint&task=locationtype.edit&id='
+                                                    . $item->id
+                                                ),
                                                 $this->escape($item->title),
                                                 ['title' => Text::_('JACTION_EDIT')]
                                             ); ?>
-                                        <?php else : ?>
-                                            <span title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL',
-                                                $this->escape($item->alias)); ?>">
-                                            <?php echo $this->escape($item->title); ?>
-                                        </span>
+                                        <?php else :
+                                            echo sprintf(
+                                                '<span title="%s">%s</span>',
+                                                Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)),
+                                                $this->escape($item->title)
+                                            );
+                                            ?>
                                         <?php endif; ?>
                                     </div>
                                 </td>

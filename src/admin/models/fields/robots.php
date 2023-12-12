@@ -25,9 +25,13 @@
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 FormHelper::loadFieldClass('list');
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class ShacklocationsFormFieldRobots extends JFormFieldList
 {
@@ -38,9 +42,12 @@ class ShacklocationsFormFieldRobots extends JFormFieldList
         'index, follow',
         'noindex, follow',
         'index, nofollow',
-        'noindex, nofollow'
+        'noindex, nofollow',
     ];
 
+    /**
+     * @inheritDoc
+     */
     protected function getOptions()
     {
         $options = [];

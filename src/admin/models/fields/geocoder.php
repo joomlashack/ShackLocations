@@ -25,9 +25,13 @@
 use Alledia\Framework\Joomla\Form\Field\TraitLayouts;
 use Joomla\CMS\Form\FormField;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class ShacklocationsFormFieldGeocoder extends FormField
 {
@@ -43,15 +47,13 @@ class ShacklocationsFormFieldGeocoder extends FormField
      */
     protected function getLayoutData()
     {
-        $layoutData = array_merge(
+        return array_merge(
             parent::getLayoutData(),
             [
                 'latitude'  => $this->form->getField('latitude'),
-                'longitude' => $this->form->getField('longitude')
+                'longitude' => $this->form->getField('longitude'),
             ]
         );
-
-        return $layoutData;
     }
 
     /**

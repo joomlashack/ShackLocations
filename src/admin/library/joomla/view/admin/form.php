@@ -28,7 +28,10 @@ use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 abstract class FocalpointViewAdminForm extends AbstractForm
 {
@@ -57,7 +60,7 @@ abstract class FocalpointViewAdminForm extends AbstractForm
      *
      * @return void
      */
-    protected function addToolbar(string $prefix)
+    protected function addToolbar(string $prefix): void
     {
         $this->app->input->set('hidemainmenu', true);
 

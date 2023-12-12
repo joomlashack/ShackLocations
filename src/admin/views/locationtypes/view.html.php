@@ -22,13 +22,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\View\Admin\AbstractList;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointViewLocationtypes extends FocalpointViewAdminList
 {

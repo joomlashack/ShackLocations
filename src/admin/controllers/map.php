@@ -26,14 +26,21 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointControllerMap extends FormController
 {
+    /**
+     * @inheritdoc
+     */
     protected $view_list = 'maps';
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     protected function postSaveHook(BaseDatabaseModel $model, $validData = [])
     {

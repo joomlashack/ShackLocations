@@ -27,9 +27,13 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Version;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 FormHelper::loadFieldClass('GroupedList');
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
 {
@@ -77,14 +81,14 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
                 ->select([
                     'a.id',
                     'a.title',
-                    'b.title AS legend'
+                    'b.title AS legend',
                 ])
                 ->from('#__focalpoint_locationtypes AS a')
                 ->innerJoin('#__focalpoint_legends AS b on a.legend = b.id')
                 ->where('a.state > -1')
                 ->order([
                     'b.ordering ASC',
-                    'a.ordering ASC'
+                    'a.ordering ASC',
                 ]);
 
             $types      = $db->setQuery($query)->loadObjectList();
@@ -109,7 +113,7 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
      *
      * @return void
      */
-    protected function loadJs(self $primaryField)
+    protected function loadJs(self $primaryField): void
     {
         if (Version::MAJOR_VERSION < 4) {
             HTMLHelper::_('jquery.framework');

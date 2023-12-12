@@ -23,7 +23,10 @@
 
 use Joomla\CMS\MVC\Model\FormModel;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 abstract class FocalpointModelSite extends FormModel
 {
@@ -32,7 +35,7 @@ abstract class FocalpointModelSite extends FormModel
      *
      * @return void
      */
-    protected function formatCustomFields(object $location)
+    protected function formatCustomFields(object $location): void
     {
         $location->customfields = null;
 
@@ -63,7 +66,7 @@ abstract class FocalpointModelSite extends FormModel
                             $customFields[$fieldName] = (object)[
                                 'datatype' => $customField->type,
                                 'label'    => $customField->label,
-                                'data'     => $fieldData[$fieldName]
+                                'data'     => $fieldData[$fieldName],
                             ];
                         }
                     }

@@ -27,7 +27,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\Registry\Registry;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointView extends HtmlView
 {
@@ -43,6 +46,7 @@ class FocalpointView extends HtmlView
 
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function __construct($config = [])
     {
@@ -99,9 +103,9 @@ class FocalpointView extends HtmlView
      *
      * @return void
      */
-    protected function setDocumentMetadata($defaults)
+    protected function setDocumentMetadata($defaults): void
     {
-        if (!$defaults instanceof Registry) {
+        if ($defaults instanceof Registry == false) {
             $defaults = new Registry($defaults);
         }
 

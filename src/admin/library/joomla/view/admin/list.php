@@ -26,7 +26,10 @@ use Alledia\Framework\Joomla\View\Admin\AbstractList;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 abstract class FocalpointViewAdminList extends AbstractList
 {
@@ -36,7 +39,7 @@ abstract class FocalpointViewAdminList extends AbstractList
      *
      * @return void
      */
-    protected function addToolbar(string $single, string $plural)
+    protected function addToolbar(string $single, string $plural): void
     {
         $user = Factory::getUser();
 

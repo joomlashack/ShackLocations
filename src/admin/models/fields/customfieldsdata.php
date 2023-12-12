@@ -28,7 +28,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class ShacklocationsFormFieldCustomfieldsdata extends FormField
 {
@@ -113,7 +116,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                 '<div class="tab-description alert alert-info">',
                 '<span class="icon-info" aria-hidden="true"></span>',
                 $message,
-                '</div>'
+                '</div>',
             ];
         }
 
@@ -182,7 +185,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
             'name'        => $name,
             'type'        => $type,
             'label'       => addslashes(htmlspecialchars($label)),
-            'description' => addslashes(htmlspecialchars($description))
+            'description' => addslashes(htmlspecialchars($description)),
         ];
         if (empty($options['attributes']) == false) {
             $attributes = array_merge($attributes, $options['attributes']);
@@ -224,7 +227,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
 
         $renderedSubfields = [
             '<fieldset class="sl-customfield-group">',
-            sprintf('<legend>%s</legend>', $customField['label'])
+            sprintf('<legend>%s</legend>', $customField['label']),
         ];
 
         foreach ($subFields as $name => $subField) {
@@ -343,8 +346,8 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
             $options,
             [
                 'attributes' => [
-                    'directory' => $customField['directory']
-                ]
+                    'directory' => $customField['directory'],
+                ],
             ]
         );
 
@@ -377,7 +380,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                     'attributes' => [
                         'class'   => 'btn-group btn-group-yesno',
                         'layout'  => 'joomla.form.field.radio.switcher',
-                        'default' => '1'
+                        'default' => '1',
                     ],
                     'options'    => HTMLHelper::_(
                         'select.options',
@@ -387,11 +390,11 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                         ],
                         [
                             'option.key.toHtml'  => false,
-                            'option.text.toHtml' => false
+                            'option.text.toHtml' => false,
                         ]
-                    )
-                ]
-            ]
+                    ),
+                ],
+            ],
         ];
 
         return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $customField, $subFields, $options);
@@ -416,7 +419,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
     ): string {
         $subFields = [
             'email'    => ['type' => 'email'],
-            'linktext' => ['type' => 'text']
+            'linktext' => ['type' => 'text'],
         ];
 
         return $this->renderSubfieldGroup($fieldName, $fieldGroup, $groupName, $customField, $subFields, $options);
@@ -457,9 +460,9 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
                     $selectOptions,
                     [
                         'option.key.toHtml'  => false,
-                        'option.text.toHtml' => false
+                        'option.text.toHtml' => false,
                     ]
-                )
+                ),
             ]
         );
 
@@ -489,7 +492,7 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
         $fieldOptions = array_merge(
             $options,
             [
-                'attributes' => ['multiple' => 'true']
+                'attributes' => ['multiple' => 'true'],
             ]
         );
 

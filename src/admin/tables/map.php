@@ -22,10 +22,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Application\ApplicationHelper;
-use Joomla\CMS\Table\Table;
-
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
 
 class FocalpointTablemap extends FocalpointTable
 {
@@ -35,14 +36,14 @@ class FocalpointTablemap extends FocalpointTable
     protected $_jsonEncode = [
         'tabsdata',
         'metadata',
-        'params'
+        'params',
     ];
 
     /**
      * @inheritdoc
      */
     protected $_columnAlias = [
-        'published' => 'state'
+        'published' => 'state',
     ];
 
     /**

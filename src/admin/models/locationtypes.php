@@ -24,7 +24,10 @@
 
 use Joomla\CMS\Component\ComponentHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointModellocationtypes extends FocalpointModelList
 {
@@ -44,8 +47,8 @@ class FocalpointModellocationtypes extends FocalpointModelList
                     'a.legend',
                     'created_by_alias',
                     'legend_title',
-                    'state'
-                ]
+                    'state',
+                ],
             ]
         );
 
@@ -95,7 +98,7 @@ class FocalpointModellocationtypes extends FocalpointModelList
                 'a.*',
                 'uc.name AS editor',
                 'b.title AS legend_title',
-                'creator.name AS created_by_alias'
+                'creator.name AS created_by_alias',
             ])
             ->from('`#__focalpoint_locationtypes` AS a')
             ->leftJoin('#__users AS uc ON uc.id=a.checked_out')
@@ -121,7 +124,7 @@ class FocalpointModellocationtypes extends FocalpointModelList
 
                 $ors = [
                     'a.title LIKE ' . $search,
-                    'a.description LIKE ' . $search
+                    'a.description LIKE ' . $search,
                 ];
                 $query->where(sprintf('(%s)', join(' OR ', $ors)));
             }
@@ -137,7 +140,7 @@ class FocalpointModellocationtypes extends FocalpointModelList
             $query->order([
                 'legend_title ' . $direction,
                 'a.legend ' . $direction,
-                'a.ordering ' . $direction
+                'a.ordering ' . $direction,
             ]);
 
         } else {

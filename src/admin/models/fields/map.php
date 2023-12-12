@@ -22,14 +22,17 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Alledia\Framework\Joomla\Form\Field\ListField;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 FormHelper::loadFieldClass('list');
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class ShacklocationsFormFieldMap extends JFormFieldList
 {
@@ -41,7 +44,7 @@ class ShacklocationsFormFieldMap extends JFormFieldList
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    protected function getOptions()
     {
         if (static::$options === null) {
             static::$options = [];

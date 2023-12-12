@@ -81,8 +81,7 @@ endif;
                         </button>
                     </div>
                 </div>
-            <?php
-            endif;
+            <?php endif;
 
         else : ?>
             <table class="table table-striped" id="locationTypesList">
@@ -197,9 +196,7 @@ endif;
                                        style="display:none"
                                        name="order[]"
                                        value="<?php echo $item->ordering; ?>"/>
-                            <?php
-                            endif;
-                            ?>
+                            <?php endif; ?>
                         </td>
 
                         <td class="center hidden-phone">

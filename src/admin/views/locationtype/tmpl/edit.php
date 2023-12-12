@@ -51,8 +51,12 @@ $wa->useScript('keepalive')
         <?php
         echo HTMLHelper::_('uitab.startTabSet', 'locationtype', ['active' => 'general', 'recall' => true]);
 
-        echo HTMLHelper::_('uitab.addTab', 'locationtype', 'general',
-            Text::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL'));
+        echo HTMLHelper::_(
+            'uitab.addTab',
+            'locationtype',
+            'general',
+            Text::_('COM_FOCALPOINT_LOCATIONTYPE_GENERAL')
+        );
         ?>
         <div class="row">
             <div class="col-lg-9">

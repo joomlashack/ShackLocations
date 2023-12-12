@@ -26,9 +26,13 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Table\Table;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
 require_once __DIR__ . '/traits.php';
+
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
 class FocalpointModelmap extends FocalpointModelAdmin
 {
@@ -57,7 +61,7 @@ class FocalpointModelmap extends FocalpointModelAdmin
             'map',
             [
                 'control'   => 'jform',
-                'load_data' => $loadData
+                'load_data' => $loadData,
             ]
         );
     }

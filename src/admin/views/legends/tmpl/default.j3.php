@@ -79,8 +79,7 @@ endif;
                         </button>
                     </div>
                 </div>
-            <?php
-            endif;
+            <?php endif;
 
         else : ?>
             <table class="table table-striped" id="legendsList">
@@ -182,9 +181,7 @@ endif;
                                        style="display:none"
                                        name="order[]"
                                        value="<?php echo $item->ordering; ?>"/>
-                            <?php
-                            endif;
-                            ?>
+                            <?php endif; ?>
                         </td>
 
                         <td class="center hidden-phone">
@@ -223,7 +220,7 @@ endif;
                                 if ($canEdit) :
                                     echo HTMLHelper::_(
                                         'link',
-                                        JRoute::_('index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id),
+                                        Route::_('index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id),
                                         $this->escape($item->title),
                                         sprintf('title="%s"', Text::_('JACTION_EDIT'))
                                     );
@@ -243,9 +240,7 @@ endif;
                             <?php echo (int)$item->id; ?>
                         </td>
                     </tr>
-                <?php
-                endforeach;
-                ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
             <?php

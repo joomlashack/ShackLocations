@@ -71,7 +71,7 @@ HTMLHelper::_('jquery.framework');
 
 Text::script('COM_FOCALPOINT_ERROR_GEOCODE');
 
-$noAPI = sprintf(
+$noApi = sprintf(
     '<span class="alert alert-error">%s</span>',
     Text::_('COM_FOCALPOINT_ERROR_MAPS_API_MISSING')
 );
@@ -261,7 +261,7 @@ echo HTMLHelper::_(
                     }, 800);
                 });
 
-                $(selector.save).on('click', function(evt) {
+                $(selector.save).on('click', function() {
                     if ($latitude) {
                         $latitude.val(marker.getPosition().lat());
                     }
@@ -272,7 +272,7 @@ echo HTMLHelper::_(
             });
 
         } else {
-            $(mapCanvas).html('<?php echo $noAPI; ?>');
+            $(mapCanvas).html('<?php echo $noApi; ?>');
         }
     })(jQuery);
 </script>

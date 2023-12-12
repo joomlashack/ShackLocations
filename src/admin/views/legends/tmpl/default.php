@@ -45,14 +45,14 @@ if ($saveOrder && $this->items) :
             'option'                => 'com_focalpoint',
             'task'                  => 'legends.saveOrderAjax',
             'tmpl'                  => 'component',
-            Session::getFormToken() => 1
+            Session::getFormToken() => 1,
         ]);
 
     $bodyAttribs = ArrayHelper::toString([
         'class'          => 'js-draggable',
         'data-url'       => $saveOrderingUrl,
         'data-direction' => strtolower($direction),
-        'data-nested'    => 'true'
+        'data-nested'    => 'true',
     ]);
 endif;
 
@@ -155,7 +155,8 @@ endif;
                             $ordering = ($ordering == 'a.ordering');
                             $canCreate = $user->authorise('core.create', 'com_focalpoint');
                             $canEdit = $user->authorise('core.edit', 'com_focalpoint')
-                                || ($user->authorise('core.edit.own', 'com_focalpoint') && $item->created_by == $user->id);
+                                || ($user->authorise('core.edit.own', 'com_focalpoint')
+                                    && $item->created_by == $user->id);
                             $canCheckin = $user->authorise('core.manage', 'com_focalpoint');
                             $canChange = $user->authorise('core.edit.state', 'com_focalpoint');
                             ?>
@@ -196,7 +197,7 @@ endif;
                                         [
                                             'task_prefix' => 'legends.',
                                             'id'          => 'state-' . $item->id,
-                                            'disabled'    => $canChange == false
+                                            'disabled'    => $canChange == false,
                                         ]
                                     );
                                     ?>
@@ -205,22 +206,31 @@ endif;
                                 <td class="has-context">
                                     <div class="break-word">
                                         <?php if ($item->checked_out) : ?>
-                                            <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor,
-                                                $item->checked_out_time, 'maps.', $canCheckin); ?>
+                                            <?php echo HTMLHelper::_(
+                                                'jgrid.checkedout',
+                                                $i,
+                                                $item->editor,
+                                                $item->checked_out_time,
+                                                'maps.',
+                                                $canCheckin
+                                            ); ?>
                                         <?php endif; ?>
                                         <?php if ($canEdit) :
                                             echo HTMLHelper::_(
                                                 'link',
-                                                JRoute::_('index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id),
+                                                Route::_(
+                                                    'index.php?option=com_focalpoint&task=legend.edit&id=' . $item->id
+                                                ),
                                                 $this->escape($item->title),
                                                 ['title' => Text::_('JACTION_EDIT')]
                                             ); ?>
-                                        <?php else : ?>
-                                            <span title="<?php echo Text::sprintf('JFIELD_ALIAS_LABEL',
-                                                $this->escape($item->alias)); ?>">
-                                            <?php echo $this->escape($item->title); ?>
-                                        </span>
-                                        <?php endif; ?>
+                                        <?php else :
+                                            echo sprintf(
+                                                '<span title="%s">%s</span>',
+                                                Text::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)),
+                                                $this->escape($item->title)
+                                            );
+                                        endif; ?>
                                     </div>
                                 </td>
 
@@ -232,9 +242,7 @@ endif;
                                     <?php echo (int)$item->id; ?>
                                 </td>
                             </tr>
-                        <?php
-                        endforeach;
-                        ?>
+                        <?php endforeach; ?>
                         </tbody>
                     </table>
                     <?php echo $this->pagination->getListFooter(); ?>

@@ -48,7 +48,7 @@ if ($saveOrder) {
 }
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_focalpoint&view=locations'); ?>"
+<form action="<?php echo Route::_('index.php?option=com_focalpoint&view=locations'); ?>"
       method="post"
       name="adminForm"
       id="adminForm">
@@ -81,8 +81,7 @@ if ($saveOrder) {
                         </button>
                     </div>
                 </div>
-            <?php
-            endif;
+            <?php endif;
 
         else :
             ?>

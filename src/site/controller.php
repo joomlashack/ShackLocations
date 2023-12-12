@@ -22,23 +22,13 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\MVC\Controller\BaseController;
+
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-
-class FocalpointController extends JControllerLegacy
+class FocalpointController extends BaseController
 {
-
-	/**
-	 * Method to display a view.
-	 *
-	 * @param   boolean			If true, the view output will be cached
-	 * @param   array  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
-	 *
-	 * @return  JController		This object to support chaining.
-	 * @since   1.5
-	 */
-	public function display($cachable = false, $urlparams = false)
-	{
-		return parent::display($cachable = false, $urlparams = false);
-	}
 }
