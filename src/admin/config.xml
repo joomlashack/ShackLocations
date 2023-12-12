@@ -18,9 +18,10 @@
 
     </fieldset>
 
-    <fieldset name="maps" label="Map / Display" description="">
+    <fieldset name="maps" label="COM_FOCALPOINT_FORM_CONFIG_FIELDSET_MAPS_CONTENT_LBL">
         <field name="mapTypeId"
                type="list"
+               layout="joomla.form.field.list-fancy-select"
                default="ROADMAP"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_DESC">
@@ -120,7 +121,6 @@
 
         <field name="mapsizecontrol"
                type="list"
-               class="chzn-single"
                default="1"
                label="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_MAP_SIZE_CONTROL_DESC">
@@ -144,6 +144,7 @@
 
         <field name="legendposition"
                type="list"
+               layout="joomla.form.field.list-fancy-select"
                default="below"
                label="COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_LBL"
                description="COM_FOCALPOINT_FORM_CONFIG_LEGEND_POSITION_DESC">
@@ -314,7 +315,7 @@
                showon="mapsearchenabled:1"/>
     </fieldset>
 
-    <fieldset name="locations" label="Locations">
+    <fieldset name="locations" label="COM_FOCALPOINT_TITLE_LOCATIONS">
         <field name="marker"
                type="media"
                label="COM_FOCALPOINT_FORM_CONFIG_MARKER_LBL"
@@ -358,8 +359,8 @@
     </fieldset>
 
     <fieldset name="permissions"
-              description="JCONFIG_PERMISSIONS_DESC"
-              label="JCONFIG_PERMISSIONS_LABEL">
+              label="JCONFIG_PERMISSIONS_LABEL"
+              description="JCONFIG_PERMISSIONS_DESC">
         <field name="rules"
                type="rules"
                component="com_focalpoint"
