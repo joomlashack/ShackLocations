@@ -23,6 +23,7 @@
  */
 
 use Alledia\Framework\AutoLoader;
+use Alledia\Framework\Helper as FrameworkHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
@@ -43,7 +44,7 @@ try {
         return false;
     }
 
-    if (defined('ALLEDIA_FRAMEWORK_LOADED') && !defined('SLOC_LOADED')) {
+    if (defined('ALLEDIA_FRAMEWORK_LOADED') && defined('SLOC_LOADED') == false) {
         define('SLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
         define('SLOC_SITE', JPATH_SITE . '/components/com_focalpoint');
         define('SLOC_LIBRARY', SLOC_ADMIN . '/library');
@@ -52,6 +53,7 @@ try {
         HTMLHelper::addIncludePath(SLOC_LIBRARY . '/html');
         PluginHelper::importPlugin('focalpoint');
         JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
+        FrameworkHelper::createDatabaseClassAliases();
 
         // Application specific loads
         switch (Factory::getApplication()->getName()) {
