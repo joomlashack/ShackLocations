@@ -78,28 +78,28 @@
  *
  * @param {Object} [options]
  */
-function InfoBox(options) {
+let InfoBox = function(options) {
     options = options || {};
 
     google.maps.OverlayView.apply(this, arguments);
 
     // Standard options (in common with google.maps.InfoWindow):
-    this.content_        = options.content || '';
-    this.disableAutoPan_ = options.disableAutoPan || false;
-    this.maxWidth_       = options.maxWidth || 0;
-    this.pixelOffset_    = options.pixelOffset || new google.maps.Size(0, 0);
-    this.position_       = options.position || new google.maps.LatLng(0, 0);
-    this.zIndex_         = options.zIndex || null;
+    this.content        = options.content || '';
+    this.disableAutoPan = options.disableAutoPan || false;
+    this.maxWidth       = options.maxWidth || 0;
+    this.pixelOffset    = options.pixelOffset || new google.maps.Size(0, 0);
+    this.position       = options.position || new google.maps.LatLng(0, 0);
+    this.zIndex         = options.zIndex || null;
 
     // Additional options (unique to InfoBox):
-    this.boxClass_       = options.boxClass || 'infoBox';
-    this.boxStyle_       = options.boxStyle || {};
-    this.closeBoxMargin_ = options.closeBoxMargin || '2px';
-    this.closeBoxURL_    = options.closeBoxURL || 'https://www.google.com/intl/en_us/mapfiles/close.gif';
+    this.boxClass       = options.boxClass || 'infoBox';
+    this.boxStyle       = options.boxStyle || {};
+    this.closeBoxMargin = options.closeBoxMargin || '2px';
+    this.closeBoxURL    = options.closeBoxURL || 'https://www.google.com/intl/en_us/mapfiles/close.gif';
     if (options.closeBoxURL === '') {
-        this.closeBoxURL_ = '';
+        this.closeBoxURL = '';
     }
-    this.infoBoxClearance_ = options.infoBoxClearance || new google.maps.Size(1, 1);
+    this.infoBoxClearance = options.infoBoxClearance || new google.maps.Size(1, 1);
 
     if (typeof options.visible === 'undefined') {
         if (typeof options.isHidden === 'undefined') {
@@ -108,18 +108,18 @@ function InfoBox(options) {
             options.visible = !options.isHidden;
         }
     }
-    this.isHidden_ = !options.visible;
+    this.isHidden = !options.visible;
 
-    this.alignBottom_            = options.alignBottom || false;
-    this.pane_                   = options.pane || 'floatPane';
-    this.enableEventPropagation_ = options.enableEventPropagation || false;
+    this.alignBottom            = options.alignBottom || false;
+    this.pane                   = options.pane || 'floatPane';
+    this.enableEventPropagation = options.enableEventPropagation || false;
 
-    this.div_           = null;
-    this.moveListener_  = null;
-    this.fixedWidthSet_ = null;
+    this.container     = null;
+    this.moveListener  = null;
+    this.fixedWidthSet = null;
 
-    this.domEventListeners_ = [];
-    this.cancelEvents       = [
+    this.domEventListeners = [];
+    this.cancelEvents      = [
         'mousedown',
         'mouseover',
         'mouseout',
@@ -139,7 +139,7 @@ InfoBox.prototype = new google.maps.OverlayView();
 /**
  * Creates the <div> representing the InfoBox.
  */
-InfoBox.prototype.createInfoBoxDiv_ = function() {
+InfoBox.prototype.createInfoBoxDiv = function() {
     let bw,
         me = this;
 
@@ -168,50 +168,50 @@ InfoBox.prototype.createInfoBoxDiv_ = function() {
     let ignoreHandler = function(event) {
         event.preventDefault();
 
-        if (!me.enableEventPropagation_) {
+        if (!me.enableEventPropagation) {
             cancelHandler(event);
         }
     };
 
-    if (!this.div_) {
-        this.div_ = document.createElement('div');
+    if (!this.container) {
+        this.container = document.createElement('div');
         this.clearDomEventListeners();
 
-        this.setBoxStyle_();
+        this.setboxStyle();
 
-        if (typeof this.content_.nodeType === 'undefined') {
-            this.div_.innerHTML = this.content_;
+        if (typeof this.content.nodeType === 'undefined') {
+            this.container.innerHTML = this.content;
         } else {
-            this.div_.appendChild(this.content_);
+            this.container.appendChild(this.content);
         }
-        this.div_.prepend(this.getCloseBoxImg_());
+        this.container.prepend(this.getCloseBoxImg());
 
         // Add the InfoBox DIV to the DOM
-        this.getPanes()[this.pane_].appendChild(this.div_);
+        this.getPanes()[this.pane].appendChild(this.container);
 
-        this.addCloseBox_();
+        this.addCloseBox();
 
-        if (this.div_.style.width) {
-            this.fixedWidthSet_ = true;
+        if (this.container.style.width) {
+            this.fixedWidthSet = true;
 
         } else {
-            if (this.maxWidth_ !== 0 && this.div_.offsetWidth > this.maxWidth_) {
-                this.div_.style.width    = this.maxWidth_;
-                this.div_.style.overflow = 'auto';
-                this.fixedWidthSet_      = true;
+            if (this.maxWidth !== 0 && this.container.offsetWidth > this.maxWidth) {
+                this.container.style.width    = this.maxWidth;
+                this.container.style.overflow = 'auto';
+                this.fixedWidthSet            = true;
 
             } else {
                 // The following code is needed to overcome problems with MSIE
-                bw = this.getBoxWidths_();
+                bw = this.getBoxWidths();
 
-                this.div_.style.width = (this.div_.offsetWidth - bw.left - bw.right) + 'px';
-                this.fixedWidthSet_   = false;
+                this.container.style.width = (this.container.offsetWidth - bw.left - bw.right) + 'px';
+                this.fixedWidthSet         = false;
             }
         }
 
-        this.panBox_(this.disableAutoPan_);
+        this.panBox(this.disableAutoPan);
 
-        if (!this.enableEventPropagation_) {
+        if (!this.enableEventPropagation) {
             this.cancelEvents.forEach(function(event) {
                 me.addDomEventListener(event, cancelHandler);
             });
@@ -240,14 +240,14 @@ InfoBox.prototype.createInfoBoxDiv_ = function() {
  *
  * @return {Image|String}
  */
-InfoBox.prototype.getCloseBoxImg_ = function() {
+InfoBox.prototype.getCloseBoxImg = function() {
     let img = '';
 
-    if (this.closeBoxURL_ !== '') {
+    if (this.closeBoxURL !== '') {
         img = document.createElement('img');
-        img.setAttribute('src', this.closeBoxURL_);
+        img.setAttribute('src', this.closeBoxURL);
         img.style.cursor = 'pointer';
-        img.style.margin = this.closeBoxMargin_;
+        img.style.margin = this.closeBoxMargin;
         img.style.float  = 'right';
 
     }
@@ -266,13 +266,13 @@ InfoBox.prototype.getCloseBoxImg_ = function() {
  */
 InfoBox.prototype.addDomEventListener = function(event, handler, element) {
     let item = {
-        element: element || this.div_,
+        element: element || this.container,
         event  : event,
         handler: handler
 
     }
 
-    this.domEventListeners_.push(item);
+    this.domEventListeners.push(item);
     item.element.addEventListener(item.event, item.handler);
 };
 
@@ -282,19 +282,19 @@ InfoBox.prototype.addDomEventListener = function(event, handler, element) {
  * @return void
  */
 InfoBox.prototype.clearDomEventListeners = function() {
-    this.domEventListeners_.forEach(function(item) {
+    this.domEventListeners.forEach(function(item) {
         item.element.removeEventListener(item.event, item.handler);
     });
-    this.domEventListeners_ = [];
+    this.domEventListeners = [];
 };
 
 /**
  * Adds the click handler to the InfoBox close box.
  * @private
  */
-InfoBox.prototype.addCloseBox_ = function() {
-    if (this.closeBoxURL_ !== '') {
-        this.addDomEventListener('click', this.closeHandler, this.div_.firstChild);
+InfoBox.prototype.addCloseBox = function() {
+    if (this.closeBoxURL !== '') {
+        this.addDomEventListener('click', this.closeHandler);
     }
 };
 
@@ -321,7 +321,7 @@ InfoBox.prototype.closeHandler = function(event) {
  *
  * @return void
  */
-InfoBox.prototype.panBox_ = function(disablePan) {
+InfoBox.prototype.panBox = function(disablePan) {
     let map,
         xOffset = 0,
         yOffset = 0;
@@ -331,24 +331,24 @@ InfoBox.prototype.panBox_ = function(disablePan) {
 
         if (map instanceof google.maps.Map) {
             // Only pan if attached to map, not panorama
-            if (!map.getBounds().contains(this.position_)) {
+            if (!map.getBounds().contains(this.position)) {
                 /*
                  * Marker not in visible area of map, so set center
                  * of map to the marker position first.
                  */
-                map.setCenter(this.position_);
+                map.setCenter(this.position);
             }
 
             let mapDiv      = map.getDiv(),
                 mapWidth    = mapDiv.offsetWidth,
                 mapHeight   = mapDiv.offsetHeight,
-                iwOffsetX   = this.pixelOffset_.width,
-                iwOffsetY   = this.pixelOffset_.height,
-                iwWidth     = this.div_.offsetWidth,
-                iwHeight    = this.div_.offsetHeight,
-                padX        = this.infoBoxClearance_.width,
-                padY        = this.infoBoxClearance_.height,
-                pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position_);
+                iwOffsetX   = this.pixelOffset.width,
+                iwOffsetY   = this.pixelOffset.height,
+                iwWidth     = this.container.offsetWidth,
+                iwHeight    = this.container.offsetHeight,
+                padX        = this.infoBoxClearance.width,
+                padY        = this.infoBoxClearance.height,
+                pixPosition = this.getProjection().fromLatLngToContainerPixel(this.position);
 
             if (pixPosition.x < (-iwOffsetX + padX)) {
                 xOffset = pixPosition.x + iwOffsetX - padX;
@@ -357,7 +357,7 @@ InfoBox.prototype.panBox_ = function(disablePan) {
                 xOffset = pixPosition.x + iwWidth + iwOffsetX + padX - mapWidth;
             }
 
-            if (this.alignBottom_) {
+            if (this.alignBottom) {
                 if (pixPosition.y < (-iwOffsetY + padY + iwHeight)) {
                     yOffset = pixPosition.y + iwOffsetY - padY - iwHeight;
 
@@ -388,22 +388,22 @@ InfoBox.prototype.panBox_ = function(disablePan) {
  *
  * @return void
  */
-InfoBox.prototype.setBoxStyle_ = function() {
+InfoBox.prototype.setboxStyle = function() {
     let i,
         boxStyle;
 
-    if (this.div_) {
+    if (this.container) {
         // Apply style values from the style sheet defined in the boxClass parameter:
-        this.div_.className = this.boxClass_;
+        this.container.className = this.boxClass;
 
         // Clear existing inline style values:
-        this.div_.style.cssText = '';
+        this.container.style.cssText = '';
 
         // Apply style values defined in the boxStyle parameter:
-        boxStyle = this.boxStyle_;
+        boxStyle = this.boxStyle;
         for (i in boxStyle) {
             if (boxStyle.hasOwnProperty(i)) {
-                this.div_.style[i] = boxStyle[i];
+                this.container.style[i] = boxStyle[i];
             }
         }
 
@@ -411,20 +411,20 @@ InfoBox.prototype.setBoxStyle_ = function() {
          * Fix for iOS disappearing InfoBox problem.
          * See http://stackoverflow.com/questions/9229535/google-maps-markers-disappear-at-certain-zoom-level-only-on-iphone-ipad
          */
-        this.div_.style.WebkitTransform = 'translateZ(0)';
+        this.container.style.WebkitTransform = 'translateZ(0)';
 
         // Fix up opacity style for benefit of MSIE:
-        if (typeof this.div_.style.opacity !== 'undefined' && this.div_.style.opacity !== '') {
+        if (typeof this.container.style.opacity !== 'undefined' && this.container.style.opacity !== '') {
             // See http://www.quirksmode.org/css/opacity.html
-            this.div_.style.MsFilter = '"progid:DXImageTransform.Microsoft.Alpha(Opacity=' + (this.div_.style.opacity * 100) + ')"';
-            this.div_.style.filter   = 'alpha(opacity=' + (this.div_.style.opacity * 100) + ')';
+            this.container.style.MsFilter = '"progid:DXImageTransform.Microsoft.Alpha(Opacity=' + (this.container.style.opacity * 100) + ')"';
+            this.container.style.filter   = 'alpha(opacity=' + (this.container.style.opacity * 100) + ')';
         }
 
         // Apply required styles:
-        this.div_.style.position   = 'absolute';
-        this.div_.style.visibility = 'hidden';
-        if (this.zIndex_ !== null) {
-            this.div_.style.zIndex = this.zIndex_;
+        this.container.style.position   = 'absolute';
+        this.container.style.visibility = 'hidden';
+        if (this.zIndex !== null) {
+            this.container.style.zIndex = this.zIndex;
         }
     }
 };
@@ -434,10 +434,10 @@ InfoBox.prototype.setBoxStyle_ = function() {
  *
  * @return {Object} widths object (top, bottom left, right)
  */
-InfoBox.prototype.getBoxWidths_ = function() {
+InfoBox.prototype.getBoxWidths = function() {
     let computedStyle,
         bw  = {top: 0, bottom: 0, left: 0, right: 0},
-        box = this.div_;
+        box = this.container;
 
     if (document.defaultView && document.defaultView.getComputedStyle) {
         computedStyle = box.ownerDocument.defaultView.getComputedStyle(box, '');
@@ -459,9 +459,9 @@ InfoBox.prototype.getBoxWidths_ = function() {
  * Invoked when <tt>close</tt> is called. Do not call it directly.
  */
 InfoBox.prototype.onRemove = function() {
-    if (this.div_) {
-        this.div_.parentNode.removeChild(this.div_);
-        this.div_ = null;
+    if (this.container) {
+        this.container.parentNode.removeChild(this.container);
+        this.container = null;
     }
 };
 
@@ -469,24 +469,24 @@ InfoBox.prototype.onRemove = function() {
  * Draws the InfoBox based on the current map projection and zoom level.
  */
 InfoBox.prototype.draw = function() {
-    this.createInfoBoxDiv_();
+    this.createInfoBoxDiv();
 
-    let pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
+    let pixPosition = this.getProjection().fromLatLngToDivPixel(this.position);
 
-    this.div_.style.left = (pixPosition.x + this.pixelOffset_.width) + 'px';
+    this.container.style.left = (pixPosition.x + this.pixelOffset.width) + 'px';
 
-    if (this.alignBottom_) {
-        this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + 'px';
+    if (this.alignBottom) {
+        this.container.style.bottom = -(pixPosition.y + this.pixelOffset.height) + 'px';
 
     } else {
-        this.div_.style.top = (pixPosition.y + this.pixelOffset_.height) + 'px';
+        this.container.style.top = (pixPosition.y + this.pixelOffset.height) + 'px';
     }
 
-    if (this.isHidden_) {
-        this.div_.style.visibility = 'hidden';
+    if (this.isHidden) {
+        this.container.style.visibility = 'hidden';
 
     } else {
-        this.div_.style.visibility = 'visible';
+        this.container.style.visibility = 'visible';
     }
 };
 
@@ -500,13 +500,13 @@ InfoBox.prototype.draw = function() {
  */
 InfoBox.prototype.setOptions = function(options) {
     if (typeof options.boxClass !== 'undefined') { // Must be first
-        this.boxClass_ = options.boxClass;
-        this.setBoxStyle_();
+        this.boxClass = options.boxClass;
+        this.setboxStyle();
     }
 
     if (typeof options.boxStyle !== 'undefined') { // Must be second
-        this.boxStyle_ = options.boxStyle;
-        this.setBoxStyle_();
+        this.boxStyle = options.boxStyle;
+        this.setboxStyle();
     }
 
     if (typeof options.content !== 'undefined') {
@@ -514,19 +514,19 @@ InfoBox.prototype.setOptions = function(options) {
     }
 
     if (typeof options.disableAutoPan !== 'undefined') {
-        this.disableAutoPan_ = options.disableAutoPan;
+        this.disableAutoPan = options.disableAutoPan;
     }
 
     if (typeof options.maxWidth !== 'undefined') {
-        this.maxWidth_ = options.maxWidth;
+        this.maxWidth = options.maxWidth;
     }
 
     if (typeof options.pixelOffset !== 'undefined') {
-        this.pixelOffset_ = options.pixelOffset;
+        this.pixelOffset = options.pixelOffset;
     }
 
     if (typeof options.alignBottom !== 'undefined') {
-        this.alignBottom_ = options.alignBottom;
+        this.alignBottom = options.alignBottom;
     }
 
     if (typeof options.position !== 'undefined') {
@@ -538,30 +538,30 @@ InfoBox.prototype.setOptions = function(options) {
     }
 
     if (typeof options.closeBoxMargin !== 'undefined') {
-        this.closeBoxMargin_ = options.closeBoxMargin;
+        this.closeBoxMargin = options.closeBoxMargin;
     }
 
     if (typeof options.closeBoxURL !== 'undefined') {
-        this.closeBoxURL_ = options.closeBoxURL;
+        this.closeBoxURL = options.closeBoxURL;
     }
 
     if (typeof options.infoBoxClearance !== 'undefined') {
-        this.infoBoxClearance_ = options.infoBoxClearance;
+        this.infoBoxClearance = options.infoBoxClearance;
     }
 
     if (typeof options.isHidden !== 'undefined') {
-        this.isHidden_ = options.isHidden;
+        this.isHidden = options.isHidden;
     }
 
     if (typeof options.visible !== 'undefined') {
-        this.isHidden_ = !options.visible;
+        this.isHidden = !options.visible;
     }
 
     if (typeof options.enableEventPropagation !== 'undefined') {
-        this.enableEventPropagation_ = options.enableEventPropagation;
+        this.enableEventPropagation = options.enableEventPropagation;
     }
 
-    if (this.div_) {
+    if (this.container) {
         this.draw();
     }
 };
@@ -573,25 +573,25 @@ InfoBox.prototype.setOptions = function(options) {
  * @param {string|Node} content
  */
 InfoBox.prototype.setContent = function(content) {
-    this.content_ = content;
+    this.content = content;
 
-    if (this.div_) {
+    if (this.container) {
         if (typeof content.nodeType === 'undefined') {
-            this.div_.innerHTML = content;
+            this.container.innerHTML = content;
 
         } else {
-            this.div_.appendChild(content);
+            this.container.appendChild(content);
         }
-        this.div_.prepend(this.getCloseBoxImg_());
+        this.container.prepend(this.getCloseBoxImg());
 
-        this.addCloseBox_();
+        this.addCloseBox();
     }
 
     /**
      * This event is fired when the content of the InfoBox changes.
-     * @name InfoBox#content_changed
+     * @name InfoBox#contentchanged
      */
-    google.maps.event.trigger(this, 'content_changed');
+    google.maps.event.trigger(this, 'contentchanged');
 };
 
 /**
@@ -600,17 +600,17 @@ InfoBox.prototype.setContent = function(content) {
  * @param {LatLng} latlng
  */
 InfoBox.prototype.setPosition = function(latlng) {
-    this.position_ = latlng;
+    this.position = latlng;
 
-    if (this.div_) {
+    if (this.container) {
         this.draw();
     }
 
     /**
      * This event is fired when the position of the InfoBox changes.
-     * @name InfoBox#position_changed
+     * @name InfoBox#positionchanged
      */
-    google.maps.event.trigger(this, 'position_changed');
+    google.maps.event.trigger(this, 'positionchanged');
 };
 
 /**
@@ -619,17 +619,17 @@ InfoBox.prototype.setPosition = function(latlng) {
  * @param {Number} index
  */
 InfoBox.prototype.setZIndex = function(index) {
-    this.zIndex_ = index;
+    this.zIndex = index;
 
-    if (this.div_) {
-        this.div_.style.zIndex = index;
+    if (this.container) {
+        this.container.style.zIndex = index;
     }
 
     /**
      * This event is fired when the zIndex of the InfoBox changes.
-     * @name InfoBox#zindex_changed
+     * @name InfoBox#zIndexchanged
      */
-    google.maps.event.trigger(this, 'zindex_changed');
+    google.maps.event.trigger(this, 'zIndexchanged');
 };
 
 /**
@@ -638,9 +638,9 @@ InfoBox.prototype.setZIndex = function(index) {
  * @param {Boolean} isVisible
  */
 InfoBox.prototype.setVisible = function(isVisible) {
-    this.isHidden_ = !isVisible;
-    if (this.div_) {
-        this.div_.style.visibility = (this.isHidden_ ? 'hidden' : 'visible');
+    this.isHidden = !isVisible;
+    if (this.container) {
+        this.container.style.visibility = (this.isHidden ? 'hidden' : 'visible');
     }
 };
 
@@ -649,7 +649,7 @@ InfoBox.prototype.setVisible = function(isVisible) {
  * @returns {string}
  */
 InfoBox.prototype.getContent = function() {
-    return this.content_;
+    return this.content;
 };
 
 /**
@@ -657,7 +657,7 @@ InfoBox.prototype.getContent = function() {
  * @returns {LatLng}
  */
 InfoBox.prototype.getPosition = function() {
-    return this.position_;
+    return this.position;
 };
 
 /**
@@ -665,7 +665,7 @@ InfoBox.prototype.getPosition = function() {
  * @returns {number}
  */
 InfoBox.prototype.getZIndex = function() {
-    return this.zIndex_;
+    return this.zIndex;
 };
 
 /**
@@ -679,7 +679,7 @@ InfoBox.prototype.getVisible = function() {
         isVisible = false;
 
     } else {
-        isVisible = !this.isHidden_;
+        isVisible = !this.isHidden;
     }
 
     return isVisible;
@@ -689,9 +689,9 @@ InfoBox.prototype.getVisible = function() {
  * Shows the InfoBox. [Deprecated; use <tt>setVisible</tt> instead.]
  */
 InfoBox.prototype.show = function() {
-    this.isHidden_ = false;
-    if (this.div_) {
-        this.div_.style.visibility = 'visible';
+    this.isHidden = false;
+    if (this.container) {
+        this.container.style.visibility = 'visible';
     }
 };
 
@@ -699,9 +699,9 @@ InfoBox.prototype.show = function() {
  * Hides the InfoBox. [Deprecated; use <tt>setVisible</tt> instead.]
  */
 InfoBox.prototype.hide = function() {
-    this.isHidden_ = true;
-    if (this.div_) {
-        this.div_.style.visibility = 'hidden';
+    this.isHidden = true;
+    if (this.container) {
+        this.container.style.visibility = 'hidden';
     }
 };
 
@@ -718,16 +718,16 @@ InfoBox.prototype.open = function(map, anchor) {
     let me = this;
 
     if (anchor) {
-        this.position_     = anchor.getPosition();
-        this.moveListener_ = google.maps.event.addListener(anchor, 'position_changed', function() {
+        this.position     = anchor.getPosition();
+        this.moveListener = google.maps.event.addListener(anchor, 'positionchanged', function() {
             me.setPosition(this.getPosition());
         });
     }
 
     this.setMap(map);
 
-    if (this.div_) {
-        this.panBox_();
+    if (this.container) {
+        this.panBox();
     }
 };
 
@@ -737,9 +737,9 @@ InfoBox.prototype.open = function(map, anchor) {
 InfoBox.prototype.close = function() {
     this.clearDomEventListeners();
 
-    if (this.moveListener_) {
-        google.maps.event.removeListener(this.moveListener_);
-        this.moveListener_ = null;
+    if (this.moveListener) {
+        google.maps.event.removeListener(this.moveListener);
+        this.moveListener = null;
     }
 
     this.setMap(null);
