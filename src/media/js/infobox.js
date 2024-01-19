@@ -269,7 +269,6 @@ InfoBox.prototype.addDomEventListener = function(event, handler, element) {
         element: element || this.container,
         event  : event,
         handler: handler
-
     }
 
     this.domEventListeners.push(item);
@@ -294,7 +293,14 @@ InfoBox.prototype.clearDomEventListeners = function() {
  */
 InfoBox.prototype.addCloseBox = function() {
     if (this.closeBoxURL !== '') {
-        this.addDomEventListener('click', this.closeHandler);
+        let me = this;
+        this.addDomEventListener(
+            'click',
+            function(event) {
+                me.closeHandler(event);
+            },
+            this.container.firstChild
+        );
     }
 };
 
