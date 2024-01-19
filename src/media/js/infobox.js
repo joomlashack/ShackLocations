@@ -1,6 +1,7 @@
 /**
  * @name         InfoBox
- * @version      1.1.13 [March 19, 2014]
+ * @version      2.0.0 [January 19, 2024]
+ * @version      1.1.13 [March 19, 2014] (original)
  * @author       Gary Little (inspired by proof-of-concept code from Pamela Fox of Google)
  * @copyright    Copyright 2010 Gary Little [gary at luxcentral.com]
  * @copyright    Copyright 2021 joomlashack.com
@@ -310,7 +311,6 @@ InfoBox.prototype.addCloseBox = function() {
  * @param {Event} event
  */
 InfoBox.prototype.closeHandler = function(event) {
-    // 1.0.3 fix: Always prevent propagation of a close box click to the map:
     event.cancelBubble = true;
 
     event.stopPropagation();
