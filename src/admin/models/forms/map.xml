@@ -204,16 +204,6 @@
                 <option value="1">JENABLED</option>
             </field>
 
-            <field name="panControl"
-                   type="list"
-                   useglobal="true"
-                   class="chzn-color-state form-select-color-state"
-                   label="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_DESC">
-                <option value="0">JDISABLED</option>
-                <option value="1">JENABLED</option>
-            </field>
-
             <field name="streetViewControl"
                    type="list"
                    useglobal="true"

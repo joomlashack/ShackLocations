@@ -67,7 +67,6 @@
                     zoomControl             : null,
                     scrollwheel             : null,
                     streetViewControl       : null,
-                    panControl              : null,
                     draggable               : null,
                     mapTypeId               : null,
                     styles                  : null

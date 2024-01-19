@@ -258,16 +258,6 @@
                 <option value="false">JDISABLED</option>
             </field>
 
-            <field name="panControl"
-                   type="list"
-                   class="chzn-color chzn-color-state form-select-color-state"
-                   label="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_LBL"
-                   description="COM_FOCALPOINT_FORM_CONFIG_PAN_CONTROL_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="true">JEnabled</option>
-                <option value="false">JDISABLED</option>
-            </field>
-
             <field name="streetViewControl"
                    type="list"
                    class="chzn-color chzn-color-state form-select-color-state"

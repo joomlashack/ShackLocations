@@ -95,7 +95,6 @@ abstract class JhtmlSlocGoogle
                 'mapTypeControl'           => (int)$params->get('mapTypeControl'),
                 'mapTypeId'                => $params->get('mapTypeId'),
                 'maxZoom'                  => (int)$params->get('maxzoom') ?: null,
-                'panControl'               => (int)(bool)$params->get('panControl'),
                 'scrollwheel'              => (int)(bool)$params->get('scrollwheel'),
                 'streetViewControl'        => (int)(bool)$params->get('streetViewControl'),
                 'styles'                   => $params->get('mapstyle', []),
