@@ -1,7 +1,7 @@
 /**
  * @package   ShackLocations
  * @contact   www.joomlashack.com, help@joomlashack.com
- * @copyright 2020-2023 Joomlashack.com. All rights reserved
+ * @copyright 2020-2024 Joomlashack. All rights reserved
  * @license   https://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of ShackLocations.
