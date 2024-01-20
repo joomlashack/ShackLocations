@@ -197,9 +197,9 @@
         <fields name="params">
             <field name="mapTypeId"
                    type="list"
+                   useglobal="true"
                    label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="ROADMAP">ROADMAP</option>
                 <option value="SATELLITE">SATELLITE</option>
                 <option value="HYBRID">HYBRID</option>
@@ -208,30 +208,26 @@
 
             <field name="mapTypeControl"
                    type="list"
+                   useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_MAP_TYPE_CONTROL_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="false">JDISABLED</option>
-                <option value="true">JEnabled</option>
+                <option value="0">JDISABLED</option>
+                <option value="1">JEnabled</option>
             </field>
 
             <field name="zoomin"
                    type="shacklocations.zoom"
+                   useglobal="true"
                    label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_LBL"
-                   description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
-            </field>
+                   description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_LVL_DESC"/>
 
             <field name="zoomControl"
                    type="list"
+                   useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_ZOOM_CONTROLS_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="false">JDISABLED</option>
-                <option value="true">JEnabled</option>
-            </field>
 
             <field name="scrollwheel"
                    type="list"
@@ -255,50 +251,50 @@
 
             <field name="streetViewControl"
                    type="list"
+                   useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_STREETVIEW_CONTROL_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
-                <option value="true">JEnabled</option>
-                <option value="false">JDISABLED</option>
+                <option value="0">JDISABLED</option>
+                <option value="1">JENABLED</option>
             </field>
 
             <field name="infoshowaddress"
                    type="list"
+                   useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_CONTENT_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_CONTENT_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
 
             <field name="infoshowphone"
                    type="list"
+                   useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
 
             <field name="infoshowintro"
                    type="list"
+                   useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
 
             <field name="getdirections"
                    type="list"
+                   useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
                    label="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_LBL"
                    description="COM_FOCALPOINT_FORM_CONFIG_GET_DIRECTIONS_DESC">
-                <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
