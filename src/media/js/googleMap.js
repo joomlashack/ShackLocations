@@ -59,15 +59,14 @@
                         lat: null,
                         lng: null
                     },
+                    gestureHandling         : null,
                     zoom                    : null,
                     maxZoom                 : null,
                     mapTypeControl          : null,
                     fullscreenControl       : null,
                     fullscreenControlOptions: {},
                     zoomControl             : null,
-                    scrollwheel             : null,
                     streetViewControl       : null,
-                    draggable               : null,
                     mapTypeId               : null,
                     styles                  : null
                 },

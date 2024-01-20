@@ -75,27 +75,11 @@
             <option value="1">JENABLED</option>
         </field>
 
-        <field name="scrollwheel"
-               type="radio"
-               class="btn-group btn-group-yesno"
-               layout="joomla.form.field.radio.switcher"
-               default="0"
-               label="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_LBL"
-               description="COM_FOCALPOINT_FORM_CONFIG_MOUSE_ZOOM_DESC">
-            <option value="0">JDISABLED</option>
-            <option value="1">JENABLED</option>
-        </field>
-
-        <field name="draggable"
-               type="radio"
-               class="btn-group btn-group-yesno"
-               layout="joomla.form.field.radio.switcher"
-               default="1"
-               label="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_LBL"
-               description="COM_FOCALPOINT_FORM_CONFIG_DRAGABLE_DESC">
-            <option value="0">JDISABLED</option>
-            <option value="1">JENABLED</option>
-        </field>
+        <field name="gestureHandling"
+               type="shacklocations.gestures"
+               layout="joomla.form.field.list-fancy-select"
+               label="COM_FOCALPOINT_FORM_CONFIG_GESTUREHANDLING_LBL"
+               default="auto"/>
 
         <field name="streetViewControl"
                type="radio"
