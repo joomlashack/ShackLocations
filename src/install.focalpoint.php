@@ -72,7 +72,110 @@ class com_focalpointInstallerScript extends AbstractScript
                 $this->updateCustomFieldsData();
                 $this->removeObsoleteFiles();
                 $this->checkParameters();
+                $this->fixGestureParameter();
                 break;
+        }
+    }
+
+    /**
+     * Convert old scrollwheel/draggable parameters to gestureHandling
+     *
+     * @return void
+     *
+     * @since v2.1.12
+     */
+    protected function fixGestureParameter()
+    {
+        $db = $this->dbo;
+
+        try {
+            $query = $db->getQuery(true)
+                ->select([
+                    $db->quoteName('extension_id'),
+                    $db->quoteName('params'),
+                ])
+                ->from('#__extensions')
+                ->where($db->quoteName('name') . ' = ' . $db->quote('com_focalpoint'));
+            if ($config = $db->setQuery($query)->loadObject()) {
+                $config->params = json_decode($config->params);
+                if (property_exists($config->params, 'scrollwheel') || property_exists($config->params, 'draggable')) {
+                    // Old parameters exist, convert to new gestureHandling parameter
+                    $this->sendDebugMessage('Convert scrollwheel/draggable parameters to gestureHandling');
+
+                    $gestures = [
+                        '00' => 'none',
+                        '01' => 'cooperative',
+                        '10' => 'none',
+                        '11' => 'greedy',
+                    ];
+
+                    $convert = function (string $params, string $default) use ($gestures) {
+                        $params = json_decode($params);
+
+                        $scrollwheel = $params->scrollwheel ?? '';
+                        if ($scrollwheel && is_numeric($scrollwheel) == false) {
+                            $scrollwheel = (string)(int)($scrollwheel == 'true');
+                        }
+                        $draggable = $params->draggable ?? '';
+                        if ($draggable && is_numeric($draggable) == false) {
+                            $draggable = (string)(int)($draggable == 'true');
+                        }
+
+                        $current = (string)(int)$scrollwheel . (string)(int)$draggable;
+                        if ($scrollwheel || $draggable && $current != $default) {
+                            $gesture = $gestures[$current] ?? '';
+                        } else {
+                            $gesture = '';
+                        }
+
+                        $params->gestureHandling = $gesture;
+                        unset($params->scrollwheel, $params->draggable);
+
+                        return json_encode($params);
+                    };
+
+                    $scrollwheel = $config->params->scrollwheel ?? '0';
+                    $draggable   = $config->params->draggable ?? '1';
+
+                    // We have the old parameters update everything
+                    $gesture = $gestures[$scrollwheel . $draggable] ?? 'auto';
+
+                    $config->params->gestureHandling = $gesture;
+                    unset($config->params->scrollwheel, $config->params->draggable);
+
+                    $config->params = json_encode($config->params);
+                    $db->updateObject('#__extensions', $config, ['extension_id']);
+
+                    // Check map parameters
+                    $query = $db->getQuery(true)
+                        ->select([
+                            $db->quoteName('id'),
+                            $db->quoteName('params'),
+                        ])
+                        ->from('#__focalpoint_maps');
+                    $maps  = $db->setQuery($query)->loadObjectList();
+                    foreach ($maps as $map) {
+                        $map->params = $convert($map->params, $scrollwheel . $draggable);
+                        $db->updateObject('#__focalpoint_maps', $map, ['id']);
+                    }
+
+                    // Check location parameters
+                    $query     = $db->getQuery(true)
+                        ->select([
+                            $db->quoteName('id'),
+                            $db->quoteName('params'),
+                        ])
+                        ->from('#__focalpoint_locations');
+                    $locations = $db->setQuery($query)->loadObjectList();
+                    foreach ($locations as $location) {
+                        $location->params = $convert($location->params, $scrollwheel . $draggable);
+                        $db->updateObject('#__focalpoint_locations', $location, ['id']);
+                    }
+                }
+            }
+
+        } catch (Throwable $error) {
+            $this->sendErrorMessage($error);
         }
     }
 
