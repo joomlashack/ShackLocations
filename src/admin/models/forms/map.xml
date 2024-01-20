@@ -95,11 +95,10 @@
 
             <field name="robots"
                    type="shacklocations.robots"
+                   useglobal="true"
                    layout="joomla.form.field.list-fancy-select"
                    label="COM_FOCALPOINT_FORM_METADATA_ROBOTS_LABEL"
-                   description="COM_FOCALPOINT_FORM_METADATA_ROBOTS_DESC">
-                <option value="">COM_FOCALPOINT_OPTION_IGNORE</option>
-            </field>
+                   description="COM_FOCALPOINT_FORM_METADATA_ROBOTS_DESC"/>
 
             <field name="author"
                    type="text"

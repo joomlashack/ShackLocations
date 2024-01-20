@@ -22,23 +22,29 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Form\FormHelper;
-use Joomla\CMS\HTML\HTMLHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('list');
+if (class_exists(ListField::class) == false) {
+    // Joomla 3 support
+    FormHelper::loadFieldClass('list');
+    class_alias('\\JFormFieldList', listField::class);
+}
 
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class ShacklocationsFormFieldRobots extends JFormFieldList
+class ShacklocationsFormFieldRobots extends ListField
 {
+    public $type = 'Robotos';
+
     /**
      * @var string[]
      */
-    protected $options = [
+    protected $predefinedOptions = [
         'index, follow',
         'noindex, follow',
         'index, nofollow',
@@ -46,15 +52,28 @@ class ShacklocationsFormFieldRobots extends JFormFieldList
     ];
 
     /**
+     * @var bool
+     */
+    protected static $loaded = false;
+
+    /**
      * @inheritDoc
      */
-    protected function getOptions()
+    public function setup(SimpleXMLElement $element, $value, $group = null)
     {
-        $options = [];
-        foreach ($this->options as $value) {
-            $options[] = HTMLHelper::_('select.option', $value);
+        if (parent::setup($element, $value, $group)) {
+            if (static::$loaded == false) {
+                foreach ($this->predefinedOptions as $value) {
+                    $option = $this->element->addChild('option', $value);
+                    $option->addAttribute('value', $value);
+                }
+
+                static::$loaded = true;
+            }
+
+            return true;
         }
 
-        return array_merge(parent::getOptions(), $options);
+        return false;
     }
 }

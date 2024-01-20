@@ -119,7 +119,7 @@ class FocalpointView extends HtmlView
             $this->document->setMetaData('keywords', $keywords);
         }
 
-        $robots = $this->params->get('robots') ?: $defaults->get('robots');
+        $robots = $defaults->get('robots') ?: $this->params->get('robots');
         if ($robots) {
             $this->document->setMetaData('robots', $robots);
         }
