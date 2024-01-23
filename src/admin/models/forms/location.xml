@@ -263,8 +263,7 @@
                    type="list"
                    useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
-                   label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_LBL"
-                   description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_PHONE_LBL">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
@@ -273,8 +272,7 @@
                    type="list"
                    useglobal="true"
                    class="chzn-color chzn-color-state form-select-color-state"
-                   label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_LBL"
-                   description="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_DESC">
+                   label="COM_FOCALPOINT_FORM_CONFIG_INFOBOX_SHOW_INTRO_LBL">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
