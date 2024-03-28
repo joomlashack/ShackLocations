@@ -60,17 +60,16 @@ class FocalpointRouter extends RouterBase
             $view = $menuItem ? $menuItem->query['view'] : null;
         }
 
-        if ($view != $menuItem->query['view']) {
-            if (empty($query['id']) == false) {
-                $id = $query['id'];
-                unset($query['id']);
+        $menuView = $menuItem->query['view'] ?? null;
+        $id       = $query['id'] ?? null;
+        if ($id && $view != $menuView) {
+            unset($query['id']);
 
-                if ($targetMenu = $this->findMenu($view, $id)) {
-                    $query['Itemid'] = $targetMenu->id;
+            if ($targetMenu = $this->findMenu($view, $id)) {
+                $query['Itemid'] = $targetMenu->id;
 
-                } else {
-                    $segments[] = $this->getAlias($view, $id);
-                }
+            } else {
+                $segments[] = $this->getAlias($view, $id);
             }
         }
 
