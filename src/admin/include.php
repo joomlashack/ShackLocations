@@ -44,17 +44,19 @@ try {
 
         return false;
     }
+    unset($frameworkPath);
 
     if (defined('ALLEDIA_FRAMEWORK_LOADED') && defined('SLOC_LOADED') == false) {
         define('SLOC_ADMIN', JPATH_ADMINISTRATOR . '/components/com_focalpoint');
         define('SLOC_SITE', JPATH_SITE . '/components/com_focalpoint');
         define('SLOC_LIBRARY', SLOC_ADMIN . '/library');
 
+        require_once SLOC_ADMIN . '/helpers/focalpoint.php';
+        FrameworkHelper::createDatabaseClassAliases();
+
         AutoLoader::registerCamelBase('Focalpoint', SLOC_LIBRARY . '/joomla');
         HTMLHelper::addIncludePath(SLOC_LIBRARY . '/html');
         PluginHelper::importPlugin('focalpoint');
-        JLoader::register('FocalpointHelper', SLOC_ADMIN . '/helpers/focalpoint.php');
-        FrameworkHelper::createDatabaseClassAliases();
 
         // Application specific loads
         switch (Factory::getApplication()->getName()) {
