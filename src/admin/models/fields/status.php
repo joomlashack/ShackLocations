@@ -23,17 +23,20 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// phpcs:disable PSR1.Files.SideEffects
+use Joomla\CMS\Form\Field\PredefinedlistField;
 use Joomla\CMS\Form\FormHelper;
 
-// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('Predefinedlist');
-
+if (class_exists(PredefinedlistField::class) == false) {
+    FormHelper::loadFieldClass('predefinedlist');
+    class_alias(PredefinedlistField::class, JFormFieldPredefinedlist::class);
+}
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class ShacklocationsFormFieldStatus extends JFormFieldPredefinedList
+class ShacklocationsFormFieldStatus extends PredefinedlistField
 {
     /**
      * @inheritdoc

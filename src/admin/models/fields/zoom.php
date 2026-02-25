@@ -23,33 +23,43 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Form\FormHelper;
+use Alledia\Framework\Factory;
+use Alledia\Framework\Joomla\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('list');
-
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return false;
+}
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class ShacklocationsFormFieldZoom extends JFormFieldList
+class ShacklocationsFormFieldZoom extends ListField
 {
     /**
      * @inheritDoc
      */
     protected function getOptions()
     {
+        $language = Factory::getApplication()->getLanguage();
+
         $options = [];
-        for ($i = 1; $i <= 20; $i++) {
-            $options[] = HTMLHelper::_(
-                'select.option',
-                $i,
-                Text::_(sprintf('COM_FOCALPOINT_ZOOM_%02d', $i))
-            );
-        }
+        $i       = 0;
+        do {
+            $i++;
+            $languageConstant = sprintf('COM_FOCALPOINT_ZOOM_%02d', $i);
+            $hasKey           = $language->hasKey($languageConstant);
+            if ($hasKey) {
+                $options[] = HTMLHelper::_(
+                    'select.option',
+                    $i,
+                    Text::_($languageConstant)
+                );
+            }
+        } while ($hasKey);
 
         return array_merge(parent::getOptions(), $options);
     }

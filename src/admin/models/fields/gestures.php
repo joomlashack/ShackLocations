@@ -22,16 +22,13 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// phpcs:disable PSR1.Files.SideEffects
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\Form\FormHelper;
+use Alledia\Framework\Joomla\Form\Field\ListField;
 
+// phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-if (class_exists(listField::class) == false) {
-    // Joomla 3 support
-    FormHelper::loadFieldClass('predefinedlist');
-    class_alias('\\JFormFieldlist', ListField::class);
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return false;
 }
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -41,7 +38,7 @@ class ShacklocationsFormFieldGestures extends ListField
     public $type = 'Gestures';
 
     /**
-     * @inheritdoc
+     * @var string[]
      */
     protected $predefinedOptions = [
         'auto'        => 'COM_FOCALPOINT_OPTION_AUTO',
@@ -50,7 +47,10 @@ class ShacklocationsFormFieldGestures extends ListField
         'cooperative' => 'COM_FOCALPOINT_OPTION_COOPERATIVE',
     ];
 
-    protected static $loaded = false;
+    /**
+     * @var bool
+     */
+    protected static bool $loaded = false;
 
     /**
      * @inheritDoc

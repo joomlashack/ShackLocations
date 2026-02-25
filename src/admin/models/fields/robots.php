@@ -23,16 +23,13 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Form\Field\ListField;
-use Joomla\CMS\Form\FormHelper;
+use Alledia\Framework\Joomla\Form\Field\ListField;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-if (class_exists(ListField::class) == false) {
-    // Joomla 3 support
-    FormHelper::loadFieldClass('list');
-    class_alias('\\JFormFieldList', listField::class);
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return false;
 }
 
 // phpcs:enable PSR1.Files.SideEffects
@@ -45,7 +42,7 @@ class ShacklocationsFormFieldRobots extends ListField
     /**
      * @var string[]
      */
-    protected $predefinedOptions = [
+    protected array $predefinedOptions = [
         'index, follow',
         'noindex, follow',
         'index, nofollow',
@@ -55,7 +52,7 @@ class ShacklocationsFormFieldRobots extends ListField
     /**
      * @var bool
      */
-    protected static $loaded = false;
+    protected static bool $loaded = false;
 
     /**
      * @inheritDoc

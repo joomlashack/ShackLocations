@@ -23,19 +23,20 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\Form\Field\ListField;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('list');
-
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return false;
+}
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class ShacklocationsFormFieldLegend extends JFormFieldList
+class ShacklocationsFormFieldLegend extends ListField
 {
     /**
      * @inheritdoc

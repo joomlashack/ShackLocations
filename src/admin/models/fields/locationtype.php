@@ -23,20 +23,22 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormHelper;
+use Alledia\Framework\Factory;
+use Alledia\Framework\Joomla\Form\Field\GroupedlistField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Version;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('GroupedList');
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return false;
+}
 
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
+class ShacklocationsFormFieldLocationtype extends GroupedlistField
 {
     /**
      * @inheritdoc
@@ -44,9 +46,9 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
     public $type = 'locationtype';
 
     /**
-     * @var object[]
+     * @var ?object[]
      */
-    protected static $typeOptions = null;
+    protected static ?array $typeOptions = null;
 
     /**
      * @inheritDoc
@@ -76,7 +78,7 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
     protected function getGroups()
     {
         if (static::$typeOptions === null) {
-            $db = Factory::getDbo();
+            $db = Factory::getDatabase();
 
             $query = $db->getQuery(true)
                 ->select([
@@ -120,7 +122,7 @@ class ShacklocationsFormFieldLocationtype extends JFormFieldGroupedList
             HTMLHelper::_('jquery.framework');
 
             $js = <<<JSCODE
-jQuery(document).ready(function($) {
+jQuery(function($) {
     let \$primary = $('#{$primaryField->id}'),
         \$secondary = $('#{$this->id}');
         

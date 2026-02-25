@@ -23,19 +23,20 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormHelper;
+use Alledia\Framework\Factory;
+use Alledia\Framework\Joomla\Form\Field\ListField;
 use Joomla\CMS\HTML\HTMLHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 
-FormHelper::loadFieldClass('list');
-
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return false;
+}
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class ShacklocationsFormFieldLocation extends JFormFieldList
+class ShacklocationsFormFieldLocation extends ListField
 {
     /**
      * @inheritdoc
@@ -43,9 +44,9 @@ class ShacklocationsFormFieldLocation extends JFormFieldList
     public $type = 'shacklocations.location';
 
     /**
-     * @var object[]
+     * @var ?object[]
      */
-    protected static $options = null;
+    protected static ?array $options = null;
 
     /**
      * @inheritDoc
@@ -55,7 +56,7 @@ class ShacklocationsFormFieldLocation extends JFormFieldList
         if (static::$options === null) {
             static::$options = [];
 
-            $db        = Factory::getDbo();
+            $db        = Factory::getDatabase();
             $query     = $db->getQuery(true)
                 ->select('id, title')
                 ->from('#__focalpoint_locations')
