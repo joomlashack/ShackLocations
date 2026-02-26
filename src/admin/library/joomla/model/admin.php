@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\Model\AbstractAdminModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 
@@ -30,7 +31,7 @@ defined('_JEXEC') or die();
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-abstract class FocalpointModelAdmin extends AdminModel
+abstract class FocalpointModelAdmin extends AbstractAdminModel
 {
     /**
      * @inheritDoc
@@ -97,14 +98,11 @@ abstract class FocalpointModelAdmin extends AdminModel
     }
 
     /**
-     * Clear any orhpaned table rows
-     *
-     * @return void
-     * @throws Exception
+     * @inheritDoc
      */
-    protected function garbageCollect(): void
+    protected function garbageCollect(?string $source = null, $relations = null, string $prefix = '#__'): void
     {
-        $db = $this->getDbo();
+        $db = $this->getDatabase();
 
         $query = $db->getQuery(true)
             ->delete('#__focalpoint_location_type_xref')

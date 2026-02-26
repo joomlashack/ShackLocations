@@ -62,7 +62,7 @@ class FocalpointModellocation extends FocalpointModelAdmin
             'location',
             [
                 'control'   => 'jform',
-                'load_data' => $loadData
+                'load_data' => $loadData,
             ]
         );
     }
@@ -89,13 +89,13 @@ class FocalpointModellocation extends FocalpointModelAdmin
     public function getItem($pk = null)
     {
         if ($item = parent::getItem($pk)) {
-            $item->description = trim((string)$item->get('fulldescription')) == ''
-                ? $item->description
-                : $item->description . '<hr id="system-readmore" />' . $item->get('fulldescription');
+            $item->description .= $item->fulldescription
+                ? '<hr id="system-readmore" />' . $item->fulldescription
+                : '';
 
-            $item->metadata         = json_decode((string)$item->get('metadata'), true);
-            $item->othertypes       = json_decode((string)$item->get('othertypes'), true);
-            $item->customfieldsdata = json_decode((string)$item->get('customfieldsdata'), true);
+            $item->metadata         = json_decode((string)$item->metadata, true);
+            $item->othertypes       = json_decode((string)$item->othertypes, true);
+            $item->customfieldsdata = json_decode((string)$item->customfieldsdata, true);
         }
 
         return $item;

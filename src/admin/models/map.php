@@ -70,7 +70,7 @@ class FocalpointModelmap extends FocalpointModelAdmin
     /**
      * @inheritDoc
      */
-    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    protected function preprocessForm(Form $form, $data, $group = 'content')
     {
         try {
             $proForm = Form::getInstance('map.pro', 'map.pro');

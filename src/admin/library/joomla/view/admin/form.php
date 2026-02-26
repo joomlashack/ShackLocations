@@ -25,8 +25,7 @@
 use Alledia\Framework\Factory;
 use Alledia\Framework\Joomla\View\Admin\AbstractForm;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Toolbar\ToolbarHelper;
+use Alledia\Framework\Joomla\Toolbar\ToolbarHelper;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -42,7 +41,7 @@ abstract class FocalpointViewAdminForm extends AbstractForm
     protected $params = null;
 
     /**
-     * @var CMSObject
+     * @var object
      */
     protected $item = null;
 
@@ -63,7 +62,7 @@ abstract class FocalpointViewAdminForm extends AbstractForm
      */
     protected function addToolbar(string $prefix): void
     {
-        $this->app->input->set('hidemainmenu', true);
+        Factory::getInput()->set('hidemainmenu', true);
 
         $user  = Factory::getUser();
         $isNew = ($this->item->id == 0);

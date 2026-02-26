@@ -22,7 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
+use Alledia\Framework\Factory;
 use Joomla\String\StringHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -72,10 +72,11 @@ trait FocalpointModelTraits
      */
     protected function checkSave2copy(array &$data, ?int $categoryId = null): void
     {
-        $app = Factory::getApplication();
-        if ($app->input->getCmd('task') == 'save2copy') {
+        $input = Factory::getInput();
+
+        if ($input->getCmd('task') == 'save2copy') {
             $original = clone $this->getTable();
-            $original->load($app->input->getInt('id'));
+            $original->load($input->getInt('id'));
 
             if ($data['title'] == $original->title) {
                 [$title, $alias] = $this->generateNewTitle($categoryId, $data['alias'], $data['title']);

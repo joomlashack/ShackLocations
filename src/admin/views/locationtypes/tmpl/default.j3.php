@@ -23,11 +23,12 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
+use Alledia\Framework\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\User\User;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die();
@@ -36,11 +37,12 @@ HTMLHelper::_('bootstrap.tooltip');
 HTMLHelper::_('behavior.multiselect');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
-$user      = Factory::getUser();
+/** @var User $user */
+$user      = $this->app->getIdentity();
 $ordering  = $this->escape($this->state->get('list.ordering'));
 $direction = $this->escape($this->state->get('list.direction'));
 $saveOrder = $ordering == 'a.ordering';
-$task      = $this->app->input->getCmd('task');
+$task      = Factory::getInput($this->app)->getCmd('task');
 
 if ($saveOrder) :
     $saveOrderingUrl = 'index.php?option=com_focalpoint&task=locationtypes.saveOrderAjax&tmpl=component';
