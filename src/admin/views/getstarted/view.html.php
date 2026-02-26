@@ -23,11 +23,11 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Factory;
+use Alledia\Framework\Joomla\Toolbar\ToolbarHelper;
 use Alledia\Framework\Joomla\View\Admin\AbstractBase;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Version;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -53,7 +53,7 @@ class FocalpointViewGetstarted extends AbstractBase
 
         $this->addToolbar();
 
-        $view = Factory::getApplication()->input->getCmd('view');
+        $view = Factory::getInput()->getCmd('view');
         FocalpointHelper::addSubmenu($view);
 
         if (Version::MAJOR_VERSION < 4) {
@@ -70,7 +70,7 @@ class FocalpointViewGetstarted extends AbstractBase
     {
         ToolbarHelper::title(Text::_('COM_FOCALPOINT_TITLE_GETSTARTED'), 'map');
 
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         if ($user->authorise('core.admin', 'com_focalpoint')) {
             ToolbarHelper::preferences('com_focalpoint');

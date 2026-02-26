@@ -23,16 +23,15 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Factory;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\Controller\BaseController;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
 // phpcs:enable PSR1.Files.SideEffects
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class FocalpointController extends BaseController
+class FocalpointController extends \Alledia\Framework\Joomla\Controller\AbstractBase
 {
     /**
      * @inheritdoc
@@ -45,20 +44,20 @@ class FocalpointController extends BaseController
      */
     public function display($cachable = false, $urlparams = false)
     {
-        $app  = Factory::getApplication();
-        $view = $app->input->getCmd('view', $this->default_view);
+        $view = Factory::getInput($this->app)->getCmd('view', $this->default_view);
 
         $params = ComponentHelper::getParams('com_focalpoint');
         if (empty($params->get('apikey'))) {
             if ($view != 'getstarted') {
-                $app->input->set('view', 'getstarted');
+                Factory::getInput($this->app)->set('view', 'getstarted');
             }
 
         } else {
-            $db    = Factory::getDbo();
+            $db    = Factory::getDatabase();
             $query = $db->getQuery(true)->select('COUNT(*)');
 
-            $maps          = $db->setQuery((clone $query)->from('#__focalpoint_maps'))->loadResult();
+            $maps = $db->setQuery((clone $query)->from('#__focalpoint_maps'))->loadResult();
+
             $legends       = $db->setQuery((clone $query)->from('#__focalpoint_legends'))->loadResult();
             $locationTypes = $db->setQuery((clone $query)->from('#__focalpoint_locationtypes'))->loadResult();
             $locations     = $db->setQuery((clone $query)->from('#__focalpoint_locations'))->loadResult();

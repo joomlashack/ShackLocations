@@ -23,13 +23,13 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
+use Alledia\Framework\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 defined('_JEXEC') or die();
 
 if (include JPATH_COMPONENT_ADMINISTRATOR . '/include.php') {
     $controller = BaseController::getInstance('Focalpoint');
-    $controller->execute(Factory::getApplication()->input->getCmd('task'));
+    $controller->execute(Factory::getInput()->getCmd('task'));
     $controller->redirect();
 }

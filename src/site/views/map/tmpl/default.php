@@ -23,6 +23,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Version;
 
@@ -49,7 +50,7 @@ $pageClass      = $this->getPageClass('fp-map-view legend_' . $legendPosition);
             <?php
             echo $this->loadTemplate($this->mapEngine . '_tabs');
 
-            if ($this->app->input->getBool('debug')) :
+            if (Factory::getInput()->getBool('debug')) :
                 echo sprintf(
                     '<textarea style="width:100%;height:500px;"><pre>%s</pre></textarea>',
                     print_r($this->item, 1)

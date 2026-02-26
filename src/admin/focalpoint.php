@@ -23,7 +23,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
+use Alledia\Framework\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -31,16 +31,16 @@ use Joomla\CMS\Version;
 
 defined('_JEXEC') or die();
 
-if (!Factory::getUser()->authorise('core.manage', 'com_focalpoint')) {
-    throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
-}
-
 if (include __DIR__ . '/include.php') {
+    if (!Factory::getApplication()->getIdentity()->authorise('core.manage', 'com_focalpoint')) {
+        throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
+    }
+
     if (Version::MAJOR_VERSION < 4) {
         HTMLHelper::_('behavior.tabstate');
     }
 
     $controller = BaseController::getInstance('Focalpoint');
-    $controller->execute(Factory::getApplication()->input->getCmd('task'));
+    $controller->execute(Factory::getInput()->getCmd('task'));
     $controller->redirect();
 }

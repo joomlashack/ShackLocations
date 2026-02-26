@@ -23,7 +23,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use Joomla\CMS\Factory;
+use Alledia\Framework\Factory;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -64,7 +64,7 @@ class FocalpointViewMaps extends FocalpointViewAdminList
 
             $mapsExist = $db->setQuery($query)->loadResult();
             if (!$mapsExist) {
-                $this->app->input->set('task', 'showhelp');
+                Factory::getInput($this->app)->set('task', 'showhelp');
             }
 
             parent::display($tpl);

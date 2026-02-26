@@ -26,6 +26,7 @@
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
+use Alledia\Framework\Factory;
 
 defined('_JEXEC') or die();
 
@@ -141,7 +142,7 @@ $pageClass   = $this->getPageClass('fp-location-view');
 
     echo $this->renderModule('shacklocations-below-map');
 
-    if ($this->app->input->getBool('debug')) :
+    if (Factory::getInput()->getBool('debug')) :
         echo '<pre>' . print_r($this->item, 1) . '</pre>';
     endif;
     ?>
