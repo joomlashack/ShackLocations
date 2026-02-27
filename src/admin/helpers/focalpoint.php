@@ -27,7 +27,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\Helpers\Sidebar;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
+use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
 defined('_JEXEC') or die();
@@ -73,8 +73,8 @@ abstract class FocalpointHelper extends ContentHelper
      */
     public static function getActions($component = '', $section = '', $id = 0)
     {
-        $user   = Factory::getUser();
-        $result = new CMSObject();
+        $user   = Factory::getApplication()->getIdentity();
+        $result = new Registry(null, '');
 
         $assetName = 'com_focalpoint';
 
@@ -85,7 +85,7 @@ abstract class FocalpointHelper extends ContentHelper
             'core.edit',
             'core.edit.own',
             'core.edit.state',
-            'core.delete'
+            'core.delete',
         ];
 
         foreach ($actions as $action) {

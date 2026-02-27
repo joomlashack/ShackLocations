@@ -41,9 +41,9 @@ class FocalpointView extends HtmlView
     protected $app = null;
 
     /**
-     * @var Registry
+     * @var ?Registry
      */
-    protected $params = null;
+    protected ?Registry $params = null;
 
     /**
      * @inheritDoc

@@ -27,25 +27,24 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Registry\Registry;
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects.FoundWithSymbols
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 class FocalpointViewLocation extends FocalpointViewSite
 {
     /**
-     * @var CMSObject
+     * @var null|CMSObject|Registry
      */
     protected $state = null;
 
     /**
-     * @var CMSObject
+     * @var ?object
      */
-    protected $item = null;
-
-    /**
-     * @var object
-     */
-    protected $outputfield;
+    protected ?object $item = null;
 
     /**
      * @inheritDoc
@@ -55,7 +54,7 @@ class FocalpointViewLocation extends FocalpointViewSite
         /** @var FocalpointModelLocation $model */
         $model = $this->getModel();
 
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         $this->state = $model->getState();
         $this->item  = $model->getData();
@@ -85,7 +84,7 @@ class FocalpointViewLocation extends FocalpointViewSite
                 'com_focalpoint.location',
                 &$this->item,
                 &$this->params,
-                0
+                0,
             ]
         );
         $this->item->description = $this->item->text;
@@ -97,7 +96,7 @@ class FocalpointViewLocation extends FocalpointViewSite
                 'com_focalpoint.location',
                 &$this->item,
                 &$this->params,
-                0
+                0,
             ]
         );
         $this->item->fulldescription = $this->item->text;

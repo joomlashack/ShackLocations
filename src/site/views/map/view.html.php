@@ -28,29 +28,27 @@ use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 defined('_JEXEC') or die();
+// phpcs:enable PSR1.Files.SideEffects.FoundWithSymbols
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 class FocalpointViewMap extends FocalpointViewSite
 {
     /**
-     * @var CMSObject
+     * @var null|CMSObject|Registry
      */
     protected $state = null;
 
     /**
-     * @var CMSObject
+     * @var ?object
      */
-    protected $item = null;
+    protected ?object $item = null;
 
     /**
-     * @var Registry
+     * @var ?Registry
      */
-    protected $params = null;
-
-    /**
-     * @var object
-     */
-    protected $outputfield = null;
+    protected ?Registry $params = null;
 
     /**
      * @param string $tpl
