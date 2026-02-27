@@ -22,6 +22,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Joomla\Model\TraitModel;
 use Joomla\CMS\MVC\Model\FormModel;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -31,6 +32,8 @@ defined('_JEXEC') or die();
 
 abstract class FocalpointModelSite extends FormModel
 {
+    use TraitModel;
+
     /**
      * @param object $location
      *

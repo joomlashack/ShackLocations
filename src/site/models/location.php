@@ -23,30 +23,29 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Factory;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 defined('_JEXEC') or die();
 
-if (defined('SLOC_LOADED') == false) {
-    $include = JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
-    if (is_file($include)) {
-        include $include;
-    }
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return;
 }
+// phpcs:enable PSR1.Files.SideEffects.FoundWithSymbols
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 class FocalpointModelLocation extends FocalpointModelSite
 {
     /**
-     * @var CMSObject
+     * @var ?object
      */
-    protected $item = null;
+    protected ?object $item;
 
     /**
      * @return void
@@ -55,25 +54,26 @@ class FocalpointModelLocation extends FocalpointModelSite
     protected function populateState()
     {
         /** @var SiteApplication $app */
-        $app = Factory::getApplication('com_focalpoint');
+        $app = Factory::getApplication();
 
-        $locationId = $app->input->getInt('id', $app->getParams()->get('item_id'));
+        $locationId = Factory::getInput()->getInt('id', $app->getParams()->get('item_id'));
         $this->setState('location.id', $locationId);
     }
 
     /**
-     * @param int $id
+     * @param ?int $id
      *
-     * @return CMSObject
+     * @return object
      * @throws Exception
      */
-    public function getData($id = null)
+    public function getData(?int $id = null)
     {
-        if ($this->item === null) {
-            $this->item = false;
+        if (isset($this->item) == false) {
+            $this->item = (object)[];
 
             $id = $id ?: $this->getState('location.id');
 
+            /** @var FocalpointTablelocation $table */
             $table = $this->getTable();
             if ($table->load($id)) {
                 if ($published = $this->getState('filter.published')) {
@@ -83,13 +83,13 @@ class FocalpointModelLocation extends FocalpointModelSite
                 }
 
                 $properties = $table->getProperties(1);
-                $this->item = ArrayHelper::toObject($properties, '\\Joomla\\CMS\\Object\\CMSObject');
+                $this->item = ArrayHelper::toObject($properties);
 
                 $this->formatCustomFields($this->item);
-                $this->item->marker       = $this->getMarker($this->item);
-                $this->item->address      = str_replace('||', ' <br>', $this->item->address);
-                $this->item->backlink     = $this->getBackLink($this->item->map_id);
-                $this->item->metadata     = new Registry($this->item->metadata);
+                $this->item->marker   = $this->getMarker($this->item);
+                $this->item->address  = str_replace('||', ' <br>', $this->item->address);
+                $this->item->backlink = $this->getBackLink($this->item->map_id);
+                $this->item->metadata = new Registry($this->item->metadata);
 
                 $params = ComponentHelper::getParams('com_focalpoint');
                 $params->merge(new Registry($this->item->params));
@@ -117,12 +117,12 @@ class FocalpointModelLocation extends FocalpointModelSite
         $query = $db->getQuery(true)
             ->select([
                 'id',
-                'params'
+                'params',
             ])
             ->from('#__menu')
             ->where([
                 'link = ' . $db->quote($link),
-                'published=1'
+                'published=1',
             ]);
 
         $menus = $db->setQuery($query)->loadObjectList();
@@ -151,18 +151,18 @@ class FocalpointModelLocation extends FocalpointModelSite
     }
 
     /**
-     * @param CMSObject $location
+     * @param object $location
      *
      * @return string
      * @throws Exception
      */
-    protected function getMarker(CMSObject $location)
+    protected function getMarker(object $location)
     {
-        $marker = $location->get('marker');
+        $marker = $location->marker ?? null;
 
         if (!$marker) {
-            if ($locationId = (int)$location->get('id')) {
-                $db    = $this->getDbo();
+            if ($locationId = ($location->id ?? null)) {
+                $db    = $this->getDatabase();
                 $query = $db->getQuery(true)
                     ->select('a.marker')
                     ->from('#__focalpoint_locationtypes AS a')
@@ -193,9 +193,12 @@ class FocalpointModelLocation extends FocalpointModelSite
         return $marker;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getTable($type = 'Location', $prefix = 'FocalpointTable', $config = [])
     {
-        $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+        static::addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 
         return Table::getInstance($type, $prefix, $config);
     }

@@ -23,30 +23,30 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Alledia\Framework\Factory;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 defined('_JEXEC') or die();
 
-if (defined('SLOC_LOADED') == false) {
-    $include = JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php';
-    if (is_file($include)) {
-        include $include;
-    }
+if ((include JPATH_ADMINISTRATOR . '/components/com_focalpoint/include.php') == false) {
+    return;
 }
+// phpcs:enable PSR1.Files.SideEffects.FoundWithSymbols
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 class FocalpointModelMap extends FocalpointModelSite
 {
     /**
-     * @var object
+     * @var ?object
      */
-    protected $item = null;
+    protected ?object $item = null;
 
     /**
      * @inheritDoc
@@ -57,7 +57,7 @@ class FocalpointModelMap extends FocalpointModelSite
         /** @var SiteApplication $app */
         $app = Factory::getApplication();
 
-        $id = $app->input->getInt('id') ?: $app->getParams()->get('item_id');
+        $id = Factory::getInput()->getInt('id') ?: $app->getParams()->get('item_id');
         $this->setState('map.id', $id);
 
         $menu = $app->getMenu()->getActive();
@@ -65,24 +65,25 @@ class FocalpointModelMap extends FocalpointModelSite
     }
 
     /**
-     * @param int $id
+     * @param ?int $id
      *
      * @return object
      * @throws Exception
      */
-    public function getData($id = null)
+    public function getData(?int $id = null): object
     {
         if ($this->item === null) {
-            $this->item = false;
+            $this->item = (object)[];
 
             $id = $id ?: $this->getState('map.id');
             if ($id) {
+                /** @var Table $table */
                 $table = $this->getTable();
                 if ($table->load($id)) {
                     // Check published state.
                     $published = $this->getState('filter.published');
                     if (!$published || ($published == $table->state)) {
-                        $this->item = new CMSObject($table->getProperties());
+                        $this->item = ArrayHelper::toObject($table->getProperties());
 
                         $this->item->tabsdata = json_decode((string)$this->item->tabsdata) ?: new stdClass();
                         $this->item->metadata = new Registry($this->item->metadata);
@@ -143,7 +144,7 @@ class FocalpointModelMap extends FocalpointModelSite
         $app    = Factory::getApplication();
         $params = $app->getParams('com_focalpoint');
 
-        $db = $this->getDbo();
+        $db = $this->getDatabase();
 
         $query = $db->getQuery(true)
             ->select([
@@ -171,7 +172,7 @@ class FocalpointModelMap extends FocalpointModelSite
                 'a.altlink',
                 'a.maplinkid',
                 'a.menulink',
-                'a.params'
+                'a.params',
             ])
             ->from('#__focalpoint_locations AS a')
             ->innerJoin('#__focalpoint_locationtypes AS e on e.id = a.type')
@@ -182,7 +183,7 @@ class FocalpointModelMap extends FocalpointModelSite
                 'a.map_id = ' . (int)$item->id,
                 'a.state = 1',
                 'b.state = 1',
-                'c.state = 1'
+                'c.state = 1',
             ]);
 
         $order     = $item->params->get('locationorder', 'ordering');
@@ -191,7 +192,7 @@ class FocalpointModelMap extends FocalpointModelSite
             $query->order([
                 "c.{$order} {$direction}",
                 "b.{$order} {$direction}",
-                "a.{$order} {$direction}"
+                "a.{$order} {$direction}",
             ]);
 
         } else {
@@ -234,7 +235,7 @@ class FocalpointModelMap extends FocalpointModelSite
             $linkQuery = [
                 'option' => 'com_focalpoint',
                 'view'   => 'location',
-                'id'     => $location->id
+                'id'     => $location->id,
             ];
 
             $location->link = null;
@@ -248,7 +249,7 @@ class FocalpointModelMap extends FocalpointModelSite
                     // URL
                     if ($location->altlink) {
                         $location->link = $location->altlink;
-                        $linkQuery    = null;
+                        $linkQuery      = null;
 
                     } elseif ($menuId = $this->getState('menu.id')) {
                         $linkQuery['Itemid'] = $menuId;
@@ -274,7 +275,7 @@ class FocalpointModelMap extends FocalpointModelSite
                         if ($targetMenu = $app->getMenu()->getItem($location->menulink)) {
                             $linkQuery = [
                                 'option' => $targetMenu->query['option'],
-                                'Itemid' => $targetMenu->id
+                                'Itemid' => $targetMenu->id,
                             ];
                         }
                     }
