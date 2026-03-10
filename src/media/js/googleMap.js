@@ -20,7 +20,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-;jQuery(function($) {
+(function($) {
     $.sloc = $.extend(true, {map: {}}, $.sloc);
 
     $.sloc.map.google = function() {
@@ -812,4 +812,4 @@
             getManager: getManager
         };
     };
-});
+})(jQuery);

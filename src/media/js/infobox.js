@@ -133,8 +133,7 @@ let InfoBox = function(options) {
     ];
 }
 
-/* InfoBox extends OverlayView in the Google Maps API v3.
- */
+/* InfoBox extends OverlayView in the Google Maps API v3. */
 InfoBox.prototype = new google.maps.OverlayView();
 
 /**

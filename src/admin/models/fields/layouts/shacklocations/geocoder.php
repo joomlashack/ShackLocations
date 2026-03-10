@@ -23,6 +23,7 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Joomla\CMS\Form\Field\TextField;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\FileLayout;
@@ -63,8 +64,8 @@ defined('_JEXEC') or die();
  * @var bool                            $spellcheck
  * @var string                          $validate
  * @var string                          $value
- * @var JFormFieldText                  $latitude
- * @var JFormFieldText                  $longitude
+ * @var TextField                       $latitude
+ * @var TextField                       $longitude
  */
 extract($displayData);
 
@@ -146,11 +147,11 @@ echo HTMLHelper::_(
         'height'     => '400px',
         'modalWidth' => '80',
         'footer'     => HTMLHelper::_(
-                'alledia.modal.footerSaveButton',
-                ['id' => $saveId],
-                Text::_('COM_FOCALPOINT_GEOCODER_SAVE')
-            )
-            . HTMLHelper::_('alledia.modal.footerCloseButton'),
+            'alledia.modal.footerSaveButton',
+            ['id' => $saveId],
+            Text::_('COM_FOCALPOINT_GEOCODER_SAVE')
+        )
+        . HTMLHelper::_('alledia.modal.footerCloseButton'),
     ],
     $modalBody
 );
