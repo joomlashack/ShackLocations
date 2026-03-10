@@ -36,6 +36,11 @@ defined('_JEXEC') or die();
 abstract class JhtmlSlocGoogle
 {
     /**
+     * @var bool
+     */
+    protected static bool $apiLoaded = false;
+
+    /**
      * @param int|string      $id
      * @param mixed           $params
      * @param mixed           $center
@@ -117,26 +122,54 @@ abstract class JhtmlSlocGoogle
             ],
         ]);
 
+        if (static::$apiLoaded == false) {
+            $googleVars = [
+                'key'      => $apiKey,
+                'loading'  => 'async',
+                'callback' => 'initGoogle',
+            ];
+            HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?' . http_build_query($googleVars));
 
-        $googleVars = [
-            'key'      => $apiKey,
-            'callback' => 'Function.prototype',
-        ];
-        HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?' . http_build_query($googleVars));
+            HTMLHelper::_('jquery.framework');
+            HTMLHelper::_('script', 'com_focalpoint/sloc.min.js', ['relative' => true]);
+            HTMLHelper::_('script', 'com_focalpoint/googleMap.min.js', ['relative' => true]);
 
-        $init = <<<JSCRIPT
-jQuery(document).ready(function ($) {
-    let map = new $.sloc.map.google();
-    map.init({$options});
-    $.sloc.map.register('{$id}', map); 
-});
+            $scripts = json_encode(
+                [
+                    HTMLHelper::_('script', 'com_focalpoint/infobox.min.js', ['relative' => true, 'pathOnly' => true]),
+                ]
+            );
+
+            $init = <<<JSCRIPT
+async function initGoogle() {
+    await google.maps.importLibrary('maps');
+    await google.maps.importLibrary('marker');
+    
+    Promise.all({$scripts}.map(script => jQuery.sloc.loadScript(script)))
+    .catch(err => {
+        console.error(err);
+    });
+}
+async function initMap(id, options) {
+    setTimeout(function() {
+        if (!!google.maps) {
+            let map = new jQuery.sloc.map.google();
+            map.init(options);
+            jQuery.sloc.map.register(id, map);
+
+        } else {
+            initMap(id, options);
+        }
+    },
+    500);
+}
 JSCRIPT;
-        $app->getDocument()->addScriptDeclaration($init);
+            $app->getDocument()->addScriptDeclaration($init);
 
-        HTMLHelper::_('jquery.framework');
-        HTMLHelper::_('script', 'com_focalpoint/infobox.min.js', ['relative' => true]);
-        HTMLHelper::_('script', 'com_focalpoint/sloc.min.js', ['relative' => true]);
-        HTMLHelper::_('script', 'com_focalpoint/googleMap.min.js', ['relative' => true]);
+            static::$apiLoaded = true;
+        }
+
+        $app->getDocument()->addScriptDeclaration("initMap('{$id}', {$options});");
     }
 
     /**

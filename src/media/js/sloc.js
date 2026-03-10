@@ -24,6 +24,23 @@
 
     $.extend(true, $.sloc, {
         /**
+         * @param {String} uri
+         *
+         * @returns {Promise}
+         */
+        loadScript: function(uri) {
+            return new Promise((resolve, reject) => {
+                let tag       = document.createElement('script');
+                tag.src       = uri;
+                tag.async     = true;
+                tag.onload    = resolve; // Resolve on successful load
+                tag.onerror   = reject; // Reject on error
+                let scriptTag = document.getElementsByTagName('script')[0];
+                scriptTag.parentNode.insertBefore(tag, scriptTag);
+            });
+        },
+
+        /**
          * @param {string}              string
          * @param {...string|string[]}  replacements
          *
