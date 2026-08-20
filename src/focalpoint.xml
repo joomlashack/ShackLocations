@@ -4,11 +4,11 @@
     <author>Joomlashack</author>
     <authorEmail>help@joomlashack.com</authorEmail>
     <authorUrl>https://www.joomlashack.com/</authorUrl>
-    <copyright>Copyright 2018-2024 Joomlashack. All rights reserved</copyright>
+    <copyright>Copyright 2018-2026 Joomlashack. All rights reserved</copyright>
     <license>GNU GPL; see LICENSE file</license>
     <description>COM_FOCALPOINT_DESCRIPTION</description>
-    <version>2.2.1</version>
-    <creationDate>April 23 2026</creationDate>
+    <version>2.2.2</version>
+    <creationDate>August 19 2026</creationDate>
     <variant>FREE</variant>
 
     <install>
