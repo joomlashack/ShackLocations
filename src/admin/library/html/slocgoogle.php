@@ -152,7 +152,7 @@ async function initGoogle() {
 }
 async function initMap(id, options) {
     setTimeout(function() {
-        if (!!google.maps) {
+        if (typeof google !== 'undefined' && !!google.maps && typeof InfoBox !== 'undefined') {
             let map = new jQuery.sloc.map.google();
             map.init(options);
             jQuery.sloc.map.register(id, map);
