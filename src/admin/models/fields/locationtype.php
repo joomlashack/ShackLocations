@@ -203,11 +203,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
             options.forEach(function(option) {
                 option.choices.forEach(function(choice) {
-                    choice.disabled = primaryValue === choice.value
+                    choice.disabled = primaryValue === choice.value;
                 });
             });
 
-            choices.setChoices(options, 'value', 'label', true);
+            if (choices.setChoices.length >= 6) {
+                let selectedValues = choices.getValue(true) || [];
+
+                options.forEach(function(option) {
+                    option.choices.forEach(function(choice) {
+                        choice.selected = selectedValues.indexOf(choice.value) !== -1;
+                    });
+                });
+
+                choices.setChoices(options, 'value', 'label', true, false, true);
+
+            } else {
+                choices.setChoices(options, 'value', 'label', true);
+            }
             choices.removeActiveItemsByValue(primaryValue);
         });
 
