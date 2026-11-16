@@ -124,9 +124,8 @@ abstract class JhtmlSlocGoogle
 
         if (static::$apiLoaded == false) {
             $googleVars = [
-                'key'      => $apiKey,
-                'loading'  => 'async',
-                'callback' => 'initGoogle',
+                'key'     => $apiKey,
+                'loading' => 'async',
             ];
             HTMLHelper::_('script', '//maps.googleapis.com/maps/api/js?' . http_build_query($googleVars));
 
@@ -141,24 +140,42 @@ abstract class JhtmlSlocGoogle
             );
 
             $init = <<<JSCRIPT
-async function initGoogle() {
-    await google.maps.importLibrary('maps');
-    await google.maps.importLibrary('marker');
-    
-    Promise.all({$scripts}.map(script => jQuery.sloc.loadScript(script)))
-    .catch(err => {
-        console.error(err);
-    });
-}
-async function initMap(id, options) {
-    setTimeout(function() {
-        if (typeof google !== 'undefined' && !!google.maps && typeof InfoBox !== 'undefined') {
-            let map = new jQuery.sloc.map.google();
-            map.init(options);
-            jQuery.sloc.map.register(id, map);
+let googleReadyPromise = null;
 
+function initGoogle() {
+    if (googleReadyPromise === null) {
+        googleReadyPromise = (async function() {
+            await google.maps.importLibrary('maps');
+            await google.maps.importLibrary('marker');
+            await Promise.all({$scripts}.map(script => jQuery.sloc.loadScript(script)));
+        })().catch(error => {
+            // Allow a subsequent map initialisation to retry after a failed load.
+            googleReadyPromise = null;
+            throw error;
+        });
+    }
+
+    return googleReadyPromise;
+}
+
+async function initMap(id, options, startedAt = Date.now()) {
+    setTimeout(async function() {
+        if (typeof google !== 'undefined' && !!google.maps && typeof google.maps.importLibrary === 'function') {
+            try {
+                await initGoogle();
+
+                let map = new jQuery.sloc.map.google();
+                map.init(options);
+                jQuery.sloc.map.register(id, map);
+
+            } catch (err) {
+                console.error(err);
+            }
+
+        } else if (Date.now() - startedAt < 30000) {
+            initMap(id, options, startedAt);
         } else {
-            initMap(id, options);
+            console.error('Shack Locations: Google Maps API did not become available within 30 seconds.');
         }
     },
     500);
