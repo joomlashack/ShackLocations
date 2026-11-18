@@ -200,7 +200,7 @@ The component fires these events:
 | `onSlocmapBeforeLoad`     | Admin map edit view                 | `&$item`                      | Adjust the map before the edit form renders |
 | `onSlocmapTabs`           | Admin map edit template             | `$form`                       | Return the name of a form fieldset to show as an extra tab in the map editor. The tab label comes from the fieldset's `label` |
 | `onSlocmapBeforeSave`     | `FocalpointModelMap::save()`        | `&$data`                      | Modify the submitted map data before saving |
-| `onSlocmapAfterSave`      | `FocalpointControllerMap::postSaveHook()` | The validated data array, passed as the argument list itself (not wrapped in an array) | React after a map is saved |
+| `onSlocmapAfterSave`      | `FocalpointControllerMap::postSaveHook()` | `$validData` (the validated form data) | React after a map is saved |
 | `onSlocmapPrepareRender`  | Site map and location views         | `&$item`                      | Change the item before params are merged and content plugins run |
 | `onSlocmapBeforeRender`   | Site map view                       | `&$item`                      | Last chance to change the map before the templates render |
 | `onSlocmapAfterRender`    | Site map view                       | `&$item`                      | Runs after the templates have rendered |
