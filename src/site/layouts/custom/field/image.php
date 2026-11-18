@@ -42,7 +42,7 @@ $value     = empty($displayData['data']) ? null : $displayData['data'];
 if ($value) :
     $value = HTMLHelper::_('image', $value, $label, 'class="fp_customfield fp_image"');
 
-    echo '<p class="fp_customfield fp_textbox">';
+    echo '<p class="fp_customfield fp_image">';
     if ($showLabel && $label) :
         echo sprintf('<span class="fp_label">%s: </span>', $label);
     endif;

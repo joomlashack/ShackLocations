@@ -226,6 +226,11 @@ class ViewTest extends TestCase
         $shown  = $this->invoke($this->getView(), 'renderField', [$field]);
         $hidden = $this->invoke($this->getView(), 'renderField', [$field, true]);
 
+        $this->assertMatchesRegularExpression(
+            '#^<(p|div) class="fp_customfield fp_' . $type . '">#',
+            trim($shown),
+            'Each type is wrapped in its own class'
+        );
         $this->assertStringContainsString('<span class="fp_label">The label: </span>', $shown);
         $this->assertStringNotContainsString('fp_label', $hidden);
         $this->assertNotSame('', trim($hidden), 'The value is still shown');
