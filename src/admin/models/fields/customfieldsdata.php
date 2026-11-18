@@ -185,8 +185,8 @@ class ShacklocationsFormFieldCustomfieldsdata extends FormField
         $attributes = [
             'name'        => $name,
             'type'        => $type,
-            'label'       => addslashes(htmlspecialchars($label)),
-            'description' => addslashes(htmlspecialchars($description)),
+            'label'       => addslashes(htmlspecialchars($label, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401)),
+            'description' => addslashes(htmlspecialchars($description, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401)),
         ];
         if (empty($options['attributes']) == false) {
             $attributes = array_merge($attributes, $options['attributes']);

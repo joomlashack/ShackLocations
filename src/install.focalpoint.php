@@ -98,8 +98,14 @@ class com_focalpointInstallerScript extends AbstractScript
                 ->from('#__extensions')
                 ->where($db->quoteName('name') . ' = ' . $db->quote('com_focalpoint'));
             if ($config = $db->setQuery($query)->loadObject()) {
-                $config->params = json_decode($config->params);
-                if (property_exists($config->params, 'scrollwheel') || property_exists($config->params, 'draggable')) {
+                $config->params = json_decode((string)$config->params);
+                if (
+                    is_object($config->params)
+                    && (
+                        property_exists($config->params, 'scrollwheel')
+                        || property_exists($config->params, 'draggable')
+                    )
+                ) {
                     // Old parameters exist, convert to new gestureHandling parameter
                     $this->sendDebugMessage('Convert scrollwheel/draggable parameters to gestureHandling');
 
@@ -111,7 +117,11 @@ class com_focalpointInstallerScript extends AbstractScript
                     ];
 
                     $convert = function (string $params, string $default) use ($gestures) {
-                        $params = json_decode($params);
+                        $original = $params;
+                        $params   = json_decode($params);
+                        if (is_object($params) == false) {
+                            return $original;
+                        }
 
                         $scrollwheel = $params->scrollwheel ?? '';
                         if ($scrollwheel && is_numeric($scrollwheel) == false) {
@@ -194,7 +204,7 @@ class com_focalpointInstallerScript extends AbstractScript
         $maps = $db->setQuery($query)->loadObjectList();
         foreach ($maps as $map) {
             $params = json_decode((string)$map->params, true);
-            if (array_intersect($params, ['true', 'false', 'null', 'on', 'off'])) {
+            if (is_array($params) && array_intersect($params, ['true', 'false', 'null', 'on', 'off'])) {
                 foreach ($params as $name => $value) {
                     switch ($value) {
                         case 'true':
@@ -343,7 +353,7 @@ class com_focalpointInstallerScript extends AbstractScript
 
         foreach ($locationTypes as $locationType) {
             $customFields = json_decode((string)$locationType->customfields, true);
-            if (substr_count(key($customFields), '.') == 1) {
+            if (is_array($customFields) && substr_count((string)key($customFields), '.') == 1) {
                 $locationType->customfields = [];
                 foreach ($customFields as $key => $customField) {
                     [$type, $hash] = explode('.', $key);
@@ -416,8 +426,14 @@ class com_focalpointInstallerScript extends AbstractScript
             ]);
 
         $focalpoint = $db->setQuery($query)->loadObject();
+        if ($focalpoint == false) {
+            return;
+        }
 
-        $params = json_decode((string)$focalpoint->params);
+        $params = json_decode((string)$focalpoint->params) ?: (object)[];
+        if (is_object($params) == false) {
+            return;
+        }
         $update = clone $params;
 
         /**
