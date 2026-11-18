@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Shack Locations (Free) is a Joomla component for map-based location directories. It is a fork of John Pitchers' FocalPoint, so internally everything is still named `focalpoint`: the element is `com_focalpoint`, classes are prefixed `Focalpoint*`, language keys are `COM_FOCALPOINT_*`, and DB tables are `#__focalpoint_*`. "SLOC"/"Sloc" is the newer shorthand (`SLOC_*` constants, `JHtmlSloc*`, `jQuery.sloc`, `onSlocmap*` events). Requires PHP 7.4+. Supports Joomla 3.9 and later; recent work targets Joomla 4–6.
 
+For more detail (JSON column formats, plugin event signatures, how to add a custom field type), see `docs/DEVELOPMENT.md`.
+
 ## Build
 
 There is no test suite, linter config, or composer install step in this repo. Packages are built with Phing using the external **ShackBuilder** tool:
