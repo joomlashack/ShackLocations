@@ -122,7 +122,8 @@ class ShacklocationsFormFieldCustomfields extends FormField
         foreach ($this->fieldTypes as $fieldType) {
             $newButtons[] = '<li>'
                 . sprintf(
-                    '<button class="btn btn-small button-apply btn-success pull-left sl-customfield-new" data-type="%s">',
+                    '<button class="btn btn-small button-apply btn-success pull-left sl-customfield-new"'
+                    . ' data-type="%s">',
                     $fieldType
                 )
                 . sprintf(
