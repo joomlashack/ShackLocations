@@ -55,11 +55,12 @@ class FocalpointView extends HtmlView
 
         $this->app = Factory::getApplication();
 
+        // A copy, as views merge item params into it and Joomla shares the original
         if (method_exists($this->app, 'getParams')) {
-            $this->params = $this->app->getParams('com_focalpoint');
+            $this->params = clone $this->app->getParams('com_focalpoint');
 
         } else {
-            $this->params = ComponentHelper::getParams('com_focalpoint');
+            $this->params = clone ComponentHelper::getParams('com_focalpoint');
         }
     }
 

@@ -132,8 +132,7 @@ class TablesTest extends TestCase
         $table->bind(['title' => 'Cafe']);
         $table->customfields = 'not json';
 
-        $table->check();
-
+        $this->assertFalse($table->check(), 'Invalid custom fields are not saved');
         $this->assertSame(Text::_('COM_FOCALPOINT_ERROR_CUSTOMFIELDS_INVALID'), $table->getError());
     }
 

@@ -34,14 +34,16 @@ defined('_JEXEC') or die();
  * @var string     $path
  */
 
-$showLabel = empty($displayData['showlabel']) ? true : $displayData['showlabel'];
+$showLabel = (bool)($displayData['showlabel'] ?? true);
 $label     = empty($displayData['label']) ? null : $displayData['label'];
 $value     = empty($displayData['data']) ? null : $displayData['data'];
 
 if ($value) :
+    // A div, as editor content brings its own paragraphs
+    echo '<div class="fp_customfield fp_textarea">';
     if ($showLabel && $label) :
         echo sprintf('<span class="fp_label">%s: </span>', $label);
     endif;
     echo $value;
-    echo '</p>';
+    echo '</div>';
 endif;

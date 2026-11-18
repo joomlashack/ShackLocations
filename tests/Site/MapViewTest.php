@@ -26,6 +26,7 @@ namespace Tests\Site;
 
 use FocalpointModelMap;
 use FocalpointViewMap;
+use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 use Tests\Support\TestCase;
 
@@ -242,6 +243,31 @@ class MapViewTest extends TestCase
 
         $this->assertStringContainsString('9 to 5', $item->markerdata[0]->description);
         $this->assertStringNotContainsString('{hours}', $item->markerdata[0]->description);
+    }
+
+    public function testMissingMapIsNotFound()
+    {
+        $view = $this->getView((object)[]);
+
+        try {
+            $view->display();
+            $this->fail('No exception');
+
+        } catch (\Exception $error) {
+            $this->assertSame(404, $error->getCode());
+            $this->assertSame(Text::_('JGLOBAL_RESOURCE_NOT_FOUND'), $error->getMessage());
+        }
+    }
+
+    public function testMapParamsDontChangeApplicationParams()
+    {
+        $this->app->getParams()->set('zoom', '6');
+
+        ob_start();
+        $this->getView($this->mapItem())->display();
+        ob_get_clean();
+
+        $this->assertSame('6', $this->app->getParams()->get('zoom'));
     }
 
     public function testModelErrorsStopDisplay()

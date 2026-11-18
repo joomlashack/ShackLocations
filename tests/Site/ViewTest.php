@@ -24,6 +24,7 @@
 
 namespace Tests\Site;
 
+use Codeception\Attribute\DataProvider;
 use FocalpointViewMap;
 use Joomla\Registry\Registry;
 use Tests\Support\TestCase;
@@ -186,6 +187,71 @@ class ViewTest extends TestCase
             '<p class="fp_customfield fp_textbox"><span class="fp_label">Hours: </span>7am - 3pm</p>',
             trim($html)
         );
+    }
+
+    public function testRenderFieldCanHideTheLabel()
+    {
+        $html = $this->invoke($this->getView(), 'renderField', [
+            (object)['datatype' => 'textbox', 'label' => 'Hours', 'data' => '7am - 3pm'],
+            true,
+        ]);
+
+        $this->assertSame('<p class="fp_customfield fp_textbox">7am - 3pm</p>', trim($html));
+    }
+
+    public static function fieldTypeProvider(): array
+    {
+        return [
+            'textbox'     => ['textbox', 'Some text'],
+            'textarea'    => ['textarea', '<p>Some text</p>'],
+            'selectlist'  => ['selectlist', 'Option'],
+            'multiselect' => ['multiselect', ['One', 'Two']],
+            'link'        => ['link', ['url' => 'https://example.com']],
+            'email'       => ['email', ['email' => 'info@example.com']],
+            'image'       => ['image', 'images/photo.jpg'],
+        ];
+    }
+
+    /**
+     * @param string $type
+     * @param mixed  $data
+     *
+     * @return void
+     */
+    #[DataProvider('fieldTypeProvider')]
+    public function testEveryFieldTypeShowsOrHidesItsLabel(string $type, $data)
+    {
+        $field = (object)['datatype' => $type, 'label' => 'The label', 'data' => $data];
+
+        $shown  = $this->invoke($this->getView(), 'renderField', [$field]);
+        $hidden = $this->invoke($this->getView(), 'renderField', [$field, true]);
+
+        $this->assertStringContainsString('<span class="fp_label">The label: </span>', $shown);
+        $this->assertStringNotContainsString('fp_label', $hidden);
+        $this->assertNotSame('', trim($hidden), 'The value is still shown');
+    }
+
+    public function testTextareaIsWrappedInADiv()
+    {
+        $html = $this->invoke($this->getView(), 'renderField', [
+            (object)['datatype' => 'textarea', 'label' => 'Notes', 'data' => '<p>First</p><p>Second</p>'],
+        ]);
+
+        $this->assertSame(
+            '<div class="fp_customfield fp_textarea"><span class="fp_label">Notes: </span>'
+            . '<p>First</p><p>Second</p></div>',
+            trim($html)
+        );
+    }
+
+    public function testViewParamsAreACopy()
+    {
+        $view = $this->getView(['zoom' => '6']);
+
+        $params = new \ReflectionProperty($view, 'params');
+        $params->getValue($view)->set('zoom', '16');
+
+        $this->assertSame('6', $this->app->getParams('com_focalpoint')->get('zoom'));
     }
 
     public function testRenderFieldWithoutTypeIsEmpty()

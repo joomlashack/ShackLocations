@@ -345,4 +345,15 @@ class HtmlSlocGoogleTest extends TestCase
         $this->assertStringNotContainsString('src="images/photo.jpg"', $content);
         $this->assertMatchesRegularExpression('#src="[^"]*/images/photo\.jpg"#', $content);
     }
+
+    public function testMissingInfoboxImagesAreLeftAlone()
+    {
+        HTMLHelper::_('slocgoogle.map', 'fp_1', ['apikey' => 'KEY123'], null, [
+            $this->marker(['description' => '<img src="images/missing.jpg" alt="Gone">'], ['infoshowintro' => 1]),
+        ]);
+
+        $content = $this->mapOptions('fp_1')['markerData'][0]['infoBox']['content'];
+
+        $this->assertStringContainsString('src="images/missing.jpg"', $content);
+    }
 }

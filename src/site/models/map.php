@@ -96,7 +96,7 @@ class FocalpointModelMap extends FocalpointModelSite
                         $this->item->tabsdata->tabs = $mapTabs;
 
                         // Load the item params merged from component config
-                        $params = ComponentHelper::getParams('com_focalpoint');
+                        $params = clone ComponentHelper::getParams('com_focalpoint');
                         $params->merge(new Registry($this->item->params));
                         $this->item->params = $params;
 
@@ -224,10 +224,10 @@ class FocalpointModelMap extends FocalpointModelSite
             } else {
                 $location->marker = $params->get('marker');
             }
-            $location->marker = explode('#', $location->marker);
-            $location->marker = array_shift($location->marker);
 
-            $location->marker = Uri::base() . $location->marker;
+            // Strip the media field's #joomlaImage suffix. No marker means Google's default
+            $location->marker = explode('#', (string)$location->marker)[0];
+            $location->marker = $location->marker ? Uri::base() . $location->marker : null;
             unset($location->marker_location, $location->marker_type);
 
             // Create link.

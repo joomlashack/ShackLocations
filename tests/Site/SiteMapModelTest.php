@@ -25,6 +25,7 @@
 namespace Tests\Site;
 
 use FocalpointModelMap;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 use Tests\Support\Fixtures\TestMenu;
@@ -44,7 +45,6 @@ class SiteMapModelTest extends TestCase
         require_once SLOC_SITE . '/models/map.php';
         \Joomla\CMS\Table\Table::addIncludePath(SLOC_ADMIN . '/tables');
 
-        // Sites always have a default marker; without one the model passes null to explode()
         $this->app->getParams('com_focalpoint')->set('marker', 'images/markers/default.png');
     }
 
@@ -196,6 +196,16 @@ class SiteMapModelTest extends TestCase
         $this->assertSame([], $item->markerdata);
     }
 
+    public function testMapParamsDontChangeGlobalOptions()
+    {
+        $this->createMap();
+        $this->setComponentParams(['zoom' => '6']);
+
+        $this->getModel()->getData($this->ids['map']);
+
+        $this->assertSame('6', ComponentHelper::getParams('com_focalpoint')->get('zoom'));
+    }
+
     public function testMapWithoutTabsGetsEmptyTabList()
     {
         $this->createMap(['tabsdata' => '']);
@@ -326,6 +336,17 @@ class SiteMapModelTest extends TestCase
             'Media field suffix after # is stripped'
         );
         $this->assertSame('http://www.example.com/images/markers/default.png', $byAlias['plain']);
+    }
+
+    public function testNoMarkerAnywhereUsesGoogleDefault()
+    {
+        $this->createMap();
+        $this->app->getParams('com_focalpoint')->set('marker', '');
+        $this->createLocation('plain', $this->ids['bar']);
+
+        $marker = $this->getModel()->getData($this->ids['map'])->markerdata[0];
+
+        $this->assertNull($marker->marker);
     }
 
     public function testLinkTypes()

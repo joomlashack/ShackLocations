@@ -25,6 +25,7 @@
 namespace Tests\Site;
 
 use FocalpointModelLocation;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Registry\Registry;
 use Tests\Support\TestCase;
 
@@ -126,6 +127,25 @@ class SiteLocationModelTest extends TestCase
         $this->assertSame('Espresso Bar', $this->getModel()->getData()->title);
     }
 
+    public function testMissingLocationIsNull()
+    {
+        $model = $this->getModel();
+
+        $this->assertNull($model->getData(999));
+        $this->assertNull($model->getData(999), 'Still null on the next call');
+        $this->assertSame([], $model->getErrors());
+    }
+
+    public function testLocationParamsDontChangeGlobalOptions()
+    {
+        $this->setComponentParams(['zoom' => '6']);
+        $id = $this->createLocation(['params' => json_encode(['zoom' => '16'])]);
+
+        $this->getModel()->getData($id);
+
+        $this->assertSame('6', ComponentHelper::getParams('com_focalpoint')->get('zoom'));
+    }
+
     public function testPublishedFilterHidesUnpublishedLocation()
     {
         $id    = $this->createLocation(['state' => 0]);
@@ -133,6 +153,7 @@ class SiteLocationModelTest extends TestCase
         $model->setState('filter.published', 1);
 
         $this->assertNull($model->getData($id));
+        $this->assertNull($model->getData($id), 'Still null on the next call');
     }
 
     public function testOwnMarkerIsUsed()

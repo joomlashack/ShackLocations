@@ -34,7 +34,7 @@ defined('_JEXEC') or die();
  * @var string     $path
  */
 
-$showLabel = empty($displayData['showlabel']) ? true : $displayData['showlabel'];
+$showLabel = (bool)($displayData['showlabel'] ?? true);
 $label     = empty($displayData['label']) ? null : $displayData['label'];
 $value     = empty($displayData['data']) ? null : $displayData['data'];
 

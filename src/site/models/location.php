@@ -45,7 +45,12 @@ class FocalpointModelLocation extends FocalpointModelSite
     /**
      * @var ?object
      */
-    protected ?object $item;
+    protected ?object $item = null;
+
+    /**
+     * @var bool
+     */
+    protected bool $itemLoaded = false;
 
     /**
      * @return void
@@ -63,25 +68,21 @@ class FocalpointModelLocation extends FocalpointModelSite
     /**
      * @param ?int $id
      *
-     * @return object
+     * @return ?object null when the location doesn't exist or isn't published
      * @throws Exception
      */
-    public function getData(?int $id = null)
+    public function getData(?int $id = null): ?object
     {
-        if (isset($this->item) == false) {
-            $this->item = (object)[];
+        if ($this->itemLoaded == false) {
+            $this->itemLoaded = true;
+            $this->item       = null;
 
             $id = $id ?: $this->getState('location.id');
 
             /** @var FocalpointTablelocation $table */
-            $table = $this->getTable();
-            if ($table->load($id)) {
-                if ($published = $this->getState('filter.published')) {
-                    if ($table->state != $published) {
-                        return null;
-                    }
-                }
-
+            $table     = $this->getTable();
+            $published = $this->getState('filter.published');
+            if ($table->load($id) && (!$published || $table->state == $published)) {
                 $properties = $table->getProperties(1);
                 $this->item = ArrayHelper::toObject($properties);
 
@@ -91,7 +92,7 @@ class FocalpointModelLocation extends FocalpointModelSite
                 $this->item->backlink = $this->getBackLink($this->item->map_id);
                 $this->item->metadata = new Registry($this->item->metadata);
 
-                $params = ComponentHelper::getParams('com_focalpoint');
+                $params = clone ComponentHelper::getParams('com_focalpoint');
                 $params->merge(new Registry($this->item->params));
                 $this->item->params = $params;
 
@@ -100,7 +101,7 @@ class FocalpointModelLocation extends FocalpointModelSite
             }
         }
 
-        return $this->item ?: null;
+        return $this->item;
     }
 
     /**
