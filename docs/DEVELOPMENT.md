@@ -243,9 +243,78 @@ The extension supports Joomla 3 alongside Joomla 4 and later:
 - Version-specific PHP branches on `Joomla\CMS\Version::MAJOR_VERSION`.
 - Prefer the framework's `Alledia\Framework\Factory` where surrounding code uses it. It smooths over API differences between Joomla versions.
 
+## Testing
+
+### Requirements
+
+- PHP 8.3 or later (Joomla 6 needs it), with `mysqli`
+- Composer
+- Node 22 or later, for the JavaScript tests (no npm packages are used)
+- A MySQL server. The suite drops and recreates its own database, `shacklocations_test` by default, so never point it at a real site's database.
+- Local checkouts of Joomla and the Joomlashack build repos. The defaults are the paths PhpStorm uses for external libraries:
+
+| Variable                  | Default                                    | Used for                                   |
+|---------------------------|--------------------------------------------|--------------------------------------------|
+| `JOOMLA_PATH`             | `../../../../Common/Joomla.6`              | A Joomla 4, 5 or 6 site, including `media` |
+| `SHACK_FRAMEWORK_PATH`    | `../../Builders/AllediaFramework`          | The Joomlashack framework                  |
+| `SHACK_INSTALLER_PATH`    | `../../Builders/ShackInstaller`            | The installer script's base class          |
+| `SHACK_DEFAULTFILES_PATH` | `../../Builders/ShackDefaultFiles`         | Files the build adds, for the manifest check |
+| `SLOC_TEST_DB_HOST`       | `localhost`                                | MySQL host                                 |
+| `SLOC_TEST_DB_USER`       | `root`                                     | MySQL user                                 |
+| `SLOC_TEST_DB_PASSWORD`   | (empty)                                    | MySQL password                             |
+| `SLOC_TEST_DB_NAME`       | `shacklocations_test`                      | Database to drop and recreate              |
+
+Paths are relative to the repository root.
+
+### Commands
+
+| Command                   | What it does                                                   |
+|---------------------------|----------------------------------------------------------------|
+| `composer test`           | All tests: Admin, Site and JavaScript                          |
+| `composer test:admin`     | The Admin suite                                                |
+| `composer test:site`      | The Site suite                                                 |
+| `composer test:js`        | The JavaScript tests (`node --test 'tests/js/*.test.mjs'`)     |
+| `composer lint`           | PSR-12 over `src` and `tests`, per `phpcs.xml.dist`            |
+| `composer lint:fix`       | Fixes what phpcbf can                                          |
+| `composer lint:compat`    | PHPCompatibility over `src` for PHP 7.4 and later              |
+| `composer check:manifest` | Compares the manifest's file lists with `src`                  |
+| `composer check`          | All of the above                                               |
+
+The test tools live in `tests/composer.json` with their own `tests/vendor`. The scripts install them on first use. To run a single test:
+
+```
+php tests/vendor/codeception/codeception/codecept run Site SiteMapModelTest:testLinkTypes
+```
+
+To test against another Joomla version, set `JOOMLA_PATH`:
+
+```
+JOOMLA_PATH=~/Documents/Common/joomla.5 composer test
+```
+
+### How the suite works
+
+- **Two suites, two processes.** The admin and site sides define classes with the same name, such as `FocalpointModelLocation` and `FocalpointModellocation`, and PHP class names are case-insensitive. Joomla never loads both in one request, and the tests can't either. So `tests/Admin` and `tests/Site` are separate Codeception suites, which `composer test` runs one after the other. Running `codecept run` without a suite name stops with an error.
+- **Real Joomla, minimal site.** `tests/bootstrap.php` builds a site root in `tests/_output/site`. It symlinks the Joomla checkout's `libraries`, `layouts`, `language` and `media` there, together with the component's `src/site`, `src/admin` and `src/media`. It then defines the `JPATH_*` constants and autoloads Joomla's namespaces.
+- **Per-test environment.** `tests/Support/TestCase.php` gives each test:
+  - a `TestApplication`: a real `CMSApplication` with the menu, component params, template and message queue under the test's control
+  - a DI container, an `HtmlDocument` and the en-GB language
+  - a `TestUser` with the permissions the test grants
+  - an in-memory session
+- **Real database.** The test database is built from the real `install.sql`, plus the parts of the core `#__extensions` and `#__menu` tables the component uses. It's built once per run, and each test runs inside a transaction that is rolled back.
+- **Installer script.** `tests/Support/InstallerLoader.php` loads `install.focalpoint.php` against ShackInstaller's real `AbstractScript`, but skips ShackInstaller's `include.php`. That file installs its own error handler, which would hide deprecations.
+- **Deprecations fail tests.** `codeception.yml` turns every PHP error into a test failure, deprecations included, so code that a newer PHP deprecates is caught.
+
+Notes for writing tests:
+
+- Create admin models with `'ignore_request' => true`, as `FormController::getModel()` does. Otherwise `getState()` repopulates state from the request.
+- Give the view its document with `$view->setDocument()`, as the controller does.
+- `HTMLHelper::image()` only resolves files that exist. Create them under `JPATH_SITE . '/images'` when a test needs one.
+- The JavaScript tests run each script in a `vm` context with a small jQuery stand-in. `sloc.js` behavior is tested against both the source and `sloc.min.js`, so a stale minified file fails too.
+
 ## Coding conventions
 
-- Use the PSR-12 style already in the code.
+- Use the PSR-12 style already in the code. `phpcs.xml.dist` allows the blank line the code puts before `} else`.
 - Every PHP file starts with the GPL docblock and both copyright lines (John Pitchers and Joomlashack), then `defined('_JEXEC') or die();`.
 - Files with legacy, non-namespaced classes wrap that header in `phpcs:disable`/`enable` comments for PSR1 side effects and missing namespaces. Copy the pattern from an existing file.
 - Translations: en-GB is the source. fr-FR and nl-NL should get the new keys too.

@@ -45,6 +45,7 @@ After installing, open **Components → Shack Locations**. You'll be asked for y
 
 See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for:
 - building the package from source
+- running the tests (`composer test`)
 - the architecture and data model
 - the plugin events available for extending Shack Locations
 - coding conventions and the release process

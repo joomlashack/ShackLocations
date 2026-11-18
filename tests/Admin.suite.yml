@@ -1,0 +1,8 @@
+# Administrator classes. Run separately from the Site suite: admin and site
+# models/views share class names (PHP class names are case-insensitive).
+actor: UnitTester
+suite_namespace: Tests\Admin
+bootstrap: _bootstrap.php
+modules:
+    enabled:
+        - Asserts

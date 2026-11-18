@@ -8,9 +8,18 @@ Shack Locations (Free) is a Joomla component for map-based location directories.
 
 For more detail (JSON column formats, plugin event signatures, how to add a custom field type), see `docs/DEVELOPMENT.md`.
 
+## Tests and checks
+
+- `composer test` runs everything: `composer test:admin`, `composer test:site` (Codeception) and `composer test:js` (Node's built-in runner, no npm). Run one test with `php tests/vendor/codeception/codeception/codecept run Site SiteMapModelTest:testLinkTypes`.
+- **Admin and Site are separate suites and must run in separate processes**: admin and site models/views/controllers share class names (PHP class names are case-insensitive, e.g. `FocalpointModellocation` vs `FocalpointModelLocation`). Plain `codecept run` with no suite stops with an error. Put a new test in `tests/Admin` or `tests/Site` by which side's classes it loads.
+- Tests run component code against **real Joomla and framework classes** from local checkouts (`JOOMLA_PATH`, default `../../../../Common/Joomla.6`; `SHACK_FRAMEWORK_PATH`; `SHACK_INSTALLER_PATH`; `SHACK_DEFAULTFILES_PATH`, defaults under `../../Builders/`) and a **MySQL** database (`SLOC_TEST_DB_HOST`/`_USER`/`_PASSWORD`/`_NAME`, default `localhost`/`root`/no password/`shacklocations_test`). The database is dropped and rebuilt from `install.sql` each run; every test runs in a transaction that is rolled back.
+- `tests/bootstrap.php` builds a fake site root in `tests/_output/site` (symlinks to the Joomla checkout and to `src/site`, `src/admin`, `src/media`). `tests/Support/TestCase.php` sets up a `TestApplication`, container, document, language, menu, user and session, and seeds `ComponentHelper`/`PluginHelper` statics; use `setComponentParams()`, `$this->app->getParams()`, `insert()`, `invoke()` and `instance()`.
+- Create models the way controllers do: admin models with `'ignore_request' => true`. Codeception fails tests on any PHP deprecation.
+- `composer lint` (PSR-12 via `phpcs.xml.dist`, which allows a blank line before `} else`), `composer lint:compat` (PHP 7.4+), `composer check:manifest`, and `composer check` for all of them plus tests.
+
 ## Build
 
-There is no test suite, linter config, or composer install step in this repo. Packages are built with Phing using the external **ShackBuilder** tool:
+Packages are built with Phing using the external **ShackBuilder** tool:
 
 - Copy `build.dist.properties` to `build.properties` (it's gitignored) and set `builder.path` plus the paths to the sibling repos ShackInstaller, ShackDefaultFiles, ShackFramework and ShackExtensionSupport.
 - Run `phing` from the repo root. The installable zip goes to `packages/` (gitignored).
