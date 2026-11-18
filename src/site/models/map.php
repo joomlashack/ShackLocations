@@ -204,7 +204,6 @@ class FocalpointModelMap extends FocalpointModelSite
         foreach ($locations as $location) {
             // Merge global params with item params so Item params take precedence
             $itemParams = new Registry($location->params);
-            $itemParams->set('mapTypeId', 'TEST');
             $location->params = clone $params;
             $location->params->merge($itemParams);
 
