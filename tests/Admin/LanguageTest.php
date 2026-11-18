@@ -36,11 +36,7 @@ class LanguageTest extends Unit
     /**
      * Keys the code uses that have no string yet. Remove entries as they are added.
      */
-    protected const KNOWN_MISSING = [
-        // Filter field descriptions in admin/models/forms/filter_*.xml
-        'COM_FOCALPOINT_FILTER_LEGEND',
-        'COM_FOCALPOINT_FILTER_LOCATIONTYPES',
-    ];
+    protected const KNOWN_MISSING = [];
 
     /**
      * @return string
