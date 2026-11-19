@@ -215,14 +215,13 @@ class SiteMapModelTest extends TestCase
         $this->assertSame([], $item->tabsdata->tabs);
     }
 
-    public function testPublishedFilterHidesUnpublishedMap()
+    public function testOnlyPublishedMaps()
     {
-        $this->createMap(['state' => 0]);
+        foreach ([0 => 'Unpublished', -2 => 'Trashed', 2 => 'Archived'] as $state => $label) {
+            $this->createMap(['state' => $state]);
 
-        $model = $this->getModel();
-        $model->setState('filter.published', 1);
-
-        $this->assertEquals((object)[], $model->getData($this->ids['map']));
+            $this->assertEquals((object)[], $this->getModel()->getData($this->ids['map']), $label);
+        }
     }
 
     public function testDataIsLoadedOnce()

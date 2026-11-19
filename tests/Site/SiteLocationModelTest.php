@@ -146,14 +146,17 @@ class SiteLocationModelTest extends TestCase
         $this->assertSame('6', ComponentHelper::getParams('com_focalpoint')->get('zoom'));
     }
 
-    public function testPublishedFilterHidesUnpublishedLocation()
+    public function testOnlyPublishedLocations()
     {
-        $id    = $this->createLocation(['state' => 0]);
-        $model = $this->getModel();
-        $model->setState('filter.published', 1);
+        foreach ([0 => 'Unpublished', -2 => 'Trashed', 2 => 'Archived'] as $state => $label) {
+            $id    = $this->createLocation(['state' => $state]);
+            $model = $this->getModel();
 
-        $this->assertNull($model->getData($id));
-        $this->assertNull($model->getData($id), 'Still null on the next call');
+            $this->assertNull($model->getData($id), $label);
+            $this->assertNull($model->getData($id), $label . ': still null on the next call');
+        }
+
+        $this->assertNotNull($this->getModel()->getData($this->createLocation(['state' => 1])));
     }
 
     public function testOwnMarkerIsUsed()

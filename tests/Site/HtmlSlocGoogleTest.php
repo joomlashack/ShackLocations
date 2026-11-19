@@ -64,7 +64,7 @@ class HtmlSlocGoogleTest extends TestCase
     }
 
     /**
-     * The options object passed to initMap() for the given map
+     * The options object passed to jQuery.sloc.google.initMap() for the given map
      *
      * @param string $id
      *
@@ -73,7 +73,8 @@ class HtmlSlocGoogleTest extends TestCase
     protected function mapOptions(string $id): array
     {
         foreach ($this->scriptDeclarations() as $script) {
-            if (preg_match('/^initMap\(\'' . preg_quote($id) . '\', (.*)\);$/s', $script, $match)) {
+            $call = '/^jQuery\.sloc\.google\.initMap\(\'' . preg_quote($id) . '\', (.*)\);$/s';
+            if (preg_match($call, $script, $match)) {
                 return json_decode($match[1], true);
             }
         }
@@ -129,7 +130,7 @@ class HtmlSlocGoogleTest extends TestCase
         $this->assertCount(1, $google);
         $this->assertStringContainsString('key=KEY123', $google[0]);
         $this->assertStringContainsString('loading=async', $google[0]);
-        $this->assertStringContainsString('callback=initGoogle', $google[0]);
+        $this->assertStringNotContainsString('callback=', $google[0], 'Readiness is detected, not called back');
 
         foreach (['sloc.min.js', 'googleMap.min.js'] as $file) {
             $this->assertCount(
@@ -142,20 +143,30 @@ class HtmlSlocGoogleTest extends TestCase
         }
 
         $declarations = $this->scriptDeclarations();
-        $this->assertCount(1, preg_grep('/async function initGoogle\(\)/', $declarations));
-        $this->assertCount(1, preg_grep('/^initMap\(\'fp_1\'/', $declarations));
-        $this->assertCount(1, preg_grep('/^initMap\(\'fp_2\'/', $declarations));
+        $this->assertCount(1, preg_grep('/\$\.sloc\.google = \{/', $declarations));
+        $this->assertCount(1, preg_grep('/^jQuery\.sloc\.google\.initMap\(\'fp_1\'/', $declarations));
+        $this->assertCount(1, preg_grep('/^jQuery\.sloc\.google\.initMap\(\'fp_2\'/', $declarations));
     }
 
-    public function testInfoboxScriptIsLoadedAfterGoogle()
+    public function testInitScriptLoadsLibrariesThenInfobox()
     {
         HTMLHelper::_('slocgoogle.map', 'fp_1', ['apikey' => 'KEY123']);
 
-        $init = implode("\n", preg_grep('/initGoogle/', $this->scriptDeclarations()));
+        $init = implode("\n", preg_grep('/\$\.sloc\.google = \{/', $this->scriptDeclarations()));
 
         $this->assertMatchesRegularExpression('#\[".*?/infobox\.min\.js"\]#', stripslashes($init));
-        $this->assertStringContainsString("importLibrary('maps')", $init);
-        $this->assertStringContainsString("importLibrary('marker')", $init);
+        $this->assertStringContainsString("['maps', 'marker', 'geocoding', 'routes']", $init);
+        $this->assertStringContainsString('importLibrary(library)', $init);
+    }
+
+    public function testInitScriptDefinesNoGlobals()
+    {
+        HTMLHelper::_('slocgoogle.map', 'fp_1', ['apikey' => 'KEY123']);
+
+        $init = implode("\n", preg_grep('/\$\.sloc\.google = \{/', $this->scriptDeclarations()));
+
+        $this->assertStringStartsWith('(function($) {', $init, 'Everything is inside a closure');
+        $this->assertStringEndsWith('})(jQuery);', trim($init));
     }
 
     public function testJavascriptLanguageStringsAreRegistered()
