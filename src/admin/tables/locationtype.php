@@ -77,6 +77,8 @@ class FocalpointTablelocationtype extends FocalpointTable
 
                 } else {
                     $this->setError(Text::_('COM_FOCALPOINT_ERROR_CUSTOMFIELDS_INVALID'));
+
+                    return false;
                 }
             }
 

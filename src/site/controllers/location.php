@@ -23,15 +23,16 @@
  * along with ShackLocations.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 defined('_JEXEC') or die();
 
-require_once JPATH_COMPONENT.'/controller.php';
+require_once JPATH_COMPONENT . '/controller.php';
+// phpcs:enable PSR1.Files.SideEffects.FoundWithSymbols
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 /**
  * Location controller class.
  */
 class FocalpointControllerLocation extends FocalpointController
 {
-
-
 }

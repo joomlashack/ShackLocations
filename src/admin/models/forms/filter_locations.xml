@@ -32,7 +32,7 @@
 
         <field name="type"
                type="shacklocations.locationtype"
-               label="COM_FOCALPOINT_LOCATIONTYPES_LEGEND"
+               label="COM_FOCALPOINT_LOCATIONS_TYPE"
                description="COM_FOCALPOINT_FILTER_LOCATIONTYPES"
                onchange="this.form.submit();">
             <option value="">COM_FOCALPOINT_FILTER_SELECT_LOCATIONTYPE</option>

@@ -214,8 +214,9 @@ JSCRIPT;
         if (preg_match_all('/<img.*?src="(image[^"].*?)".*?>/', $content, $images)) {
             $fixed = [];
             foreach ($images[0] as $idx => $source) {
+                // Null when the file doesn't exist, so leave those as they are
                 $imageUri    = HTMLHelper::_('image', $images[1][$idx], null, null, false, 1);
-                $fixed[$idx] = str_replace($images[1][$idx], $imageUri, $source);
+                $fixed[$idx] = $imageUri ? str_replace($images[1][$idx], $imageUri, $source) : $source;
             }
             $content = str_replace($images[0], $fixed, $content);
         }

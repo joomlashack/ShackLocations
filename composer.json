@@ -24,5 +24,51 @@
         "ext-json"     : "*",
         "ext-simplexml": "*",
         "ext-curl"     : "*"
+    },
+    "scripts"          : {
+        "test"          : [
+            "@test:admin",
+            "@test:site",
+            "@test:js"
+        ],
+        "test:admin"    : [
+            "@composer --working-dir=tests install --no-interaction --quiet",
+            "@php tests/vendor/codeception/codeception/codecept run Admin"
+        ],
+        "test:site"     : [
+            "@composer --working-dir=tests install --no-interaction --quiet",
+            "@php tests/vendor/codeception/codeception/codecept run Site"
+        ],
+        "test:js"       : "node --test 'tests/js/*.test.mjs'",
+        "lint"          : [
+            "@composer --working-dir=tests install --no-interaction --quiet",
+            "@php tests/vendor/squizlabs/php_codesniffer/bin/phpcs -sp"
+        ],
+        "lint:fix"      : [
+            "@composer --working-dir=tests install --no-interaction --quiet",
+            "@php tests/vendor/squizlabs/php_codesniffer/bin/phpcbf"
+        ],
+        "lint:compat"   : [
+            "@composer --working-dir=tests install --no-interaction --quiet",
+            "@php tests/vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 7.4- --extensions=php -sp src"
+        ],
+        "check:manifest": "@php tests/bin/check-manifest.php",
+        "check"         : [
+            "@lint",
+            "@lint:compat",
+            "@check:manifest",
+            "@test"
+        ]
+    },
+    "scripts-descriptions": {
+        "test"          : "Run the Admin, Site and JavaScript tests",
+        "test:admin"    : "Run the Admin suite (MySQL; see docs/DEVELOPMENT.md)",
+        "test:site"     : "Run the Site suite (MySQL; see docs/DEVELOPMENT.md)",
+        "test:js"       : "Run the JavaScript tests with Node's test runner",
+        "lint"          : "Check src and tests against phpcs.xml.dist",
+        "lint:fix"      : "Fix what phpcbf can",
+        "lint:compat"   : "Check src for PHP 7.4+ compatibility",
+        "check:manifest": "Compare the manifest's file lists with src",
+        "check"         : "Run every check; do this before committing"
     }
 }

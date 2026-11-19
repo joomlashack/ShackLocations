@@ -24,6 +24,7 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Registry\Registry;
@@ -69,6 +70,10 @@ class FocalpointViewMap extends FocalpointViewSite
         // Check for errors.
         if ($errors = $model->getErrors()) {
             throw new Exception(implode("\n", $errors));
+        }
+
+        if (empty($this->item->id)) {
+            throw new Exception(Text::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
         }
 
         $app->triggerEvent('onSlocmapPrepareRender', [&$this->item]);

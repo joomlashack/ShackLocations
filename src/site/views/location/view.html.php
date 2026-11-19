@@ -64,6 +64,10 @@ class FocalpointViewLocation extends FocalpointViewSite
             throw new Exception(implode("\n", $errors));
         }
 
+        if ($this->item === null) {
+            throw new Exception(Text::_('JGLOBAL_RESOURCE_NOT_FOUND'), 404);
+        }
+
         if ($this->_layout == 'edit') {
             $authorised = $user->authorise('core.create', 'com_focalpoint');
             if ($authorised !== true) {

@@ -1,0 +1,35 @@
+{
+    "name"       : "joomlashack/shacklocations-tests",
+    "description": "Test suite for Shack Locations",
+    "type"       : "project",
+    "license"    : "GPL-2.0-or-later",
+    "authors"    : [
+        {
+            "name" : "Joomlashack",
+            "email": "help@joomlashack.com"
+        }
+    ],
+    "require-dev": {
+        "codeception/codeception"  : "^5.3",
+        "codeception/module-asserts": "^3.3",
+        "squizlabs/php_codesniffer": "^3.13",
+        "phpcompatibility/php-compatibility": "^10.0@alpha",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Support\\": "Support/"
+        }
+    },
+    "config"     : {
+        "platform": {
+            "php": "8.2.0"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts"    : {
+        "test": "codecept run -c .."
+    }
+}

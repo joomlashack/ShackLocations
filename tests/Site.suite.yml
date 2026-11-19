@@ -1,0 +1,8 @@
+# Frontend classes. Run separately from the Admin suite: admin and site
+# models/views share class names (PHP class names are case-insensitive).
+actor: UnitTester
+suite_namespace: Tests\Site
+bootstrap: _bootstrap.php
+modules:
+    enabled:
+        - Asserts
