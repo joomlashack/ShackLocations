@@ -44,13 +44,28 @@ class LocationViewTest extends TestCase
         require_once SLOC_SITE . '/views/location/view.html.php';
     }
 
-    public function testMissingOrUnpublishedLocationIsNotFound()
+    public function testMissingLocationIsNotFound()
     {
+        $this->assertNotFound(999);
+    }
+
+    public function testUnpublishedLocationIsNotFound()
+    {
+        $this->assertNotFound($this->insert('focalpoint_locations', ['title' => 'Closed', 'state' => 0]));
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return void
+     */
+    protected function assertNotFound(int $id): void
+    {
+        $this->createApplication('site', ['option' => 'com_focalpoint', 'id' => $id]);
+
         $view = new FocalpointViewLocation(['name' => 'location', 'base_path' => SLOC_SITE]);
         $view->setDocument($this->app->getDocument());
         $view->setModel(new FocalpointModelLocation(['dbo' => $this->db]), true);
-
-        $this->createApplication('site', ['option' => 'com_focalpoint', 'id' => 999]);
 
         try {
             $view->display();
