@@ -139,54 +139,69 @@ abstract class JhtmlSlocGoogle
                 ]
             );
 
+            /*
+             * The API script normally runs before this, but consent managers and script
+             * optimizers can hold it back, so wait for it without a time limit. All maps
+             * share one wait and one load of the libraries they need.
+             */
             $init = <<<JSCRIPT
-let googleReadyPromise = null;
-
-function initGoogle() {
-    if (googleReadyPromise === null) {
-        googleReadyPromise = (async function() {
-            await google.maps.importLibrary('maps');
-            await google.maps.importLibrary('marker');
-            await Promise.all({$scripts}.map(script => jQuery.sloc.loadScript(script)));
-        })().catch(error => {
-            // Allow a subsequent map initialisation to retry after a failed load.
-            googleReadyPromise = null;
-            throw error;
-        });
+(function($) {
+    if ($.sloc.google) {
+        return;
     }
 
-    return googleReadyPromise;
-}
+    let ready = null;
 
-async function initMap(id, options, startedAt = Date.now()) {
-    setTimeout(async function() {
-        if (typeof google !== 'undefined' && !!google.maps && typeof google.maps.importLibrary === 'function') {
-            try {
-                await initGoogle();
+    let apiLoaded = function() {
+        return new Promise(function(resolve) {
+            let check = function() {
+                if (window.google && google.maps && typeof google.maps.importLibrary === 'function') {
+                    resolve();
+                } else {
+                    setTimeout(check, 100);
+                }
+            };
+            check();
+        });
+    };
 
-                let map = new jQuery.sloc.map.google();
-                map.init(options);
-                jQuery.sloc.map.register(id, map);
-
-            } catch (err) {
-                console.error(err);
+    $.sloc.google = {
+        ready: function() {
+            if (ready === null) {
+                ready = apiLoaded()
+                    .then(function() {
+                        return Promise.all(['maps', 'marker', 'geocoding', 'routes'].map(function(library) {
+                            return google.maps.importLibrary(library);
+                        }));
+                    })
+                    .then(function() {
+                        return Promise.all({$scripts}.map($.sloc.loadScript));
+                    });
             }
 
-        } else if (Date.now() - startedAt < 30000) {
-            initMap(id, options, startedAt);
-        } else {
-            console.error('Shack Locations: Google Maps API did not become available within 30 seconds.');
+            return ready;
+        },
+
+        initMap: function(id, options) {
+            $.sloc.google.ready()
+                .then(function() {
+                    let map = new $.sloc.map.google();
+                    map.init(options);
+                    $.sloc.map.register(id, map);
+                })
+                .catch(function(error) {
+                    console.error('Shack Locations: unable to load Google Maps', error);
+                });
         }
-    },
-    500);
-}
+    };
+})(jQuery);
 JSCRIPT;
             $app->getDocument()->addScriptDeclaration($init);
 
             static::$apiLoaded = true;
         }
 
-        $app->getDocument()->addScriptDeclaration("initMap('{$id}', {$options});");
+        $app->getDocument()->addScriptDeclaration("jQuery.sloc.google.initMap('{$id}', {$options});");
     }
 
     /**
