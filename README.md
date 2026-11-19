@@ -1,4 +1,4 @@
-[![Joomlashack](https://www.joomlashack.com/images/logo_circle_small.png)](https://www.joomlashack.com)
+[![Joomlashack](docs/images/joomlashack-logo.png)](https://www.joomlashack.com)
 
 Shack Locations
 ===============
