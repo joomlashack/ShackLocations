@@ -63,6 +63,9 @@ class FocalpointModelLocation extends FocalpointModelSite
 
         $locationId = Factory::getInput()->getInt('id', $app->getParams()->get('item_id'));
         $this->setState('location.id', $locationId);
+
+        // Visitors only see published locations
+        $this->setState('filter.published', 1);
     }
 
     /**

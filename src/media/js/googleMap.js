@@ -163,6 +163,12 @@
         let init = function(params) {
             options = $.extend(true, {}, defaults, params);
 
+            if (options.show.clusters && typeof markerClusterer === 'undefined') {
+                // Show every marker rather than none
+                console.error('Shack Locations: the marker clustering library is not loaded');
+                options.show.clusters = false;
+            }
+
             canvas    = document.getElementById(options.canvasId);
             isDesktop = window.screen.availWidth > 979;
 
@@ -244,9 +250,30 @@
                     }
                 });
 
-                clusterManager.clearMarkers();
-                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
+                clusterManager.clearMarkers(true);
+                clusterManager.addMarkers(clusterMarkers);
             }
+        };
+
+        /**
+         * Clustering is added by a plugin, which loads @googlemaps/markerclusterer
+         *
+         * @param {google.maps.Marker[]} clusterMarkers
+         *
+         * @return {markerClusterer.MarkerClusterer}
+         */
+        let createClusterer = function(clusterMarkers) {
+            let settings = {
+                    map    : map,
+                    markers: clusterMarkers
+                },
+                styles   = (options.clusterOptions && options.clusterOptions.styles) || [];
+
+            if (styles.length) {
+                settings.renderer = $.sloc.map.google.clusterRenderer(styles);
+            }
+
+            return new markerClusterer.MarkerClusterer(settings);
         };
 
         /**
@@ -456,7 +483,7 @@
             });
 
             if (options.show.clusters) {
-                clusterManager = new MarkerClusterer(map, clusterMarkers, options.clusterOptions);
+                clusterManager = createClusterer(clusterMarkers);
             }
         };
 
@@ -810,6 +837,39 @@
             init      : init,
             update    : updateDisplay,
             getManager: getManager
+        };
+    };
+
+    /**
+     * Draws clusters with the given icons the way MarkerClustererPlus did: clusters of
+     * 1-9 markers use the first icon, 10-99 the second, and so on, up to the last icon
+     *
+     * @param {object[]} styles {url, width, height, textColor, textSize, fontWeight}
+     *
+     * @return {object} A markerClusterer renderer
+     */
+    $.sloc.map.google.clusterRenderer = function(styles) {
+        return {
+            render: function(cluster) {
+                let count = cluster.count,
+                    style = styles[Math.min(String(count).length, styles.length) - 1];
+
+                return new google.maps.Marker({
+                    position: cluster.position,
+                    icon    : {
+                        url   : style.url,
+                        size  : new google.maps.Size(style.width, style.height),
+                        anchor: new google.maps.Point(style.width / 2, style.height / 2)
+                    },
+                    label   : {
+                        text      : String(count),
+                        color     : style.textColor || '#000',
+                        fontSize  : (style.textSize || 14) + 'px',
+                        fontWeight: style.fontWeight || 'bold'
+                    },
+                    zIndex  : Number(google.maps.Marker.MAX_ZINDEX) + count
+                });
+            }
         };
     };
 })(jQuery);

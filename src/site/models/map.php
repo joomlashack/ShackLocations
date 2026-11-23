@@ -62,6 +62,9 @@ class FocalpointModelMap extends FocalpointModelSite
 
         $menu = $app->getMenu()->getActive();
         $this->setState('menu.id', $menu ? $menu->id : null);
+
+        // Visitors only see published maps
+        $this->setState('filter.published', 1);
     }
 
     /**
